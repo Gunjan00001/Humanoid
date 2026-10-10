@@ -1,0 +1,416 @@
+{
+  "meta": {
+    "video_a": "/home/jiit_992401210050/Desktop/Humanoid/data/scene2/a.mp4",
+    "video_b": "/home/jiit_992401210050/Desktop/Humanoid/data/scene2/b.mp4",
+    "backend": "vggt",
+    "model": "/home/jiit_992401210050/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-10T18:28:20Z",
+    "config_hash": "e6e15c30467a",
+    "num_frames": 24,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "apple",
+      "description": "The apple was removed from the table.",
+      "centroid": [
+        0.0843,
+        -0.1234,
+        1.0234
+      ],
+      "bbox": [
+        -0.125,
+        -0.3794,
+        0.8452,
+        0.2698,
+        0.115,
+        1.1875
+      ],
+      "from": [
+        0.0843,
+        -0.1234,
+        1.0234
+      ],
+      "to": null,
+      "confidence": 0.81,
+      "cluster_ids": [
+        1
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00040.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00040.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    }
+  ],
+  "unverified_changes": [
+    {
+      "id": 2,
+      "type": "added",
+      "label": "concrete floor",
+      "description": "a gray concrete floor meeting a white wall baseboard.",
+      "centroid": [
+        -0.4817,
+        -0.0348,
+        0.884
+      ],
+      "bbox": [
+        -0.5396,
+        -0.365,
+        0.6221,
+        -0.3354,
+        0.3699,
+        1.1328
+      ],
+      "from": null,
+      "to": [
+        -0.4817,
+        -0.0348,
+        0.884
+      ],
+      "confidence": 0.3,
+      "cluster_ids": [
+        3
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00032.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 3,
+      "type": "added",
+      "label": "crumpled paper",
+      "description": "a small, crumpled piece of white paper lying on a dark floor near a white wall or baseboard.",
+      "centroid": [
+        -0.4445,
+        -0.3845,
+        1.1288
+      ],
+      "bbox": [
+        -0.4546,
+        -0.3992,
+        1.1201,
+        -0.4353,
+        -0.3655,
+        1.1387
+      ],
+      "from": null,
+      "to": [
+        -0.4445,
+        -0.3845,
+        1.1288
+      ],
+      "confidence": 0.03,
+      "cluster_ids": [
+        4
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00120.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 4,
+      "type": "added",
+      "label": "small metallic object",
+      "description": "a shiny, circular object with a reflective surface, possibly a coin or small metal piece, lying on a dark, textured surface.",
+      "centroid": [
+        -0.3463,
+        -0.191,
+        1.0359
+      ],
+      "bbox": [
+        -0.365,
+        -0.2048,
+        1.0137,
+        -0.3301,
+        -0.1802,
+        1.0537
+      ],
+      "from": null,
+      "to": [
+        -0.3463,
+        -0.191,
+        1.0359
+      ],
+      "confidence": 0.04,
+      "cluster_ids": [
+        5
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00040.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 5,
+      "type": "added",
+      "label": "finger",
+      "description": "a close-up of a human finger tip on a gray surface.",
+      "centroid": [
+        0.3593,
+        0.2683,
+        0.8312
+      ],
+      "bbox": [
+        0.2852,
+        0.175,
+        0.7402,
+        0.4348,
+        0.3699,
+        1.043
+      ],
+      "from": null,
+      "to": [
+        0.3593,
+        0.2683,
+        0.8312
+      ],
+      "confidence": 0.3,
+      "cluster_ids": [
+        6
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00168.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 6,
+      "type": "added",
+      "label": "wooden frame",
+      "description": "a close-up of a brown wooden frame edge next to a light-colored surface.",
+      "centroid": [
+        0.3752,
+        -0.5472,
+        1.3465
+      ],
+      "bbox": [
+        0.3552,
+        -0.5898,
+        1.2949,
+        0.3945,
+        -0.5054,
+        1.46
+      ],
+      "from": null,
+      "to": [
+        0.3752,
+        -0.5472,
+        1.3465
+      ],
+      "confidence": 0.2,
+      "cluster_ids": [
+        7
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00168.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 7,
+      "type": "added",
+      "label": "wooden frame",
+      "description": "a diagonal wooden frame or trim against a light-colored wall.",
+      "centroid": [
+        0.3764,
+        -0.6057,
+        1.3786
+      ],
+      "bbox": [
+        0.3604,
+        -0.6196,
+        1.3506,
+        0.3894,
+        -0.5952,
+        1.4297
+      ],
+      "from": null,
+      "to": [
+        0.3764,
+        -0.6057,
+        1.3786
+      ],
+      "confidence": 0.04,
+      "cluster_ids": [
+        8
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00176.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 8,
+      "type": "added",
+      "label": "wooden frame",
+      "description": "a diagonal wooden frame or trim against a light-colored wall or surface.",
+      "centroid": [
+        0.3853,
+        -0.4963,
+        1.309
+      ],
+      "bbox": [
+        0.375,
+        -0.5098,
+        1.2832,
+        0.397,
+        -0.4802,
+        1.3779
+      ],
+      "from": null,
+      "to": [
+        0.3853,
+        -0.4963,
+        1.309
+      ],
+      "confidence": 0.03,
+      "cluster_ids": [
+        9
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00176.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 9,
+      "type": "added",
+      "label": "metal ball",
+      "description": "a small, shiny metallic ball resting on a dark surface near a wooden edge.",
+      "centroid": [
+        0.4136,
+        -0.271,
+        1.176
+      ],
+      "bbox": [
+        0.385,
+        -0.4348,
+        1.043,
+        0.45,
+        -0.0903,
+        1.3301
+      ],
+      "from": null,
+      "to": [
+        0.4136,
+        -0.271,
+        1.176
+      ],
+      "confidence": 0.3,
+      "cluster_ids": [
+        10
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00152.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 10,
+      "type": "added",
+      "label": "wooden beam",
+      "description": "a diagonal wooden beam against a light-colored wall, possibly part of a ceiling or frame.",
+      "centroid": [
+        0.3952,
+        -0.4711,
+        1.2849
+      ],
+      "bbox": [
+        0.385,
+        -0.4897,
+        1.2578,
+        0.4011,
+        -0.4551,
+        1.333
+      ],
+      "from": null,
+      "to": [
+        0.3952,
+        -0.4711,
+        1.2849
+      ],
+      "confidence": 0.02,
+      "cluster_ids": [
+        11
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00160.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 11,
+      "type": "added",
+      "label": "wooden frame",
+      "description": "a close-up of a wooden frame corner, likely part of a door or window, with visible grain and a light-colored surface.",
+      "centroid": [
+        0.4437,
+        -0.0457,
+        1.0378
+      ],
+      "bbox": [
+        0.4402,
+        -0.0699,
+        1.0039,
+        0.45,
+        -0.0251,
+        1.0928
+      ],
+      "from": null,
+      "to": [
+        0.4437,
+        -0.0457,
+        1.0378
+      ],
+      "confidence": 0.03,
+      "cluster_ids": [
+        12
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00024.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    }
+  ]
+}
