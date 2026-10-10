@@ -116,10 +116,15 @@ def model_to_original_transform(orig_w: int, orig_h: int, target: int = MODEL_TA
 
 def model_bbox_to_original(bbox_xyxy: tuple[float, float, float, float],
                            tr: dict[str, Any]) -> tuple[int, int, int, int]:
-    """Model-space pixel bbox -> original-frame pixel bbox (clamped)."""
+    """Model-space pixel bbox -> original-frame pixel bbox (clamped).
+
+    Works for both backends: VGGT's crop mode has crop_left == 0; MapAnything
+    can crop in both axes (see src/ma_contract.transform_for).
+    """
     x1, y1, x2, y2 = bbox_xyxy
-    ox1 = x1 / tr["scale_w"]
-    ox2 = x2 / tr["scale_w"]
+    crop_left = tr.get("crop_left", 0)
+    ox1 = (x1 + crop_left) / tr["scale_w"]
+    ox2 = (x2 + crop_left) / tr["scale_w"]
     oy1 = (y1 + tr["crop_top"]) / tr["scale_h"]
     oy2 = (y2 + tr["crop_top"]) / tr["scale_h"]
     ox1 = int(max(0, min(ox1, tr["orig_w"] - 1)))

@@ -63,5 +63,31 @@ print("torch      ", torch.__version__, "| cuda build", torch.version.cuda)
 print("cuda avail  (False on the login node is expected):", torch.cuda.is_available())
 PY
 
+# ---------------------------------------------------------------------------
+# 4) Isolated MapAnything env (reconstruction.backend: mapanything)
+#
+# MapAnything pins dependencies that conflict with the main env
+# (e.g. opencv-python-headless==4.10.0.84), so it gets its own conda env and
+# runs as a subprocess - see scripts/run_mapanything.py and docs/models.md.
+# Its own package requires python >= 3.10 (the 3.12 in its quickstart is just
+# a recommendation).
+MA_ENV_NAME="${MA_ENV_NAME:-spatialdiff-ma}"
+MA_ENV_PREFIX="$CONDA_BASE/envs/$MA_ENV_NAME"
+MA_ENV_PY="$MA_ENV_PREFIX/bin/python"
+
+if [ ! -x "$MA_ENV_PY" ]; then
+    echo "==> creating conda env '$MA_ENV_NAME' (python 3.10, isolated)"
+    "$CONDA_BASE/bin/conda" create -n "$MA_ENV_NAME" python=3.10 -y
+else
+    echo "==> conda env '$MA_ENV_NAME' already exists at $MA_ENV_PREFIX, reusing"
+fi
+
+echo "==> installing torch (cu126) + MapAnything in $MA_ENV_NAME"
+"$MA_ENV_PY" -m pip install --upgrade pip
+"$MA_ENV_PY" -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
+"$MA_ENV_PY" -m pip install "git+https://github.com/facebookresearch/map-anything.git"
+"$MA_ENV_PY" -m pip install pyyaml        # used by src/common.py in the worker
+
 echo "==> env '$ENV_NAME' ready."
 echo "    act with:  conda activate $ENV_NAME  (then: export PATH=\"\$CONDA_PREFIX/bin:\$PATH\")"
+echo "==> env '$MA_ENV_NAME' ready (MapAnything backend worker)."

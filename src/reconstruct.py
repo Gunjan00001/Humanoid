@@ -1,9 +1,15 @@
 """Stage 2 - joint 3D reconstruction (GPU, 1 device).
 
-Runs VGGT on ALL frames of both videos together so everything lands in one
-shared coordinate frame: camera poses, depth maps and a colored point cloud
-(with a per-point source tag A/B). Backend selectable via config
-(`vggt` primary -> `mast3r` -> `colmap` fallbacks, see docs/models.md).
+Runs the configured backend on ALL frames of both videos together so everything
+lands in one shared coordinate frame: camera poses, depth maps and a colored
+point cloud (with a per-point source tag A/B).
+
+Backends (config `reconstruction.backend`):
+    vggt         in-process, this env (docs/models.md)
+    mapanything  subprocess in the separate `spatialdiff-ma` env - its
+                 dependency pins conflict with ours, so the worker
+                 (scripts/run_mapanything.py) writes the same artifact contract
+    mast3r / colmap   planned fallbacks (raise NotImplementedError)
 
     python src/reconstruct.py --config configs/default.yaml
     python src/reconstruct.py --config configs/default.yaml --limit_per_video 6  # smoke test
@@ -14,9 +20,9 @@ Writes cache/reconstruction/:
     dense.npz     depth [S,H,W], depth_conf [S,H,W], world_points [S,H,W,3]
     colors.npz    images [S,H,W,3] uint8 (model-resolution colors)
 
-Memory note: with 60 frames at 518px in bf16 the model fits one A100-80GB.
-If it does not (torch.cuda.OutOfMemoryError), lower frames.max_frames_per_video
-or use --limit_per_video for a chunked workflow.
+Memory note: with 60 frames at 518px in bf16 VGGT fits one A100-80GB. If it
+does not (torch.cuda.OutOfMemoryError), lower frames.max_frames_per_video or
+use --limit_per_video for a chunked workflow.
 """
 
 from __future__ import annotations
@@ -24,6 +30,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import random
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -32,6 +39,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src.common import (  # noqa: E402
+    PROJECT_ROOT,
     add_common_args,
     apply_overrides,
     cache_dir,
@@ -76,7 +84,7 @@ def load_frame_list(cfg: dict, limit_per_video: int | None = None) -> list[dict]
 # backends
 
 
-def run_vggt(frames: list[dict], cfg: dict) -> dict:
+def run_vggt(frames: list[dict], cfg: dict, limit_per_video: int | None = None) -> dict:
     import os
 
     import torch
@@ -168,7 +176,50 @@ def run_vggt(frames: list[dict], cfg: dict) -> dict:
     }
 
 
-def run_mast3r(frames: list[dict], cfg: dict) -> dict:  # pragma: no cover
+def run_mapanything(frames: list[dict], cfg: dict, limit_per_video: int | None = None) -> dict:
+    """MapAnything backend - a subprocess in the `spatialdiff-ma` conda env.
+
+    MapAnything's dependency pins (e.g. opencv-python-headless==4.10.0.84)
+    conflict with the main env, so it runs isolated. The worker
+    (scripts/run_mapanything.py) performs the whole stage: it loads the model
+    from the local path, runs one joint inference over all frames and writes
+    the exact same artifact contract as the VGGT backend
+    (cache/reconstruction/{cameras,dense,colors}.npz + meta.json). The parent
+    therefore only launches it and returns `wrote_files: True`.
+    """
+    macfg = cfg["reconstruction"].get("mapanything", {})
+    env_python = Path(str(macfg.get("env_python",
+                                    "~/miniconda3/envs/spatialdiff-ma/bin/python"))).expanduser()
+    if not env_python.exists():
+        raise RuntimeError(
+            f"MapAnything env python not found: {env_python}\n"
+            "Create the isolated env with: bash scripts/setup_env.sh"
+        )
+
+    out_dir = cache_dir(cfg, "reconstruction")
+    frames_index = repo_path(cfg["paths"]["cache_dir"]) / "frames" / "index.json"
+    cmd = [
+        str(env_python), str(PROJECT_ROOT / "scripts" / "run_mapanything.py"),
+        "--config", str(cfg["_config_path"]),
+        "--frames-index", str(frames_index),
+        "--out", str(out_dir),
+        "--force",                       # the parent already decided to run
+    ]
+    if limit_per_video is not None:
+        cmd += ["--limit_per_video", str(int(limit_per_video))]
+    log.info("launching MapAnything worker: %s", " ".join(cmd))
+    # stream the worker's log to this job's output (no capture) so the PBS log
+    # contains the full model-loading/inference trace
+    proc = subprocess.run(cmd, cwd=PROJECT_ROOT)
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"MapAnything worker failed with exit code {proc.returncode}; "
+            "see the log above (and logs/setup_ma_env.log for env issues)"
+        )
+    return {"backend": "mapanything", "wrote_files": True}
+
+
+def run_mast3r(frames: list[dict], cfg: dict, limit_per_video: int | None = None) -> dict:  # pragma: no cover
     raise NotImplementedError(
         "MASt3R fallback backend not implemented yet. The HF repo is gated and "
         "the checkpoint is unavailable to this account; see docs/models.md and "
@@ -176,11 +227,12 @@ def run_mast3r(frames: list[dict], cfg: dict) -> dict:  # pragma: no cover
     )
 
 
-def run_colmap(frames: list[dict], cfg: dict) -> dict:  # pragma: no cover
+def run_colmap(frames: list[dict], cfg: dict, limit_per_video: int | None = None) -> dict:  # pragma: no cover
     raise NotImplementedError("COLMAP fallback backend not implemented yet - see docs/roadmap.md.")
 
 
-BACKENDS = {"vggt": run_vggt, "mast3r": run_mast3r, "colmap": run_colmap}
+BACKENDS = {"vggt": run_vggt, "mapanything": run_mapanything,
+            "mast3r": run_mast3r, "colmap": run_colmap}
 
 
 # ---------------------------------------------------------------------------
@@ -211,9 +263,10 @@ def main() -> int:
 
     backend = cfg["reconstruction"]["backend"]
     if backend not in BACKENDS:
-        raise ValueError(f"unknown reconstruction.backend: {backend!r}")
+        raise ValueError(f"unknown reconstruction.backend: {backend!r} "
+                         f"(available: {sorted(BACKENDS)})")
     try:
-        result = BACKENDS[backend](frames, cfg)
+        result = BACKENDS[backend](frames, cfg, limit_per_video=args.limit_per_video)
     except Exception as exc:  # noqa: BLE001 - keep the OOM hint
         if "out of memory" in str(exc).lower():
             raise RuntimeError(
@@ -222,6 +275,13 @@ def main() -> int:
                 "reduce frames.fps."
             ) from exc
         raise
+
+    # some backends (mapanything) run isolated and write the artifacts
+    # themselves through their worker - nothing left to save here
+    if result.get("wrote_files"):
+        log.info("backend '%s' wrote cache/reconstruction/ directly; done",
+                 result.get("backend", backend))
+        return 0
 
     # ---- save -----------------------------------------------------------
     np.savez_compressed(
