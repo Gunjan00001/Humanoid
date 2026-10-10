@@ -474,6 +474,48 @@ def main() -> int:
     log.info("VLM verification: %d confirmed, %d rejected, %d unverified kept",
              len(confirmed), len(rejected), len(uncertain_kept))
 
+    # ---- 3b) appearance check: crop-pair similarity -----------------------
+    # a candidate whose before/after crops embed as nearly the same image is a
+    # lighting/blur artefact, not a change (the flipped remote scores low here,
+    # the untouched timer scores high). Uses the same DINOv2 as matching.
+    if not args.skip_vlm and confirmed:
+        import torch
+        from PIL import Image
+
+        pairs = [c for c in confirmed
+                 if str(c["id"]) in crops and "crop" in crops[str(c["id"])]
+                 and "crop_other" in crops[str(c["id"])]]
+        if pairs:
+            matcher, matcher_processor = load_matcher(cfg)
+            sims = {}
+            for c in pairs:
+                ci = crops[str(c["id"])]
+                emb = embed_crops(matcher, matcher_processor, [ci["crop"], ci["crop_other"]])
+                sims[c["id"]] = float(emb[0] @ emb[1])
+            threshold = float(cfg["semantics"].get("same_appearance_threshold", 0.80))
+            still = []
+            for c in confirmed:
+                sim = sims.get(c["id"])
+                if sim is not None and sim > threshold:
+                    cid = str(c["id"])
+                    rejected[cid] = {"type": c["type"], "centroid": c["centroid"],
+                                     "reason": f"before/after crops look like the same appearance "
+                                               f"(DINOv2 similarity {sim:.2f} > {threshold})",
+                                     "vlm": {k: vlm_cache.get(cid, {}).get(k)
+                                             for k in ("label", "first", "second")}}
+                    log.info("appearance-reject %s (sim %.2f): %s", cid, sim,
+                             vlm_cache.get(cid, {}).get("label"))
+                else:
+                    still.append(c)
+            for c in confirmed:
+                if c["id"] in sims:
+                    log.info("  crop-pair similarity %s (%s): %.2f", c["id"], c["type"], sims[c["id"]])
+            confirmed = still
+            log.info("appearance check: %d kept after crop-similarity filter", len(confirmed))
+            del matcher, matcher_processor
+            gc.collect()
+            torch.cuda.empty_cache()
+
     # ---- 4) DINOv2 embeddings + move matching ---------------------------
     matches: list[dict] = []
     if not args.skip_vlm and confirmed:
