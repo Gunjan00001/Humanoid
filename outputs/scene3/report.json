@@ -5,7 +5,7 @@
     "backend": "vggt",
     "model": "/home/user/models/VGGT-1B",
     "diff_method": "tabletop",
-    "created": "2026-10-10T18:26:12Z",
+    "created": "2026-10-10T18:47:54Z",
     "config_hash": "e6e15c30467a",
     "num_frames": 30,
     "semantics": "vlm-verified",
@@ -14,44 +14,6 @@
   "changes": [
     {
       "id": 1,
-      "type": "removed",
-      "label": "table leg",
-      "description": "The metal table leg was removed from the surface.",
-      "centroid": [
-        -0.1632,
-        0.2636,
-        0.8471
-      ],
-      "bbox": [
-        -0.1749,
-        0.2451,
-        0.8188,
-        -0.1454,
-        0.2798,
-        0.8745
-      ],
-      "from": [
-        -0.1632,
-        0.2636,
-        0.8471
-      ],
-      "to": null,
-      "confidence": 0.35,
-      "cluster_ids": [
-        3
-      ],
-      "evidence": {
-        "frames_a": [
-          "a/frame_00000.jpg"
-        ],
-        "frames_b": [
-          "b/frame_00000.jpg"
-        ],
-        "confirmed_empty_in": []
-      }
-    },
-    {
-      "id": 2,
       "type": "removed",
       "label": "tabletop objects",
       "description": "The red and green objects on the table were removed.",
@@ -89,7 +51,7 @@
       }
     },
     {
-      "id": 3,
+      "id": 2,
       "type": "replaced",
       "label": "chair",
       "description": "The black bowl was replaced by a black chair with a wooden backrest.",
@@ -133,7 +95,7 @@
   ],
   "unverified_changes": [
     {
-      "id": 4,
+      "id": 3,
       "type": "removed",
       "label": "cracked floor",
       "description": "a white tiled floor with visible cracks running across the surface.",
@@ -169,7 +131,7 @@
       }
     },
     {
-      "id": 5,
+      "id": 4,
       "type": "removed",
       "label": "wall corner",
       "description": "a close-up of an indoor wall corner with a textured surface and a dark vertical edge.",
@@ -205,7 +167,7 @@
       }
     },
     {
-      "id": 6,
+      "id": 5,
       "type": "removed",
       "label": "window frame",
       "description": "a close-up of a dark window frame with a white wall beside it, showing part of a glass pane.",
@@ -241,7 +203,7 @@
       }
     },
     {
-      "id": 7,
+      "id": 6,
       "type": "removed",
       "label": "metal chair leg",
       "description": "a curved metal chair leg with a shiny surface, partially visible next to a blue curtain and dark wall.",
@@ -277,7 +239,7 @@
       }
     },
     {
-      "id": 8,
+      "id": 7,
       "type": "removed",
       "label": "marble surface",
       "description": "a close-up of a white marble surface with gray veining patterns.",
@@ -313,7 +275,7 @@
       }
     },
     {
-      "id": 9,
+      "id": 8,
       "type": "removed",
       "label": "cracked surface",
       "description": "a close-up of a white surface with dark, irregular cracks resembling marble or dried paint.",
@@ -349,7 +311,7 @@
       }
     },
     {
-      "id": 10,
+      "id": 9,
       "type": "removed",
       "label": "cracked surface",
       "description": "a close-up of a white surface with dark, irregular cracks resembling marble or dried paint.",
@@ -385,7 +347,7 @@
       }
     },
     {
-      "id": 11,
+      "id": 10,
       "type": "removed",
       "label": "metal chair leg",
       "description": "a shiny chrome chair leg with a curved design, partially visible against a blue curtain background.",
@@ -421,7 +383,7 @@
       }
     },
     {
-      "id": 12,
+      "id": 11,
       "type": "removed",
       "label": "metal chair back",
       "description": "a curved, shiny metal chair back with a decorative top, positioned near a blue curtain and wooden surface.",
@@ -457,7 +419,7 @@
       }
     },
     {
-      "id": 13,
+      "id": 12,
       "type": "removed",
       "label": "wooden table corner",
       "description": "a close-up of the corner of a wooden table with a dark blue curtain in the background.",
@@ -493,7 +455,7 @@
       }
     },
     {
-      "id": 14,
+      "id": 13,
       "type": "removed",
       "label": "metal table leg",
       "description": "A shiny metal table leg standing on a tiled floor with visible cracks.",
@@ -529,7 +491,7 @@
       }
     },
     {
-      "id": 15,
+      "id": 14,
       "type": "removed",
       "label": "metal chair frame",
       "description": "a shiny metal chair frame with curved legs, partially visible next to a wooden table and a dark curtain.",
@@ -565,7 +527,7 @@
       }
     },
     {
-      "id": 16,
+      "id": 15,
       "type": "removed",
       "label": "wooden table corner",
       "description": "a close-up of the corner of a wooden table with a dark blue curtain in the background.",
@@ -601,7 +563,7 @@
       }
     },
     {
-      "id": 17,
+      "id": 16,
       "type": "removed",
       "label": "apple on table",
       "description": "A red apple sits on a wooden table in a dimly lit indoor setting.",
@@ -637,7 +599,7 @@
       }
     },
     {
-      "id": 18,
+      "id": 17,
       "type": "removed",
       "label": "bar stool",
       "description": "A black, round, leather-like seat on a metal frame with chrome legs, placed on a tiled floor.",
@@ -673,7 +635,7 @@
       }
     },
     {
-      "id": 19,
+      "id": 18,
       "type": "removed",
       "label": "metal chair leg",
       "description": "a close-up of a shiny metal chair leg with a black seat above it, showing part of the frame and floor beneath.",
@@ -709,7 +671,7 @@
       }
     },
     {
-      "id": 20,
+      "id": 19,
       "type": "removed",
       "label": "metal chair leg",
       "description": "a shiny metallic leg of a chair standing on a tiled floor.",
@@ -745,7 +707,7 @@
       }
     },
     {
-      "id": 21,
+      "id": 20,
       "type": "removed",
       "label": "metal chair leg",
       "description": "A close-up of a metal chair leg on a white floor with visible cracks and a black cable nearby.",
@@ -781,7 +743,7 @@
       }
     },
     {
-      "id": 22,
+      "id": 21,
       "type": "removed",
       "label": "metal shelving unit",
       "description": "a close-up of a shiny, curved metal shelving unit with multiple tiers.",
@@ -817,7 +779,7 @@
       }
     },
     {
-      "id": 23,
+      "id": 22,
       "type": "removed",
       "label": "metal chair frame",
       "description": "close-up of curved metal bars forming part of a chair's structure.",
@@ -853,7 +815,7 @@
       }
     },
     {
-      "id": 24,
+      "id": 23,
       "type": "removed",
       "label": "metal chair back",
       "description": "A close-up of a shiny, chrome-finished chair back with horizontal slats and a curved top rail.",
@@ -889,7 +851,7 @@
       }
     },
     {
-      "id": 25,
+      "id": 24,
       "type": "removed",
       "label": "doorframe",
       "description": "a vertical edge of a door or wall with a visible seam and adjacent flooring.",
@@ -925,7 +887,7 @@
       }
     },
     {
-      "id": 26,
+      "id": 25,
       "type": "added",
       "label": "wooden table leg",
       "description": "A close-up of a wooden table leg with a visible grain pattern and a metal tabletop above it.",
@@ -961,7 +923,7 @@
       }
     },
     {
-      "id": 27,
+      "id": 26,
       "type": "added",
       "label": "dark vertical object",
       "description": "a blurry, dark, vertical object with a light-colored edge, possibly a door frame or furniture leg.",
@@ -997,7 +959,7 @@
       }
     },
     {
-      "id": 28,
+      "id": 27,
       "type": "added",
       "label": "cracked wall",
       "description": "a white wall with multiple dark cracks spreading across its surface.",
@@ -1033,7 +995,7 @@
       }
     },
     {
-      "id": 29,
+      "id": 28,
       "type": "added",
       "label": "metal chair leg",
       "description": "a close-up of a metal chair leg with a circular base, casting a shadow on a light-colored floor.",
@@ -1069,7 +1031,7 @@
       }
     },
     {
-      "id": 30,
+      "id": 29,
       "type": "added",
       "label": "door frame",
       "description": "a close-up of a wooden door frame with a light-colored wall and a metal threshold below.",

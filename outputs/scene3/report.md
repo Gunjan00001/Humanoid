@@ -4,27 +4,18 @@
 - video B: `/home/user/Desktop/Humanoid/data/scene3/b.mp4`
 - reconstruction: `vggt` (/home/user/models/VGGT-1B)
 - frames: 30 | semantics: vlm-verified
-- generated: 2026-10-10T18:26:12Z | config `e6e15c30467a`
+- generated: 2026-10-10T18:47:54Z | config `e6e15c30467a`
 
-**3 change(s) detected**: 2 removed, 1 replaced
+**2 change(s) detected**: 1 removed, 1 replaced
 
 | # | type | label | centroid (x, y, z) | confidence |
 |---|---|---|---|---|
-| 1 | removed | table leg | (-0.16, 0.26, 0.85) | 0.35 |
-| 2 | removed | tabletop objects | (0.02, -0.18, 0.86) | 0.56 |
-| 3 | replaced | chair | (0.32, 0.12, 0.73) | 0.57 |
+| 1 | removed | tabletop objects | (0.02, -0.18, 0.86) | 0.56 |
+| 2 | replaced | chair | (0.32, 0.12, 0.73) | 0.57 |
 
 ## Details
 
-### 1. REMOVED - table leg
-
-> The metal table leg was removed from the surface.
-
-- centroid: (-0.16, 0.26, 0.85) | confidence: 0.35
-- cluster ids: [3]
-- visible in: a/frame_00000.jpg, b/frame_00000.jpg
-
-### 2. REMOVED - tabletop objects
+### 1. REMOVED - tabletop objects
 
 > The red and green objects on the table were removed.
 
@@ -32,7 +23,7 @@
 - cluster ids: [5]
 - visible in: a/frame_00020.jpg, b/frame_00010.jpg
 
-### 3. REPLACED - chair
+### 2. REPLACED - chair
 
 > The black bowl was replaced by a black chair with a wooden backrest.
 
