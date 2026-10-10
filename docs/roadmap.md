@@ -18,15 +18,18 @@ Code that exists but has not been validated end-to-end is marked 🔶.
 
 ## Backend comparison (v0.5)
 
-MapAnything was added as a second reconstruction backend
-(`reconstruction.backend: mapanything`, isolated `spatialdiff-ma` env) and
-compared against VGGT on the demo scene with identical frames. All numbers are
-measured; see [`results.md`](results.md#backend-comparison-vggt-vs-mapanything).
+Two more reconstruction backends were added and compared against VGGT on the
+demo scene with identical frames: **MapAnything**
+(`reconstruction.backend: mapanything`, isolated `spatialdiff-ma` env) and the
+stretch goal **Depth Anything 3** (DA3-LARGE-1.1 through MapAnything's unified
+interface). All numbers are measured; see
+[`results.md`](results.md#backend-comparison-vggt-vs-mapanything-vs-depth-anything-3).
 
 Headline: **VGGT + tabletop stays the best single configuration (3/3 changes,
-0 false positives)**; MapAnything does not beat it overall, but its *geometry*
-detects the 1 cm-thick comb and pen (impossible for VGGT's depth maps) and its
-output is metric by construction - a promising basis for a future hybrid.
+0 false positives)**. MapAnything matches it with its threshold calibrated and
+adds metric scale + a geometric diff that sees the 1 cm objects; DA3 is the
+fastest and lightest backend with the best alignment and the strongest
+thin-object response. Neither replaces the default; both are selectable.
 
 ## Infrastructure already done
 
