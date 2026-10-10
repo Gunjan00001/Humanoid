@@ -82,6 +82,8 @@ semantics:
   matcher: dinov2
   match_similarity_threshold: 0.75
   match_min_distance: 0.10   # a "moved" pair must have moved at least this far
+  same_appearance_threshold: 0.80  # before/after crops more similar than this
+                             # are the same appearance -> not a change
   crop_margin: 0.25          # margin around the projected crop, relative to size
   min_crop_pixels: 48
   verify_crop_margin: 0.6    # verification crops need context around the cluster
