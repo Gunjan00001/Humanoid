@@ -4,23 +4,50 @@
 - video B: `/home/user/Desktop/Humanoid/data/scene3/b.mp4`
 - reconstruction: `vggt` (/home/user/models/VGGT-1B)
 - frames: 30 | semantics: vlm-verified
-- generated: 2026-10-10T20:35:54Z | config `2b487e1c26d7`
+- generated: 2026-10-10T20:37:34Z | config `2b487e1c26d7`
 
-**1 change(s) detected**: 1 removed
+**4 change(s) detected**: 3 removed, 1 replaced
 
 | # | type | label | centroid (x, y, z) | confidence |
 |---|---|---|---|---|
-| 1 | removed | table leg | (-0.16, 0.26, 0.85) | 0.35 |
+| 1 | replaced | black chair | (0.02, -0.18, 0.86) | 0.56 |
+| 2 | removed | red apple | (-0.04, -0.40, 1.11) | 1.00 |
+| 3 | removed | green and yellow object | (0.29, -0.38, 1.04) | 0.98 |
+| 4 | removed | black trash can | (0.32, 0.12, 0.73) | 0.57 |
 
 ## Details
 
-### 1. REMOVED - table leg
+### 1. REPLACED - black chair
 
-> The metal table leg was removed from the surface.
+> the red object was replaced by a black chair
 
-- centroid: (-0.16, 0.26, 0.85) | confidence: 0.35
-- cluster ids: [3]
-- visible in: a/frame_00000.jpg, b/frame_00000.jpg
+- centroid: (0.02, -0.18, 0.86) | confidence: 0.56
+- cluster ids: [5]
+- visible in: a/frame_00020.jpg, b/frame_00010.jpg
+
+### 2. REMOVED - red apple
+
+> the red apple was removed from the table
+
+- centroid: (-0.04, -0.40, 1.11) | confidence: 1.00
+- cluster ids: [26]
+- visible in: a/frame_00000.jpg, b/frame_00010.jpg
+
+### 3. REMOVED - green and yellow object
+
+> the green and yellow object was removed from the scene
+
+- centroid: (0.29, -0.38, 1.04) | confidence: 0.98
+- cluster ids: [27]
+- visible in: a/frame_00000.jpg, b/frame_00010.jpg
+
+### 4. REMOVED - black trash can
+
+> the black trash can was removed from the corner
+
+- centroid: (0.32, 0.12, 0.73) | confidence: 0.57
+- cluster ids: [28]
+- visible in: a/frame_00000.jpg, b/frame_00010.jpg
 
 
 ## Unverified candidates

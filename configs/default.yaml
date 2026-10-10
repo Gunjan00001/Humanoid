@@ -141,6 +141,8 @@ visualize:
                              # Chrome (matches the interactive viewer);
                              # falls back to matplotlib if Chrome is missing
   gif_frames: 24             # frames in the rotating change.gif
+  gif_width: 1100            # GIF/viewport size: taller than wide enough that
+  gif_height: 780            # the 3D panel is not a letterbox strip
   export_mesh: true          # colored TSDF mesh -> scene_mesh.ply (<= 10 MB)
   export_viewer: true        # self-contained HTML viewer -> viewer.html
 

@@ -340,3 +340,55 @@ are unchanged.
 - **Decision: crop stays the default**; the option remains for scenes whose
   content sits at the frame edges. Full table in
   `docs/results.md#visualization-rework-steps-05`.
+
+## 2026-10-11 — Presentation + correctness pass (`v0.9.0`)
+
+### Layout / 3D view / Chrome GIF (steps 1-3)
+
+- Two-row composites and GIF (before|after top, large 3D below, legend strip
+  outside the panel); 3D geometry cropped to 0.4 m around the changes; camera
+  at 40° elevation with the fitted table-plane normal as up
+  (`table_up_rotation`); orbit framed on the changed region.
+- **Bug found**: rotating the two bbox corners is not a rotated AABB — the
+  component-wise min/max swap (negative extents) made the viewer's Box3Helper
+  draw giant lines. All eight corners are rotated now.
+- The GIF is rendered from `viewer.html` by headless Chrome
+  (`src/render_gif.py`, SwiftShader; a matplotlib fallback remains). The
+  viewer accepts `?shot=1&az=..&elev=..` for deterministic frames and embeds
+  the full cloud sorted by focus distance so its "full scene" toggle is a
+  drawRange. A legend strip is drawn during assembly (the viewer's UI is
+  hidden in shot mode).
+
+### GitHub Pages (step 4)
+
+`docs/hosting.md` documents enabling Pages (Settings → Pages → main / root)
+and lists the live URLs; the README links them. No workflow needed — the
+viewers are committed static files. (`gh` CLI is not available on this
+cluster, so enablement is a one-time web-UI step for the repo owner.)
+
+### Stale screenshots (step 5)
+
+`visualize.py` clears `changes/` and, defensively, deletes any
+`change_*.png` whose id is not in the current change list.
+
+### Scene3 change types (step 6)
+
+- **Crop framing is now occlusion-aware** (in-view = not behind the observed
+  surface). The old test required the object to be present, so in the other
+  video a removed object's frames looked empty and crops landed on
+  neighbouring objects — the root cause of scene3's "chair replaced" and
+  "replaced by a black chair" misreadings.
+- **Geometric type correction** (calibrated on the scenes): comb 0.73 empty
+  vs apple/cup 0.01 occupied → `removed`→`replaced`; remote 0.00 occupied vs
+  chair 0.21 empty → `replaced`→`removed`. Corrected clusters get a fresh
+  sentence (`PROMPT_REPLACE`/`PROMPT_REMOVED`).
+- **Rule priority fixed**: the empty-space confirmation now outranks the
+  both-present suppression (the chair sat next to the *other* chair, which
+  made that heuristic fire), and reclassified replacements skip the
+  photometric pixel gate.
+- **Measured outcome**: scene3's chair is `removed` ✓ and the apple→cup is
+  `replaced` ✓ — but the scene now shows 4 entries (the apple region appears
+  twice; one entry is not in the ground truth) and the naming is unreliable
+  because video B's crop of the table is partly occluded by the remaining
+  chair. Demo stays 3/3, 0 extra. Documented honestly in
+  `docs/results.md#presentation--correctness-pass-v090`.

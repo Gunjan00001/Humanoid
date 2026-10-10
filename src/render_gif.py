@@ -13,6 +13,7 @@ caller falls back to the matplotlib renderer. Returns the GIF path, or None.
 
 from __future__ import annotations
 
+import json
 import logging
 import shutil
 import subprocess
@@ -33,6 +34,27 @@ def _chrome() -> str | None:
         if path:
             return path
     return None
+
+
+LEGEND = [("removed", (242, 51, 51)), ("added", (64, 230, 89)),
+          ("moved", (255, 153, 26)), ("replaced", (242, 63, 242)),
+          ("unverified", (89, 191, 217))]
+
+
+def _legend_strip(width: int, height: int, present: list[str]):
+    """Colour legend drawn OUTSIDE the 3D panel (its own strip)."""
+    from PIL import Image, ImageDraw
+
+    strip = Image.new("RGB", (width, height), (16, 20, 24))
+    draw = ImageDraw.Draw(strip)
+    x = 12
+    for name, color in LEGEND:
+        if name not in present:
+            continue
+        draw.rectangle([x, height // 2 - 5, x + 10, height // 2 + 5], fill=color)
+        draw.text((x + 15, height // 2 - 6), name, fill=(225, 225, 225))
+        x += 15 + 9 * (len(name) + 2)
+    return strip
 
 
 def _top_panel(before_path: Path | None, after_path: Path | None, width: int,
@@ -68,10 +90,23 @@ def render_gif(cfg: dict, out_dir: Path, before_file: str | None,
         return None
 
     vcfg = cfg["visualize"]
-    width, height = int(vcfg.get("gif_width", 1400)), int(vcfg.get("gif_height", 520))
-    panel_h = height // 2
+    width, height = int(vcfg.get("gif_width", 1100)), int(vcfg.get("gif_height", 780))
+    panel_h = int(height * 0.36)
+    legend_h = 22
     top = _top_panel(Path(before_file) if before_file else None,
                      Path(after_file) if after_file else None, width, panel_h)
+    # legend reflects the change types actually present (from report.json)
+    present = ["removed", "added", "moved", "replaced"]
+    try:
+        rep = json.loads((out_dir / "report.json").read_text())
+        types = {c["type"] for c in rep.get("changes", [])}
+        if rep.get("unverified_changes"):
+            types.add("unverified")
+        present = [t for t in present if t in types] + \
+                  (["unverified"] if "unverified" in types else [])
+    except Exception:  # noqa: BLE001
+        pass
+    legend = _legend_strip(width, legend_h, present)
 
     from PIL import Image
     gif_frames = []
@@ -87,10 +122,12 @@ def render_gif(cfg: dict, out_dir: Path, before_file: str | None,
                 log.warning("chrome_gif: screenshot %d failed (%s)", k,
                             (proc.stderr or "")[-200:])
                 return None
-            panel = Image.open(shot).convert("RGB").resize((width, height - panel_h))
+            panel = Image.open(shot).convert("RGB").resize(
+                (width, height - panel_h - legend_h))
             frame = Image.new("RGB", (width, height), (16, 20, 24))
             frame.paste(top, (0, 0))
-            frame.paste(panel, (0, panel_h))
+            frame.paste(legend, (0, panel_h))
+            frame.paste(panel, (0, panel_h + legend_h))
             gif_frames.append(frame)
 
     gif_path = out_dir / "change.gif"
@@ -99,3 +136,36 @@ def render_gif(cfg: dict, out_dir: Path, before_file: str | None,
     log.info("chrome_gif: wrote %s (%d frames from viewer.html)",
              gif_path, len(gif_frames))
     return gif_path
+
+
+if __name__ == "__main__":
+    import argparse
+    import sys as _sys
+    from pathlib import Path as _Path
+
+    _sys.path.insert(0, str(_Path(__file__).resolve().parent.parent))
+    from src.common import load_config, repo_path
+    from src.geometry import build_change_list
+
+    ap = argparse.ArgumentParser(description="re-render change.gif from viewer.html")
+    ap.add_argument("--config", default="configs/default.yaml")
+    ap.add_argument("--cache", required=True)
+    ap.add_argument("--out", required=True)
+    a = ap.parse_args()
+    cfg = load_config(a.config)
+    cfg["paths"]["cache_dir"] = a.cache
+    out = repo_path(a.out)
+    # evidence frames of the first confirmed change (from the crops cache)
+    crops_path = repo_path(a.cache) / "semantics" / "crops.json"
+    before_file = after_file = None
+    if crops_path.exists():
+        crops = json.loads(crops_path.read_text())
+        changes = build_change_list(cfg)
+        if changes:
+            ci = crops.get(str(changes[0]["cluster_ids"][0]), {})
+            for f in (ci.get("frame"),):
+                before_file = str(repo_path(a.cache) / "frames" / f) if f else None
+            f = ci.get("frame_other")
+            after_file = str(repo_path(a.cache) / "frames" / f) if f else None
+    logging.basicConfig(level=logging.INFO)
+    render_gif(cfg, out, before_file, after_file, frames=int(cfg["visualize"]["gif_frames"]))

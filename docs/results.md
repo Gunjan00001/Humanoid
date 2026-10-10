@@ -217,7 +217,7 @@ exact knobs so the choices are reproducible.
 | demo | comb removed, pen added, remote moved+flipped | `tabletop` | none (defaults) | **3/3** | 0 |
 | scene2 | coconut removed | `geometric` | `--blur_threshold 25` | **1/1** (coconut, 5896 pts seen empty) | 4 (coverage artifacts) |
 | scene2 | coconut removed | `tabletop` | `--objectness_margin 80` | 0/1 (missed) | 1 (apple, false positive) + 11 unverified |
-| scene3 | chair removed, apple→cup | `tabletop` | `--min_change_score 85` | **2/2** | 0 |
+| scene3 | chair removed, apple→cup | `tabletop` | `--min_change_score 85` | 2/2 objects, **types now correct** (chair `removed`, apple→cup `replaced` - v0.9.0) | 2 extra entries + unreliable naming (see the correctness pass below) |
 
 ### scene2 — why the mode matters
 
@@ -301,6 +301,84 @@ What changed (all structural, detection untouched by default):
 
 Logs: `logs/pbs_pad_exp.log`, `logs/pbs_demo_reg.log`; pad artifacts in
 `cache/pad_run` + `outputs/pad_run` (not committed).
+
+## Presentation + correctness pass (v0.9.0)
+
+### Layout and 3D view (steps 1-2)
+
+- Composites and GIF are now **two rows**: `before | after` on top (larger),
+  a large 3D panel below; the legend sits **outside** the 3D panel and labels
+  are drawn unclipped.
+- The 3D view **crops the display geometry to 0.4 m around the changed
+  region** and orbits it; the camera elevation is 40° with the **fitted
+  table-plane normal as the up axis** (`table_up_rotation`), so the scene
+  reads like the real tabletop instead of an arbitrary model frame.
+- Bug found and fixed on the way: rotating the two bbox corners does not give
+  a rotated AABB (negative extents made the viewer draw giant boxes); all
+  eight corners are rotated now.
+
+### GIF rendered from the interactive viewer (step 3)
+
+`src/render_gif.py` screenshots `viewer.html` with **headless Chrome**
+(SwiftShader; no GPU needed) at 24 orbit angles and assembles the two-row GIF,
+so the GIF is literally the interactive viewer's rendering. The viewer takes
+URL parameters (`?shot=1&az=..&elev=..`) for deterministic frames and embeds
+the full cloud sorted by distance to the focus, so its "full scene" toggle is
+a cheap draw range. A matplotlib fallback remains for machines without Chrome.
+
+### GitHub Pages (step 4)
+
+[`docs/hosting.md`](hosting.md) documents the one-time enablement
+(Settings → Pages → `main` / root) and lists the live URLs; the README links
+them. No workflow file is needed - the viewers are committed static files.
+
+### Stale screenshots (step 5)
+
+`visualize.py` clears `outputs/<scene>/changes/` on every run and, as a
+defence in depth, deletes any `change_*.png` whose id is not in the current
+change list (the ids the report references).
+
+### Scene3 change-type logic (step 6)
+
+Two structural changes to `describe.py`:
+
+1. **Occlusion-aware crop framing** - a point counts as in-view when it is
+   not *behind* the observed surface (previously: only when the object was
+   present, which made a removed object's frames look empty and let crops
+   land on neighbouring objects).
+2. **Geometric type correction** - the pipeline's own principle decides the
+   type: run the empty-space test on every `removed`/`replaced` cluster.
+   Calibration measured on the scenes: comb 0.73 empty vs apple/cup 0.01
+   (occupied) → `removed` → `replaced`; remote 0.00 (occupied) vs chair 0.21
+   (empty) → `replaced` → `removed`. Corrected clusters get a fresh sentence
+   from the VLM naming the actual event.
+
+Results after the pass (see the per-scene table above for the full picture):
+
+- **demo: 3/3, 0 extra - unchanged** (verified after the rework; the
+  reclassified timer/highlighter fragments were removed by the post-filters).
+- **scene3** (with its tuned floor 85): **4 entries vs 2 ground-truth
+  changes** - the chair is now correctly **`removed`** (was `replaced`; the
+  empty-space evidence says 22%) and the apple→cup region is a
+  **`replacement`** (occupied, 2%), but the apple region also appears as a
+  second `removed` entry ("red apple"), and a "green and yellow object" entry
+  appears for a region the ground truth does not list. The chair entry's label
+  reads "black trash can" (a naming error from a distant crop).
+
+### Remaining mismatches (honest)
+
+- **scene3's naming**: the apple/cup region's crop in video B is partly
+  occluded by the *remaining chair*, so the VLM's replacement sentence can
+  name the wrong object; the chair's own label came out as "black trash can".
+  The **types are correct** (geometric evidence), the **naming is not
+  reliable** on this scene - a recording-angle limitation, not a rule failure.
+- **scene3's extra entries**: the apple region appears twice (as the
+  `replaced` apple→cup entry and as a `removed` "red apple" entry); the
+  deduplication rules (bbox overlap, mutual cancellation) do not catch this
+  pair because their clusters sit ~0.2 m apart in the reconstruction. One more
+  per-scene tuning pass on the diff thresholds would be needed.
+- **scene2** keeps its documented behaviour (coconut found by the geometric
+  mode; the tabletop mode's apple-area false positive remains).
 
 ## Limitations and failure cases (as observed on this scene)
 
