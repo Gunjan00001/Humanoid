@@ -28,6 +28,10 @@ Planned layout from [`../AGENT_PLAN.md`](../AGENT_PLAN.md) §4; the root maps to
 | `scripts/download_models.sh` | run on login node | ✅ |
 | `scripts/job_*.pbs` | PBS job templates | ✅ |
 | `scripts/inspect_cache.py` | read-only cache inspector (first debugging tool) | ✅ |
+| `scripts/run_mapanything.py` | MapAnything GPU worker (runs in `spatialdiff-ma`) | ✅ |
+| `scripts/rebuild_colors.py` | rebuild `colors.npz` from the JPEGs (no GPU) | ✅ |
+| `src/ma_contract.py` | MapAnything → pipeline artifact contract (pure NumPy) | ✅ |
+| `third_party/` | MapAnything source checkout (hydra configs; gitignored) | ✅ |
 | `tests/` | synthetic smoke tests (not results) | ✅ |
 | `data/` | input videos + ground truth | ⬜ videos not recorded yet |
 | `cache/` | expensive intermediate artifacts (gitignored) | ✅ produced by stages |
