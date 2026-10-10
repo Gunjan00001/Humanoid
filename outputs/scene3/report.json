@@ -5,8 +5,8 @@
     "backend": "vggt",
     "model": "/home/jiit_992401210050/models/VGGT-1B",
     "diff_method": "tabletop",
-    "created": "2026-10-10T18:47:54Z",
-    "config_hash": "e6e15c30467a",
+    "created": "2026-10-10T20:35:54Z",
+    "config_hash": "2b487e1c26d7",
     "num_frames": 30,
     "semantics": "vlm-verified",
     "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
@@ -15,79 +15,37 @@
     {
       "id": 1,
       "type": "removed",
-      "label": "tabletop objects",
-      "description": "The red and green objects on the table were removed.",
+      "label": "table leg",
+      "description": "The metal table leg was removed from the surface.",
       "centroid": [
-        0.0169,
-        -0.183,
-        0.8631
+        -0.1632,
+        0.2636,
+        0.8471
       ],
       "bbox": [
-        -0.0399,
-        -0.2,
-        0.8398,
-        0.0799,
-        -0.165,
-        1.1445
+        -0.1749,
+        0.2451,
+        0.8188,
+        -0.1454,
+        0.2798,
+        0.8745
       ],
       "from": [
-        0.0169,
-        -0.183,
-        0.8631
+        -0.1632,
+        0.2636,
+        0.8471
       ],
       "to": null,
-      "confidence": 0.56,
+      "confidence": 0.35,
       "cluster_ids": [
-        5
+        3
       ],
       "evidence": {
         "frames_a": [
-          "a/frame_00020.jpg"
+          "a/frame_00000.jpg"
         ],
         "frames_b": [
-          "b/frame_00010.jpg"
-        ],
-        "confirmed_empty_in": []
-      }
-    },
-    {
-      "id": 2,
-      "type": "replaced",
-      "label": "chair",
-      "description": "The black bowl was replaced by a black chair with a wooden backrest.",
-      "centroid": [
-        0.3205,
-        0.1176,
-        0.7324
-      ],
-      "bbox": [
-        0.3152,
-        0.095,
-        0.7065,
-        0.3396,
-        0.1498,
-        0.812
-      ],
-      "from": [
-        0.3205,
-        0.1176,
-        0.7324
-      ],
-      "to": [
-        0.3242,
-        0.1118,
-        0.7093
-      ],
-      "confidence": 0.57,
-      "cluster_ids": [
-        28
-      ],
-      "evidence": {
-        "frames_a": [
-          "a/frame_00010.jpg"
-        ],
-        "frames_b": [
-          "b/frame_00010.jpg"
+          "b/frame_00000.jpg"
         ],
         "confirmed_empty_in": []
       }
@@ -95,7 +53,7 @@
   ],
   "unverified_changes": [
     {
-      "id": 3,
+      "id": 2,
       "type": "removed",
       "label": "cracked floor",
       "description": "a white tiled floor with visible cracks running across the surface.",
@@ -131,7 +89,7 @@
       }
     },
     {
-      "id": 4,
+      "id": 3,
       "type": "removed",
       "label": "wall corner",
       "description": "a close-up of an indoor wall corner with a textured surface and a dark vertical edge.",
@@ -167,7 +125,7 @@
       }
     },
     {
-      "id": 5,
+      "id": 4,
       "type": "removed",
       "label": "window frame",
       "description": "a close-up of a dark window frame with a white wall beside it, showing part of a glass pane.",
@@ -203,7 +161,7 @@
       }
     },
     {
-      "id": 6,
+      "id": 5,
       "type": "removed",
       "label": "metal chair leg",
       "description": "a curved metal chair leg with a shiny surface, partially visible next to a blue curtain and dark wall.",
@@ -239,7 +197,7 @@
       }
     },
     {
-      "id": 7,
+      "id": 6,
       "type": "removed",
       "label": "marble surface",
       "description": "a close-up of a white marble surface with gray veining patterns.",
@@ -275,7 +233,7 @@
       }
     },
     {
-      "id": 8,
+      "id": 7,
       "type": "removed",
       "label": "cracked surface",
       "description": "a close-up of a white surface with dark, irregular cracks resembling marble or dried paint.",
@@ -311,7 +269,7 @@
       }
     },
     {
-      "id": 9,
+      "id": 8,
       "type": "removed",
       "label": "cracked surface",
       "description": "a close-up of a white surface with dark, irregular cracks resembling marble or dried paint.",
@@ -347,10 +305,10 @@
       }
     },
     {
-      "id": 10,
+      "id": 9,
       "type": "removed",
-      "label": "metal chair leg",
-      "description": "a shiny chrome chair leg with a curved design, partially visible against a blue curtain background.",
+      "label": "metal chair back",
+      "description": "a curved, shiny metal chair back with a dark blue curtain in the background.",
       "centroid": [
         -0.4969,
         -0.3517,
@@ -376,14 +334,14 @@
       ],
       "evidence": {
         "frames_a": [
-          "a/frame_00010.jpg"
+          "a/frame_00020.jpg"
         ],
         "frames_b": [],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 11,
+      "id": 10,
       "type": "removed",
       "label": "metal chair back",
       "description": "a curved, shiny metal chair back with a decorative top, positioned near a blue curtain and wooden surface.",
@@ -419,10 +377,10 @@
       }
     },
     {
-      "id": 12,
+      "id": 11,
       "type": "removed",
-      "label": "wooden table corner",
-      "description": "a close-up of the corner of a wooden table with a dark blue curtain in the background.",
+      "label": "metal railing",
+      "description": "a curved, shiny metal railing next to a wooden surface and dark curtain.",
       "centroid": [
         -0.3476,
         -0.3954,
@@ -455,7 +413,7 @@
       }
     },
     {
-      "id": 13,
+      "id": 12,
       "type": "removed",
       "label": "metal table leg",
       "description": "A shiny metal table leg standing on a tiled floor with visible cracks.",
@@ -491,10 +449,10 @@
       }
     },
     {
-      "id": 14,
+      "id": 13,
       "type": "removed",
-      "label": "metal chair frame",
-      "description": "a shiny metal chair frame with curved legs, partially visible next to a wooden table and a dark curtain.",
+      "label": "metal chair",
+      "description": "a chrome-finished metal chair with curved backrest and armrests, partially visible next to a wooden table.",
       "centroid": [
         -0.2404,
         -0.1906,
@@ -520,17 +478,17 @@
       ],
       "evidence": {
         "frames_a": [
-          "a/frame_00000.jpg"
+          "a/frame_00020.jpg"
         ],
         "frames_b": [],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 15,
+      "id": 14,
       "type": "removed",
       "label": "wooden table corner",
-      "description": "a close-up of the corner of a wooden table with a dark blue curtain in the background.",
+      "description": "a close-up of the corner of a wooden table with a dark finish, partially visible next to a blue curtain.",
       "centroid": [
         -0.2385,
         -0.2825,
@@ -563,7 +521,7 @@
       }
     },
     {
-      "id": 16,
+      "id": 15,
       "type": "removed",
       "label": "apple on table",
       "description": "A red apple sits on a wooden table in a dimly lit indoor setting.",
@@ -599,10 +557,10 @@
       }
     },
     {
-      "id": 17,
+      "id": 16,
       "type": "removed",
       "label": "bar stool",
-      "description": "A black, round, leather-like seat on a metal frame with chrome legs, placed on a tiled floor.",
+      "description": "A black, round, leather-upholstered bar stool with a chrome metal frame and legs, placed on a tiled floor.",
       "centroid": [
         -0.0958,
         0.01,
@@ -628,17 +586,17 @@
       ],
       "evidence": {
         "frames_a": [
-          "a/frame_00080.jpg"
+          "a/frame_00070.jpg"
         ],
         "frames_b": [],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 18,
+      "id": 17,
       "type": "removed",
-      "label": "metal chair leg",
-      "description": "a close-up of a shiny metal chair leg with a black seat above it, showing part of the frame and floor beneath.",
+      "label": "bar stool",
+      "description": "a metal bar stool with a black seat and chrome legs, partially visible in a cropped indoor setting.",
       "centroid": [
         -0.1353,
         0.1014,
@@ -664,17 +622,17 @@
       ],
       "evidence": {
         "frames_a": [
-          "a/frame_00040.jpg"
+          "a/frame_00020.jpg"
         ],
         "frames_b": [],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 19,
+      "id": 18,
       "type": "removed",
       "label": "metal chair leg",
-      "description": "a shiny metallic leg of a chair standing on a tiled floor.",
+      "description": "A shiny, cylindrical metal leg of a chair standing on a cracked white surface.",
       "centroid": [
         -0.0247,
         0.1691,
@@ -700,14 +658,14 @@
       ],
       "evidence": {
         "frames_a": [
-          "a/frame_00030.jpg"
+          "a/frame_00000.jpg"
         ],
         "frames_b": [],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 20,
+      "id": 19,
       "type": "removed",
       "label": "metal chair leg",
       "description": "A close-up of a metal chair leg on a white floor with visible cracks and a black cable nearby.",
@@ -743,10 +701,10 @@
       }
     },
     {
-      "id": 21,
+      "id": 20,
       "type": "removed",
-      "label": "metal shelving unit",
-      "description": "a close-up of a shiny, curved metal shelving unit with multiple tiers.",
+      "label": "stacked metal bowls",
+      "description": "a close-up of shiny, reflective metal bowls stacked on top of each other.",
       "centroid": [
         0.278,
         -0.0093,
@@ -772,17 +730,17 @@
       ],
       "evidence": {
         "frames_a": [
-          "a/frame_00040.jpg"
+          "a/frame_00080.jpg"
         ],
         "frames_b": [],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 22,
+      "id": 21,
       "type": "removed",
-      "label": "metal chair frame",
-      "description": "close-up of curved metal bars forming part of a chair's structure.",
+      "label": "metal bowl",
+      "description": "a shiny, curved edge of a metal bowl reflecting light.",
       "centroid": [
         0.3288,
         -0.0669,
@@ -808,17 +766,17 @@
       ],
       "evidence": {
         "frames_a": [
-          "a/frame_00030.jpg"
+          "a/frame_00090.jpg"
         ],
         "frames_b": [],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 23,
+      "id": 22,
       "type": "removed",
-      "label": "metal chair back",
-      "description": "A close-up of a shiny, chrome-finished chair back with horizontal slats and a curved top rail.",
+      "label": "metal chair frame",
+      "description": "a close-up of a shiny chrome chair frame with curved armrests and a hinge mechanism.",
       "centroid": [
         0.3823,
         -0.0772,
@@ -844,14 +802,14 @@
       ],
       "evidence": {
         "frames_a": [
-          "a/frame_00040.jpg"
+          "a/frame_00080.jpg"
         ],
         "frames_b": [],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 24,
+      "id": 23,
       "type": "removed",
       "label": "doorframe",
       "description": "a vertical edge of a door or wall with a visible seam and adjacent flooring.",
@@ -887,7 +845,7 @@
       }
     },
     {
-      "id": 25,
+      "id": 24,
       "type": "added",
       "label": "wooden table leg",
       "description": "A close-up of a wooden table leg with a visible grain pattern and a metal tabletop above it.",
@@ -923,7 +881,7 @@
       }
     },
     {
-      "id": 26,
+      "id": 25,
       "type": "added",
       "label": "dark vertical object",
       "description": "a blurry, dark, vertical object with a light-colored edge, possibly a door frame or furniture leg.",
@@ -959,7 +917,7 @@
       }
     },
     {
-      "id": 27,
+      "id": 26,
       "type": "added",
       "label": "cracked wall",
       "description": "a white wall with multiple dark cracks spreading across its surface.",
@@ -995,7 +953,7 @@
       }
     },
     {
-      "id": 28,
+      "id": 27,
       "type": "added",
       "label": "metal chair leg",
       "description": "a close-up of a metal chair leg with a circular base, casting a shadow on a light-colored floor.",
@@ -1031,7 +989,7 @@
       }
     },
     {
-      "id": 29,
+      "id": 28,
       "type": "added",
       "label": "door frame",
       "description": "a close-up of a wooden door frame with a light-colored wall and a metal threshold below.",

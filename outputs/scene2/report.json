@@ -5,8 +5,8 @@
     "backend": "vggt",
     "model": "/home/jiit_992401210050/models/VGGT-1B",
     "diff_method": "tabletop",
-    "created": "2026-10-10T18:53:55Z",
-    "config_hash": "e6e15c30467a",
+    "created": "2026-10-10T20:26:03Z",
+    "config_hash": "af2c7bd058ca",
     "num_frames": 24,
     "semantics": "vlm-verified",
     "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
@@ -18,22 +18,22 @@
       "label": "apple",
       "description": "The apple was removed from the table.",
       "centroid": [
-        0.0662,
-        -0.154,
-        1.053
+        0.0642,
+        -0.2472,
+        1.0519
       ],
       "bbox": [
-        -0.125,
-        -0.3149,
-        0.8882,
-        0.2499,
-        0.0249,
-        1.1738
+        -0.1229,
+        -0.3689,
+        0.9487,
+        0.2485,
+        0.005,
+        1.166
       ],
       "from": [
-        0.0662,
-        -0.154,
-        1.053
+        0.0642,
+        -0.2472,
+        1.0519
       ],
       "to": null,
       "confidence": 0.86,
@@ -42,10 +42,10 @@
       ],
       "evidence": {
         "frames_a": [
-          "a/frame_00048.jpg"
+          "a/frame_00000.jpg"
         ],
         "frames_b": [
-          "b/frame_00088.jpg"
+          "b/frame_00032.jpg"
         ],
         "confirmed_empty_in": []
       }
@@ -55,8 +55,8 @@
     {
       "id": 2,
       "type": "added",
-      "label": "small metallic object",
-      "description": "a shiny, circular object with a reflective surface, possibly a coin or small metal piece, lying on a dark, textured surface.",
+      "label": "concrete floor",
+      "description": "a gray concrete floor meeting a white wall baseboard.",
       "centroid": [
         -0.4817,
         -0.0348,
@@ -91,8 +91,8 @@
     {
       "id": 3,
       "type": "added",
-      "label": "finger",
-      "description": "a close-up of a human finger tip on a gray surface.",
+      "label": "crumpled paper",
+      "description": "a small, crumpled piece of white paper lying on a dark floor near a white wall or baseboard.",
       "centroid": [
         -0.4445,
         -0.3845,
@@ -127,8 +127,8 @@
     {
       "id": 4,
       "type": "added",
-      "label": "wooden frame",
-      "description": "a close-up of a brown wooden frame edge next to a light-colored surface.",
+      "label": "small metallic object",
+      "description": "a shiny, circular object with a reflective surface, possibly a coin or small metal piece, lying on a dark, textured surface.",
       "centroid": [
         -0.3463,
         -0.191,
@@ -163,8 +163,8 @@
     {
       "id": 5,
       "type": "added",
-      "label": "wooden frame",
-      "description": "a diagonal wooden frame or trim against a light-colored wall.",
+      "label": "white wall",
+      "description": "a plain, light-colored wall surface with subtle texture and minor imperfections.",
       "centroid": [
         0.3593,
         0.2683,
@@ -191,7 +191,7 @@
       "evidence": {
         "frames_a": [],
         "frames_b": [
-          "b/frame_00168.jpg"
+          "b/frame_00016.jpg"
         ],
         "confirmed_empty_in": []
       }
@@ -199,8 +199,8 @@
     {
       "id": 6,
       "type": "added",
-      "label": "wooden frame",
-      "description": "a diagonal wooden frame or trim against a light-colored wall or surface.",
+      "label": "wooden beam",
+      "description": "a diagonal wooden beam against a light-colored wall.",
       "centroid": [
         0.3752,
         -0.5472,
@@ -227,7 +227,7 @@
       "evidence": {
         "frames_a": [],
         "frames_b": [
-          "b/frame_00168.jpg"
+          "b/frame_00160.jpg"
         ],
         "confirmed_empty_in": []
       }
@@ -235,8 +235,8 @@
     {
       "id": 7,
       "type": "added",
-      "label": "metal ball",
-      "description": "a small, shiny metallic ball resting on a dark surface near a wooden edge.",
+      "label": "wooden frame",
+      "description": "a diagonal wooden frame or trim against a light-colored wall.",
       "centroid": [
         0.3764,
         -0.6057,
@@ -271,8 +271,8 @@
     {
       "id": 8,
       "type": "added",
-      "label": "wooden beam",
-      "description": "a diagonal wooden beam against a light-colored wall, possibly part of a ceiling or frame.",
+      "label": "floor corner",
+      "description": "a close-up of a floor corner with a dark baseboard and light-colored flooring.",
       "centroid": [
         0.3853,
         -0.4963,
@@ -299,7 +299,7 @@
       "evidence": {
         "frames_a": [],
         "frames_b": [
-          "b/frame_00176.jpg"
+          "b/frame_00168.jpg"
         ],
         "confirmed_empty_in": []
       }
@@ -307,8 +307,8 @@
     {
       "id": 9,
       "type": "added",
-      "label": "wooden frame",
-      "description": "a close-up of a wooden frame corner, likely part of a door or window, with visible grain and a light-colored surface.",
+      "label": "metal ball",
+      "description": "a small, shiny metallic ball resting on a dark surface near a wooden edge.",
       "centroid": [
         0.4136,
         -0.271,
@@ -379,8 +379,8 @@
     {
       "id": 11,
       "type": "added",
-      "label": "wooden frame",
-      "description": "a close-up of a wooden frame corner, likely part of a door or window, with visible grain and a light-colored surface.",
+      "label": "wooden beam",
+      "description": "a vertical wooden beam with visible grain and a rough texture, partially framing the edge of the image.",
       "centroid": [
         0.4437,
         -0.0457,
@@ -407,45 +407,7 @@
       "evidence": {
         "frames_a": [],
         "frames_b": [
-          "b/frame_00024.jpg"
-        ],
-        "confirmed_empty_in": []
-      }
-    },
-    {
-      "id": 12,
-      "type": "added",
-      "label": "crumpled paper",
-      "description": "a small, crumpled piece of white paper lying on a dark floor near a white wall or baseboard.",
-      "centroid": [
-        0.3069,
-        0.1321,
-        0.9166
-      ],
-      "bbox": [
-        0.27,
-        0.1003,
-        0.8618,
-        0.3398,
-        0.1599,
-        1.0693
-      ],
-      "from": null,
-      "to": [
-        0.3069,
-        0.1321,
-        0.9166
-      ],
-      "confidence": 0.17,
-      "cluster_ids": [
-        4
-      ],
-      "evidence": {
-        "frames_a": [
-          "a/frame_00048.jpg"
-        ],
-        "frames_b": [
-          "b/frame_00168.jpg"
+          "b/frame_00008.jpg"
         ],
         "confirmed_empty_in": []
       }
