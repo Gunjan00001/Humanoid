@@ -180,10 +180,16 @@ def main() -> int:
             )
         else:
             # external wrappers follow the same forward() interface and return
-            # the unified output format directly (see their README)
+            # the unified output format directly (see their README); unlike
+            # MapAnything.infer() they do not move the views to the device, so
+            # every tensor in every view is placed here
             import torch as _torch
             dtype = {"bf16": _torch.bfloat16, "fp16": _torch.float16,
                      "fp32": _torch.float32}.get(amp_dtype, _torch.bfloat16)
+            for view in views:
+                for k, val in list(view.items()):
+                    if isinstance(val, _torch.Tensor):
+                        view[k] = val.to(device)
             model.eval()
             with _torch.no_grad(), _torch.autocast("cuda", dtype=dtype):
                 predictions = model(views)
