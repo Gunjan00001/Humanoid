@@ -260,6 +260,48 @@ Logs: `logs/pbs_scene2b.log`, `logs/pbs_scene2dbg.log`,
 `outputs/scene{2,2_geo,3}/`; failure/fix history in
 [`devlog.md`](devlog.md#2026-10-10--robustness-runs-on-the-extra-scenes-datav02).
 
+## Visualization rework (Steps 0-5)
+
+The original `change.gif`s rendered the scene as dark slivers. **Step 0
+diagnosis** (`tests/diagnose_projection.py`, numbers before any change):
+
+- The **reconstruction is faithful**: reprojecting the fused cloud into the
+  first camera reproduces the table and every object with true colours, with
+  100% of the frame covered by points. **The problem was the rendering** —
+  `static_dim 0.35` (dark cloud), 1-pixel markers, and whole-scene framing
+  (the table became a sliver inside a room-sized 3D box).
+- Model-input coverage: the demo and scene2 are **portrait** (480×85x) and
+  VGGT's crop mode delivers **56.1%** of each frame (top/bottom discarded);
+  **scene3 is landscape** (860×480) and loses nothing.
+
+What changed (all structural, detection untouched by default):
+
+| Step | Change | Result |
+|---|---|---|
+| 1 | `reconstruction.input_mode: crop \| pad` (default `crop`) | pad-mode padding masked from confidence; see the comparison below |
+| 2 | `visualize.conf_percentile` 5 / `voxel_size` 8 mm / `static_dim` 0.8 | display cloud separate from the detection cutoff, true colours |
+| 3 | `src/mesh.py` — colored TSDF mesh | `scene_mesh.ply`, 85–115k triangles, 3.5–4.4 MB (≤ 10 MB) per scene |
+| 4 | `src/visualize.py` rewritten | dark background, distance-sized splats, framing on the changed region, bbox + label + legend per change, unverified dim cyan, **before \| after \| 3D** composites and GIF layout |
+| 5 | `src/viewer.py` — self-contained HTML | `viewer.html` 1.7 MB (three.js r128 pinned from cdnjs, inline orbit controls, quantized embedded cloud, A/B/change toggles, labels); validated by screenshotting it in headless Chrome |
+
+### Step 6 — regression and the `input_mode=pad` experiment
+
+- **Regression (crop, the default): unchanged** — demo 3/3 changes, 0 false
+  positives after the rework (`logs/pbs_demo_reg.log`).
+- **`input_mode=pad` on the portrait demo: worse, with evidence** — 5 entries
+  vs the crop baseline's 3: the pen is **missed**, and three extra entries
+  appear ("brown object corner" at the frame edge, "marker replaced" +
+  "white object added" at the highlighter's area, vague labels). Reason: pad
+  mode renders the portrait content at 294 px wide inside the 518 px canvas
+  (~1.76× coarser pixels), and the newly-included frame borders carry
+  unreliable geometry.
+- **Decision: `crop` remains the default.** The option stays available for
+  scenes where the important content sits at the frame edges
+  (`reconstruction.input_mode: pad`).
+
+Logs: `logs/pbs_pad_exp.log`, `logs/pbs_demo_reg.log`; pad artifacts in
+`cache/pad_run` + `outputs/pad_run` (not committed).
+
 ## Limitations and failure cases (as observed on this scene)
 
 - Static objects whose appearance differs between recordings (blur, exposure,

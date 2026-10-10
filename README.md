@@ -86,6 +86,13 @@ short per-scene tuning pass and scene2 still shows the geometric mode's
 coverage artifacts. That is the expected behaviour of a scene-tuned
 photometric pipeline and is documented rather than hidden.
 
+**Faithful 3D rendering (v0.8.0)** — each scene now ships a dark-background
+render with per-change bounding boxes + labels and a before | after | 3D
+layout, a colored **TSDF mesh** (`scene_mesh.ply`, ≤ 10 MB) and a
+**self-contained interactive viewer** (`viewer.html` — open it in any browser:
+orbit, zoom, toggle video A / B / changes). Diagnosis and the
+`input_mode=pad` experiment: [visualization rework](docs/results.md#visualization-rework-steps-05).
+
 ## Pipeline
 
 ```
