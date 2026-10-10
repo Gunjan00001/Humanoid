@@ -532,13 +532,17 @@ def main() -> int:
                                  for k in ("label", "first", "second")}}
         log.debug("  reject %s (%s): %s", cid, c["type"], reason)
 
-    # weak fragments are noise, not changes (the pen scores 90, the comb 110)
+    # weak fragments are noise, not changes (the pen scores 90, the comb 110).
+    # NOTE: only photometric candidates carry a change score; geometric ones
+    # are evidence-checked by the visibility test instead, so the floor must
+    # not reject them just because the field is absent.
     min_score = float(cfg["semantics"].get("min_change_score", 80))
     kept = []
     for c in confirmed:
-        if (c["type"] in ("removed", "added")
-                and float(c.get("mean_change_score") or 0) < min_score):
-            _reject(c, f"weak evidence (change score {c.get('mean_change_score')} < {min_score})")
+        score = c.get("mean_change_score")
+        if (c["type"] in ("removed", "added") and score is not None
+                and float(score) < min_score):
+            _reject(c, f"weak evidence (change score {score} < {min_score})")
         else:
             kept.append(c)
     confirmed = kept
