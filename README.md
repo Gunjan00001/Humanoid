@@ -57,14 +57,25 @@ hides all GPUs). Per-job limits: 16 CPUs, 64 GB RAM, 24 h, 5 jobs.
 
 ## How to run
 
-_Planned interface — not implemented yet:_
-
 ```bash
 python run.py --video_a data/a.mp4 --video_b data/b.mp4 --out outputs/
 ```
 
-Per-stage commands and PBS templates will be documented in
-[`docs/setup.md`](docs/setup.md) and `scripts/`.
+The one-command pipeline is implemented (`run.py` → `src/*`, orchestrator +
+7 stages). Every stage also runs alone and reads/writes only the cache:
+
+```bash
+python src/extract_frames.py --config configs/default.yaml
+python src/reconstruct.py    --config configs/default.yaml   # GPU
+python src/diff.py           --config configs/default.yaml
+python src/describe.py       --config configs/default.yaml   # GPU
+python src/visualize.py      --config configs/default.yaml
+python src/report.py         --config configs/default.yaml
+```
+
+Status: validated on synthetic smoke data; the run on the demo recordings is
+pending (see [`docs/roadmap.md`](docs/roadmap.md)). Cluster templates live in
+`scripts/`.
 
 ## Design decisions
 

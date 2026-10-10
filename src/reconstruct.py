@@ -125,11 +125,12 @@ def run_vggt(frames: list[dict], cfg: dict) -> dict:
         transforms.append(tr)
 
     t0 = time.perf_counter()
+    images_batched = images[None]                     # [1,S,3,H,W] (as in demo_colmap)
     with torch.no_grad(), torch.autocast("cuda", dtype=dtype):
-        aggregated_tokens_list, ps_idx = model.aggregator(images[None])
+        aggregated_tokens_list, ps_idx = model.aggregator(images_batched)
         pose_enc = model.camera_head(aggregated_tokens_list)[-1]
-        extrinsic, intrinsic = pose_encoding_to_extri_intri(pose_enc, images.shape[-2:])
-        depth, depth_conf = model.depth_head(aggregated_tokens_list, images, ps_idx)
+        extrinsic, intrinsic = pose_encoding_to_extri_intri(pose_enc, images_batched.shape[-2:])
+        depth, depth_conf = model.depth_head(aggregated_tokens_list, images_batched, ps_idx)
     torch.cuda.synchronize()
     infer_s = time.perf_counter() - t0
     log.info("inference done in %.1fs (%.2fs/frame)", infer_s, infer_s / s)
