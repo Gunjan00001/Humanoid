@@ -200,9 +200,12 @@ for(const c of DATA.changes){
   }
 }
 const labelDivs = DATA.changes.map(c=>{
+  // verified changes get a label; unverified ones keep only their box (they
+  // are listed in the report - their labels would clutter the view)
+  if(!c.verified) return null;
   const d = document.createElement('div'); d.className='lab';
   d.style.background = '#' + (COL[c.type]||'888888') + 'aa';
-  d.textContent = `${c.id}: ${c.type}${c.label? ' - '+c.label : ''}` + (c.verified?'':' (unverified)');
+  d.textContent = `${c.id}: ${c.type}${c.label? ' - '+c.label : ''}`;
   document.getElementById('labels').appendChild(d); return d;
 });
 
@@ -230,7 +233,7 @@ document.getElementById('tb').onchange = e => pb.visible = e.target.checked;
 document.getElementById('tc').onchange = e => changeGroup.visible = e.target.checked;
 document.getElementById('tf').onchange = e => applyCrop(!e.target.checked);
 document.getElementById('tl').onchange = e =>
-  labelDivs.forEach(d => d.style.display = e.target.checked ? '' : 'none');
+  labelDivs.forEach(d => { if(d) d.style.display = e.target.checked ? '' : 'none'; });
 
 function frame(){
   requestAnimationFrame(frame);
@@ -241,10 +244,11 @@ function frame(){
   camera.lookAt(target);
   renderer.render(scene, camera);
   DATA.changes.forEach((c,i)=>{
+    const d = labelDivs[i];
+    if(!d) return;
     const p = new THREE.Vector3((c.bbox_min[0]+c.bbox_max[0])/2,
                                 (c.bbox_min[1]+c.bbox_max[1])/2, c.bbox_max[2]);
     p.project(camera);
-    const d = labelDivs[i];
     d.style.left = (p.x*0.5+0.5)*innerWidth + 'px';
     d.style.top  = (-p.y*0.5+0.5)*innerHeight + 'px';
     d.style.display = (p.z < 1) ? '' : 'none';

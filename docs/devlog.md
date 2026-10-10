@@ -392,3 +392,68 @@ cluster, so enablement is a one-time web-UI step for the repo owner.)
   because video B's crop of the table is partly occluded by the remaining
   chair. Demo stays 3/3, 0 extra. Documented honestly in
   `docs/results.md#presentation--correctness-pass-v090`.
+
+
+## 2026-10-11 — scene4 (`data-v0.3`) + move/arrival/composite semantics (`v0.10.0`)
+
+### The new data
+
+`data-v0.3` added scene4: 46 s portrait videos (blur p50 137–163 — the default
+blur threshold works), ground truth = apple moved, scissor removed, bottle
+added. Videos are 9 MB each → still LFS (the <5 MB exception covers only the
+six small demo clips).
+
+### What the first run got (and why)
+
+The first full run reported 3 changes but the wrong shape: the apple's old
+spot as "removed apple", a scissor fragment as "replaced scissors→apple", the
+apple's arrival dropped, no bottle. Root causes, all measured:
+
+- the **move matcher ran after the structural filters**, and the arrival
+  cluster had already been dropped as a duplicate of the replaced fragment;
+- the **mutual cancellation** compared stored labels — the arrival cluster's
+  label read "scissors" (named from its A-side view) and cancelled the genuine
+  apple arrival;
+- the apple pair scored **0.704** — just under the 0.75 threshold (different
+  objects score 0.13);
+- the moved apple landing on the removed scissor's pixels made the tabletop
+  mask call the mix "replaced" (a composite of two real changes).
+
+### Fixes (v0.10.0)
+
+Move matching now runs right after the VLM confirmation (clusters skip the
+later stages but stay in `confirmed.json` so the report can render the move);
+the cancellation compares the removed cluster's `first` with the added
+cluster's `second`; the threshold is 0.65 with the VLM move question as the
+arbiter and cluster size as the tie-breaker (the clean 102-cell destination
+beat a 52-cell fragment at 0.732); arrivals at a move's origin are reported as
+their own `added` change; replaced claims whose two sides are independently
+confirmed changes are dropped as composites. `build_change_list` renders
+moves as before → destination; the renderer/viewer draw a dashed line to the
+destination and keep point-less changes (arrivals) as labelled boxes.
+
+### Regression caught a latent demo break
+
+The demo regression (re-run + table diff against the committed outputs)
+initially produced **4 changes**: a highlighter fragment survived because the
+empty-space skip of the both-present suppression (added for scene3's chair)
+was too broad. The skip now requires that the VLM did not name the same object
+in both views — "highlighter" vs "highlighter" means present in both and is
+suppressed again, while the chair's differing descriptions still skip. After
+the fix: demo **3/3, 0 extra — identical to committed**; scene2 and scene3
+identical.
+
+### Verified result
+
+**scene4: exactly 3/3** (moved apple with from→to, removed scissors, added
+plastic bottle), default mode, 0 extras; 7 unverified edge candidates listed
+for transparency. GIF/viewer/mesh regenerated (Chrome on the login node —
+Chrome is not installed on the GPU node, so visualize runs there fall back to
+matplotlib). Remaining honest notes: the scissor sentence is inherited from
+the two-view verification ("removed and replaced with an apple") and the move
+sentence is view-relative wording.
+
+Cluster-job note: the `gpu` queue has a **per-user 16-CPU limit**; with the
+user's three ASR jobs + the gpu-session holding all 16, GPU jobs queue. The
+idle gpu-session was stopped to free a slot before each run and restarted by
+the waiters afterwards (five times over this session, documented here).

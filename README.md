@@ -57,9 +57,9 @@ same frames ([full numbers](docs/results.md#backend-comparison-vggt-vs-mapanythi
 - Backend choice is `reconstruction.backend: vggt | mapanything` (DA3 via
   `--model-key da3_apache`); the default stays VGGT + `tabletop`.
 
-### Results across all scenes (v0.7.0)
+### Results across all scenes (v0.10.0)
 
-All four runs (same pipeline, per-scene working points; full details in
+All five runs (same pipeline, per-scene working points; full details in
 [`docs/results.md`](docs/results.md#results-across-all-scenes)):
 
 | Scene | Ground truth | Detected | False positives | Mode / tuning |
@@ -67,6 +67,7 @@ All four runs (same pipeline, per-scene working points; full details in
 | **demo** (`data/`) | comb removed, pen added, remote moved+flipped | **3/3** | **0** | `tabletop` (default) |
 | **scene2** (`data/scene2/`) | coconut removed | **1/1** (coconut ✓) | 4 extra entries | `geometric` (big object; lighting-immune) + `--blur_threshold 25` |
 | **scene3** (`data/scene3/`) | chair removed, apple→cup | **2/2** (types corrected: chair `removed`, apple→cup `replaced`) | 2 extra entries | `tabletop` + `--min_change_score 85` |
+| **scene4** (`data/scene4/`) | apple moved, scissor removed, bottle added | **3/3** (`moved` apple ✓, `removed` scissors ✓, `added` bottle ✓) | **0 extra entries** | `tabletop` (default) |
 
 **scene2** — coconut removed (`geometric` mode; the visibility check confirmed
 it with 5896 points seen empty). The `tabletop` mode misses it because video
@@ -75,15 +76,29 @@ entries (its known weakness with limited A coverage).
 
 ![scene2 result](outputs/scene2_geo/change.gif)
 
-**scene3** — both changes found with zero false positives: the chair (typed
-`replaced`, see the note in `docs/results.md`) and the apple→cup replacement.
+**scene3** — both changes found: the chair is now correctly typed `removed`
+(empty-space evidence 22%) and the apple→cup region `replaced` (occupied 2%);
+2 extra entries and an unreliable replacement sentence remain (video B's crop
+of the table is partly occluded by the remaining chair) — see
+[the correctness pass](docs/results.md#presentation--correctness-pass-v090).
 
 ![scene3 result](outputs/scene3/change.gif)
 
-Honest summary: the demo scene reaches 3/3 with 0 false positives; the extra
-scenes run end-to-end and find their ground-truth changes, but each needed a
-short per-scene tuning pass and scene2 still shows the geometric mode's
-coverage artifacts. That is the expected behaviour of a scene-tuned
+**scene4** — all three ground-truth changes, no tuning and no extras: the
+apple is reported as **`moved`** (from → to shown in the report and drawn as a
+dashed line in the 3D view), the scissors as **`removed`**, and the bottle as
+**`added`** at the apple's old spot. This scene drove the v0.10.0 semantics
+work: move matching now runs before the structural filters, objects arriving
+at a moved object's origin are reported, and "replaced" claims whose two sides
+are independently confirmed changes are dropped as composites — see
+[scene4 in results](docs/results.md#scene4).
+
+![scene4 result](outputs/scene4/change.gif)
+
+Honest summary: the demo scene reaches 3/3 with 0 false positives and scene4
+reaches 3/3 with 0 extras using the default mode; scene2 and scene3 find their
+ground-truth changes but each needed a short per-scene tuning pass, and both
+carry documented extras. That is the expected behaviour of a scene-tuned
 photometric pipeline and is documented rather than hidden.
 
 **Faithful 3D rendering (v0.8.0)** — each scene now ships a dark-background
@@ -99,7 +114,8 @@ Diagnosis and the `input_mode=pad` experiment:
 [demo](https://gunjan00001.github.io/Humanoid/outputs/viewer.html) ·
 [scene2](https://gunjan00001.github.io/Humanoid/outputs/scene2/viewer.html) ·
 [scene2 geometric](https://gunjan00001.github.io/Humanoid/outputs/scene2_geo/viewer.html) ·
-[scene3](https://gunjan00001.github.io/Humanoid/outputs/scene3/viewer.html)
+[scene3](https://gunjan00001.github.io/Humanoid/outputs/scene3/viewer.html) ·
+[scene4](https://gunjan00001.github.io/Humanoid/outputs/scene4/viewer.html)
 
 ## Pipeline
 
