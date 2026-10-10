@@ -52,6 +52,21 @@ def main() -> int:
         from src.common import read_json
         recon_meta = read_json(meta_path)
 
+    # provenance: prefer the video paths actually used for extraction (the
+    # frames index records them) over the config defaults - this keeps reports
+    # correct when the pipeline runs on a scene via --video_a/--video_b
+    frames_index = repo_path(cfg["paths"]["cache_dir"]) / "frames" / "index.json"
+    video_a = str(repo_path(cfg["paths"]["video_a"]))
+    video_b = str(repo_path(cfg["paths"]["video_b"]))
+    if frames_index.exists():
+        from src.common import read_json
+        try:
+            idx = read_json(frames_index)
+            video_a = idx["videos"]["a"].get("path", video_a)
+            video_b = idx["videos"]["b"].get("path", video_b)
+        except Exception:  # noqa: BLE001 - provenance must never break a report
+            pass
+
     has_semantics = (repo_path(cfg["paths"]["cache_dir"]) / "semantics" / "vlm.json").exists()
 
     def entry(ch: dict) -> dict:
@@ -75,8 +90,8 @@ def main() -> int:
 
     report = {
         "meta": {
-            "video_a": str(repo_path(cfg["paths"]["video_a"])),
-            "video_b": str(repo_path(cfg["paths"]["video_b"])),
+            "video_a": video_a,
+            "video_b": video_b,
             "backend": recon_meta.get("backend", cfg["reconstruction"]["backend"]),
             "model": recon_meta.get("model"),
             "diff_method": cfg["diff"].get("method", "geometric"),
