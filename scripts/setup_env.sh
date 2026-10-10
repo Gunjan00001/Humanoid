@@ -18,6 +18,7 @@ CONDA_BASE="${CONDA_BASE:-$HOME/miniconda3}"
 ENV_NAME="${ENV_NAME:-spatialdiff}"
 ENV_PREFIX="$CONDA_BASE/envs/$ENV_NAME"
 ENV_PY="$ENV_PREFIX/bin/python"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 if [ ! -x "$ENV_PY" ]; then
     echo "==> creating conda env '$ENV_NAME' (python 3.10)"
@@ -87,6 +88,15 @@ echo "==> installing torch (cu126) + MapAnything in $MA_ENV_NAME"
 "$MA_ENV_PY" -m pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
 "$MA_ENV_PY" -m pip install "git+https://github.com/facebookresearch/map-anything.git"
 "$MA_ENV_PY" -m pip install pyyaml        # used by src/common.py in the worker
+
+# MapAnything's hydra configs are not part of the pip package. A shallow source
+# checkout under third_party/ (gitignored) provides them for the external-model
+# interface (da3, ...) - the worker prepends it to sys.path.
+if [ ! -d "$REPO_ROOT/third_party/map-anything/configs" ]; then
+    echo "==> cloning MapAnything source (configs for external models) into third_party/"
+    git clone --depth 1 https://github.com/facebookresearch/map-anything.git \
+        "$REPO_ROOT/third_party/map-anything"
+fi
 
 echo "==> env '$ENV_NAME' ready."
 echo "    act with:  conda activate $ENV_NAME  (then: export PATH=\"\$CONDA_PREFIX/bin:\$PATH\")"

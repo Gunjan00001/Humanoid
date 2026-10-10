@@ -604,7 +604,7 @@ def main() -> int:
         for other in confirmed[i + 1:]:
             if other["id"] in merged_flags or other["type"] != c["type"]:
                 continue
-            if c["type"] not in ("removed", "added"):
+            if c["type"] not in ("removed", "added", "replaced"):
                 continue
             li = vlm_cache.get(str(c["id"]), {}).get("label")
             lo = vlm_cache.get(str(other["id"]), {}).get("label")
@@ -617,7 +617,8 @@ def main() -> int:
             pts = np.concatenate([np.asarray(g["sample_points"], dtype=np.float32)
                                   for g in group if g.get("sample_points")])
             c = dict(c)
-            c["n_cells"] = int(sum(g["n_cells"] for g in group))
+            # photometric clusters have n_cells; geometric ones n_points only
+            c["n_cells"] = int(sum(g.get("n_cells", g.get("n_points", 0)) for g in group))
             c["merged_ids"] = [g["id"] for g in group]
             c["sample_points"] = [[round(float(v), 4) for v in p] for p in pts[:200]]
             c["centroid"] = [round(float(v), 4) for v in pts.mean(axis=0)]
