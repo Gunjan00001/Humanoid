@@ -142,6 +142,7 @@ def run_vggt(frames: list[dict], cfg: dict, limit_per_video: int | None = None) 
 
     t0 = time.perf_counter()
     images_batched = images[None]                     # [1,S,3,H,W] (as in demo_colmap)
+    torch.cuda.reset_peak_memory_stats(device)
     with torch.no_grad(), torch.autocast("cuda", dtype=dtype):
         aggregated_tokens_list, ps_idx = model.aggregator(images_batched)
         pose_enc = model.camera_head(aggregated_tokens_list)[-1]
@@ -149,7 +150,9 @@ def run_vggt(frames: list[dict], cfg: dict, limit_per_video: int | None = None) 
         depth, depth_conf = model.depth_head(aggregated_tokens_list, images_batched, ps_idx)
     torch.cuda.synchronize()
     infer_s = time.perf_counter() - t0
-    log.info("inference done in %.1fs (%.2fs/frame)", infer_s, infer_s / s)
+    peak_gb = torch.cuda.max_memory_allocated(device) / 2**30
+    log.info("inference done in %.1fs (%.2fs/frame) | peak GPU memory %.1f GiB",
+             infer_s, infer_s / s, peak_gb)
 
     extrinsic = extrinsic.squeeze(0).float().cpu().numpy()          # [S,3,4]
     intrinsic = intrinsic.squeeze(0).float().cpu().numpy()          # [S,3,3]
@@ -173,6 +176,7 @@ def run_vggt(frames: list[dict], cfg: dict, limit_per_video: int | None = None) 
         "device": str(torch.cuda.get_device_name(device)),
         "dtype": str(dtype).replace("torch.", ""),
         "inference_seconds": round(infer_s, 1),
+        "peak_gpu_gib": round(peak_gb, 1),
     }
 
 
@@ -244,8 +248,12 @@ def main() -> int:
     add_common_args(parser)
     parser.add_argument("--limit_per_video", type=int, default=None,
                         help="debug: use only the first N frames of each video")
+    parser.add_argument("--backend", default=None,
+                        help="override reconstruction.backend (vggt | mapanything | ...)")
     args = parser.parse_args()
     cfg = apply_overrides(load_config(args.config), args)
+    if args.backend:
+        cfg["reconstruction"]["backend"] = args.backend
 
     recon_dir = cache_dir(cfg, "reconstruction")
     meta_path = recon_dir / "meta.json"
@@ -313,6 +321,7 @@ def main() -> int:
         "conf_percentile": cfg["reconstruction"]["conf_percentile"],
         "limit_per_video": args.limit_per_video,
         "inference_seconds": result.get("inference_seconds"),
+        "peak_gpu_gib": result.get("peak_gpu_gib"),
         "frames_index_sha1": hashlib.sha1(index_path.read_bytes()).hexdigest()[:12],
         "frames": [
             {"file": f["file"], "tag": f["tag"],

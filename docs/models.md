@@ -8,11 +8,16 @@ cleared before results are published.
 
 | Role | Primary | Fallback | Runs on | GPU |
 |---|---|---|---|---|
-| 3D reconstruction — poses, depth, point cloud | **VGGT** | MASt3R → COLMAP/hloc | GPU node | 1 |
+| 3D reconstruction — poses, depth, point cloud | **VGGT** | **MapAnything** → MASt3R → COLMAP/hloc | GPU node | 1 |
 | Labels + descriptions | **Qwen3-VL-32B-Instruct** | Qwen3-VL-8B, Gemma (vision) | GPU node | 2 (bf16), or 1 if it fits |
 | Cross-scene object matching | **DINOv2** | SigLIP 2 | GPU node | 1 (small) |
 | Object masks (stretch) | **SAM 2** | none — DBSCAN clusters | GPU node | 1 |
 | Diff / clustering / visualization | OpenCV, Open3D, NumPy, SciPy, scikit-learn | — | CPU | 0 |
+
+The reconstruction backend is selectable via `reconstruction.backend`
+(`vggt` | `mapanything`); both write the same artifact contract, so every
+downstream stage works unchanged. See the backend comparison in
+[`results.md`](results.md#backend-comparison-vggt-vs-mapanything).
 
 ## Memory notes
 
@@ -48,6 +53,8 @@ huggingface-cli download <model-id>     # fill in the exact IDs below
 | Model | Exact ID / repo | Version / commit | License | Commercial use OK? | Verified by / date |
 |---|---|---|---|---|---|
 | VGGT | `facebook/VGGT-1B`, code `facebookresearch/vggt` | HF sha `860abec7937d`, repo commit `a288dd0f` | **CC-BY-NC-4.0** | ❌ non-commercial | agent, 2026-10-10 (HF API) |
+| MapAnything (used) | `facebook/map-anything-apache`, code `facebookresearch/map-anything` | HF sha `00f9c245bbcb`, v1.1.4 | **Apache-2.0** | ✅ | agent, 2026-10-10 (HF API) |
+| MapAnything (default) | `facebook/map-anything` | — | **CC-BY-NC-4.0** | ❌ non-commercial | agent, 2026-10-10 (HF API) |
 | MASt3R | `naver/mast3r` | — | repository **gated**, license not verifiable on this account | unknown | agent, 2026-10-10 (HF API 401) |
 | COLMAP | `colmap/colmap` | — | repo LICENSE (BSD-3-Clause style; SPDX not auto-detected) | likely yes — verify before commercial use | agent, 2026-10-10 (GitHub API) |
 | hloc | `cvg/Hierarchical-Localization` | — | Apache-2.0 | ✅ | agent, 2026-10-10 (GitHub API) |
@@ -60,6 +67,17 @@ huggingface-cli download <model-id>     # fill in the exact IDs below
 VGGT is installed in the env via `pip install git+https://github.com/facebookresearch/vggt.git`
 (package name `vggt`, commit above). The weights are downloaded separately by
 `scripts/download_models.sh` and load offline from `~/models/VGGT-1B/`.
+
+MapAnything is **purpose-built for metric scale** and ships two checkpoints
+that differ only in training data and license; this project uses the
+Apache-2.0 one (`facebook/map-anything-apache`, loaded from
+`~/models/map-anything-apache/`) so the whole stack stays commercially usable.
+It runs in an **isolated conda env** (`spatialdiff-ma`, created by
+`scripts/setup_env.sh`) because its dependency pins (e.g.
+`opencv-python-headless==4.10.0.84`) conflict with the main `spatialdiff` env;
+`src/reconstruct.py` launches it as a subprocess and the worker writes the
+same artifact contract (see `scripts/run_mapanything.py` and
+`src/ma_contract.py`).
 
 ## Why these models
 

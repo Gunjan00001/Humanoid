@@ -35,11 +35,18 @@ Video B ─┘            shared frame       A / B tags └─> diff + visibilit
   frame through reconstruction so the diff can separate the two captures.
 
 ### 2. Joint reconstruction (most important)
-- **VGGT runs on all frames of both videos together**, producing one coordinate
-  frame: camera poses, depth maps, and a colored point cloud.
+- **VGGT or MapAnything runs on all frames of both videos together** (backend
+  selectable via `reconstruction.backend`), producing one coordinate frame:
+  camera poses, depth maps, and a colored point cloud.
 - Each point carries a source tag (`A` or `B`).
-- Backend is selectable: `vggt` (primary) → `mast3r` → `colmap`.
-- If GPU memory is tight: fewer frames or lower resolution first; chunking second.
+- Both backends write the **same artifact contract**
+  (`cache/reconstruction/{cameras,dense,colors}.npz` + `meta.json`), so every
+  downstream stage works unchanged. MapAnything runs in an isolated conda env
+  (`spatialdiff-ma`) as a subprocess - see `scripts/run_mapanything.py` and
+  `src/ma_contract.py`.
+- Fallback order: `vggt` / `mapanything` → `mast3r` → `colmap`.
+- If GPU memory is tight: fewer frames or lower resolution first; chunking
+  second (MapAnything: `reconstruction.mapanything.minibatch_size`).
 
 ### 3. Alignment (optional)
 - ICP refinement over static regions only, if A and B clouds drift apart.
