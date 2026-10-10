@@ -39,6 +39,21 @@ the remote's in-place flip is reported as `replaced` rather than `moved`; the
 pen's label includes the neighbouring timer; one-video-only areas can only
 produce *unverified* candidates.
 
+### Backend comparison (v0.5)
+
+A second reconstruction backend — **MapAnything** (Apache-2.0 checkpoint) — was
+added and compared against VGGT on the same frames
+([full numbers](docs/results.md#backend-comparison-vggt-vs-mapanything)):
+
+- **VGGT + `tabletop` remains the best single configuration** (3/3 changes,
+  0 false positives, 11.3 GiB peak, 17 s inference).
+- MapAnything does not beat it overall, but brings **metric scale by
+  construction** and a **geometric diff that sees the 1 cm-thick comb and pen**
+  (2/3 with zero false positives; VGGT's depth maps cannot see them at all).
+  With its threshold calibrated it also reaches 3/3 with 0 false positives.
+- Costs: 1.8× peak GPU memory, an isolated conda env, and a confidence head
+  that needs a lower working point (p25) on the blurrier video.
+
 ## Pipeline
 
 ```

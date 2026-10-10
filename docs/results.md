@@ -90,6 +90,112 @@ python src/report.py    --config configs/default.yaml
   the Qwen3-VL confirmation + structural filters reduce it to the 3 real
   changes. Rejections are logged, not silently dropped.
 
+## Backend comparison: VGGT vs MapAnything
+
+Added 2026-10-10 (`v0.5`): MapAnything (Apache-2.0 checkpoint
+`facebook/map-anything-apache`) as a second backend
+(`reconstruction.backend: mapanything`) on the **same 49 frames** of the demo
+scene. All numbers below are measured; raw logs and the machine-readable
+summary are in `logs/` (`ma_full.log`, `describe_ma.log`, `pbs_*.log`,
+`backend_comparison.json`).
+
+### Reconstruction cost
+
+| | VGGT (CC-BY-NC) | MapAnything (Apache-2.0) |
+|---|---|---|
+| Model input per frame | 518×518 (centre-cropped) | 518×294 (full portrait frame) |
+| Model load (network FS) | ~3.0 min | ~4.3 min |
+| Inference, 49 frames | **17.2 s** (0.35 s/frame) | 20.0 s (0.41 s/frame) |
+| Peak GPU memory | **11.3 GiB** | 20.1 GiB |
+| Confidence working point | p50 (`p50` ≈ 1.01) | **p25**: MA's confidence head sits at its floor (≤1.0) for all of the blurrier video B (mean 0.97); p50 discards 99% of B |
+| Colours | correct from the model | `img_no_norm` absent → rebuilt from the JPEGs (`scripts/rebuild_colors.py`); the worker now always crop-resizes the originals as fallback |
+
+### Static-structure alignment (A↔B, 6 mm voxels)
+
+| | VGGT | MapAnything |
+|---|---|---|
+| A→B NN p50 / p75 / p90 | 4.1 / 7.9 / 16.3 mm | 4.1 / 6.5 / 23.5 mm |
+| ICP static mean NN (p25 working point) | 15.2 → 10.7 mm | 17.9 → 10.6 mm |
+| ICP static mean NN at p50 (MA B-sparse) | — | 17.5 → 4.4 mm |
+
+After ICP both backends align their two videos equally well (~10.6 vs
+10.7 mm). At MA's *clean* p50 subsets the residual drops to 4.4 mm, which
+suggests MA's geometry is more rigidly consistent (VGGT's residual is
+dominated by local surface warp), but that subset only contains 1% of B.
+
+### Thin objects: are the comb and pen visible in the depth maps?
+
+Height of each backend's own detected clusters above a *local* table plane
+(ring fit around the cluster, so surface warp is not mistaken for object
+height). A 1 cm object should read ≈ +10 mm if resolved.
+
+| Cluster | VGGT | MapAnything |
+|---|---|---|
+| comb (removed) | median −5.5 mm, p90 **+0.6 mm** (absorbed) | median −6.6 mm, p90 **+7.2 mm** (partial) |
+| comb handle (removed) | — | median −5.8 mm, p90 +10.7 mm |
+| pen (added) | median +0.6 mm, p90 **+8.8 mm** | median −1.5 mm, p90 **+14.0 mm** (partial) |
+
+Neither backend cleanly resolves the 1 cm objects, but MA shows a clearly
+stronger positive tail — and its *geometric* diff actually detects the comb
+and pen (see below), which VGGT's geometric diff cannot.
+
+### Metric scale
+
+- MapAnything applies metric scaling (factor ≈ 0.847 on this scene) and its
+  world frame is room-scale (z ∈ [0, 2.3 m]); VGGT's frame is camera-anchored
+  and only approximately metric.
+- Measured comb length: **VGGT 160.5 mm vs MapAnything 161.3 mm** (0.5 %
+  agreement; plausibility-consistent with a ~16 cm pocket comb — not
+  independently verified with a ruler, stated as such).
+
+### End-to-end results (ground truth: comb removed, pen added, remote moved+flipped)
+
+| Backend | diff.method | Detected | False positives | Notes |
+|---|---|---|---|---|
+| VGGT | `geometric` | 0/3 | 2 (timer ring, table blob) | thin objects absent from the depth maps |
+| VGGT | `tabletop` | **3/3** | **0** | the production default (see above) |
+| MapAnything | `geometric` | 2/3 (comb, pen) | 0 | **remote missed**; thin objects found by geometry alone |
+| MapAnything | `tabletop` | 2/3 (comb, remote) | 0 | pen VLM-confirmed but scored 62.7 < the VGGT-calibrated floor 80 |
+| MapAnything | `tabletop`, floor recalibrated to 60 | **3/3** | **0** | same method, per-backend threshold |
+
+### Verdict: did MapAnything help?
+
+- **VGGT + `tabletop` remains the best single configuration** (3/3, 0 false
+  positives, fastest, half the GPU memory, no extra env).
+- MapAnything does **not** beat it overall on this scene, but it brings three
+  real strengths: **metric scale by construction** (Apache-2.0 too), a
+  **geometric diff that sees 1 cm objects** (its depth partially resolves them;
+  VGGT's cannot), and equal post-ICP alignment.
+- Its costs: 1.8× peak GPU memory, a confidence head that needs a different
+  working point (p25) on the blurrier video, missing denormalised colours, and
+  photometric scores on a different scale (needs its own `min_change_score`).
+- The clear next step suggested by the data: a **hybrid** (MapAnything geometry
+  + the appearance-based tabletop comparison) could combine both strengths —
+  MA's geometric run already covers what VGGT's misses, and vice versa.
+
+### Stretch goal: Depth Anything 3 through MapAnything's unified interface
+
+Attempted. `--model-key da3` is implemented (external wrappers via
+`init_model_from_config` + `model(views)`); MapAnything's hydra configs are not
+part of its pip package, so `scripts/setup_env.sh` clones the source into
+`third_party/` (gitignored) and the worker prepends it before the first
+import. The DA3 smoke job is in `logs/pbs_da3_smoke.log`; the last attempt's
+result is recorded there. This is a stretch item and is **not** part of the
+comparison table above.
+
+### Pipeline robustness fixes that came out of this comparison
+
+All structural, not scene-specific (VGGT demo regression: identical clusters):
+- tabletop mode: one **joint plane** refined on the dense surface band (MA's
+  room-scale cloud made per-video fits disagree by 10°), plus a ±15 cm
+  **height band** (walls share the x/y footprint in room-scale clouds);
+- `--conf_percentile`, `--method`, `--backend`, `--min_change_score` CLI
+  overrides for per-backend working points;
+- `scripts/rebuild_colors.py` (rebuild `colors.npz` from the JPEGs, no GPU);
+- the score floor no longer rejects geometric clusters (they carry visibility
+  evidence, not a photometric score);
+- fragment merging covers `replaced` clusters and geometric clusters.
+
 ## Limitations and failure cases (as observed on this scene)
 
 - Static objects whose appearance differs between recordings (blur, exposure,
