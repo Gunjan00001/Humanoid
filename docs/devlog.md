@@ -217,3 +217,31 @@ useful. GPU jobs should report an estimated remaining time to the user.
   wall clock.
 - Logs: `logs/pbs_scene2.log`, `logs/pbs_scene3.log`; results land in
   `cache/scene{2,3}` and `outputs/scene{2,3}`.
+
+### Failure: scene2 extraction kept only 1 frame
+
+- **Symptom:** `RuntimeError: [a] only 1 frames survived (min_frames=8)`.
+- **Reason:** scene2's recordings are genuinely soft (blur p50 = 39/31 vs the
+  demo-calibrated threshold 100; only 1 frame of 12 passed).
+- **Fix:** `--blur_threshold` override on `extract_frames` (per-scene tuning);
+  scene2 re-ran with 25 (11+13 frames). Documented as a per-scene adaptation,
+  not a pipeline bug.
+
+### Failure: report provenance showed the default demo videos for scene3
+
+- **Symptom:** scene3's `report.md` said `data/a.mp4` / `data/b.mp4`.
+- **Reason:** the ad-hoc job passed `--video_a/--video_b` to extraction but not
+  to `report.py`, which took the paths from the config defaults.
+- **Fix (structural):** `report.py` now reads the video paths actually used
+  from `cache/frames/index.json` (falling back to the config), so provenance
+  is correct for any invocation. Scene3's report regenerated.
+
+### Observation: scene3 end-to-end (honest robustness finding)
+
+- The demo-calibrated pipeline detected **3 changes on scene3 vs 2 in the
+  ground truth**: "chair" (as `replaced`), "tabletop objects" (the
+  apple/cup change, as `removed`) and "table leg" (a false positive). The
+  chair's removal was type-misclassified (`replaced` instead of `removed`).
+- This is exactly what a robustness run should reveal: the thresholds and the
+  verification prompts are tuned on the demo scene; a new scene needs its own
+  tuning pass (`docs/debugging.md`). Recorded honestly in `docs/results.md`.
