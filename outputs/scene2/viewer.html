@@ -15,6 +15,7 @@
   <label><input type="checkbox" id="tc" checked> changes</label>
   <label><input type="checkbox" id="tl" checked> labels</label>
   <label><input type="checkbox" id="tf"> full scene</label>
+  <label><input type="checkbox" id="tu"> unverified</label>
   <div style="margin-top:6px;font-size:11px;color:#aaa">drag: orbit &middot; wheel: zoom</div>
 </div>
 <div id="labels"></div>
@@ -55,7 +56,7 @@ function points(p, size){
   const m = new THREE.PointsMaterial({size:size, vertexColors:true, sizeAttenuation:true});
   return new THREE.Points(geom(p), m);
 }
-const pa = points(DATA.cloud_a, RADIUS/220), pb = points(DATA.cloud_b, RADIUS/220);
+const pa = points(DATA.cloud_a, RADIUS/150), pb = points(DATA.cloud_b, RADIUS/150);
 // the embedded cloud is sorted by distance to the focus (write_viewer), so a
 // "crop" is simply a drawRange over the first N points - the toggle switches
 // between the focused view (~0.4 m) and the full scene
@@ -68,22 +69,26 @@ function applyCrop(cropped){
 applyCrop(Q.get('full') !== '1');
 scene.add(pa, pb);
 const changeGroup = new THREE.Group(); scene.add(changeGroup);
+// unverified candidates are hidden by default (toggle: "unverified")
+const unverifiedGroup = new THREE.Group(); unverifiedGroup.visible = false;
+scene.add(unverifiedGroup);
 const COL = {removed:0xf23333, added:0x40e659, moved:0xff991a, replaced:0xf23ff2};
 for(const c of DATA.changes){
-  if(c.n > 0){ const pts = points(c, RADIUS/160); changeGroup.add(pts); }
+  const grp = c.verified ? changeGroup : unverifiedGroup;
+  if(c.n > 0){ const pts = points(c, RADIUS/110); grp.add(pts); }
   const lo = new THREE.Vector3(...c.bbox_min), hi = new THREE.Vector3(...c.bbox_max);
   const box = new THREE.Box3Helper(new THREE.Box3(lo,hi),
       new THREE.Color(c.verified ? (COL[c.type]||0xffffff) : 0x59bfd9));
-  changeGroup.add(box);
+  grp.add(box);
   if(c.type === 'moved' && c.from && c.to){       // show where it went
     const fr = new THREE.Vector3(...c.from), to = new THREE.Vector3(...c.to);
     const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([fr, to]),
         new THREE.LineDashedMaterial({color: COL.moved, dashSize: RADIUS/25,
                                       gapSize: RADIUS/40}));
-    line.computeLineDistances(); changeGroup.add(line);
+    line.computeLineDistances(); grp.add(line);
     const mark = new THREE.Mesh(new THREE.SphereGeometry(RADIUS/80, 10, 8),
         new THREE.MeshBasicMaterial({color: COL.moved}));
-    mark.position.copy(to); changeGroup.add(mark);
+    mark.position.copy(to); grp.add(mark);
   }
 }
 const labelDivs = DATA.changes.map(c=>{
@@ -119,6 +124,7 @@ document.getElementById('ta').onchange = e => pa.visible = e.target.checked;
 document.getElementById('tb').onchange = e => pb.visible = e.target.checked;
 document.getElementById('tc').onchange = e => changeGroup.visible = e.target.checked;
 document.getElementById('tf').onchange = e => applyCrop(!e.target.checked);
+document.getElementById('tu').onchange = e => unverifiedGroup.visible = e.target.checked;
 document.getElementById('tl').onchange = e =>
   labelDivs.forEach(d => { if(d) d.style.display = e.target.checked ? '' : 'none'; });
 
@@ -130,15 +136,29 @@ function frame(){
     target.z + dist*Math.cos(phi));
   camera.lookAt(target);
   renderer.render(scene, camera);
+  // place labels with a small overlap resolver: a label that would cover an
+  // already-placed one is pushed straight down until it is clear
+  const placed = [];
   DATA.changes.forEach((c,i)=>{
     const d = labelDivs[i];
     if(!d) return;
     const p = new THREE.Vector3((c.bbox_min[0]+c.bbox_max[0])/2,
                                 (c.bbox_min[1]+c.bbox_max[1])/2, c.bbox_max[2]);
     p.project(camera);
-    d.style.left = (p.x*0.5+0.5)*innerWidth + 'px';
-    d.style.top  = (-p.y*0.5+0.5)*innerHeight + 'px';
-    d.style.display = (p.z < 1) ? '' : 'none';
+    if(p.z >= 1){ d.style.display = 'none'; return; }
+    const x = (p.x*0.5+0.5)*innerWidth;
+    const h = d.offsetHeight || 16, w = d.offsetWidth || 120;
+    let top = (-p.y*0.5+0.5)*innerHeight - h;      // css puts the label above
+    for(let guard = 0; guard < 40; guard++){
+      const hit = placed.find(q => Math.abs(x - q.x) < (w + q.w)/2 + 6
+                                && top < q.top + q.h + 3 && top + h > q.top - 3);
+      if(!hit) break;
+      top = hit.top + hit.h + 4;
+    }
+    placed.push({x, top, w, h});
+    d.style.display = '';
+    d.style.left = x + 'px';
+    d.style.top = (top + h) + 'px';
   });
 }
 frame();

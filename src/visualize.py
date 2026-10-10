@@ -157,7 +157,8 @@ def _camera_pos(focus: np.ndarray, radius: float, azimuth: float, elev: float) -
 
 
 def draw_3d(ax, bg_pts, bg_rgb, change_pts, focus, radius, azimuth, elev,
-            splat: float, show_labels: bool = True) -> None:
+            splat: float, show_labels: bool = True,
+            show_unverified: bool = False) -> None:
     """Dark background, distance-sized splats, change boxes + labels, legend."""
     ax.set_facecolor(BG_COLOR)
     cam = _camera_pos(focus, radius, azimuth, elev)
@@ -179,7 +180,8 @@ def draw_3d(ax, bg_pts, bg_rgb, change_pts, focus, radius, azimuth, elev,
         if len(p):
             ax.scatter(p[:, 0], p[:, 1], p[:, 2], s=splat_sizes(p, splat * 1.6),
                        c=c["colors"], linewidths=0, depthshade=False)
-        if not c["verified"]:
+        unverified = not c["verified"]
+        if unverified and not show_unverified:
             continue
         # bounding box wireframe
         lo = np.asarray(ch["bbox_min"], dtype=float)
@@ -188,7 +190,7 @@ def draw_3d(ax, bg_pts, bg_rgb, change_pts, focus, radius, azimuth, elev,
                             for y in (lo[1], hi[1]) for z in (lo[2], hi[2])])
         edges = [(0, 1), (2, 3), (4, 5), (6, 7), (0, 2), (1, 3),
                  (4, 6), (5, 7), (0, 4), (1, 5), (2, 6), (3, 7)]
-        color = COLORS.get(ch["type"], (0.8, 0.8, 0.8))
+        color = UNVERIFIED_COLOR if unverified else COLORS.get(ch["type"], (0.8, 0.8, 0.8))
         for e in edges:
             a, b = corners[e[0]], corners[e[1]]
             ax.plot([a[0], b[0]], [a[1], b[1]], [a[2], b[2]], c=color, lw=1.2, alpha=0.9)
@@ -200,7 +202,7 @@ def draw_3d(ax, bg_pts, bg_rgb, change_pts, focus, radius, azimuth, elev,
                     lw=1.6, ls="--", alpha=0.95)
             ax.scatter([to[0]], [to[1]], [to[2]], s=splat * 2.2, c=[color],
                        marker="o", linewidths=0, depthshade=False)
-        if show_labels:
+        if show_labels and not unverified:
             label = f"{ch['id']}: {ch['type']} - {ch.get('label') or '?'}"
             ax.text(lo[0], lo[1], hi[2] + 0.02 * max(radius, 0.3), label,
                     color=LABEL_COLOR, fontsize=8, zorder=10, clip_on=False,
@@ -247,6 +249,29 @@ def table_up_rotation(bg_pts: np.ndarray) -> np.ndarray:
     return np.eye(3) + k + k @ k * ((1 - c) / s ** 2)
 
 
+def check_render_caches(cfg: dict) -> list[str]:
+    """Required cache paths for --render-only that are missing (empty = ready).
+
+    Render-only never recomputes a pipeline stage: if anything the rendering
+    needs is absent, the run stops and lists what is missing.
+    """
+    from src.geometry import recon_dir_for
+    cache = repo_path(cfg["paths"]["cache_dir"])
+    rdir = recon_dir_for(cfg, prefer_aligned=True)
+    required = [
+        ("reconstruction (meta)", rdir / "meta.json"),
+        ("reconstruction (cameras)", rdir / "cameras.npz"),
+        ("reconstruction (depth/conf)", rdir / "dense.npz"),
+        ("reconstruction (colors)", rdir / "colors.npz"),
+        ("diff points", cache / "diff" / "points.npz"),
+        ("diff clusters", cache / "diff" / "clusters.json"),
+        ("VLM confirmations", cache / "semantics" / "confirmed.json"),
+        ("VLM labels", cache / "semantics" / "vlm.json"),
+        ("crop evidence", cache / "semantics" / "crops.json"),
+    ]
+    return [f"{name}: {path}" for name, path in required if not path.exists()]
+
+
 def load_evidence_frame(cfg: dict, file: str | None):
     """Load an evidence JPEG (relative to cache/frames) for the side panels."""
     if not file:
@@ -269,8 +294,26 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     add_common_args(parser)
     parser.add_argument("--view", action="store_true", help="open the interactive Open3D viewer")
+    parser.add_argument("--render-only", action="store_true",
+                        help="reuse the cached reconstruction/diff/VLM outputs and "
+                             "only re-render figures, GIF, viewer and mesh; stops "
+                             "with a list when a required cache is missing (never "
+                             "recomputes a pipeline stage)")
     args = parser.parse_args()
     cfg = apply_overrides(load_config(args.config), args)
+
+    if args.render_only:
+        missing = check_render_caches(cfg)
+        if missing:
+            log.error("--render-only: %d required cache(s) missing - nothing was "
+                      "recomputed:", len(missing))
+            for m in missing:
+                log.error("  missing %s", m)
+            log.error("run the pipeline stages first "
+                      "(extract_frames / reconstruct / align / diff / describe)")
+            return 2
+        log.info("--render-only: caches present (reconstruction, diff, VLM) - "
+                 "rendering from cache only")
 
     vcfg = cfg["visualize"]
     out = out_dir(cfg)
@@ -342,8 +385,8 @@ def main() -> int:
         before = load_evidence_frame(cfg, ci.get("frame"))
         after = load_evidence_frame(cfg, ci.get("frame_other"))
         # two rows: [before | after] on top (larger), a large 3D panel below
-        fig = plt.figure(figsize=(12, 10.5), dpi=110, facecolor=BG_COLOR)
-        gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 1.5],
+        fig = plt.figure(figsize=(12, 11), dpi=110, facecolor=BG_COLOR)
+        gs = fig.add_gridspec(2, 2, height_ratios=[1.25, 1.5],
                               hspace=0.06, wspace=0.02)
         for k, (img, title) in enumerate(((before, "before (video A)"),
                                           (after, "after (video B)"))):
@@ -359,7 +402,8 @@ def main() -> int:
         ch_focus = np.asarray(ch["centroid"], dtype=float)
         ch_radius = max(float(np.linalg.norm(
             np.asarray(ch["bbox_max"]) - np.asarray(ch["bbox_min"]))) * 1.4, 0.3)
-        draw_3d(ax3, bg_pts, bg_rgb, [c], ch_focus, ch_radius, -52, elev, splat)
+        draw_3d(ax3, bg_pts, bg_rgb, [c], ch_focus, ch_radius, -52, elev, splat,
+                show_unverified=True)
         fig.legend(handles=legend_handles([c]), loc="lower center",
                    ncol=5, framealpha=0.15, labelcolor=LABEL_COLOR, fontsize=9)
         title = f"{ch['id']:02d} - {ch['type'].upper()}"
@@ -374,16 +418,34 @@ def main() -> int:
         fig.savefig(path, facecolor=BG_COLOR)
         plt.close(fig)
         log.info("wrote %s", path)
-    # defensive: only screenshots whose id is in the CURRENT change list may
-    # remain (re-runs must never leave files the report does not reference)
+    # stale-screenshot cleanup: keep only files whose id is in report.json;
+    # when the report is from an older run (ids differ), the current change
+    # list is authoritative so fresh screenshots are never deleted
     valid_ids = {c["change"]["id"] for c in change_pts}
+    keep_ids, source = valid_ids, "the current change list"
+    report_path = out / "report.json"
+    if report_path.exists():
+        try:
+            rep = read_json(report_path)
+            rep_ids = {ch["id"] for ch in rep.get("changes", [])}
+            rep_ids |= {ch["id"] for ch in rep.get("unverified_changes", [])}
+            if rep_ids and rep_ids == valid_ids:
+                keep_ids, source = rep_ids, "report.json"
+        except Exception as exc:  # noqa: BLE001
+            log.warning("could not read %s (%s) - using the current list",
+                        report_path, exc)
+    removed = 0
     for png in changes_dir.glob("change_*.png"):
         try:
             cid = int(png.stem.split("_")[1])
         except (IndexError, ValueError):
             continue
-        if cid not in valid_ids:
+        if cid not in keep_ids:
             png.unlink()
+            removed += 1
+    if removed:
+        log.info("stale-screenshot cleanup: removed %d file(s) not in %s",
+                 removed, source)
 
     if vcfg.get("export_viewer", False):
         try:
@@ -441,9 +503,11 @@ def main() -> int:
             frames.append(np.asarray(fig.canvas.buffer_rgba()).copy())
         plt.close(fig)
         from PIL import Image
-        imgs = [Image.fromarray(f) for f in frames]
+
+        from src.render_gif import gif_quantize
+        imgs = [gif_quantize(Image.fromarray(f)) for f in frames]
         imgs[0].save(gif_path, save_all=True, append_images=imgs[1:],
-                     duration=150, loop=0)
+                     duration=150, loop=0, optimize=False)
         log.info("wrote %s (%d frames, matplotlib fallback)", gif_path, n)
 
     # ---- optional mesh + interactive viewer ------------------------------

@@ -127,8 +127,10 @@ start there when a change is missing; the reason tells you which rule fired.
 - `CUDA_VISIBLE_DEVICES` is set to an empty string inside PBS jobs — the
   stages handle it: `common.pin_idle_gpus()` picks the idlest GPUs before CUDA
   initialises and logs what it pinned.
-- Model loading is the slowest step (~2–4 min for VGGT from the network FS,
-  ~1.5–3 min for Qwen3-VL-32B). Debug the *stage logic* on CPU (crops, rules)
+- Model loading: measured 8–14 s for VGGT and 26 s for Qwen3-VL-32B with
+  warm local files (job 10802); an early cold/network-FS run measured 2:07
+  for the VLM load. See [`timing.md`](timing.md). Debug the *stage logic* on
+  CPU (crops, rules)
   whenever possible instead of re-loading models.
 
 ## Logs

@@ -139,7 +139,7 @@ visualize:
   voxel_size: 0.008          # display resolution (finer than diff.voxel_size)
   static_dim: 0.8            # keep true colours (0.35 was the dark-sliver cause)
   max_background_points: 150000
-  splat_size: 14             # marker size at the framing distance (1/z scaled)
+  splat_size: 20             # marker size at the framing distance (1/z scaled)
   orbit_elev: 40             # camera elevation (35-45 deg, table-plane up)
   display_crop_radius: 0.4   # display geometry is cropped to this radius
                              # around the changed region (metres)
@@ -149,7 +149,7 @@ visualize:
                              # falls back to matplotlib if Chrome is missing
   gif_frames: 24             # frames in the rotating change.gif
   gif_width: 1100            # GIF/viewport size: taller than wide enough that
-  gif_height: 780            # the 3D panel is not a letterbox strip
+  gif_height: 820            # the 3D panel is not a letterbox strip
   export_mesh: true          # colored TSDF mesh -> scene_mesh.ply (<= 10 MB)
   export_viewer: true        # self-contained HTML viewer -> viewer.html
 
