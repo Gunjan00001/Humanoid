@@ -620,6 +620,7 @@ def main() -> int:
     matches: list[dict] = []
     arrivals: list[dict] = []          # objects now occupying a move's origin
     moved_ids: set[int] = set()
+    frag_ids: set[int] = set()         # duplicate arrivals dropped
     moved_origins: dict[int, list] = {}
     moved_centroids: dict[int, list] = {}
     if not args.skip_vlm and confirmed:
@@ -695,6 +696,7 @@ def main() -> int:
                         _reject(c, f"same object as the moved {entry['label']} "
                                    f"(fragment of its arrival)")
                         moved_ids.add(c["id"])
+                        frag_ids.add(c["id"])
 
                 # what occupies the origin now? the origin's own before/after
                 # verification already saw it (scene4: a bottle appeared where
@@ -717,6 +719,8 @@ def main() -> int:
                         "label": second,
                     })
                     log.info("arrival at #%s origin: %r", p["removed_id"], second)
+            if frag_ids:
+                confirmed = [c for c in confirmed if c["id"] not in frag_ids]
             log.info("move matches: %d (%d arrivals)", len(matches), len(arrivals))
             for a in arrivals:
                 vlm_cache[str(a["id"])] = {
@@ -841,8 +845,13 @@ def main() -> int:
             # an explicit empty-space confirmation (from the type-correction
             # step) is stronger evidence than the both-present heuristic -
             # e.g. scene3's chair sits next to the OTHER chair, which made the
-            # both-present mask fire; the empty-check proved it was removed
-            if c.get("empty_fraction") is not None and c.get("reclassified_from"):
+            # both-present mask fire; the empty-check proved it was removed.
+            # BUT if the VLM named the SAME object in both views (the demo's
+            # highlighter: 'highlighter' vs 'highlighter'), the object really
+            # is present in both and the suppression stands.
+            v = vlm_cache.get(str(c["id"]), {})
+            if (c.get("empty_fraction") is not None and c.get("reclassified_from")
+                    and not _same_objects(v.get("first"), v.get("second"))):
                 kept.append(c)
                 continue
             if c["type"] in ("removed", "added") and pts is not None and len(pts):
