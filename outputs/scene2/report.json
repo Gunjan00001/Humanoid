@@ -5,7 +5,7 @@
     "backend": "vggt",
     "model": "/home/jiit_992401210050/models/VGGT-1B",
     "diff_method": "tabletop",
-    "created": "2026-10-10T18:47:45Z",
+    "created": "2026-10-10T18:53:55Z",
     "config_hash": "e6e15c30467a",
     "num_frames": 24,
     "semantics": "vlm-verified",
@@ -49,87 +49,11 @@
         ],
         "confirmed_empty_in": []
       }
-    },
-    {
-      "id": 2,
-      "type": "removed",
-      "label": "concrete floor",
-      "description": "a gray concrete floor meeting a white wall baseboard.",
-      "centroid": [
-        0.1429,
-        0.0628,
-        0.9123
-      ],
-      "bbox": [
-        0.095,
-        0.015,
-        0.8672,
-        0.1899,
-        0.1,
-        0.9395
-      ],
-      "from": [
-        0.1429,
-        0.0628,
-        0.9123
-      ],
-      "to": null,
-      "confidence": 0.82,
-      "cluster_ids": [
-        3
-      ],
-      "evidence": {
-        "frames_a": [
-          "a/frame_00000.jpg"
-        ],
-        "frames_b": [
-          "b/frame_00088.jpg"
-        ],
-        "confirmed_empty_in": []
-      }
-    },
-    {
-      "id": 3,
-      "type": "added",
-      "label": "crumpled paper",
-      "description": "a small, crumpled piece of white paper lying on a dark floor near a white wall or baseboard.",
-      "centroid": [
-        0.3069,
-        0.1321,
-        0.9166
-      ],
-      "bbox": [
-        0.27,
-        0.1003,
-        0.8618,
-        0.3398,
-        0.1599,
-        1.0693
-      ],
-      "from": null,
-      "to": [
-        0.3069,
-        0.1321,
-        0.9166
-      ],
-      "confidence": 0.57,
-      "cluster_ids": [
-        4
-      ],
-      "evidence": {
-        "frames_a": [
-          "a/frame_00048.jpg"
-        ],
-        "frames_b": [
-          "b/frame_00168.jpg"
-        ],
-        "confirmed_empty_in": []
-      }
     }
   ],
   "unverified_changes": [
     {
-      "id": 4,
+      "id": 2,
       "type": "added",
       "label": "small metallic object",
       "description": "a shiny, circular object with a reflective surface, possibly a coin or small metal piece, lying on a dark, textured surface.",
@@ -165,7 +89,7 @@
       }
     },
     {
-      "id": 5,
+      "id": 3,
       "type": "added",
       "label": "finger",
       "description": "a close-up of a human finger tip on a gray surface.",
@@ -201,7 +125,7 @@
       }
     },
     {
-      "id": 6,
+      "id": 4,
       "type": "added",
       "label": "wooden frame",
       "description": "a close-up of a brown wooden frame edge next to a light-colored surface.",
@@ -237,7 +161,7 @@
       }
     },
     {
-      "id": 7,
+      "id": 5,
       "type": "added",
       "label": "wooden frame",
       "description": "a diagonal wooden frame or trim against a light-colored wall.",
@@ -273,7 +197,7 @@
       }
     },
     {
-      "id": 8,
+      "id": 6,
       "type": "added",
       "label": "wooden frame",
       "description": "a diagonal wooden frame or trim against a light-colored wall or surface.",
@@ -309,7 +233,7 @@
       }
     },
     {
-      "id": 9,
+      "id": 7,
       "type": "added",
       "label": "metal ball",
       "description": "a small, shiny metallic ball resting on a dark surface near a wooden edge.",
@@ -345,7 +269,7 @@
       }
     },
     {
-      "id": 10,
+      "id": 8,
       "type": "added",
       "label": "wooden beam",
       "description": "a diagonal wooden beam against a light-colored wall, possibly part of a ceiling or frame.",
@@ -381,7 +305,7 @@
       }
     },
     {
-      "id": 11,
+      "id": 9,
       "type": "added",
       "label": "wooden frame",
       "description": "a close-up of a wooden frame corner, likely part of a door or window, with visible grain and a light-colored surface.",
@@ -417,7 +341,7 @@
       }
     },
     {
-      "id": 12,
+      "id": 10,
       "type": "added",
       "label": "wooden beam",
       "description": "a diagonal wooden beam against a light-colored wall, possibly part of a ceiling or frame.",
@@ -453,7 +377,7 @@
       }
     },
     {
-      "id": 13,
+      "id": 11,
       "type": "added",
       "label": "wooden frame",
       "description": "a close-up of a wooden frame corner, likely part of a door or window, with visible grain and a light-colored surface.",
@@ -484,6 +408,44 @@
         "frames_a": [],
         "frames_b": [
           "b/frame_00024.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 12,
+      "type": "added",
+      "label": "crumpled paper",
+      "description": "a small, crumpled piece of white paper lying on a dark floor near a white wall or baseboard.",
+      "centroid": [
+        0.3069,
+        0.1321,
+        0.9166
+      ],
+      "bbox": [
+        0.27,
+        0.1003,
+        0.8618,
+        0.3398,
+        0.1599,
+        1.0693
+      ],
+      "from": null,
+      "to": [
+        0.3069,
+        0.1321,
+        0.9166
+      ],
+      "confidence": 0.17,
+      "cluster_ids": [
+        4
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00048.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00168.jpg"
         ],
         "confirmed_empty_in": []
       }
