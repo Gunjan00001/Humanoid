@@ -139,7 +139,8 @@ def run_vggt(frames: list[dict], cfg: dict) -> dict:
     intrinsic = intrinsic.squeeze(0).float().cpu().numpy()          # [S,3,3]
     depth = depth.squeeze(0).squeeze(-1).float().cpu().numpy()      # [S,H,W]
     depth_conf = depth_conf.squeeze(0).float().cpu().numpy()        # [S,H,W]
-    world_points = unproject_depth_map_to_point_map(depth, extrinsic, intrinsic)  # [S,H,W,3]
+    # note: this helper squeezes the channel dim itself -> pass [S,H,W,1]
+    world_points = unproject_depth_map_to_point_map(depth[..., None], extrinsic, intrinsic)
 
     colors = (images.clamp(0, 1) * 255).to(torch.uint8).permute(0, 2, 3, 1).cpu().numpy()
 

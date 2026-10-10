@@ -100,7 +100,8 @@ def main() -> int:
     write_json(out / "timings.json",
                {"stages": timings, "total_s": round(sum(timings.values()), 1)})
     print(f"\ndone in {sum(timings.values()) / 60:.1f} min (stages run: {len(timings)})")
-    print(f"report: {out / 'report.md'}")
+    if "report" in timings:
+        print(f"report: {out / 'report.md'}")
     return 0
 
 
