@@ -66,7 +66,7 @@ All four runs (same pipeline, per-scene working points; full details in
 |---|---|---|---|---|
 | **demo** (`data/`) | comb removed, pen added, remote moved+flipped | **3/3** | **0** | `tabletop` (default) |
 | **scene2** (`data/scene2/`) | coconut removed | **1/1** (coconut ✓) | 4 extra entries | `geometric` (big object; lighting-immune) + `--blur_threshold 25` |
-| **scene3** (`data/scene3/`) | chair removed, apple→cup | **2/2** | **0** | `tabletop` + `--min_change_score 85` |
+| **scene3** (`data/scene3/`) | chair removed, apple→cup | **2/2** (types corrected: chair `removed`, apple→cup `replaced`) | 2 extra entries | `tabletop` + `--min_change_score 85` |
 
 **scene2** — coconut removed (`geometric` mode; the visibility check confirmed
 it with 5896 points seen empty). The `tabletop` mode misses it because video

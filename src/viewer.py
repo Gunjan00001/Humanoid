@@ -201,7 +201,7 @@ const labelDivs = DATA.changes.map(c=>{
 camera.up.set(0, 0, 1);
 let theta = (parseFloat(Q.get('az') ?? '-52')) * Math.PI / 180;
 let phi = (90 - parseFloat(Q.get('elev') ?? '40')) * Math.PI / 180;
-let dist = RADIUS * 2.6;
+let dist = RADIUS * (SHOT ? 2.0 : 2.6);
 const target = new THREE.Vector3(...FOCUS);
 let drag=false, px=0, py=0;
 renderer.domElement.addEventListener('mousedown', e=>{drag=true;px=e.clientX;py=e.clientY;});
