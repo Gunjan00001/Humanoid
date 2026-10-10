@@ -14,7 +14,19 @@ Code that exists but has not been validated end-to-end is marked 🔶.
 | 3 | `src/diff.py` with visibility check | Checkpoint 3: 3 known changes found, few false positives | ✅ all 3 found; final report has 0 false positives (22 candidates rejected with reasons); required the photometric tabletop mode - see results.md |
 | 4 | `src/describe.py` (Qwen3-VL + DINOv2) | Checkpoint 4: every change has type, label, location, sentence | ✅ 3/3 with labels + sentences; VLM verification rejects lighting artefacts |
 | 5 | `src/visualize.py`, `src/report.py`, `run.py` | Checkpoint 5: one command produces all outputs | ✅ `run.py` produces scene.ply, change.gif, screenshots, report.json/md |
-| 6 | README with real results, ablations, public repo | Definition of done | 🔶 README + results.md filled with the real run; repo public check pending |
+| 6 | README with real results, ablations, public repo | Definition of done | 🔶 README + results.md filled with the real run; backend comparison added (see results.md); repo public verified |
+
+## Backend comparison (v0.5)
+
+MapAnything was added as a second reconstruction backend
+(`reconstruction.backend: mapanything`, isolated `spatialdiff-ma` env) and
+compared against VGGT on the demo scene with identical frames. All numbers are
+measured; see [`results.md`](results.md#backend-comparison-vggt-vs-mapanything).
+
+Headline: **VGGT + tabletop stays the best single configuration (3/3 changes,
+0 false positives)**; MapAnything does not beat it overall, but its *geometry*
+detects the 1 cm-thick comb and pen (impossible for VGGT's depth maps) and its
+output is metric by construction - a promising basis for a future hybrid.
 
 ## Infrastructure already done
 
