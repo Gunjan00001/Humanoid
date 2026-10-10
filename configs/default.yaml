@@ -16,7 +16,8 @@ paths:
   model_dir: ~/models        # shared weights folder (see scripts/download_models.sh)
 
 frames:
-  fps: 2.0                   # sampling rate from the source video
+  fps: 3.0                   # sampling rate from the source video (2.0 gave
+                             # too few B frames for a smooth reconstruction)
   max_frames_per_video: 30   # hard cap after blur filtering (evenly spaced)
   blur_threshold: 100.0      # Laplacian variance; blurrier frames are dropped
   min_frames: 8              # fail if fewer frames survive sampling
@@ -41,17 +42,21 @@ models:
   # a repo id (login node only - compute nodes may have no internet).
 
 diff:
-  voxel_size: 0.02           # metres (reconstruction scale is approximate)
-  change_distance: 0.05      # NN distance above which a point is a candidate
-  dbscan_eps: 0.08           # ~4 voxels radius
-  dbscan_min_points: 30      # flat surfaces at 2cm voxels give ~49-64 points in
-                             # an 8cm radius; 30 stays off that knife's edge
-  outlier_nb_neighbors: 20   # statistical outlier removal on candidates
+  # Tuned on the demo scene (tabletop, phone videos): the changed objects
+  # (comb, pen, remote) are 1-2 cm thick, so the defaults from the plan
+  # skeleton (voxel 2 cm / distance 5 cm) could not see them. For larger
+  # rooms/objects, scale voxel_size and change_distance up together.
+  voxel_size: 0.006          # metres (reconstruction scale is approximate)
+  change_distance: 0.012     # NN distance above which a point is a candidate
+  dbscan_eps: 0.025          # ~4 voxels radius
+  dbscan_min_points: 12      # flat surfaces at 6mm voxels give ~40-60 points
+                             # in a 2.5cm radius; 12 stays off the knife's edge
+  outlier_nb_neighbors: 12   # statistical outlier removal on candidates
   outlier_std_ratio: 2.0
-  min_cluster_points: 80     # discard clusters smaller than this
+  min_cluster_points: 25     # discard clusters smaller than this
   visibility_check: true     # occlusion-aware classification
-  visibility_tol: 0.05       # depth tolerance when testing "seen empty"
-  visibility_min_fraction: 0.2  # fraction of cluster points that must be seen empty
+  visibility_tol: 0.006      # depth tolerance when testing "seen empty"
+  visibility_min_fraction: 0.15  # fraction of cluster points that must be seen empty
 
 semantics:
   vlm: primary               # primary | fallback
