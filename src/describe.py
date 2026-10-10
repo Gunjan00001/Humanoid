@@ -242,6 +242,17 @@ def _objects_overlap(a, b) -> bool:
     return bool(wa & wb)
 
 
+def _same_objects(a, b) -> bool:
+    """True when the two descriptions contain exactly the same significant
+    words (e.g. 'digital timer' vs 'digital timer' - no change named)."""
+    def words(s):
+        s = re.sub(r"[^a-z0-9 ]", " ", (s or "").lower())
+        return {w for w in s.split() if w and w not in _STOPWORDS}
+
+    wa, wb = words(a), words(b)
+    return bool(wa) and wa == wb
+
+
 # ---------------------------------------------------------------------------
 # DINOv2
 
@@ -386,6 +397,15 @@ def main() -> int:
                 if changed is not False:
                     log.info("  override -> changed=False (%s vs %s)",
                              parsed.get("first"), parsed.get("second"))
+                changed = False
+            # for a "replaced" claim, identical object descriptions in both
+            # images mean nothing actually changed (the timer blur case); a
+            # real flip/replacement names different objects or attributes
+            if (two_view and c["type"] == "replaced"
+                    and _same_objects(parsed.get("first"), parsed.get("second"))):
+                if changed is not False:
+                    log.info("  override -> changed=False (identical names: %s)",
+                             parsed.get("first"))
                 changed = False
             vlm_cache[cid] = {"label": parsed.get("label"),
                               "description": parsed.get("sentence") or parsed.get("description"),
