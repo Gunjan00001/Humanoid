@@ -175,7 +175,9 @@ def main() -> int:
             )
         with Image.open(f["path"]) as im:
             orig_w, orig_h = im.size
-        transforms.append(transform_for(orig_w, orig_h, *arr["image_hw"]))
+        # arr["image_hw"] is (H, W); transform_for wants (model_w, model_h)
+        transforms.append(transform_for(orig_w, orig_h,
+                                        arr["image_hw"][1], arr["image_hw"][0]))
         extrinsics.append(arr["extrinsic"])
         intrinsics.append(arr["intrinsic"])
         depths.append(arr["depth"])
