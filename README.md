@@ -135,11 +135,13 @@ Observed on the demo scene (quantified in [`docs/results.md`](docs/results.md)):
 |---|---|
 | [`AGENT_PLAN.md`](AGENT_PLAN.md) | Plan, phases, checkpoints (source of truth) |
 | [`docs/pipeline.md`](docs/pipeline.md) | Stage-by-stage pipeline and inputs/outputs |
+| [`docs/verification.md`](docs/verification.md) | Every verification rule with the demo's real numbers |
+| [`docs/debugging.md`](docs/debugging.md) | Cache map, inspector tool, per-symptom playbooks |
 | [`docs/setup.md`](docs/setup.md) | Environment setup and run instructions |
 | [`docs/models.md`](docs/models.md) | Model stack, VRAM plan, license checklist |
 | [`docs/data.md`](docs/data.md) | Recording guide and ground-truth template |
 | [`docs/architecture.md`](docs/architecture.md) | Repo layout, modules, config reference |
-| [`docs/results.md`](docs/results.md) | Results (placeholder until real runs) |
+| [`docs/results.md`](docs/results.md) | Real results of the first end-to-end run |
 | [`docs/troubleshooting.md`](docs/troubleshooting.md) | Cluster and model failure modes |
 | [`docs/roadmap.md`](docs/roadmap.md) | Phase status checklist |
 | [`gpu.md`](gpu.md) | Cluster / GPU access reference |

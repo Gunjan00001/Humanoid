@@ -10,12 +10,15 @@
   "8": "Stage detail",
   "9": "build_change_list",
   "10": "3D Scene Change Detection",
-  "11": "run.py",
+  "11": "tabletop.py",
   "12": "Setup",
-  "13": "Architecture",
+  "13": "Results",
   "14": "download_models.sh",
   "15": "gpu_smoke_test.sh",
   "16": "AGENTS.md",
   "17": "setup_env.sh",
-  "18": "tests/README.md"
+  "18": "tests/README.md",
+  "19": "make_fake_reconstruction.py",
+  "20": "Details",
+  "21": "ground_truth.md"
 }

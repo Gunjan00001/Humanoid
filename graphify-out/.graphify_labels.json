@@ -1,6 +1,6 @@
 {
   "0": "common.py",
-  "1": "numpy",
+  "1": "write_ply",
   "2": "docs/README.md",
   "3": "AGENT_PLAN.md — 3D Scene Change Detection (Spatial AI & Navigation Challenge)",
   "4": "GPU Access on This Cluster",
@@ -10,15 +10,16 @@
   "8": "Stage detail",
   "9": "build_change_list",
   "10": "3D Scene Change Detection",
-  "11": "tabletop.py",
+  "11": "numpy",
   "12": "Setup",
-  "13": "Results",
+  "13": "inspect_cache.py",
   "14": "download_models.sh",
   "15": "gpu_smoke_test.sh",
   "16": "AGENTS.md",
   "17": "setup_env.sh",
   "18": "tests/README.md",
-  "19": "make_fake_reconstruction.py",
+  "19": "The rules, in order",
   "20": "Details",
-  "21": "ground_truth.md"
+  "21": "ground_truth.md",
+  "22": "Timer"
 }
