@@ -403,7 +403,26 @@ def main() -> int:
     vlm_ref = None
     if not args.skip_vlm:
         from PIL import Image
-        vlm_model, vlm_processor, vlm_ref = load_vlm(cfg)
+
+        key = cfg["semantics"]["vlm"]
+        vlm_ref = resolve_model(cfg["models"]["vlm_primary" if key == "primary"
+                                             else "vlm_fallback"],
+                               cfg["paths"]["model_dir"])
+
+        # load the VLM lazily: skip the multi-minute model load entirely when
+        # every answer is already cached (common when re-running post-filters)
+        def _needs_vlm_call() -> bool:
+            for c in clusters + uncertain:
+                cached = vlm_cache.get(str(c["id"]))
+                if not (cached and cached.get("model") == vlm_ref
+                        and "changed" in cached):
+                    return True
+            return False
+
+        if _needs_vlm_call():
+            vlm_model, vlm_processor, _ = load_vlm(cfg)
+        else:
+            log.info("all VLM answers cached - skipping the model load")
         for c in clusters:
             cid = str(c["id"])
             entry = crops.get(cid, {})
@@ -469,16 +488,32 @@ def main() -> int:
     write_json(vlm_path, vlm_cache)
 
     # ---- 3) keep only VLM-confirmed verified clusters --------------------
+    def _reject(c: dict, reason: str) -> None:
+        """Record a rejected candidate (never drop silently)."""
+        cid = str(c["id"])
+        rejected[cid] = {"type": c["type"], "centroid": c["centroid"],
+                         "reason": reason,
+                         "vlm": {k: vlm_cache.get(cid, {}).get(k)
+                                 for k in ("label", "first", "second")}}
+        log.debug("  reject %s (%s): %s", cid, c["type"], reason)
+
     confirmed = []
+    single_view: list[dict] = []
     for c in clusters:
         cid = str(c["id"])
         v = vlm_cache.get(cid, {})
-        if args.skip_vlm or v.get("changed", True) is not False:
-            confirmed.append(c)      # kept unless the VLM explicitly denied it
+        if args.skip_vlm:
+            confirmed.append(c)
+        elif v.get("changed") is False:
+            _reject(c, "VLM denied the change (same object visible in both videos)")
+        elif v.get("changed") is None and v.get("first") is None and v.get("second") is None:
+            # the two-view verification could not run (the other video's crop
+            # was unavailable): a label-only answer must NOT count as a
+            # confirmed change - downgrade to the unverified list
+            single_view.append(c)
+            log.info("cluster %s: no two-view verification available -> unverified", cid)
         else:
-            rejected[cid] = {"type": c["type"], "centroid": c["centroid"],
-                             "reason": "VLM denied the change (same object visible in both videos)",
-                             "vlm": {k: v.get(k) for k in ("label", "raw")}}
+            confirmed.append(c)
 
     # mutual cancellation: a confirmed "removed X" and "added X" with the same
     # label at (nearly) the same spot mean X is present in BOTH videos - the
@@ -516,7 +551,7 @@ def main() -> int:
                    and c2["bbox_min"][i] - pad <= c1["bbox_max"][i] for i in range(3))
 
     uncertain_kept = []
-    for c in uncertain:
+    for c in list(uncertain) + single_view:
         cid = str(c["id"])
         dup = next((cc["id"] for cc in confirmed if _bbox_close(c, cc)), None)
         if dup is not None:
@@ -529,13 +564,7 @@ def main() -> int:
              len(confirmed), len(rejected), len(uncertain_kept))
 
     # ---- 3b) structural post-filters --------------------------------------
-    def _reject(c: dict, reason: str) -> None:
-        cid = str(c["id"])
-        rejected[cid] = {"type": c["type"], "centroid": c["centroid"],
-                         "reason": reason,
-                         "vlm": {k: vlm_cache.get(cid, {}).get(k)
-                                 for k in ("label", "first", "second")}}
-        log.debug("  reject %s (%s): %s", cid, c["type"], reason)
+    # (_reject is defined above, before the confirmation filter)
 
     # weak fragments are noise, not changes (the pen scores 90, the comb 110).
     # NOTE: only photometric candidates carry a change score; geometric ones
