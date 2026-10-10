@@ -183,12 +183,16 @@ def main() -> int:
                         help="confidence percentile for MapAnything: its head "
                              "sits at the floor for the blurrier video B, so "
                              "p50 discards 99%% of B (see docs/results.md)")
+    parser.add_argument("--cache-da3", default=None,
+                        help="optional third cache (Depth Anything 3 stretch)")
     parser.add_argument("--out", default="logs/backend_comparison.json")
     args = parser.parse_args()
     cfg = load_config(args.config)
 
     results = [analyse("VGGT", repo_path(args.cache_vggt), cfg, args.conf_vggt),
                analyse("MapAnything", repo_path(args.cache_ma), cfg, args.conf_ma)]
+    if args.cache_da3:
+        results.append(analyse("DA3-LARGE-1.1", repo_path(args.cache_da3), cfg, 50.0))
 
     for r in results:
         print(f"\n=== {r['label']} ({r['backend']}) ===")
