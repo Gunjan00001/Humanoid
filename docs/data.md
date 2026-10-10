@@ -37,6 +37,19 @@ data/
 `.gitignore` ignores large videos (`data/*.mp4`, `data/*.mov`) with an exception
 for `data/sample_*.mp4`. Use Git LFS or a release asset for the real recordings.
 
+### Additional scenes
+
+Optional extra scenes (robustness runs) live in their own subfolder with the same
+three files. They are not picked up automatically — point the pipeline at them
+with `--video_a data/sceneN/a.mp4 --video_b data/sceneN/b.mp4`.
+
+```
+data/sceneN/
+├── a.mp4
+├── b.mp4
+└── ground_truth.md
+```
+
 ## `ground_truth.md` template
 
 ```markdown
