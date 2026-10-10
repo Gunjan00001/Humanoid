@@ -696,6 +696,13 @@ def main() -> int:
         kept = []
         for c in confirmed:
             pts = cluster_points.get(c["id"])
+            # an explicit empty-space confirmation (from the type-correction
+            # step) is stronger evidence than the both-present heuristic -
+            # e.g. scene3's chair sits next to the OTHER chair, which made the
+            # both-present mask fire; the empty-check proved it was removed
+            if c.get("empty_fraction") is not None and c.get("reclassified_from"):
+                kept.append(c)
+                continue
             if c["type"] in ("removed", "added") and pts is not None and len(pts):
                 ix = ((pts[:, 0] - sbounds[0]) / scell).astype(int)
                 iy = ((pts[:, 1] - sbounds[2]) / scell).astype(int)
@@ -786,6 +793,12 @@ def main() -> int:
             replaced_rejects: set[int] = set()
             for c in confirmed:
                 if c["type"] != "replaced":
+                    continue
+                if c.get("reclassified_from"):
+                    # the replacement was established from occupied-space
+                    # evidence; the pixel gate exists for photometric
+                    # candidates and would reject a visually odd (occluded)
+                    # crop of a genuine replacement
                     continue
                 ci = crops.get(str(c["id"]), {})
                 if "crop" not in ci or "crop_other" not in ci:

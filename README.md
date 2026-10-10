@@ -90,8 +90,16 @@ photometric pipeline and is documented rather than hidden.
 render with per-change bounding boxes + labels and a before | after | 3D
 layout, a colored **TSDF mesh** (`scene_mesh.ply`, ≤ 10 MB) and a
 **self-contained interactive viewer** (`viewer.html` — open it in any browser:
-orbit, zoom, toggle video A / B / changes). Diagnosis and the
-`input_mode=pad` experiment: [visualization rework](docs/results.md#visualization-rework-steps-05).
+orbit, zoom, toggle video A / B / changes / full scene).
+Diagnosis and the `input_mode=pad` experiment:
+[visualization rework](docs/results.md#visualization-rework-steps-05).
+
+**Live interactive viewers** (GitHub Pages — enable once, see
+[`docs/hosting.md`](docs/hosting.md)):
+[demo](https://gunjan00001.github.io/Humanoid/outputs/viewer.html) ·
+[scene2](https://gunjan00001.github.io/Humanoid/outputs/scene2/viewer.html) ·
+[scene2 geometric](https://gunjan00001.github.io/Humanoid/outputs/scene2_geo/viewer.html) ·
+[scene3](https://gunjan00001.github.io/Humanoid/outputs/scene3/viewer.html)
 
 ## Pipeline
 
