@@ -38,6 +38,7 @@ from src.common import (  # noqa: E402
     apply_overrides,
     cache_dir,
     load_config,
+    pin_idle_gpus,
     read_json,
     repo_path,
     resolve_model,
@@ -143,6 +144,10 @@ def best_crop_for_cluster(cid: int, points: np.ndarray, tag: str, recon: dict, c
 def load_vlm(cfg: dict):
     import torch
     from transformers import AutoProcessor
+
+    # pin the N idlest GPUs BEFORE torch touches CUDA (device_map="auto" would
+    # otherwise spread the model over every visible A100 - see gpu.md)
+    pin_idle_gpus(int(cfg["gpu"]["vlm_gpus"]), log)
 
     key = cfg["semantics"]["vlm"]
     ref = cfg["models"]["vlm_primary" if key == "primary" else "vlm_fallback"]
