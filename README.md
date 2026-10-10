@@ -57,6 +57,16 @@ same frames ([full numbers](docs/results.md#backend-comparison-vggt-vs-mapanythi
 - Backend choice is `reconstruction.backend: vggt | mapanything` (DA3 via
   `--model-key da3_apache`); the default stays VGGT + `tabletop`.
 
+### Robustness on the extra scenes (v0.6.0)
+
+The default pipeline was also run unchanged on the two extra scenes from
+`data-v0.2` ([details](docs/results.md#robustness-on-the-extra-scenes-datav02)):
+it runs end-to-end on both, but the demo-calibrated thresholds do not transfer
+cleanly — scene2's coconut removal merged with a broad lighting change and was
+mislabeled, scene3's two real changes were found with one type error and one
+false positive. A short per-scene tuning pass (or recording both videos under
+similar light) is required; this is documented honestly rather than hidden.
+
 ## Pipeline
 
 ```
