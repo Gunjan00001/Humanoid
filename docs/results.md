@@ -90,62 +90,58 @@ python src/report.py    --config configs/default.yaml
   the Qwen3-VL confirmation + structural filters reduce it to the 3 real
   changes. Rejections are logged, not silently dropped.
 
-## Backend comparison: VGGT vs MapAnything
+## Backend comparison: VGGT vs MapAnything vs Depth Anything 3
 
-Added 2026-10-10 (`v0.5`): MapAnything (Apache-2.0 checkpoint
-`facebook/map-anything-apache`) as a second backend
-(`reconstruction.backend: mapanything`) on the **same 49 frames** of the demo
-scene. All numbers below are measured; raw logs and the machine-readable
-summary are in `logs/` (`ma_full.log`, `describe_ma.log`, `pbs_*.log`,
-`backend_comparison.json`).
+Added 2026-10-10 (`v0.5`): two additional backends on the **same 49 frames** of
+the demo scene - **MapAnything** (Apache-2.0 checkpoint
+`facebook/map-anything-apache`, `reconstruction.backend: mapanything`) and the
+stretch goal **Depth Anything 3** (DA3-LARGE-1.1, Apache-2.0, through
+MapAnything's unified external-model interface, `--model-key da3_apache`).
+All numbers below are measured; raw logs and the machine-readable summary are
+in `logs/` (`ma_full.log`, `pbs_da3_full.log`, `describe_ma.log`,
+`pbs_da3_describe.log`, `backend_comparison.json`).
 
 ### Reconstruction cost
 
-| | VGGT (CC-BY-NC) | MapAnything (Apache-2.0) |
-|---|---|---|
-| Model input per frame | 518×518 (centre-cropped) | 518×294 (full portrait frame) |
-| Model load (network FS) | ~3.0 min | ~4.3 min |
-| Inference, 49 frames | **17.2 s** (0.35 s/frame) | 20.0 s (0.41 s/frame) |
-| Peak GPU memory | **11.3 GiB** | 20.1 GiB |
-| Confidence working point | p50 (`p50` ≈ 1.01) | **p25**: MA's confidence head sits at its floor (≤1.0) for all of the blurrier video B (mean 0.97); p50 discards 99% of B |
-| Colours | correct from the model | `img_no_norm` absent → rebuilt from the JPEGs (`scripts/rebuild_colors.py`); the worker now always crop-resizes the originals as fallback |
+| | VGGT (CC-BY-NC) | MapAnything (Apache-2.0) | DA3-LARGE-1.1 (Apache-2.0) |
+|---|---|---|---|
+| Model input per frame | 518×518 (centre-cropped) | 518×294 (full portrait frame) | 518×294 |
+| Model load (network FS) | ~3.0 min | ~4.3 min | **~0.7 min** |
+| Inference, 49 frames | 17.2 s (0.35 s/frame) | 20.0 s (0.41 s/frame) | **4.7 s (0.10 s/frame)** |
+| Peak GPU memory | 11.3 GiB | 20.1 GiB | **6.2 GiB** |
+| Confidence working point | p50 | **p25** (floor-level for video B) | p50 (healthy for both videos) |
+| Colours | correct | `img_no_norm` absent → rebuilt from JPEGs | correct |
 
 ### Static-structure alignment (A↔B, 6 mm voxels)
 
-| | VGGT | MapAnything |
-|---|---|---|
-| A→B NN p50 / p75 / p90 | 4.1 / 7.9 / 16.3 mm | 4.1 / 6.5 / 23.5 mm |
-| ICP static mean NN (p25 working point) | 15.2 → 10.7 mm | 17.9 → 10.6 mm |
-| ICP static mean NN at p50 (MA B-sparse) | — | 17.5 → 4.4 mm |
-
-After ICP both backends align their two videos equally well (~10.6 vs
-10.7 mm). At MA's *clean* p50 subsets the residual drops to 4.4 mm, which
-suggests MA's geometry is more rigidly consistent (VGGT's residual is
-dominated by local surface warp), but that subset only contains 1% of B.
+| | VGGT | MapAnything | DA3-LARGE |
+|---|---|---|---|
+| A→B NN p50 / p75 / p90 | 4.1 / 7.9 / 16.3 mm | 4.1 / 6.5 / 23.5 mm | **4.1 / 7.2 / 11.8 mm** |
+| ICP static mean NN | 15.2 → 10.7 mm | 17.9 → 10.6 mm | 15.1 → **10.2 mm** |
 
 ### Thin objects: are the comb and pen visible in the depth maps?
 
 Height of each backend's own detected clusters above a *local* table plane
-(ring fit around the cluster, so surface warp is not mistaken for object
-height). A 1 cm object should read ≈ +10 mm if resolved.
+(ring fit around the cluster). A 1 cm object should read ≈ +10 mm if resolved.
 
-| Cluster | VGGT | MapAnything |
+| Backend | object cluster | height (median / p90) |
 |---|---|---|
-| comb (removed) | median −5.5 mm, p90 **+0.6 mm** (absorbed) | median −6.6 mm, p90 **+7.2 mm** (partial) |
-| comb handle (removed) | — | median −5.8 mm, p90 +10.7 mm |
-| pen (added) | median +0.6 mm, p90 **+8.8 mm** | median −1.5 mm, p90 **+14.0 mm** (partial) |
+| VGGT | comb | −5.5 / **+0.6 mm** (absorbed) |
+| VGGT | pen | +0.6 / +8.8 mm |
+| MapAnything | comb | −6.6 / +7.2 mm (partial) |
+| MapAnything | pen | −1.5 / +14.0 mm (partial) |
+| DA3-LARGE | cluster at (0.03, −0.15) | **+10.2 / +19.9 mm (resolved)** |
+| DA3-LARGE | cluster at (0.18, −0.03) | −1.8 / **+19.6 mm** |
 
-Neither backend cleanly resolves the 1 cm objects, but MA shows a clearly
-stronger positive tail — and its *geometric* diff actually detects the comb
-and pen (see below), which VGGT's geometric diff cannot.
+DA3's depth shows the strongest object response of the three - a median of
++10.2 mm is exactly a 1 cm object; VGGT's geometry cannot see them at all.
 
 ### Metric scale
 
-- MapAnything applies metric scaling (factor ≈ 0.847 on this scene) and its
-  world frame is room-scale (z ∈ [0, 2.3 m]); VGGT's frame is camera-anchored
-  and only approximately metric.
-- Measured comb length: **VGGT 160.5 mm vs MapAnything 161.3 mm** (0.5 %
-  agreement; plausibility-consistent with a ~16 cm pocket comb — not
+- MapAnything applies metric scaling (factor ≈ 0.847 on this scene); its world
+  frame is room-scale (z ∈ [0, 2.3 m]).
+- Measured comb length: **VGGT 160.5 mm / MapAnything 161.3 mm / DA3 161.3 mm**
+  (0.5 % agreement; plausibility-consistent with a ~16 cm pocket comb - not
   independently verified with a ruler, stated as such).
 
 ### End-to-end results (ground truth: comb removed, pen added, remote moved+flipped)
@@ -153,35 +149,48 @@ and pen (see below), which VGGT's geometric diff cannot.
 | Backend | diff.method | Detected | False positives | Notes |
 |---|---|---|---|---|
 | VGGT | `geometric` | 0/3 | 2 (timer ring, table blob) | thin objects absent from the depth maps |
-| VGGT | `tabletop` | **3/3** | **0** | the production default (see above) |
-| MapAnything | `geometric` | 2/3 (comb, pen) | 0 | **remote missed**; thin objects found by geometry alone |
+| VGGT | `tabletop` | **3/3** | **0** | the production default |
+| MapAnything | `geometric` | 2/3 (comb, pen) | 0 | remote missed; thin objects found by geometry alone |
 | MapAnything | `tabletop` | 2/3 (comb, remote) | 0 | pen VLM-confirmed but scored 62.7 < the VGGT-calibrated floor 80 |
 | MapAnything | `tabletop`, floor recalibrated to 60 | **3/3** | **0** | same method, per-backend threshold |
+| DA3-LARGE | `geometric` | 1/3 (comb fragment) | 1 (timer) | fastest backend; thin objects visible in its depth |
+| DA3-LARGE | `tabletop` | 2/3 (pen, remote) | 1 (timer) | comb fragments fell below the VGGT-calibrated score floor; one timer false positive |
 
-### Verdict: did MapAnything help?
+### Verdict: did MapAnything / DA3 help?
 
 - **VGGT + `tabletop` remains the best single configuration** (3/3, 0 false
-  positives, fastest, half the GPU memory, no extra env).
-- MapAnything does **not** beat it overall on this scene, but it brings three
-  real strengths: **metric scale by construction** (Apache-2.0 too), a
-  **geometric diff that sees 1 cm objects** (its depth partially resolves them;
-  VGGT's cannot), and equal post-ICP alignment.
-- Its costs: 1.8× peak GPU memory, a confidence head that needs a different
-  working point (p25) on the blurrier video, missing denormalised colours, and
-  photometric scores on a different scale (needs its own `min_change_score`).
-- The clear next step suggested by the data: a **hybrid** (MapAnything geometry
-  + the appearance-based tabletop comparison) could combine both strengths —
-  MA's geometric run already covers what VGGT's misses, and vice versa.
+  positives) and needs no extra env.
+- **MapAnything** matches that end-to-end result with its threshold calibrated
+  (`3/3, 0 FP`) and brings **metric scale by construction** plus a geometric
+  diff that sees the 1 cm objects. Costs: 1.8× peak memory, isolated env, a
+  confidence head that needs a lower working point on the blurrier video.
+- **DA3-LARGE-1.1** is the **fastest and lightest** backend (0.10 s/frame,
+  6.2 GiB), aligns best (p90 11.8 mm) and shows the **strongest thin-object
+  response**; its photometric scores run on a different scale (comb fragments
+  fell below the VGGT-calibrated floor) and it produced one timer false
+  positive in tabletop mode. As a drop-in geometry engine it is very
+  attractive; its appearance-based scores need calibration.
+- The data suggests the same next step for both: a **hybrid** (DA3 or
+  MapAnything geometry + the tabletop appearance comparison with per-backend
+  score calibration) could cover all three changes with zero false positives
+  and less compute than VGGT.
 
 ### Stretch goal: Depth Anything 3 through MapAnything's unified interface
 
-Attempted. `--model-key da3` is implemented (external wrappers via
-`init_model_from_config` + `model(views)`); MapAnything's hydra configs are not
-part of its pip package, so `scripts/setup_env.sh` clones the source into
-`third_party/` (gitignored) and the worker prepends it before the first
-import. The DA3 smoke job is in `logs/pbs_da3_smoke.log`; the last attempt's
-result is recorded there. This is a stretch item and is **not** part of the
-comparison table above.
+**Working** (`--model-key da3_apache`). Integration notes, each found and fixed
+while bringing it up (all in `scripts/run_mapanything.py`):
+- MapAnything's hydra configs are **not part of its pip package** → the source
+  checkout under `third_party/` must shadow the installed package *before the
+  first import* (`setup_env.sh` clones it and generates
+  `configs/model/da3_apache.yaml` for the Apache-2.0 LARGE checkpoint).
+- External wrappers use `forward()` (not `infer()`), expect the views already
+  on the device, and return the **raw** unified format (`cam_quats`,
+  `cam_trans`, `depth_along_ray`); MapAnything's own
+  `postprocess_model_outputs_for_inference` derives the final fields
+  (`depth_z`, `intrinsics`, `camera_poses`, `img_no_norm`, `mask`) that the
+  artifact contract needs.
+- The wrapper's default checkpoint (GIANT-1.1) is CC-BY-NC-4.0; the generated
+  `da3_apache` config selects the Apache-2.0 LARGE-1.1 instead.
 
 ### Pipeline robustness fixes that came out of this comparison
 
