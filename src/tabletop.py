@@ -73,7 +73,13 @@ def grid_bounds(points: np.ndarray, coef: np.ndarray, cell: float, margin_cells:
 
 def cell_maps(points: np.ndarray, colors: np.ndarray, coef: np.ndarray,
               cell: float, bounds: tuple) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """Rasterise into (height [nx,ny], colour [nx,ny,3], count [nx,ny], point_cell [N,2])."""
+    """Rasterise into (height [nx,ny], colour [nx,ny,3], count [nx,ny], point_codes [N]).
+
+    point_codes[i] is the flat cell index of point i, or -1 for points outside
+    the grid. Codes are only computed for inside points so that out-of-grid
+    indices can never collide with valid cells (a raw ix*ny+iy does collide for
+    negative ix/iy - that bug attached wrong points to clusters).
+    """
     x0, x1, y0, y1 = bounds
     nx, ny = int(round((x1 - x0) / cell)), int(round((y1 - y0) / cell))
     ix = ((points[:, 0] - x0) / cell).astype(np.int64)
@@ -89,7 +95,9 @@ def cell_maps(points: np.ndarray, colors: np.ndarray, coef: np.ndarray,
                                minlength=nx * ny) / np.maximum(n, 1)
     H = np.where(n > 0, H, np.nan).reshape(nx, ny)
     C = np.where(n.reshape(nx, ny, 1) > 0, C.reshape(nx, ny, 3), np.nan)
-    return H, C, n.reshape(nx, ny), np.c_[ix, iy]
+    codes = np.full(len(points), -1, dtype=np.int64)
+    codes[inside] = flat
+    return H, C, n.reshape(nx, ny), codes
 
 
 def fit_color_field(color: np.ndarray, valid: np.ndarray, iters: int = 4,
@@ -138,15 +146,14 @@ def ratio_distance(color_a: np.ndarray, color_b: np.ndarray,
 # cluster assembly
 
 
-def _cells_to_points(cell_ij: np.ndarray, cloud_cell: np.ndarray, points: np.ndarray,
+def _cells_to_points(cell_ij: np.ndarray, cloud_codes: np.ndarray, points: np.ndarray,
                      cell: float, bounds: tuple, max_per_cell: int,
                      grid_shape: tuple) -> np.ndarray:
     """Gather the actual cloud points that fall into the given cells (vectorised)."""
     x0, _, y0, _ = bounds
     ny = grid_shape[1]
     want = np.unique(cell_ij[:, 0] * ny + cell_ij[:, 1])
-    have = cloud_cell[:, 0] * ny + cloud_cell[:, 1]
-    pts = points[np.isin(have, want)]
+    pts = points[np.isin(cloud_codes, want)]     # codes are -1 for out-of-grid points
     if len(pts) == 0:
         # fall back to cell centres
         return np.c_[(cell_ij[:, 0] + 0.5) * cell + x0, (cell_ij[:, 1] + 0.5) * cell + y0,
@@ -175,8 +182,8 @@ def detect(recon: dict[str, Any], cfg: dict[str, Any]) -> list[dict]:
     log.info("planes: A=%s B=%s", np.round(coef_a, 4).tolist(), np.round(coef_b, 4).tolist())
 
     bounds = grid_bounds(np.concatenate([A, B]), coef_a, cell)
-    HA, CMA, NA, cellA = cell_maps(A, CA, coef_a, cell, bounds)
-    HB, CMB, NB, cellB = cell_maps(B, CB, coef_b, cell, bounds)
+    HA, CMA, NA, codesA = cell_maps(A, CA, coef_a, cell, bounds)
+    HB, CMB, NB, codesB = cell_maps(B, CB, coef_b, cell, bounds)
     log.info("grid %s x %s cells (%.0fmm), observed A=%d B=%d",
              HA.shape[0], HA.shape[1], cell * 1000, int((NA > 0).sum()), int((NB > 0).sum()))
 
@@ -254,10 +261,10 @@ def detect(recon: dict[str, Any], cfg: dict[str, Any]) -> list[dict]:
                 continue
 
             if ctype == "added":
-                src_pts, src_cell = B, cellB
+                src_pts, src_codes = B, codesB
             else:  # removed, replaced and unverified-removed are anchored in video A
-                src_pts, src_cell = A, cellA
-            sample = _cells_to_points(cell_ij, src_cell, src_pts, cell, bounds,
+                src_pts, src_codes = A, codesA
+            sample = _cells_to_points(cell_ij, src_codes, src_pts, cell, bounds,
                                       int(tcfg["max_points_per_cell"]), HA.shape)
 
             score = np.abs(objA - objB)[cell_ij[:, 0], cell_ij[:, 1]].mean() \
@@ -282,12 +289,14 @@ def detect(recon: dict[str, Any], cfg: dict[str, Any]) -> list[dict]:
                                   for p in sample[:200]],
             }
             if ctype == "replaced":
-                other = _cells_to_points(cell_ij, cellB, B, cell, bounds,
+                other = _cells_to_points(cell_ij, codesB, B, cell, bounds,
                                          int(tcfg["max_points_per_cell"]), HA.shape)
                 entry["sample_points_other"] = [[round(float(v), 4) for v in p]
                                                 for p in other[:200]]
-            log.info("  keep %s #%d: %d cells, score %.0f, centroid %s",
-                     ctype, next_id, grid.sum(), score, entry["centroid"])
+            log.info("  keep %s #%d: %d cells, score %.0f, centroid %s (cells at %.3f, %.3f)",
+                     ctype, next_id, grid.sum(), score, entry["centroid"],
+                     bounds[0] + (cell_ij[:, 0].mean() + 0.5) * cell,
+                     bounds[2] + (cell_ij[:, 1].mean() + 0.5) * cell)
             clusters.append(entry)
             next_id += 1
 

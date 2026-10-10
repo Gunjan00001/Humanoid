@@ -68,11 +68,16 @@ CLAIMS = {
 PROMPT_VERIFY = (
     "These two photos show the same small region of a table at two different "
     "times. The first image is from the earlier recording, the second from the "
-    "later one. A change detector flagged this region as: {claim}.\n"
-    "Confirm or deny this claim. Ignore lighting, exposure, shadow and blur "
-    "differences - they are expected and do not count as changes.\n"
-    'Answer with JSON only: {{"changed": true or false, "label": "<2-4 word object name>", '
-    '"sentence": "<one short sentence about what changed, e.g. the comb was removed>"}}'
+    "later one.\n"
+    "A change detector makes this claim: {claim}\n"
+    "Step 1: name the main object(s) visible in the FIRST image.\n"
+    "Step 2: name the main object(s) visible in the SECOND image.\n"
+    "Step 3: decide whether the claim is true. Ignore lighting, exposure, "
+    "shadow and blur differences - they do not count as changes.\n"
+    'Answer with JSON only: {{"first": "<objects in image 1>", '
+    '"second": "<objects in image 2>", "changed": true or false, '
+    '"label": "<2-4 word object name>", '
+    '"sentence": "<one short sentence about what changed>"}}'
 )
 PROMPT_SINGLE = (
     "This image is a crop from a small indoor scene. Identify the object in it.\n"
@@ -215,6 +220,28 @@ def parse_json_reply(text: str) -> dict:
     return {"label": first[:60] or None, "description": text[:300] or None}
 
 
+_STOPWORDS = {"the", "a", "an", "and", "of", "with", "on", "in", "is", "are", "no",
+              "none", "empty", "table", "surface", "visible", "object", "objects",
+              "there", "it", "its", "small", "large", "other"}
+
+
+def _objects_overlap(a, b) -> bool:
+    """True when two free-text object descriptions name the same thing.
+
+    Used for the verification self-consistency check: 'digital timer' vs
+    'the digital timer on the table' -> True; 'wooden comb' vs 'empty table'
+    -> False (all significant words are stopwords there).
+    """
+    def words(s):
+        s = re.sub(r"[^a-z0-9 ]", " ", (s or "").lower())
+        return {w for w in s.split() if w and w not in _STOPWORDS}
+
+    wa, wb = words(a), words(b)
+    if not wa or not wb:
+        return False
+    return bool(wa & wb)
+
+
 # ---------------------------------------------------------------------------
 # DINOv2
 
@@ -351,8 +378,18 @@ def main() -> int:
             changed = parsed.get("changed") if two_view else None
             if isinstance(changed, str):
                 changed = changed.strip().lower() in ("true", "yes", "1")
+            # self-consistency override: if the model names the same object in
+            # both images, a removed/added claim is false regardless of what it
+            # answered (small blurry crops make it over-sensitive otherwise)
+            if (two_view and c["type"] in ("removed", "added")
+                    and _objects_overlap(parsed.get("first"), parsed.get("second"))):
+                if changed is not False:
+                    log.info("  override -> changed=False (%s vs %s)",
+                             parsed.get("first"), parsed.get("second"))
+                changed = False
             vlm_cache[cid] = {"label": parsed.get("label"),
                               "description": parsed.get("sentence") or parsed.get("description"),
+                              "first": parsed.get("first"), "second": parsed.get("second"),
                               "changed": bool(changed) if changed is not None else True,
                               "raw": reply[:500], "model": vlm_ref, "created": stamp()}
             log.info("verify %s (%s) -> changed=%s label=%s",
