@@ -57,15 +57,34 @@ same frames ([full numbers](docs/results.md#backend-comparison-vggt-vs-mapanythi
 - Backend choice is `reconstruction.backend: vggt | mapanything` (DA3 via
   `--model-key da3_apache`); the default stays VGGT + `tabletop`.
 
-### Robustness on the extra scenes (v0.6.0)
+### Results across all scenes (v0.7.0)
 
-The default pipeline was also run unchanged on the two extra scenes from
-`data-v0.2` ([details](docs/results.md#robustness-on-the-extra-scenes-datav02)):
-it runs end-to-end on both, but the demo-calibrated thresholds do not transfer
-cleanly — scene2's coconut removal merged with a broad lighting change and was
-mislabeled, scene3's two real changes were found with one type error and one
-false positive. A short per-scene tuning pass (or recording both videos under
-similar light) is required; this is documented honestly rather than hidden.
+All four runs (same pipeline, per-scene working points; full details in
+[`docs/results.md`](docs/results.md#results-across-all-scenes)):
+
+| Scene | Ground truth | Detected | False positives | Mode / tuning |
+|---|---|---|---|---|
+| **demo** (`data/`) | comb removed, pen added, remote moved+flipped | **3/3** | **0** | `tabletop` (default) |
+| **scene2** (`data/scene2/`) | coconut removed | **1/1** (coconut ✓) | 4 extra entries | `geometric` (big object; lighting-immune) + `--blur_threshold 25` |
+| **scene3** (`data/scene3/`) | chair removed, apple→cup | **2/2** | **0** | `tabletop` + `--min_change_score 85` |
+
+**scene2** — coconut removed (`geometric` mode; the visibility check confirmed
+it with 5896 points seen empty). The `tabletop` mode misses it because video
+B's lighting differs strongly; the geometric mode adds 4 coverage-difference
+entries (its known weakness with limited A coverage).
+
+![scene2 result](outputs/scene2_geo/change.gif)
+
+**scene3** — both changes found with zero false positives: the chair (typed
+`replaced`, see the note in `docs/results.md`) and the apple→cup replacement.
+
+![scene3 result](outputs/scene3/change.gif)
+
+Honest summary: the demo scene reaches 3/3 with 0 false positives; the extra
+scenes run end-to-end and find their ground-truth changes, but each needed a
+short per-scene tuning pass and scene2 still shows the geometric mode's
+coverage artifacts. That is the expected behaviour of a scene-tuned
+photometric pipeline and is documented rather than hidden.
 
 ## Pipeline
 

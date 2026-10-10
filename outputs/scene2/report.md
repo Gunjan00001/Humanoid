@@ -4,15 +4,13 @@
 - video B: `/home/user/Desktop/Humanoid/data/scene2/b.mp4`
 - reconstruction: `vggt` (/home/user/models/VGGT-1B)
 - frames: 24 | semantics: vlm-verified
-- generated: 2026-10-10T18:47:45Z | config `e6e15c30467a`
+- generated: 2026-10-10T18:53:55Z | config `e6e15c30467a`
 
-**3 change(s) detected**: 1 added, 2 removed
+**1 change(s) detected**: 1 removed
 
 | # | type | label | centroid (x, y, z) | confidence |
 |---|---|---|---|---|
 | 1 | removed | apple | (0.07, -0.15, 1.05) | 0.86 |
-| 2 | removed | concrete floor | (0.14, 0.06, 0.91) | 0.82 |
-| 3 | added | crumpled paper | (0.31, 0.13, 0.92) | 0.57 |
 
 ## Details
 
@@ -23,22 +21,6 @@
 - centroid: (0.07, -0.15, 1.05) | confidence: 0.86
 - cluster ids: [1]
 - visible in: a/frame_00048.jpg, b/frame_00088.jpg
-
-### 2. REMOVED - concrete floor
-
-> a gray concrete floor meeting a white wall baseboard.
-
-- centroid: (0.14, 0.06, 0.91) | confidence: 0.82
-- cluster ids: [3]
-- visible in: a/frame_00000.jpg, b/frame_00088.jpg
-
-### 3. ADDED - crumpled paper
-
-> a small, crumpled piece of white paper lying on a dark floor near a white wall or baseboard.
-
-- centroid: (0.31, 0.13, 0.92) | confidence: 0.57
-- cluster ids: [4]
-- visible in: a/frame_00048.jpg, b/frame_00168.jpg
 
 
 ## Unverified candidates
@@ -55,6 +37,7 @@ These regions contain object-like appearance in ONE video while the other video 
 - **added?** wooden frame at (0.41, -0.27, 1.18) - a close-up of a wooden frame corner, likely part of a door or window, with visible grain and a light-colored surface.
 - **added?** wooden beam at (0.40, -0.47, 1.28) - a diagonal wooden beam against a light-colored wall, possibly part of a ceiling or frame.
 - **added?** wooden frame at (0.44, -0.05, 1.04) - a close-up of a wooden frame corner, likely part of a door or window, with visible grain and a light-colored surface.
+- **added?** crumpled paper at (0.31, 0.13, 0.92) - a small, crumpled piece of white paper lying on a dark floor near a white wall or baseboard.
 
 ---
 

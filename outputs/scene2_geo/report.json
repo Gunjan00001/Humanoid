@@ -1,0 +1,302 @@
+{
+  "meta": {
+    "video_a": "/home/user/Desktop/Humanoid/data/scene2/a.mp4",
+    "video_b": "/home/user/Desktop/Humanoid/data/scene2/b.mp4",
+    "backend": "vggt",
+    "model": "/home/user/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-10T18:56:24Z",
+    "config_hash": "e6e15c30467a",
+    "num_frames": 24,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "coconut",
+      "description": "The coconut was removed from the table.",
+      "centroid": [
+        -0.09,
+        -0.331,
+        1.0816
+      ],
+      "bbox": [
+        -0.3804,
+        -0.4968,
+        1.002,
+        0.1447,
+        -0.1967,
+        1.2568
+      ],
+      "from": [
+        -0.09,
+        -0.331,
+        1.0816
+      ],
+      "to": null,
+      "confidence": 0.75,
+      "cluster_ids": [
+        1
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00072.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00040.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 19,
+            "file": "b/frame_00120.jpg",
+            "n_valid": 5896,
+            "n_empty": 5896
+          },
+          {
+            "frame": 20,
+            "file": "b/frame_00152.jpg",
+            "n_valid": 5896,
+            "n_empty": 5896
+          },
+          {
+            "frame": 21,
+            "file": "b/frame_00160.jpg",
+            "n_valid": 5896,
+            "n_empty": 5896
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "type": "removed",
+      "label": "apple",
+      "description": "The apple was removed from the table.",
+      "centroid": [
+        0.1539,
+        -0.0449,
+        0.947
+      ],
+      "bbox": [
+        0.0768,
+        -0.072,
+        0.9019,
+        0.2103,
+        0.0238,
+        0.9814
+      ],
+      "from": [
+        0.1539,
+        -0.0449,
+        0.947
+      ],
+      "to": null,
+      "confidence": 0.75,
+      "cluster_ids": [
+        2
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00016.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00088.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 11,
+            "file": "b/frame_00000.jpg",
+            "n_valid": 562,
+            "n_empty": 562
+          },
+          {
+            "frame": 12,
+            "file": "b/frame_00008.jpg",
+            "n_valid": 562,
+            "n_empty": 562
+          },
+          {
+            "frame": 13,
+            "file": "b/frame_00016.jpg",
+            "n_valid": 562,
+            "n_empty": 562
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "type": "added",
+      "label": "round object",
+      "description": "The round object was removed from the table surface.",
+      "centroid": [
+        -0.0706,
+        -0.2268,
+        1.0719
+      ],
+      "bbox": [
+        -0.1109,
+        -0.2583,
+        1.0508,
+        -0.0341,
+        -0.1985,
+        1.0928
+      ],
+      "from": null,
+      "to": [
+        -0.0706,
+        -0.2268,
+        1.0719
+      ],
+      "confidence": 0.45,
+      "cluster_ids": [
+        5
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00088.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 0,
+            "file": "a/frame_00000.jpg",
+            "n_valid": 119,
+            "n_empty": 119
+          },
+          {
+            "frame": 1,
+            "file": "a/frame_00008.jpg",
+            "n_valid": 119,
+            "n_empty": 119
+          },
+          {
+            "frame": 2,
+            "file": "a/frame_00016.jpg",
+            "n_valid": 119,
+            "n_empty": 119
+          }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "type": "added",
+      "label": "apple",
+      "description": "An apple appeared in the second image.",
+      "centroid": [
+        -0.0136,
+        0.0115,
+        0.8992
+      ],
+      "bbox": [
+        -0.0442,
+        -0.0212,
+        0.8828,
+        0.0181,
+        0.0478,
+        0.938
+      ],
+      "from": null,
+      "to": [
+        -0.0136,
+        0.0115,
+        0.8992
+      ],
+      "confidence": 0.36,
+      "cluster_ids": [
+        6
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00088.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00016.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 0,
+            "file": "a/frame_00000.jpg",
+            "n_valid": 67,
+            "n_empty": 67
+          },
+          {
+            "frame": 1,
+            "file": "a/frame_00008.jpg",
+            "n_valid": 67,
+            "n_empty": 67
+          },
+          {
+            "frame": 2,
+            "file": "a/frame_00016.jpg",
+            "n_valid": 67,
+            "n_empty": 67
+          }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "type": "added",
+      "label": "apple",
+      "description": "The apple was removed from the table.",
+      "centroid": [
+        0.2157,
+        -0.1365,
+        1.0388
+      ],
+      "bbox": [
+        0.0216,
+        -0.3486,
+        0.9531,
+        0.3435,
+        0.0055,
+        1.1797
+      ],
+      "from": null,
+      "to": [
+        0.2157,
+        -0.1365,
+        1.0388
+      ],
+      "confidence": 0.75,
+      "cluster_ids": [
+        8
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00088.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00120.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 4,
+            "file": "a/frame_00032.jpg",
+            "n_valid": 1420,
+            "n_empty": 1420
+          },
+          {
+            "frame": 5,
+            "file": "a/frame_00040.jpg",
+            "n_valid": 1420,
+            "n_empty": 1420
+          },
+          {
+            "frame": 6,
+            "file": "a/frame_00048.jpg",
+            "n_valid": 1420,
+            "n_empty": 1420
+          }
+        ]
+      }
+    }
+  ],
+  "unverified_changes": []
+}

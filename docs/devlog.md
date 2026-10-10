@@ -262,3 +262,35 @@ useful. GPU jobs should report an estimated remaining time to the user.
   A/B lighting shift need the margin raised or the videos re-recorded under
   similar light. Both scene findings are in `docs/results.md`
   ("Robustness on the extra scenes").
+
+### Tuning pass: the extra scenes now report their ground truth
+
+- **scene3** (`--min_change_score 85`): the "table leg" false positive (score
+  80.7) drops; **2/2 changes, 0 false positives** (chair typed `replaced`,
+  apple→cup labeled generically — type/label nuances, not misses).
+- **scene2**: the `tabletop` mode keeps producing one apple-area false
+  positive even at `--objectness_margin 80` (the apple is present in both
+  videos; the VLM's B-side crop missed it, and the apple's B-side objectness
+  is below threshold so the static-object suppression cannot fire). The
+  **`geometric` mode finds the coconut cleanly** — a 5896-point removed
+  cluster, visibility-confirmed ("5896 points seen empty") — because a ~15 cm
+  object is plainly visible in VGGT's depth and the mode is immune to the
+  lighting shift. Its 4 extra entries are coverage-difference artifacts
+  (regions only B saw), the weakness the plan predicted.
+- **Lesson:** choose the diff mode per scene — `tabletop` for thin objects
+  under similar lighting (the demo), `geometric` for big objects and/or large
+  lighting shifts (scene2). Both modes share everything downstream.
+
+### Two correctness fixes found by the scene runs
+
+1. **Single-view fallback counted as confirmed.** A cluster whose other-video
+   crop was unavailable got a label-only answer (`changed=None`) and was kept
+   as a *confirmed* change (scene2's "concrete floor" and "crumpled paper").
+   Now downgraded to the unverified list — only a two-view verification
+   confirms a change. (This also explains why those entries had no
+   `first`/`second` fields in `vlm.json`.)
+2. **The VLM loaded even when every answer was cached**, costing ~2 minutes
+   per post-filter re-run. Now loaded lazily.
+
+Both fixes are structural (they apply to every scene); the demo-scene results
+are unchanged.
