@@ -1,24 +1,29 @@
-"""Stage 5 - semantics (GPU, 1-2 devices).
+"""Stage 5 - semantics + VLM verification (GPU, 1-2 devices).
 
-Per cluster:
-  1. pick the best frame of its own video (most points visible, least occlusion),
-  2. crop it (mapped back to the original JPEG resolution),
-  3. ask Qwen3-VL for a short label + one-sentence description (structured JSON),
-  4. embed every crop with DINOv2 and merge a removed+added pair with a
-     plausible match at a different 3D position into one *moved* object
-     (Qwen3-VL then writes the final move sentence from the two crops).
+For every candidate cluster from src/diff.py:
+  1. pick the best frame of its own video (most points visible, least occlusion)
+     and of the *other* video (for verified candidates),
+  2. crop both at the original JPEG resolution,
+  3. ask Qwen3-VL to confirm or deny the change hypothesis and to label the
+     object ("changed": true/false) - photometric candidates include lighting
+     and blur artefacts, so this verification step is what keeps the report
+     clean. Unverified clusters (one video has no coverage) get a label only.
+  4. embed confirmed crops with DINOv2; a confirmed removed+added pair with a
+     plausible match at a different 3D position becomes one *moved* object
+     (Qwen3-VL writes the final move sentence from the two crops).
 
     python src/describe.py --config configs/default.yaml
     python src/describe.py --config configs/default.yaml --skip_vlm      # crops only
     python src/describe.py --config configs/default.yaml --limit_clusters 4
 
 Reads  cache/diff/... + cache/reconstruction/... + cache/frames/
-Writes cache/semantics/{crops/*.png, crops.json, vlm.json, embeddings.npz, matches.json}
+Writes cache/semantics/{crops/*.png, crops.json, vlm.json, rejected.json,
+                       embeddings.npz, matches.json}
 
 All VLM answers are cached incrementally: re-runs never re-spend GPU time on
-the same crop. Model lifecycle: the VLM stays loaded for labels *and* final
-move sentences; DINOv2 is loaded on the least-loaded GPU and freed before the
-sentences are generated.
+the same crop. Model lifecycle: the VLM stays loaded for verification, labels
+and final move sentences; DINOv2 is loaded on the least-used GPU and freed
+before the sentences are generated.
 """
 
 from __future__ import annotations
@@ -55,10 +60,22 @@ from src.geometry import (  # noqa: E402
 
 log = setup_logging("describe")
 
+CLAIMS = {
+    "removed": "the object was REMOVED (it is present in the first image and gone in the second)",
+    "added": "an object was ADDED (it is absent in the first image and present in the second)",
+    "replaced": "the object changed state or appearance (e.g. it was moved, flipped or replaced)",
+}
+PROMPT_VERIFY = (
+    "These two photos show the same small region of a table at two different "
+    "times. The first image is from the earlier recording, the second from the "
+    "later one. A change detector flagged this region as: {claim}.\n"
+    "Confirm or deny this claim. Ignore lighting, exposure, shadow and blur "
+    "differences - they are expected and do not count as changes.\n"
+    'Answer with JSON only: {{"changed": true or false, "label": "<2-4 word object name>", '
+    '"sentence": "<one short sentence about what changed, e.g. the comb was removed>"}}'
+)
 PROMPT_SINGLE = (
-    "This image is a crop from a small indoor scene. A 3D change-detection "
-    "pipeline flagged this region as an object that changed between two "
-    "recordings. Identify the object.\n"
+    "This image is a crop from a small indoor scene. Identify the object in it.\n"
     'Answer with JSON only, no other text: {"label": "<2-4 word object name>", '
     '"description": "<one short sentence about the object>"}'
 )
@@ -76,8 +93,9 @@ PROMPT_MOVE = (
 # crop selection
 
 
-def best_crop_for_cluster(cid: int, points: np.ndarray, tag: str, recon: dict, cfg: dict) -> dict | None:
-    """Pick the frame of the cluster's own video that sees it best, crop it."""
+def best_crop_for_cluster(cid: int, points: np.ndarray, tag: str, recon: dict, cfg: dict,
+                          suffix: str = "") -> dict | None:
+    """Pick the frame of the given video that sees the cluster best, crop it."""
     scfg = cfg["semantics"]
     conf_q = float(np.percentile(recon["depth_conf"], cfg["reconstruction"]["conf_percentile"]))
     own_frames = [i for i, t in enumerate(recon["tags"]) if t == tag]
@@ -96,8 +114,8 @@ def best_crop_for_cluster(cid: int, points: np.ndarray, tag: str, recon: dict, c
             best = {"frame_index": i, "n_visible": n_vis, "visible": visible, "uv": uv}
 
     if best is None or best["n_visible"] < 5:
-        log.warning("cluster %d: no good view found (%s visible points)",
-                    cid, None if best is None else best["n_visible"])
+        log.warning("cluster %d (%s%s): no good view found (%s visible points)",
+                    cid, tag, suffix, None if best is None else best["n_visible"])
         return None
 
     uv = best["uv"][best["visible"]]
@@ -128,13 +146,13 @@ def best_crop_for_cluster(cid: int, points: np.ndarray, tag: str, recon: dict, c
     if crop.size == 0:
         log.warning("cluster %d: empty crop %s", cid, bbox_orig)
         return None
-    crop_path = cache_dir(cfg, "semantics", "crops") / f"cluster_{cid:03d}.png"
+    crop_path = cache_dir(cfg, "semantics", "crops") / f"cluster_{cid:03d}{suffix}.png"
     cv2.imwrite(str(crop_path), crop)
-    log.info("cluster %d: best view %s (%d visible pts), crop %s",
-             cid, tr["file"], best["n_visible"], crop_path.name)
-    return {"cluster_id": cid, "frame": tr["file"], "frame_index": int(frame_idx),
-            "bbox_orig": list(bbox_orig), "n_visible": best["n_visible"],
-            "crop": str(crop_path)}
+    log.info("cluster %d (%s): best view %s (%d visible pts), crop %s",
+             cid, tag, tr["file"], best["n_visible"], crop_path.name)
+    return {"cluster_id": cid, "tag": tag, "frame": tr["file"],
+            "frame_index": int(frame_idx), "bbox_orig": list(bbox_orig),
+            "n_visible": best["n_visible"], "crop": str(crop_path)}
 
 
 # ---------------------------------------------------------------------------
@@ -235,7 +253,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     add_common_args(parser)
     parser.add_argument("--skip_vlm", action="store_true",
-                        help="crops only; no labels, embeddings or matching")
+                        help="crops only; no verification, labels or matching")
     parser.add_argument("--limit_clusters", type=int, default=None,
                         help="debug: only process the first N clusters")
     args = parser.parse_args()
@@ -248,113 +266,214 @@ def main() -> int:
         return 0
 
     recon = load_reconstruction(cfg)
-    clusters = read_json(repo_path(cfg["paths"]["cache_dir"]) / "diff" / "clusters.json")["clusters"]
-    points_npz = np.load(repo_path(cfg["paths"]["cache_dir"]) / "diff" / "points.npz")
+    diff_dir = repo_path(cfg["paths"]["cache_dir"]) / "diff"
+    clusters = read_json(diff_dir / "clusters.json")["clusters"]
+    uncertain_path = diff_dir / "uncertain.json"
+    uncertain = read_json(uncertain_path)["clusters"] if uncertain_path.exists() else []
     if args.limit_clusters:
         clusters = clusters[:args.limit_clusters]
-    keep_ids = {c["id"] for c in clusters}
+        uncertain = uncertain[:args.limit_clusters]
+    keep_ids = {c["id"] for c in clusters} | {c["id"] for c in uncertain}
+    points_npz = np.load(diff_dir / "points.npz")
     cluster_points: dict[int, np.ndarray] = {}
-    for c in clusters:
-        tag = c["source_tag"]
+    for c in clusters + uncertain:
+        tag = c["source_tag"] if c["source_tag"] in ("a", "b") else "a"
         arr = points_npz[f"{tag}_points"]
         labels = points_npz[f"{tag}_labels"]
         cluster_points[c["id"]] = arr[labels == c["id"]].astype(np.float32)
-    log.info("describing %d cluster(s)", len(clusters))
+    log.info("processing %d verified + %d unverified candidate(s)",
+             len(clusters), len(uncertain))
 
     # ---- 1) crops -------------------------------------------------------
     crops_path = sem_dir / "crops.json"
     crops = read_json(crops_path) if crops_path.exists() and not args.force else {}
     crops = {k: v for k, v in crops.items() if int(k) in keep_ids}
-    for c in clusters:
+    for c in clusters + uncertain:
         cid = c["id"]
-        if str(cid) in crops:
+        pts = cluster_points[cid]
+        if not pts.size:
             continue
-        info = best_crop_for_cluster(cid, cluster_points[cid], c["source_tag"], recon, cfg)
-        if info:
-            crops[str(cid)] = info
+        entry = crops.get(str(cid), {})
+        # own-video view
+        own_tag = c["source_tag"] if c["source_tag"] in ("a", "b") else "a"
+        if "crop" not in entry:
+            info = best_crop_for_cluster(cid, pts, own_tag, recon, cfg)
+            if info:
+                entry.update(info)
+        # other-video view (verified clusters only)
+        if c.get("verified", True) and "crop_other" not in entry:
+            other_tag = "b" if own_tag == "a" else "a"
+            info = best_crop_for_cluster(cid, pts, other_tag, recon, cfg, suffix="_other")
+            if info:
+                entry.update({f"{k}_other" if k != "cluster_id" else k: v
+                              for k, v in info.items()})
+                entry["tag_other"] = other_tag
+        if entry:
+            crops[str(cid)] = entry
     write_json(crops_path, crops)
 
-    # ---- 2) VLM labels ---------------------------------------------------
+    # ---- 2) VLM verification + labels -----------------------------------
     vlm_path = sem_dir / "vlm.json"
     vlm_cache = read_json(vlm_path) if vlm_path.exists() and not args.force else {}
     vlm_cache = {k: v for k, v in vlm_cache.items() if int(k) in keep_ids}
+    rejected: dict[str, dict] = {}
     vlm_model = vlm_processor = None
     vlm_ref = None
-    if not args.skip_vlm and crops:
+    if not args.skip_vlm:
         from PIL import Image
         vlm_model, vlm_processor, vlm_ref = load_vlm(cfg)
         for c in clusters:
             cid = str(c["id"])
-            if cid not in crops:
+            entry = crops.get(cid, {})
+            if "crop" not in entry:
+                continue
+            cached = vlm_cache.get(cid)
+            if cached and cached.get("model") == vlm_ref and "changed" in cached:
+                continue
+            own_tag = entry.get("tag", "a")
+            claim = CLAIMS.get(c["type"], c["type"])
+            prompt = PROMPT_VERIFY.format(claim=claim)
+            if "crop_other" in entry:
+                # always present in A-then-B order
+                first, second = ((entry["crop"], entry["crop_other"])
+                                 if own_tag == "a" else (entry["crop_other"], entry["crop"]))
+                reply = vlm_answer(vlm_model, vlm_processor,
+                                   [Image.open(first).convert("RGB"),
+                                    Image.open(second).convert("RGB")], prompt)
+                two_view = True
+            else:
+                reply = vlm_answer(vlm_model, vlm_processor,
+                                   [Image.open(entry["crop"]).convert("RGB")], PROMPT_SINGLE)
+                two_view = False
+            parsed = parse_json_reply(reply)
+            changed = parsed.get("changed") if two_view else None
+            if isinstance(changed, str):
+                changed = changed.strip().lower() in ("true", "yes", "1")
+            vlm_cache[cid] = {"label": parsed.get("label"),
+                              "description": parsed.get("sentence") or parsed.get("description"),
+                              "changed": bool(changed) if changed is not None else True,
+                              "raw": reply[:500], "model": vlm_ref, "created": stamp()}
+            log.info("verify %s (%s) -> changed=%s label=%s",
+                     cid, c["type"], vlm_cache[cid]["changed"], vlm_cache[cid]["label"])
+            write_json(vlm_path, vlm_cache)
+        for c in uncertain:
+            cid = str(c["id"])
+            entry = crops.get(cid, {})
+            if "crop" not in entry:
                 continue
             cached = vlm_cache.get(cid)
             if cached and cached.get("model") == vlm_ref:
-                continue                      # same model already answered
-            img = Image.open(crops[cid]["crop"]).convert("RGB")
-            reply = vlm_answer(vlm_model, vlm_processor, [img], PROMPT_SINGLE)
+                continue
+            reply = vlm_answer(vlm_model, vlm_processor,
+                               [Image.open(entry["crop"]).convert("RGB")], PROMPT_SINGLE)
             parsed = parse_json_reply(reply)
             vlm_cache[cid] = {"label": parsed.get("label"),
                               "description": parsed.get("description"),
-                              "raw": reply[:500], "model": vlm_ref, "created": stamp()}
-            log.info("cluster %s -> %s", cid, vlm_cache[cid]["label"])
-            write_json(vlm_path, vlm_cache)   # incremental: crash-safe cache
+                              "changed": None, "raw": reply[:500],
+                              "model": vlm_ref, "created": stamp()}
+            log.info("label %s (unverified %s) -> %s", cid, c["type"], vlm_cache[cid]["label"])
+            write_json(vlm_path, vlm_cache)
     write_json(vlm_path, vlm_cache)
 
-    # ---- 3) DINOv2 embeddings + move matching ---------------------------
+    # ---- 3) keep only VLM-confirmed verified clusters --------------------
+    confirmed = []
+    for c in clusters:
+        cid = str(c["id"])
+        v = vlm_cache.get(cid, {})
+        if args.skip_vlm or v.get("changed", True) is not False:
+            confirmed.append(c)      # kept unless the VLM explicitly denied it
+        else:
+            rejected[cid] = {"type": c["type"], "centroid": c["centroid"],
+                             "reason": "VLM denied the change (same object visible in both videos)",
+                             "vlm": {k: v.get(k) for k in ("label", "raw")}}
+    # drop unverified duplicates of confirmed changes (same label nearby)
+    uncertain_kept = []
+    for c in uncertain:
+        cid = str(c["id"])
+        label = (vlm_cache.get(cid, {}).get("label") or "").lower().strip()
+        dup = None
+        for cc in confirmed:
+            if not label:
+                break
+            cl = (vlm_cache.get(str(cc["id"]), {}).get("label") or "").lower().strip()
+            dist = float(np.linalg.norm(np.asarray(cc["centroid"]) - np.asarray(c["centroid"])))
+            if label and cl and (label in cl or cl in label) and dist < 0.15:
+                dup = cc["id"]
+                break
+        if dup is not None:
+            rejected[cid] = {"type": c["type"], "centroid": c["centroid"],
+                             "reason": f"duplicate of verified change #{dup} (same label nearby)",
+                             "vlm": {"label": vlm_cache.get(cid, {}).get("label")}}
+        else:
+            uncertain_kept.append(c)
+    log.info("VLM verification: %d confirmed, %d rejected, %d unverified kept",
+             len(confirmed), len(rejected), len(uncertain_kept))
+
+    # ---- 4) DINOv2 embeddings + move matching ---------------------------
     matches: list[dict] = []
-    if not args.skip_vlm and crops:
+    if not args.skip_vlm and confirmed:
         import torch
         from PIL import Image
 
-        matcher, matcher_processor = load_matcher(cfg)
-        ids = [c["id"] for c in clusters if str(c["id"]) in crops]
-        paths = [crops[str(i)]["crop"] for i in ids]
-        emb = embed_crops(matcher, matcher_processor, paths)
-        np.savez(sem_dir / "embeddings.npz",
-                 ids=np.array(ids), vectors=emb,
-                 files=np.array([crops[str(i)]["frame"] for i in ids]))
-        del matcher, matcher_processor
-        gc.collect()
-        torch.cuda.empty_cache()
+        matchable = [c for c in confirmed if c["type"] in ("removed", "added")
+                     and str(c["id"]) in crops and "crop" in crops[str(c["id"])]]
+        if matchable:
+            matcher, matcher_processor = load_matcher(cfg)
+            ids = [c["id"] for c in matchable]
+            paths = [crops[str(i)]["crop"] for i in ids]
+            emb = embed_crops(matcher, matcher_processor, paths)
+            np.savez(sem_dir / "embeddings.npz",
+                     ids=np.array(ids), vectors=emb,
+                     files=np.array([crops[str(i)]["frame"] for i in ids]))
+            del matcher, matcher_processor
+            gc.collect()
+            torch.cuda.empty_cache()
 
-        scfg = cfg["semantics"]
-        by_id = {c["id"]: c for c in clusters}
-        pairs = []
-        for i, ri in enumerate(ids):
-            if by_id[ri]["type"] != "removed":
-                continue
-            for j, aj in enumerate(ids):
-                if by_id[aj]["type"] != "added":
+            scfg = cfg["semantics"]
+            by_id = {c["id"]: c for c in matchable}
+            pairs = []
+            for i, ri in enumerate(ids):
+                if by_id[ri]["type"] != "removed":
                     continue
-                sim = float(np.dot(emb[i], emb[j]))
-                dist = float(np.linalg.norm(
-                    np.asarray(by_id[ri]["centroid"]) - np.asarray(by_id[aj]["centroid"])))
-                if sim >= float(scfg["match_similarity_threshold"]) and dist >= float(scfg["match_min_distance"]):
-                    pairs.append({"removed_id": ri, "added_id": aj,
-                                  "similarity": round(sim, 4), "distance": round(dist, 4)})
-        pairs.sort(key=lambda p: -p["similarity"])
-        used: set[int] = set()
-        for p in pairs:
-            if p["removed_id"] in used or p["added_id"] in used:
-                continue
-            used.update({p["removed_id"], p["added_id"]})
-            entry = dict(p)
-            entry["label"] = (vlm_cache.get(str(p["removed_id"]), {}).get("label")
-                              or vlm_cache.get(str(p["added_id"]), {}).get("label"))
-            imgs = [Image.open(crops[str(p["removed_id"])]["crop"]).convert("RGB"),
-                    Image.open(crops[str(p["added_id"])]["crop"]).convert("RGB")]
-            reply = vlm_answer(vlm_model, vlm_processor, imgs, PROMPT_MOVE)
-            parsed = parse_json_reply(reply)
-            entry["label"] = parsed.get("label") or entry["label"]
-            entry["sentence"] = parsed.get("sentence") or parsed.get("description")
-            entry["raw"] = reply[:500]
-            log.info("moved %s: %s (sim %.3f)", [p["removed_id"], p["added_id"]],
-                     entry["sentence"], p["similarity"])
-            matches.append(entry)
-        log.info("move matches: %d", len(matches))
+                for j, aj in enumerate(ids):
+                    if by_id[aj]["type"] != "added":
+                        continue
+                    sim = float(np.dot(emb[i], emb[j]))
+                    dist = float(np.linalg.norm(
+                        np.asarray(by_id[ri]["centroid"]) - np.asarray(by_id[aj]["centroid"])))
+                    if sim >= float(scfg["match_similarity_threshold"]) and dist >= float(scfg["match_min_distance"]):
+                        pairs.append({"removed_id": ri, "added_id": aj,
+                                      "similarity": round(sim, 4), "distance": round(dist, 4)})
+            pairs.sort(key=lambda p: -p["similarity"])
+            used: set[int] = set()
+            for p in pairs:
+                if p["removed_id"] in used or p["added_id"] in used:
+                    continue
+                used.update({p["removed_id"], p["added_id"]})
+                entry = dict(p)
+                entry["label"] = (vlm_cache.get(str(p["removed_id"]), {}).get("label")
+                                  or vlm_cache.get(str(p["added_id"]), {}).get("label"))
+                imgs = [Image.open(crops[str(p["removed_id"])]["crop"]).convert("RGB"),
+                        Image.open(crops[str(p["added_id"])]["crop"]).convert("RGB")]
+                reply = vlm_answer(vlm_model, vlm_processor, imgs, PROMPT_MOVE)
+                parsed = parse_json_reply(reply)
+                entry["label"] = parsed.get("label") or entry["label"]
+                entry["sentence"] = parsed.get("sentence") or parsed.get("description")
+                entry["raw"] = reply[:500]
+                log.info("moved %s: %s (sim %.3f)", [p["removed_id"], p["added_id"]],
+                         entry["sentence"], p["similarity"])
+                matches.append(entry)
+            log.info("move matches: %d", len(matches))
 
     write_json(matches_path, matches)
-    log.info("wrote %s", matches_path)
+    write_json(sem_dir / "rejected.json",
+               {"created": stamp(), "config_hash": cfg["_config_hash"],
+                "note": "candidates the VLM denied or duplicates of confirmed changes",
+                "rejected": rejected})
+    write_json(sem_dir / "confirmed.json",
+               {"created": stamp(), "config_hash": cfg["_config_hash"],
+                "clusters": confirmed, "uncertain": uncertain_kept})
+    log.info("wrote %s, rejected.json, confirmed.json", matches_path)
     return 0
 
 

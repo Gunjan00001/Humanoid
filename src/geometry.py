@@ -134,105 +134,128 @@ def model_bbox_to_original(bbox_xyxy: tuple[float, float, float, float],
 
 
 def build_change_list(cfg: dict[str, Any]) -> list[dict[str, Any]]:
-    """Merge clusters + DINOv2 matches + VLM crops into the final change list.
+    """Merge clusters + VLM verification + DINOv2 matches into final changes.
 
-    A removed cluster and an added cluster matched by src/describe.py become a
-    single "moved" entry (old -> new position). Confidence is a documented
-    heuristic (see outputs/report.md), not a probability:
+    Sources (all optional except the diff output):
+      cache/diff/clusters.json    verified candidates (photometric or geometric)
+      cache/diff/uncertain.json   one-video-only candidates (photometric mode)
+      cache/semantics/confirmed.json  VLM-confirmed subset (after describe.py)
+      cache/semantics/vlm.json    labels / sentences per cluster
+      cache/semantics/matches.json    DINOv2 removed<->added matches ("moved")
 
-        cluster_size_conf = min(1, n_points / 300)
-        visibility_conf   = observed_empty_fraction (0.5 when unchecked)
-        confidence        = (size + visibility) / 2            [added/removed]
-                            (size + visibility + similarity) / 3  [moved]
+    Confidence is a documented heuristic, not a probability:
+
+        size_conf  = min(1, n_cells / 150)   (falls back to n_points / 300)
+        score_conf = min(1, mean_change_score / 150)   (photometric candidates)
+        verified   = (size_conf + score_conf [+ similarity]) / 2 or / 3
+        unverified = 0.3 * size_conf
     """
     cache = repo_path(cfg["paths"]["cache_dir"])
-    clusters = read_json(cache / "diff" / "clusters.json")["clusters"]
-    by_id = {c["id"]: c for c in clusters}
+    sem = cache / "semantics"
 
-    matches_path = cache / "semantics" / "matches.json"
-    matches = read_json(matches_path) if matches_path.exists() else []
-    crops_path = cache / "semantics" / "crops.json"
-    crops = read_json(crops_path) if crops_path.exists() else {}
+    confirmed_path = sem / "confirmed.json"
+    if confirmed_path.exists():
+        confirmed_doc = read_json(confirmed_path)
+        clusters = confirmed_doc["clusters"]
+        uncertain = confirmed_doc.get("uncertain", [])
+    else:
+        clusters = read_json(cache / "diff" / "clusters.json")["clusters"]
+        uncertain_path = cache / "diff" / "uncertain.json"
+        uncertain = read_json(uncertain_path)["clusters"] if uncertain_path.exists() else []
+
+    matches = read_json(sem / "matches.json") if (sem / "matches.json").exists() else []
+    vlm = read_json(sem / "vlm.json") if (sem / "vlm.json").exists() else {}
+    crops = read_json(sem / "crops.json") if (sem / "crops.json").exists() else {}
 
     matched_removed = {m["removed_id"]: m for m in matches}
     matched_added = {m["added_id"]: m for m in matches}
 
+    def info(cid: int) -> dict:
+        return vlm.get(str(cid), {})
+
+    def crop(cid: int) -> dict:
+        return crops.get(str(cid), {})
+
     def size_conf(c: dict) -> float:
+        if c.get("n_cells") is not None:
+            return min(1.0, c["n_cells"] / 150.0)
         return min(1.0, c["n_points"] / 300.0)
 
-    def vis_conf(c: dict) -> float:
-        v = c.get("visibility") or {}
-        if v.get("checked", False):
-            return float(v.get("observed_empty_fraction", 0.0))
-        return 0.5
+    def score_conf(c: dict) -> float:
+        return min(1.0, float(c.get("mean_change_score") or 0.0) / 150.0)
 
-    def crop_info(c: dict) -> dict:
-        return crops.get(str(c["id"]), {})
+    def evidence(c: dict, extra: list[dict] | None = None) -> dict:
+        ci = crop(c["id"])
+        visible = [x for x in (ci.get("frame"), ci.get("frame_other")) if x]
+        return {
+            "visible_in": visible,
+            "confirmed_empty_in": (c.get("visibility") or {}).get("evidence", []) if extra is None else extra,
+        }
 
     changes: list[dict[str, Any]] = []
+
+    def add(c: dict, ctype: str, verified: bool, label, description, conf: float,
+            from_, to_, cluster_ids: list[int], ev: dict) -> None:
+        changes.append({
+            "id": len(changes) + 1,
+            "type": ctype,
+            "verified": bool(verified),
+            "label": label,
+            "description": description,
+            "centroid": c["centroid"],
+            "bbox_min": c["bbox_min"],
+            "bbox_max": c["bbox_max"],
+            "from": from_,
+            "to": to_,
+            "confidence": round(float(conf), 2),
+            "cluster_ids": cluster_ids,
+            "evidence": ev,
+        })
+
     for c in clusters:
+        cid = c["id"]
         if c["type"] == "removed":
-            m = matched_removed.get(c["id"])
-            if m and m["added_id"] in by_id:
-                new = by_id[m["added_id"]]
-                conf = round((size_conf(c) + vis_conf(c) + float(m.get("similarity", 0.0))) / 3, 2)
-                changes.append({
-                    "id": len(changes) + 1,
-                    "type": "moved",
-                    "label": m.get("label") or crop_info(c).get("label"),
-                    "description": m.get("sentence"),
-                    "centroid": c["centroid"],
-                    "bbox_min": c["bbox_min"],
-                    "bbox_max": c["bbox_max"],
-                    "from": c["centroid"],
-                    "to": new["centroid"],
-                    "confidence": conf,
-                    "cluster_ids": [c["id"], new["id"]],
-                    "evidence": {
-                        "visible_in": [x for x in (crop_info(c).get("frame"),
-                                                   crop_info(new).get("frame")) if x],
-                        "confirmed_empty_in": (c.get("visibility") or {}).get("evidence", []),
-                    },
-                })
+            m = matched_removed.get(cid)
+            if m:
+                new = next((x for x in clusters if x["id"] == m["added_id"]), None)
+                sim = float(m.get("similarity", 0.0))
+                conf = (size_conf(c) + score_conf(c) + sim) / 3 if c.get("n_cells") else \
+                    (size_conf(c) + 0.5 + sim) / 3
+                add(c, "moved", True,
+                    m.get("label") or info(cid).get("label"),
+                    m.get("sentence") or info(cid).get("description"),
+                    conf, c["centroid"], (new or c)["centroid"],
+                    [cid, m["added_id"]], evidence(c))
             else:
-                conf = round((size_conf(c) + vis_conf(c)) / 2, 2)
-                changes.append({
-                    "id": len(changes) + 1,
-                    "type": "removed",
-                    "label": crop_info(c).get("label"),
-                    "description": crop_info(c).get("description"),
-                    "centroid": c["centroid"],
-                    "bbox_min": c["bbox_min"],
-                    "bbox_max": c["bbox_max"],
-                    "from": c["centroid"],
-                    "to": None,
-                    "confidence": conf,
-                    "cluster_ids": [c["id"]],
-                    "evidence": {
-                        "visible_in": [x for x in [crop_info(c).get("frame")] if x],
-                        "confirmed_empty_in": (c.get("visibility") or {}).get("evidence", []),
-                    },
-                })
-        else:  # added, unless already consumed by a moved match
-            if c["id"] in matched_added:
-                continue
-            conf = round((size_conf(c) + vis_conf(c)) / 2, 2)
-            changes.append({
-                "id": len(changes) + 1,
-                "type": "added",
-                "label": crop_info(c).get("label"),
-                "description": crop_info(c).get("description"),
-                "centroid": c["centroid"],
-                "bbox_min": c["bbox_min"],
-                "bbox_max": c["bbox_max"],
-                "from": None,
-                "to": c["centroid"],
-                "confidence": conf,
-                "cluster_ids": [c["id"]],
-                "evidence": {
-                    "visible_in": [x for x in [crop_info(c).get("frame")] if x],
-                    "confirmed_empty_in": (c.get("visibility") or {}).get("evidence", []),
-                },
-            })
+                conf = (size_conf(c) + score_conf(c)) / 2 if c.get("n_cells") else \
+                    (size_conf(c) + 0.5) / 2
+                add(c, "removed", True, info(cid).get("label"),
+                    info(cid).get("description"), conf,
+                    c["centroid"], None, [cid], evidence(c))
+        elif c["type"] == "added":
+            if cid in matched_added:
+                continue                      # already reported as moved
+            conf = (size_conf(c) + score_conf(c)) / 2 if c.get("n_cells") else \
+                (size_conf(c) + 0.5) / 2
+            add(c, "added", True, info(cid).get("label"),
+                info(cid).get("description"), conf,
+                None, c["centroid"], [cid], evidence(c))
+        elif c["type"] == "replaced":
+            conf = (size_conf(c) + score_conf(c)) / 2
+            other = c.get("sample_points_other")
+            to_ = (np.asarray(other, dtype=float).mean(axis=0).round(4).tolist()
+                   if other else c["centroid"])
+            add(c, "replaced", True, info(cid).get("label"),
+                info(cid).get("description"), conf,
+                c["centroid"], to_, [cid], evidence(c))
+
+    for c in uncertain:
+        cid = c["id"]
+        conf = 0.3 * size_conf(c)
+        add(c, c["type"], False, info(cid).get("label"),
+            info(cid).get("description"), conf,
+            c["centroid"] if c["type"] == "removed" else None,
+            c["centroid"] if c["type"] == "added" else None,
+            [cid], evidence(c))
     return changes
 

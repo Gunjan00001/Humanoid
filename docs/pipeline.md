@@ -45,6 +45,9 @@ Video B ─┘            shared frame       A / B tags └─> diff + visibilit
 - ICP refinement over static regions only, if A and B clouds drift apart.
 
 ### 4. Change detection
+Two modes, selected by `diff.method`:
+
+**`geometric`** (plan default, good for objects ≥ 2–3 cm thick):
 1. Voxel-downsample both clouds (size from config).
 2. Nearest-neighbour distance both directions (A→B, B→A); threshold candidates.
 3. Statistical outlier removal, then DBSCAN into object-sized clusters.
@@ -53,11 +56,33 @@ Video B ─┘            shared frame       A / B tags └─> diff + visibilit
    space as empty. Discard occluded/unseen clusters.
 5. Classify: only in B → **added**; only in A → **removed**.
 
+**`tabletop`** (photometric; needed when objects are thinner than VGGT's patch
+scale — on the demo scene the 1 cm-thick comb and pen are *absent from the
+depth maps*, their z equals the table's):
+1. Fit the dominant plane of each cloud; rasterise both into 5 mm cells
+   (height, mean colour, point count).
+2. Per-cell *objectness* = colour distance from a robustly fitted table-colour
+   field (insensitive to object size and illumination gradients).
+3. Compare the two videos per cell: object in A only → removed; in B only →
+   added; different appearance at the same spot → **replaced** (e.g. a flipped
+   remote); lighting/shadow patches are rejected by a difference margin.
+4. DBSCAN over changed cells, ring filter (static objects only differ at their
+   edges), minimum size; cells seen by only one video become clearly flagged
+   **unverified** candidates (`cache/diff/uncertain.json`) instead of being
+   silently dropped.
+5. Output format is identical to the geometric mode, so later stages are shared.
+
 ### 5. Semantics
-- Pick the best view per cluster (max visible area, least occlusion), crop it.
-- Qwen3-VL returns a short label and description (structured JSON, parsed safely).
-- DINOv2 embeds crops; a removal + addition with high similarity at a different
-  3D position becomes one **moved** object (old and new position).
+- Pick the best view per cluster (max visible area, least occlusion), crop it;
+  verified candidates get a second crop from the *other* video of the same
+  region.
+- **Qwen3-VL verification**: candidates are confirmed or denied against the
+  before/after crops (`"changed": true/false`); lighting/blur artefacts are
+  rejected here (`cache/semantics/rejected.json` records every rejection).
+  Unverified candidates (one video never saw the area) are labelled but kept
+  separate.
+- DINOv2 embeds crops; a confirmed removal + addition with high similarity at a
+  different 3D position becomes one **moved** object (old and new position).
 - Qwen3-VL writes the final one-sentence description per change.
 - All VLM outputs are cached so re-runs don't re-spend GPU time.
 

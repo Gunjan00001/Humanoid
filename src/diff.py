@@ -125,6 +125,50 @@ def main() -> int:
 
     dcfg = cfg["diff"]
     recon = load_reconstruction(cfg)
+
+    method = dcfg.get("method", "geometric")
+    if method == "tabletop":
+        from src.tabletop import detect
+        log.info("diff method: tabletop (appearance-based, see src/tabletop.py)")
+        all_clusters = detect(recon, cfg)
+        clusters = [c for c in all_clusters if c.get("verified", True)]
+        uncertain = [c for c in all_clusters if not c.get("verified", True)]
+        write_json(clusters_path, {"created": stamp(), "config_hash": cfg["_config_hash"],
+                                   "method": "tabletop", "clusters": clusters})
+        write_json(diff_dir / "uncertain.json",
+                   {"created": stamp(), "config_hash": cfg["_config_hash"],
+                    "method": "tabletop",
+                    "note": "object-like regions in one video where the other video "
+                            "has no coverage; NOT verified changes",
+                    "clusters": uncertain})
+        write_json(diff_dir / "visibility.json",
+                   {"created": stamp(), "config_hash": cfg["_config_hash"],
+                    "method": "tabletop",
+                    "note": "photometric mode: coverage of both videos is checked "
+                            "per cell instead of the geometric empty-space test"})
+        # points.npz: cluster sample points per video (visualize.py format)
+        a_pts, a_lab, b_pts, b_lab = [], [], [], []
+        for c in all_clusters:
+            if c["source_tag"] in ("a", "both"):
+                p = np.asarray(c["sample_points"], dtype=np.float32)
+                a_pts.append(p); a_lab.append(np.full(len(p), c["id"], dtype=np.int32))
+            if c["source_tag"] in ("b", "both"):
+                p = np.asarray(c.get("sample_points_other", c["sample_points"]),
+                               dtype=np.float32)
+                b_pts.append(p); b_lab.append(np.full(len(p), c["id"], dtype=np.int32))
+        np.savez_compressed(
+            diff_dir / "points.npz",
+            a_points=np.concatenate(a_pts) if a_pts else np.zeros((0, 3), np.float32),
+            a_labels=np.concatenate(a_lab) if a_lab else np.zeros(0, np.int32),
+            b_points=np.concatenate(b_pts) if b_pts else np.zeros((0, 3), np.float32),
+            b_labels=np.concatenate(b_lab) if b_lab else np.zeros(0, np.int32),
+        )
+        log.info("wrote %s (%d verified), uncertain.json (%d unverified), points.npz",
+                 clusters_path, len(clusters), len(uncertain))
+        return 0
+    if method != "geometric":
+        raise ValueError(f"unknown diff.method: {method!r} (geometric | tabletop)")
+
     pts, rgb, tags, _ = tagged_points(recon, cfg["reconstruction"]["conf_percentile"])
     log.info("reconstruction: %d points (%.1f%% A)", len(pts), 100.0 * (tags == "a").mean())
 

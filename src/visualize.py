@@ -38,7 +38,9 @@ COLORS = {
     "removed": (0.87, 0.15, 0.15),
     "added": (0.20, 0.80, 0.25),
     "moved": (1.00, 0.55, 0.05),
+    "replaced": (0.85, 0.12, 0.85),
 }
+UNVERIFIED_COLOR = (0.10, 0.75, 0.90)   # cyan: one video never saw this area
 
 
 def write_ply(path: Path, points: np.ndarray, colors: np.ndarray) -> None:
@@ -77,7 +79,9 @@ def scene_arrays(cfg: dict):
     changes = build_change_list(cfg)
     change_pts: list[dict] = []
     for ch in changes:
-        color = np.array(COLORS[ch["type"]], dtype=np.float32)
+        color = np.array(COLORS.get(ch["type"], (0.6, 0.6, 0.6)), dtype=np.float32)
+        if not ch.get("verified", True):
+            color = np.array(UNVERIFIED_COLOR, dtype=np.float32)
         arrays = []
         for cid in ch["cluster_ids"]:
             for tag in ("a", "b"):
@@ -187,6 +191,8 @@ def main() -> int:
         ax.view_init(elev=22, azim=-60)
         ax.set_axis_off()
         title = f"{ch['id']:02d} - {ch['type'].upper()}"
+        if not ch.get("verified", True):
+            title += " (UNVERIFIED)"
         if ch.get("label"):
             title += f": {ch['label']}"
         ax.set_title(title, fontsize=11)

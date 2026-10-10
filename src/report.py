@@ -29,9 +29,10 @@ from src.geometry import build_change_list, recon_dir_for  # noqa: E402
 log = setup_logging("report")
 
 CONFIDENCE_NOTE = (
-    "confidence is a heuristic in [0,1]: cluster size, visibility fraction "
-    "(observed-empty ratio from the other video) and - for moved objects - the "
-    "DINOv2 crop similarity; it is not a calibrated probability"
+    "confidence is a heuristic in [0,1]: cluster size and change-score "
+    "(photometric candidates), DINOv2 crop similarity for moved objects; "
+    "unverified candidates (one video never saw the area) are capped at 0.3. "
+    "It is not a calibrated probability"
 )
 
 
@@ -41,7 +42,9 @@ def main() -> int:
     args = parser.parse_args()
     cfg = apply_overrides(load_config(args.config), args)
 
-    changes = build_change_list(cfg)
+    all_changes = build_change_list(cfg)
+    changes = [ch for ch in all_changes if ch.get("verified", True)]
+    unverified = [ch for ch in all_changes if not ch.get("verified", True)]
     recon_dir = recon_dir_for(cfg)
     recon_meta = {}
     meta_path = recon_dir / "meta.json"
@@ -51,38 +54,40 @@ def main() -> int:
 
     has_semantics = (repo_path(cfg["paths"]["cache_dir"]) / "semantics" / "vlm.json").exists()
 
+    def entry(ch: dict) -> dict:
+        return {
+            "id": ch["id"],
+            "type": ch["type"],
+            "label": ch["label"],
+            "description": ch["description"],
+            "centroid": ch["centroid"],
+            "bbox": ch["bbox_min"] + ch["bbox_max"],
+            "from": ch["from"],
+            "to": ch["to"],
+            "confidence": ch["confidence"],
+            "cluster_ids": ch["cluster_ids"],
+            "evidence": {
+                "frames_a": [f for f in ch["evidence"]["visible_in"] if f.startswith("a/")],
+                "frames_b": [f for f in ch["evidence"]["visible_in"] if f.startswith("b/")],
+                "confirmed_empty_in": ch["evidence"]["confirmed_empty_in"],
+            },
+        }
+
     report = {
         "meta": {
             "video_a": str(repo_path(cfg["paths"]["video_a"])),
             "video_b": str(repo_path(cfg["paths"]["video_b"])),
             "backend": recon_meta.get("backend", cfg["reconstruction"]["backend"]),
             "model": recon_meta.get("model"),
+            "diff_method": cfg["diff"].get("method", "geometric"),
             "created": stamp(),
             "config_hash": cfg["_config_hash"],
             "num_frames": recon_meta.get("num_frames"),
-            "semantics": "vlm+dinov2" if has_semantics else "not run",
+            "semantics": "vlm-verified" if has_semantics else "not run",
             "confidence_note": CONFIDENCE_NOTE,
         },
-        "changes": [
-            {
-                "id": ch["id"],
-                "type": ch["type"],
-                "label": ch["label"],
-                "description": ch["description"],
-                "centroid": ch["centroid"],
-                "bbox": ch["bbox_min"] + ch["bbox_max"],
-                "from": ch["from"],
-                "to": ch["to"],
-                "confidence": ch["confidence"],
-                "cluster_ids": ch["cluster_ids"],
-                "evidence": {
-                    "frames_a": [f for f in ch["evidence"]["visible_in"] if f.startswith("a/")],
-                    "frames_b": [f for f in ch["evidence"]["visible_in"] if f.startswith("b/")],
-                    "confirmed_empty_in": ch["evidence"]["confirmed_empty_in"],
-                },
-            }
-            for ch in changes
-        ],
+        "changes": [entry(ch) for ch in changes],
+        "unverified_changes": [entry(ch) for ch in unverified],
     }
 
     out = out_dir(cfg)
@@ -135,13 +140,28 @@ def main() -> int:
             lines.append(f"- confirmed by: {top.get('file', '?')} "
                          f"({top.get('n_empty', '?')} points seen empty)")
         lines.append("")
+    if report["unverified_changes"]:
+        lines += ["", "## Unverified candidates", "",
+                  "These regions contain object-like appearance in ONE video while the "
+                  "other video never observed the area (out of view, cropped or "
+                  "occluded). They are **not confirmed changes** - listed for "
+                  "transparency so nothing detected is silently dropped.", ""]
+        for ch in report["unverified_changes"]:
+            c = ch["centroid"]
+            desc = f" - {ch['description']}" if ch["description"] else ""
+            lines.append(f"- **{ch['type']}?** {ch['label'] or '(unlabeled)'} at "
+                         f"({c[0]:.2f}, {c[1]:.2f}, {c[2]:.2f}){desc}")
+        lines.append("")
     lines += [
         "---",
         "",
         "Notes:",
         f"- {CONFIDENCE_NOTE}.",
-        "- change detection is geometric (voxel/DBSCAN) plus an occlusion-aware "
-        "visibility check; see docs/pipeline.md for the full description.",
+        "- candidates are produced photometrically over the table plane "
+        "(`diff.method: tabletop`, see src/tabletop.py) or geometrically "
+        "(`geometric`); verified candidates are confirmed by the VLM against "
+        "before/after crops, and moved objects come from DINOv2 crop matching.",
+        "- see docs/pipeline.md for the full description.",
     ]
     (out / "report.md").write_text("\n".join(lines) + "\n")
 
