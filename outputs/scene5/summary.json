@@ -1,0 +1,66 @@
+{
+  "name": "scene5",
+  "video_a": "/home/user/Desktop/Humanoid/data/scene5/a.mp4",
+  "video_b": "/home/user/Desktop/Humanoid/data/scene5/b.mp4",
+  "n_changes": 5,
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "wooden leg",
+      "sentence": "The wooden leg was removed from the table surface in video B.",
+      "confidence": 0.74,
+      "possibly": false,
+      "sentence_source": "vlm"
+    },
+    {
+      "id": 2,
+      "type": "removed",
+      "label": "chair leg",
+      "sentence": "Possibly the chair leg and black object were removed from the scene in video B.",
+      "confidence": 0.29,
+      "possibly": true,
+      "sentence_source": "vlm"
+    },
+    {
+      "id": 3,
+      "type": "removed",
+      "label": "table leg",
+      "sentence": "The table leg and seat were removed, leaving only the cracked surface in video B.",
+      "confidence": 0.45,
+      "possibly": false,
+      "sentence_source": "vlm"
+    },
+    {
+      "id": 4,
+      "type": "added",
+      "label": "small round object",
+      "sentence": "Possibly a small round object appeared on the floor in video B.",
+      "confidence": 0.34,
+      "possibly": true,
+      "sentence_source": "vlm"
+    },
+    {
+      "id": 5,
+      "type": "added",
+      "label": "bottle and clock",
+      "sentence": "Possibly a plastic water bottle and a digital clock were added to the table in video B.",
+      "confidence": 0.3,
+      "possibly": true,
+      "sentence_source": "vlm"
+    }
+  ],
+  "n_unverified": 0,
+  "notes": [
+    "Object names come from a vision-language model and can be wrong.",
+    "Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4).",
+    "No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated."
+  ],
+  "files": [
+    "viewer.html",
+    "change.gif",
+    "report.json"
+  ],
+  "generated": "2026-10-10T23:45:30Z",
+  "text": "Compared a.mp4 and b.mp4. I found 5 change(s):\n1. Removed - wooden leg: The wooden leg was removed from the table surface in video B.\n2. Removed - chair leg: Possibly the chair leg and black object were removed from the scene in video B.\n3. Removed - table leg: The table leg and seat were removed, leaving only the cracked surface in video B.\n4. Added - small round object: Possibly a small round object appeared on the floor in video B.\n5. Added - bottle and clock: Possibly a plastic water bottle and a digital clock were added to the table in video B.\n\nNotes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.\nFiles: viewer.html, change.gif, report.json"
+}

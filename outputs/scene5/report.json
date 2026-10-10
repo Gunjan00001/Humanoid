@@ -1,0 +1,302 @@
+{
+  "meta": {
+    "video_a": "/home/user/Desktop/Humanoid/data/scene5/a.mp4",
+    "video_b": "/home/user/Desktop/Humanoid/data/scene5/b.mp4",
+    "backend": "vggt",
+    "model": "/home/user/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-10T23:43:55Z",
+    "config_hash": "a93e2d60be34",
+    "num_frames": 60,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "wooden leg",
+      "description": "The wooden leg was removed from the table surface.",
+      "centroid": [
+        -0.1549,
+        0.411,
+        0.7558
+      ],
+      "bbox": [
+        -0.2469,
+        0.3828,
+        0.6963,
+        -0.1116,
+        0.4448,
+        0.7866
+      ],
+      "from": [
+        -0.1549,
+        0.411,
+        0.7558
+      ],
+      "to": null,
+      "confidence": 0.74,
+      "cluster_ids": [
+        6
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_01270.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 38,
+            "file": "b/frame_00320.jpg",
+            "n_valid": 293,
+            "n_empty": 293
+          },
+          {
+            "frame": 56,
+            "file": "b/frame_01160.jpg",
+            "n_valid": 293,
+            "n_empty": 293
+          },
+          {
+            "frame": 57,
+            "file": "b/frame_01200.jpg",
+            "n_valid": 293,
+            "n_empty": 293
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "type": "removed",
+      "label": "chair leg",
+      "description": "The chair leg and black object were removed from the scene.",
+      "centroid": [
+        -0.0376,
+        0.1647,
+        1.1707
+      ],
+      "bbox": [
+        -0.0466,
+        0.1531,
+        1.1572,
+        -0.0287,
+        0.1746,
+        1.1846
+      ],
+      "from": [
+        -0.0376,
+        0.1647,
+        1.1707
+      ],
+      "to": null,
+      "confidence": 0.29,
+      "cluster_ids": [
+        16
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_01270.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 30,
+            "file": "b/frame_00000.jpg",
+            "n_valid": 26,
+            "n_empty": 26
+          },
+          {
+            "frame": 31,
+            "file": "b/frame_00040.jpg",
+            "n_valid": 26,
+            "n_empty": 26
+          },
+          {
+            "frame": 42,
+            "file": "b/frame_00570.jpg",
+            "n_valid": 26,
+            "n_empty": 26
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "type": "removed",
+      "label": "table leg",
+      "description": "The table leg and seat were removed, leaving only the cracked surface.",
+      "centroid": [
+        0.2099,
+        0.4772,
+        0.6142
+      ],
+      "bbox": [
+        0.097,
+        0.4077,
+        0.5581,
+        0.2651,
+        0.5361,
+        0.7065
+      ],
+      "from": [
+        0.2099,
+        0.4772,
+        0.6142
+      ],
+      "to": null,
+      "confidence": 0.45,
+      "cluster_ids": [
+        18
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00250.jpg"
+        ],
+        "frames_b": [
+          "b/frame_01230.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 37,
+            "file": "b/frame_00290.jpg",
+            "n_valid": 29,
+            "n_empty": 29
+          },
+          {
+            "frame": 57,
+            "file": "b/frame_01200.jpg",
+            "n_valid": 29,
+            "n_empty": 29
+          },
+          {
+            "frame": 58,
+            "file": "b/frame_01230.jpg",
+            "n_valid": 29,
+            "n_empty": 29
+          }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "type": "added",
+      "label": "small round object",
+      "description": "A small round object appeared on the floor in the second image.",
+      "centroid": [
+        -0.0052,
+        -0.2135,
+        1.0834
+      ],
+      "bbox": [
+        -0.0315,
+        -0.2257,
+        1.0547,
+        0.0254,
+        -0.1923,
+        1.1006
+      ],
+      "from": null,
+      "to": [
+        -0.0052,
+        -0.2135,
+        1.0834
+      ],
+      "confidence": 0.34,
+      "cluster_ids": [
+        38
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00800.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00440.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 0,
+            "file": "a/frame_00000.jpg",
+            "n_valid": 54,
+            "n_empty": 54
+          },
+          {
+            "frame": 1,
+            "file": "a/frame_00030.jpg",
+            "n_valid": 54,
+            "n_empty": 54
+          },
+          {
+            "frame": 2,
+            "file": "a/frame_00050.jpg",
+            "n_valid": 54,
+            "n_empty": 54
+          }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "type": "added",
+      "label": "bottle and clock",
+      "description": "A plastic water bottle and a digital clock were added to the table.",
+      "centroid": [
+        0.1083,
+        -0.1805,
+        0.9667
+      ],
+      "bbox": [
+        0.0992,
+        -0.1868,
+        0.958,
+        0.1164,
+        -0.1737,
+        0.9839
+      ],
+      "from": null,
+      "to": [
+        0.1083,
+        -0.1805,
+        0.9667
+      ],
+      "confidence": 0.3,
+      "cluster_ids": [
+        44
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00800.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00520.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 11,
+            "file": "a/frame_00280.jpg",
+            "n_valid": 30,
+            "n_empty": 30
+          },
+          {
+            "frame": 23,
+            "file": "a/frame_00640.jpg",
+            "n_valid": 30,
+            "n_empty": 30
+          },
+          {
+            "frame": 24,
+            "file": "a/frame_00660.jpg",
+            "n_valid": 30,
+            "n_empty": 30
+          }
+        ]
+      }
+    }
+  ],
+  "unverified_changes": []
+}
