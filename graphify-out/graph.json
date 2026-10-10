@@ -12,12 +12,12 @@
       "_callable": true,
       "_callable_class": true,
       "_origin": "ast",
-      "community": 0,
-      "community_name": "common.py",
+      "community": 22,
+      "community_name": "Timer",
       "file_type": "code",
       "norm_label": "timer",
       "source_file": "src/common.py",
-      "source_location": "L209"
+      "source_location": "L220"
     },
     {
       "id": "run_main",
@@ -44,6 +44,42 @@
       "source_location": "L26"
     },
     {
+      "id": "src_align_main",
+      "label": "main()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "main()",
+      "source_file": "src/align.py",
+      "source_location": "L45"
+    },
+    {
+      "id": "src_align_static_subset",
+      "label": "static_subset()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "static_subset()",
+      "source_file": "src/align.py",
+      "source_location": "L40"
+    },
+    {
+      "id": "src_common_add_common_args",
+      "label": "add_common_args()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "add_common_args()",
+      "source_file": "src/common.py",
+      "source_location": "L137"
+    },
+    {
       "id": "src_common_apply_overrides",
       "label": "apply_overrides()",
       "_callable": true,
@@ -53,7 +89,7 @@
       "file_type": "code",
       "norm_label": "apply_overrides()",
       "source_file": "src/common.py",
-      "source_location": "L150"
+      "source_location": "L153"
     },
     {
       "id": "src_common_cache_dir",
@@ -149,7 +185,7 @@
       "file_type": "code",
       "norm_label": "setup_logging()",
       "source_file": "src/common.py",
-      "source_location": "L163"
+      "source_location": "L166"
     },
     {
       "id": "src_common_stage_outputs",
@@ -161,7 +197,7 @@
       "file_type": "code",
       "norm_label": "stage_outputs()",
       "source_file": "src/common.py",
-      "source_location": "L227"
+      "source_location": "L238"
     },
     {
       "id": "src_common_stamp",
@@ -176,42 +212,6 @@
       "source_location": "L129"
     },
     {
-      "id": "src_common_timer_enter",
-      "label": ".__enter__()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "common.py",
-      "file_type": "code",
-      "norm_label": ".__enter__()",
-      "source_file": "src/common.py",
-      "source_location": "L215"
-    },
-    {
-      "id": "src_common_timer_exit",
-      "label": ".__exit__()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "common.py",
-      "file_type": "code",
-      "norm_label": ".__exit__()",
-      "source_file": "src/common.py",
-      "source_location": "L219"
-    },
-    {
-      "id": "src_common_timer_init",
-      "label": ".__init__()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "common.py",
-      "file_type": "code",
-      "norm_label": ".__init__()",
-      "source_file": "src/common.py",
-      "source_location": "L212"
-    },
-    {
       "id": "src_common_write_json",
       "label": "write_json()",
       "_callable": true,
@@ -222,6 +222,78 @@
       "norm_label": "write_json()",
       "source_file": "src/common.py",
       "source_location": "L98"
+    },
+    {
+      "id": "src_diff_candidate_points",
+      "label": "candidate_points()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "candidate_points()",
+      "source_file": "src/diff.py",
+      "source_location": "L57"
+    },
+    {
+      "id": "src_diff_cluster_entry",
+      "label": "cluster_entry()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "cluster_entry()",
+      "source_file": "src/diff.py",
+      "source_location": "L96"
+    },
+    {
+      "id": "src_diff_cluster_points",
+      "label": "cluster_points()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "cluster_points()",
+      "source_file": "src/diff.py",
+      "source_location": "L63"
+    },
+    {
+      "id": "src_diff_main",
+      "label": "main()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "main()",
+      "source_file": "src/diff.py",
+      "source_location": "L114"
+    },
+    {
+      "id": "src_diff_remove_statistical_outliers",
+      "label": "remove_statistical_outliers()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "remove_statistical_outliers()",
+      "source_file": "src/diff.py",
+      "source_location": "L47"
+    },
+    {
+      "id": "src_diff_visibility_check",
+      "label": "visibility_check()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "visibility_check()",
+      "source_file": "src/diff.py",
+      "source_location": "L70"
     },
     {
       "id": "src_extract_frames_main",
@@ -236,6 +308,18 @@
       "source_location": "L120"
     },
     {
+      "id": "src_geometry_load_reconstruction",
+      "label": "load_reconstruction()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "load_reconstruction()",
+      "source_file": "src/geometry.py",
+      "source_location": "L29"
+    },
+    {
       "id": "src_geometry_recon_dir_for",
       "label": "recon_dir_for()",
       "_callable": true,
@@ -246,6 +330,18 @@
       "norm_label": "recon_dir_for()",
       "source_file": "src/geometry.py",
       "source_location": "L19"
+    },
+    {
+      "id": "src_geometry_voxel_downsample",
+      "label": "voxel_downsample()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "voxel_downsample()",
+      "source_file": "src/geometry.py",
+      "source_location": "L69"
     },
     {
       "id": "src_reconstruct_load_frame_list",
@@ -320,204 +416,12 @@
       "source_location": "L57"
     },
     {
-      "id": "tests_prepare_gpu_smoke_ensure_repo_images",
-      "label": "ensure_repo_images()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "common.py",
-      "file_type": "code",
-      "norm_label": "ensure_repo_images()",
-      "source_file": "tests/prepare_gpu_smoke.py",
-      "source_location": "L42"
-    },
-    {
-      "id": "tests_prepare_gpu_smoke_main",
-      "label": "main()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "common.py",
-      "file_type": "code",
-      "norm_label": "main()",
-      "source_file": "tests/prepare_gpu_smoke.py",
-      "source_location": "L57"
-    },
-    {
-      "id": "src_align_main",
-      "label": "main()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "main()",
-      "source_file": "src/align.py",
-      "source_location": "L45"
-    },
-    {
-      "id": "src_align_static_subset",
-      "label": "static_subset()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "static_subset()",
-      "source_file": "src/align.py",
-      "source_location": "L40"
-    },
-    {
-      "id": "src_common_add_common_args",
-      "label": "add_common_args()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "add_common_args()",
-      "source_file": "src/common.py",
-      "source_location": "L137"
-    },
-    {
-      "id": "src_diff_candidate_points",
-      "label": "candidate_points()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "candidate_points()",
-      "source_file": "src/diff.py",
-      "source_location": "L57"
-    },
-    {
-      "id": "src_diff_cluster_entry",
-      "label": "cluster_entry()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "cluster_entry()",
-      "source_file": "src/diff.py",
-      "source_location": "L96"
-    },
-    {
-      "id": "src_diff_cluster_points",
-      "label": "cluster_points()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "cluster_points()",
-      "source_file": "src/diff.py",
-      "source_location": "L63"
-    },
-    {
-      "id": "src_diff_main",
-      "label": "main()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "main()",
-      "source_file": "src/diff.py",
-      "source_location": "L114"
-    },
-    {
-      "id": "src_diff_remove_statistical_outliers",
-      "label": "remove_statistical_outliers()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "remove_statistical_outliers()",
-      "source_file": "src/diff.py",
-      "source_location": "L47"
-    },
-    {
-      "id": "src_diff_visibility_check",
-      "label": "visibility_check()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "visibility_check()",
-      "source_file": "src/diff.py",
-      "source_location": "L70"
-    },
-    {
-      "id": "src_geometry_load_reconstruction",
-      "label": "load_reconstruction()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "load_reconstruction()",
-      "source_file": "src/geometry.py",
-      "source_location": "L29"
-    },
-    {
-      "id": "src_geometry_project_points",
-      "label": "project_points()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "project_points()",
-      "source_file": "src/geometry.py",
-      "source_location": "L82"
-    },
-    {
-      "id": "src_geometry_sample_depth",
-      "label": "sample_depth()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "sample_depth()",
-      "source_file": "src/geometry.py",
-      "source_location": "L90"
-    },
-    {
-      "id": "src_geometry_tagged_points",
-      "label": "tagged_points()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "tagged_points()",
-      "source_file": "src/geometry.py",
-      "source_location": "L51"
-    },
-    {
-      "id": "src_geometry_voxel_downsample",
-      "label": "voxel_downsample()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "voxel_downsample()",
-      "source_file": "src/geometry.py",
-      "source_location": "L69"
-    },
-    {
       "id": "src_visualize_main",
       "label": "main()",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
+      "community": 0,
+      "community_name": "common.py",
       "file_type": "code",
       "norm_label": "main()",
       "source_file": "src/visualize.py",
@@ -528,24 +432,12 @@
       "label": "draw_scene()",
       "_callable": true,
       "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
+      "community": 0,
+      "community_name": "common.py",
       "file_type": "code",
       "norm_label": "draw_scene()",
       "source_file": "src/visualize.py",
       "source_location": "L138"
-    },
-    {
-      "id": "src_visualize_scene_arrays",
-      "label": "scene_arrays()",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "scene_arrays()",
-      "source_file": "src/visualize.py",
-      "source_location": "L63"
     },
     {
       "id": "src_visualize_write_ply",
@@ -553,11 +445,23 @@
       "_callable": true,
       "_origin": "ast",
       "community": 1,
-      "community_name": "numpy",
+      "community_name": "write_ply",
       "file_type": "code",
       "norm_label": "write_ply()",
       "source_file": "src/visualize.py",
       "source_location": "L46"
+    },
+    {
+      "id": "src_geometry_tagged_points",
+      "label": "tagged_points()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "numpy",
+      "file_type": "code",
+      "norm_label": "tagged_points()",
+      "source_file": "src/geometry.py",
+      "source_location": "L51"
     },
     {
       "id": "src_tabletop_cell_maps",
@@ -565,7 +469,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "cell_maps()",
       "source_file": "src/tabletop.py",
@@ -577,7 +481,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "_cells_to_points()",
       "source_file": "src/tabletop.py",
@@ -589,11 +493,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "detect()",
       "source_file": "src/tabletop.py",
-      "source_location": "L210"
+      "source_location": "L228"
     },
     {
       "id": "src_tabletop_detect_erode",
@@ -601,11 +505,11 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "_erode()",
       "source_file": "src/tabletop.py",
-      "source_location": "L237"
+      "source_location": "L255"
     },
     {
       "id": "src_tabletop_fit_color_field",
@@ -613,7 +517,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "fit_color_field()",
       "source_file": "src/tabletop.py",
@@ -625,7 +529,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "fit_dominant_plane()",
       "source_file": "src/tabletop.py",
@@ -637,7 +541,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "grid_bounds()",
       "source_file": "src/tabletop.py",
@@ -649,7 +553,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "objectness()",
       "source_file": "src/tabletop.py",
@@ -661,7 +565,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "plane_height()",
       "source_file": "src/tabletop.py",
@@ -673,7 +577,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "_prepare()",
       "source_file": "src/tabletop.py",
@@ -685,7 +589,7 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "ratio_distance()",
       "source_file": "src/tabletop.py",
@@ -697,19 +601,31 @@
       "_callable": true,
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "static_object_mask()",
       "source_file": "src/tabletop.py",
-      "source_location": "L197"
+      "source_location": "L215"
+    },
+    {
+      "id": "src_visualize_scene_arrays",
+      "label": "scene_arrays()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "numpy",
+      "file_type": "code",
+      "norm_label": "scene_arrays()",
+      "source_file": "src/visualize.py",
+      "source_location": "L63"
     },
     {
       "id": "tests_make_fake_reconstruction_main",
       "label": "main()",
       "_callable": true,
       "_origin": "ast",
-      "community": 19,
-      "community_name": "make_fake_reconstruction.py",
+      "community": 11,
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "main()",
       "source_file": "tests/make_fake_reconstruction.py",
@@ -720,8 +636,8 @@
       "label": "make_frame()",
       "_callable": true,
       "_origin": "ast",
-      "community": 19,
-      "community_name": "make_fake_reconstruction.py",
+      "community": 11,
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "make_frame()",
       "source_file": "tests/make_fake_reconstruction.py",
@@ -732,12 +648,180 @@
       "label": "unproject()",
       "_callable": true,
       "_origin": "ast",
-      "community": 19,
-      "community_name": "make_fake_reconstruction.py",
+      "community": 11,
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "unproject()",
       "source_file": "tests/make_fake_reconstruction.py",
       "source_location": "L57"
+    },
+    {
+      "id": "scripts_inspect_cache_fmt",
+      "label": "_fmt()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "inspect_cache.py",
+      "file_type": "code",
+      "norm_label": "_fmt()",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L38"
+    },
+    {
+      "id": "scripts_inspect_cache_inspect_diff",
+      "label": "inspect_diff()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "inspect_cache.py",
+      "file_type": "code",
+      "norm_label": "inspect_diff()",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L101"
+    },
+    {
+      "id": "scripts_inspect_cache_inspect_frames",
+      "label": "inspect_frames()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "inspect_cache.py",
+      "file_type": "code",
+      "norm_label": "inspect_frames()",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L49"
+    },
+    {
+      "id": "scripts_inspect_cache_inspect_outputs",
+      "label": "inspect_outputs()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "inspect_cache.py",
+      "file_type": "code",
+      "norm_label": "inspect_outputs()",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L166"
+    },
+    {
+      "id": "scripts_inspect_cache_inspect_reconstruction",
+      "label": "inspect_reconstruction()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "inspect_cache.py",
+      "file_type": "code",
+      "norm_label": "inspect_reconstruction()",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L71"
+    },
+    {
+      "id": "scripts_inspect_cache_inspect_semantics",
+      "label": "inspect_semantics()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "inspect_cache.py",
+      "file_type": "code",
+      "norm_label": "inspect_semantics()",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L128"
+    },
+    {
+      "id": "scripts_inspect_cache_main",
+      "label": "main()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "inspect_cache.py",
+      "file_type": "code",
+      "norm_label": "main()",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L184"
+    },
+    {
+      "id": "scripts_inspect_cache_read_json",
+      "label": "_read_json()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "inspect_cache.py",
+      "file_type": "code",
+      "norm_label": "_read_json()",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L31"
+    },
+    {
+      "id": "scripts_inspect_cache_section",
+      "label": "section()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "inspect_cache.py",
+      "file_type": "code",
+      "norm_label": "section()",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L45"
+    },
+    {
+      "id": "tests_prepare_gpu_smoke_ensure_repo_images",
+      "label": "ensure_repo_images()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "inspect_cache.py",
+      "file_type": "code",
+      "norm_label": "ensure_repo_images()",
+      "source_file": "tests/prepare_gpu_smoke.py",
+      "source_location": "L42"
+    },
+    {
+      "id": "tests_prepare_gpu_smoke_main",
+      "label": "main()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "inspect_cache.py",
+      "file_type": "code",
+      "norm_label": "main()",
+      "source_file": "tests/prepare_gpu_smoke.py",
+      "source_location": "L57"
+    },
+    {
+      "id": "src_common_timer_enter",
+      "label": ".__enter__()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "Timer",
+      "file_type": "code",
+      "norm_label": ".__enter__()",
+      "source_file": "src/common.py",
+      "source_location": "L226"
+    },
+    {
+      "id": "src_common_timer_exit",
+      "label": ".__exit__()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "Timer",
+      "file_type": "code",
+      "norm_label": ".__exit__()",
+      "source_file": "src/common.py",
+      "source_location": "L230"
+    },
+    {
+      "id": "src_common_timer_init",
+      "label": ".__init__()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "Timer",
+      "file_type": "code",
+      "norm_label": ".__init__()",
+      "source_file": "src/common.py",
+      "source_location": "L223"
     },
     {
       "id": "src_common_pin_idle_gpus",
@@ -749,7 +833,7 @@
       "file_type": "code",
       "norm_label": "pin_idle_gpus()",
       "source_file": "src/common.py",
-      "source_location": "L173"
+      "source_location": "L184"
     },
     {
       "id": "src_common_resolve_model",
@@ -833,7 +917,7 @@
       "file_type": "code",
       "norm_label": "_bbox_close()",
       "source_file": "src/describe.py",
-      "source_location": "L508"
+      "source_location": "L509"
     },
     {
       "id": "src_describe_main_dist",
@@ -845,7 +929,7 @@
       "file_type": "code",
       "norm_label": "_dist()",
       "source_file": "src/describe.py",
-      "source_location": "L483"
+      "source_location": "L484"
     },
     {
       "id": "src_describe_main_norm",
@@ -857,7 +941,7 @@
       "file_type": "code",
       "norm_label": "_norm()",
       "source_file": "src/describe.py",
-      "source_location": "L480"
+      "source_location": "L481"
     },
     {
       "id": "src_describe_main_reject",
@@ -869,7 +953,7 @@
       "file_type": "code",
       "norm_label": "_reject()",
       "source_file": "src/describe.py",
-      "source_location": "L526"
+      "source_location": "L527"
     },
     {
       "id": "src_describe_objects_overlap",
@@ -978,6 +1062,30 @@
       "norm_label": "model_to_original_transform()",
       "source_file": "src/geometry.py",
       "source_location": "L101"
+    },
+    {
+      "id": "src_geometry_project_points",
+      "label": "project_points()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "describe.py",
+      "file_type": "code",
+      "norm_label": "project_points()",
+      "source_file": "src/geometry.py",
+      "source_location": "L82"
+    },
+    {
+      "id": "src_geometry_sample_depth",
+      "label": "sample_depth()",
+      "_callable": true,
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "describe.py",
+      "file_type": "code",
+      "norm_label": "sample_depth()",
+      "source_file": "src/geometry.py",
+      "source_location": "L90"
     },
     {
       "id": "src_reconstruct_run_vggt",
@@ -1172,6 +1280,17 @@
       "source_location": "L179"
     },
     {
+      "id": "argumentparser",
+      "label": "ArgumentParser",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "argumentparser",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "namespace",
       "label": "Namespace",
       "_origin": "ast",
@@ -1192,6 +1311,28 @@
       "norm_label": "run.py",
       "source_file": "run.py",
       "source_location": "L1"
+    },
+    {
+      "id": "src_align",
+      "label": "align.py",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "align.py",
+      "source_file": "src/align.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_align_py_ndarray",
+      "label": "ndarray",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "ndarray",
+      "source_file": "",
+      "source_location": ""
     },
     {
       "id": "src_common",
@@ -1227,6 +1368,28 @@
       "source_location": ""
     },
     {
+      "id": "src_diff",
+      "label": "diff.py",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "diff.py",
+      "source_file": "src/diff.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_diff_py_ndarray",
+      "label": "ndarray",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "ndarray",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
       "id": "src_extract_frames",
       "label": "extract_frames.py",
       "_origin": "ast",
@@ -1235,6 +1398,17 @@
       "file_type": "code",
       "norm_label": "extract_frames.py",
       "source_file": "src/extract_frames.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_geometry",
+      "label": "geometry.py",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "code",
+      "norm_label": "geometry.py",
+      "source_file": "src/geometry.py",
       "source_location": "L1"
     },
     {
@@ -1271,38 +1445,15 @@
       "source_location": "L1"
     },
     {
-      "id": "tests_gpu_describe_smoke",
-      "label": "gpu_describe_smoke.py",
+      "id": "src_visualize",
+      "label": "visualize.py",
       "_origin": "ast",
       "community": 0,
       "community_name": "common.py",
       "file_type": "code",
-      "norm_label": "gpu_describe_smoke.py",
-      "source_file": "tests/gpu_describe_smoke.py",
+      "norm_label": "visualize.py",
+      "source_file": "src/visualize.py",
       "source_location": "L1"
-    },
-    {
-      "id": "tests_prepare_gpu_smoke",
-      "label": "prepare_gpu_smoke.py",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "common.py",
-      "file_type": "code",
-      "norm_label": "prepare_gpu_smoke.py",
-      "source_file": "tests/prepare_gpu_smoke.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "docs_architecture_config_reference",
-      "label": "Config reference",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "common.py",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "config reference",
-      "source_file": "docs/architecture.md",
-      "source_location": "L57"
     },
     {
       "id": "run_rationale_1",
@@ -1313,6 +1464,17 @@
       "file_type": "rationale",
       "norm_label": "one-command pipeline (see agent_plan.md section 1). python run.py --video_a...",
       "source_file": "run.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_align_rationale_1",
+      "label": "Stage 3 - optional ICP refinement (CPU). VGGT already places both videos in one\u2026",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "rationale",
+      "norm_label": "stage 3 - optional icp refinement (cpu). vggt already places both videos in one...",
+      "source_file": "src/align.py",
       "source_location": "L1"
     },
     {
@@ -1327,18 +1489,18 @@
       "source_location": "L1"
     },
     {
-      "id": "src_common_rationale_210",
-      "label": "Wall-clock context manager used by run.py for per-stage timings.",
+      "id": "src_common_rationale_167",
+      "label": "Configure stage logging. Pass ``--debug`` on any stage command line to switch\u2026",
       "_origin": "ast",
       "community": 0,
       "community_name": "common.py",
       "file_type": "rationale",
-      "norm_label": "wall-clock context manager used by run.py for per-stage timings.",
+      "norm_label": "configure stage logging. pass ``--debug`` on any stage command line to switch...",
       "source_file": "src/common.py",
-      "source_location": "L210"
+      "source_location": "L167"
     },
     {
-      "id": "src_common_rationale_228",
+      "id": "src_common_rationale_239",
       "label": "Map stage name -> files that prove the stage finished.",
       "_origin": "ast",
       "community": 0,
@@ -1346,7 +1508,7 @@
       "file_type": "rationale",
       "norm_label": "map stage name -> files that prove the stage finished.",
       "source_file": "src/common.py",
-      "source_location": "L228"
+      "source_location": "L239"
     },
     {
       "id": "src_common_rationale_28",
@@ -1382,6 +1544,50 @@
       "source_location": "L57"
     },
     {
+      "id": "src_diff_rationale_1",
+      "label": "Stage 4 - change detection (CPU). Voxel-downsamples both clouds, finds\u2026",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "rationale",
+      "norm_label": "stage 4 - change detection (cpu). voxel-downsamples both clouds, finds...",
+      "source_file": "src/diff.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_diff_rationale_48",
+      "label": "Boolean mask: keep points whose mean distance to k NN is 'normal'.",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "rationale",
+      "norm_label": "boolean mask: keep points whose mean distance to k nn is 'normal'.",
+      "source_file": "src/diff.py",
+      "source_location": "L48"
+    },
+    {
+      "id": "src_diff_rationale_58",
+      "label": "Points of `cloud` farther than `change_distance` from every `other` point.",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "rationale",
+      "norm_label": "points of `cloud` farther than `change_distance` from every `other` point.",
+      "source_file": "src/diff.py",
+      "source_location": "L58"
+    },
+    {
+      "id": "src_diff_rationale_71",
+      "label": "Fraction of cluster points that the other video saw as empty space. A point is\u2026",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "rationale",
+      "norm_label": "fraction of cluster points that the other video saw as empty space. a point is...",
+      "source_file": "src/diff.py",
+      "source_location": "L71"
+    },
+    {
       "id": "src_extract_frames_rationale_1",
       "label": "Stage 1 - frame extraction (CPU). Video -> sharp, evenly spaced frames tagged\u2026",
       "_origin": "ast",
@@ -1390,6 +1596,17 @@
       "file_type": "rationale",
       "norm_label": "stage 1 - frame extraction (cpu). video -> sharp, evenly spaced frames tagged...",
       "source_file": "src/extract_frames.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "src_geometry_rationale_1",
+      "label": "Shared array/geometry helpers for the CPU stages. Keeps the expensive-artifact\u2026",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "rationale",
+      "norm_label": "shared array/geometry helpers for the cpu stages. keeps the expensive-artifact...",
+      "source_file": "src/geometry.py",
       "source_location": "L1"
     },
     {
@@ -1402,6 +1619,28 @@
       "norm_label": "aligned reconstruction if enabled and present, else the raw one.",
       "source_file": "src/geometry.py",
       "source_location": "L20"
+    },
+    {
+      "id": "src_geometry_rationale_30",
+      "label": "Load a whole reconstruction into memory (`.npy` semantics).",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "rationale",
+      "norm_label": "load a whole reconstruction into memory (`.npy` semantics).",
+      "source_file": "src/geometry.py",
+      "source_location": "L30"
+    },
+    {
+      "id": "src_geometry_rationale_70",
+      "label": "Keep one point per voxel (the first in lexicographic order).",
+      "_origin": "ast",
+      "community": 0,
+      "community_name": "common.py",
+      "file_type": "rationale",
+      "norm_label": "keep one point per voxel (the first in lexicographic order).",
+      "source_file": "src/geometry.py",
+      "source_location": "L70"
     },
     {
       "id": "src_reconstruct_rationale_1",
@@ -1437,123 +1676,13 @@
       "source_location": "L1"
     },
     {
-      "id": "tests_gpu_describe_smoke_rationale_1",
-      "label": "GPU smoke test for src/describe.py's model paths (validation, not results).\u2026",
+      "id": "src_visualize_rationale_1",
+      "label": "Stage 6 - visualization (CPU). Colored point cloud + screenshots + a rotating\u2026",
       "_origin": "ast",
       "community": 0,
       "community_name": "common.py",
       "file_type": "rationale",
-      "norm_label": "gpu smoke test for src/describe.py's model paths (validation, not results)....",
-      "source_file": "tests/gpu_describe_smoke.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_prepare_gpu_smoke_rationale_1",
-      "label": "Prepare a real-image GPU smoke test for src/reconstruct.py. Fetches the VGGT\u2026",
-      "_origin": "ast",
-      "community": 0,
-      "community_name": "common.py",
-      "file_type": "rationale",
-      "norm_label": "prepare a real-image gpu smoke test for src/reconstruct.py. fetches the vggt...",
-      "source_file": "tests/prepare_gpu_smoke.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "argumentparser",
-      "label": "ArgumentParser",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "argumentparser",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "src_align",
-      "label": "align.py",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "align.py",
-      "source_file": "src/align.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_align_py_ndarray",
-      "label": "ndarray",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "ndarray",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "src_diff",
-      "label": "diff.py",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "diff.py",
-      "source_file": "src/diff.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_diff_py_ndarray",
-      "label": "ndarray",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "ndarray",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "src_geometry",
-      "label": "geometry.py",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "geometry.py",
-      "source_file": "src/geometry.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_geometry_py_any",
-      "label": "Any",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "any",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "src_geometry_py_ndarray",
-      "label": "ndarray",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "ndarray",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "src_visualize",
-      "label": "visualize.py",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "code",
-      "norm_label": "visualize.py",
+      "norm_label": "stage 6 - visualization (cpu). colored point cloud + screenshots + a rotating...",
       "source_file": "src/visualize.py",
       "source_location": "L1"
     },
@@ -1562,7 +1691,7 @@
       "label": "ndarray",
       "_origin": "ast",
       "community": 1,
-      "community_name": "numpy",
+      "community_name": "write_ply",
       "file_type": "code",
       "norm_label": "ndarray",
       "source_file": "",
@@ -1573,165 +1702,22 @@
       "label": "Path",
       "_origin": "ast",
       "community": 1,
-      "community_name": "numpy",
+      "community_name": "write_ply",
       "file_type": "code",
       "norm_label": "path",
       "source_file": "",
       "source_location": ""
     },
     {
-      "id": "src_align_rationale_1",
-      "label": "Stage 3 - optional ICP refinement (CPU). VGGT already places both videos in one\u2026",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "rationale",
-      "norm_label": "stage 3 - optional icp refinement (cpu). vggt already places both videos in one...",
-      "source_file": "src/align.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_diff_rationale_1",
-      "label": "Stage 4 - change detection (CPU). Voxel-downsamples both clouds, finds\u2026",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "rationale",
-      "norm_label": "stage 4 - change detection (cpu). voxel-downsamples both clouds, finds...",
-      "source_file": "src/diff.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_diff_rationale_48",
-      "label": "Boolean mask: keep points whose mean distance to k NN is 'normal'.",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "rationale",
-      "norm_label": "boolean mask: keep points whose mean distance to k nn is 'normal'.",
-      "source_file": "src/diff.py",
-      "source_location": "L48"
-    },
-    {
-      "id": "src_diff_rationale_58",
-      "label": "Points of `cloud` farther than `change_distance` from every `other` point.",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "rationale",
-      "norm_label": "points of `cloud` farther than `change_distance` from every `other` point.",
-      "source_file": "src/diff.py",
-      "source_location": "L58"
-    },
-    {
-      "id": "src_diff_rationale_71",
-      "label": "Fraction of cluster points that the other video saw as empty space. A point is\u2026",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "rationale",
-      "norm_label": "fraction of cluster points that the other video saw as empty space. a point is...",
-      "source_file": "src/diff.py",
-      "source_location": "L71"
-    },
-    {
-      "id": "src_geometry_rationale_1",
-      "label": "Shared array/geometry helpers for the CPU stages. Keeps the expensive-artifact\u2026",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "rationale",
-      "norm_label": "shared array/geometry helpers for the cpu stages. keeps the expensive-artifact...",
-      "source_file": "src/geometry.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "src_geometry_rationale_30",
-      "label": "Load a whole reconstruction into memory (`.npy` semantics).",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "rationale",
-      "norm_label": "load a whole reconstruction into memory (`.npy` semantics).",
-      "source_file": "src/geometry.py",
-      "source_location": "L30"
-    },
-    {
-      "id": "src_geometry_rationale_52",
-      "label": "Flatten the cloud with the confidence filter applied. Returns (points [N,3],\u2026",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "rationale",
-      "norm_label": "flatten the cloud with the confidence filter applied. returns (points [n,3],...",
-      "source_file": "src/geometry.py",
-      "source_location": "L52"
-    },
-    {
-      "id": "src_geometry_rationale_70",
-      "label": "Keep one point per voxel (the first in lexicographic order).",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "rationale",
-      "norm_label": "keep one point per voxel (the first in lexicographic order).",
-      "source_file": "src/geometry.py",
-      "source_location": "L70"
-    },
-    {
-      "id": "src_geometry_rationale_83",
-      "label": "World -> pixel. Returns uv [N,2] float, z [N] (camera-frame depth).",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "rationale",
-      "norm_label": "world -> pixel. returns uv [n,2] float, z [n] (camera-frame depth).",
-      "source_file": "src/geometry.py",
-      "source_location": "L83"
-    },
-    {
-      "id": "src_geometry_rationale_91",
-      "label": "Nearest-neighbour depth lookup. Returns (depth, in_bounds).",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "rationale",
-      "norm_label": "nearest-neighbour depth lookup. returns (depth, in_bounds).",
-      "source_file": "src/geometry.py",
-      "source_location": "L91"
-    },
-    {
-      "id": "src_visualize_rationale_1",
-      "label": "Stage 6 - visualization (CPU). Colored point cloud + screenshots + a rotating\u2026",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "rationale",
-      "norm_label": "stage 6 - visualization (cpu). colored point cloud + screenshots + a rotating...",
-      "source_file": "src/visualize.py",
-      "source_location": "L1"
-    },
-    {
       "id": "src_visualize_rationale_47",
       "label": "Minimal binary little-endian PLY writer (points + uchar rgb).",
       "_origin": "ast",
       "community": 1,
-      "community_name": "numpy",
+      "community_name": "write_ply",
       "file_type": "rationale",
       "norm_label": "minimal binary little-endian ply writer (points + uchar rgb).",
       "source_file": "src/visualize.py",
       "source_location": "L47"
-    },
-    {
-      "id": "src_visualize_rationale_64",
-      "label": "Background cloud (dim/voxelized) + per-change colored point sets.",
-      "_origin": "ast",
-      "community": 1,
-      "community_name": "numpy",
-      "file_type": "rationale",
-      "norm_label": "background cloud (dim/voxelized) + per-change colored point sets.",
-      "source_file": "src/visualize.py",
-      "source_location": "L64"
     },
     {
       "id": "readme_3d_scene_change_detection",
@@ -1755,7 +1741,7 @@
       "node_kind": "heading",
       "norm_label": "design decisions",
       "source_file": "README.md",
-      "source_location": "L100"
+      "source_location": "L102"
     },
     {
       "id": "readme_documentation",
@@ -1767,7 +1753,7 @@
       "node_kind": "heading",
       "norm_label": "documentation",
       "source_file": "README.md",
-      "source_location": "L130"
+      "source_location": "L132"
     },
     {
       "id": "readme_how_to_run",
@@ -1779,7 +1765,7 @@
       "node_kind": "heading",
       "norm_label": "how to run",
       "source_file": "README.md",
-      "source_location": "L78"
+      "source_location": "L80"
     },
     {
       "id": "readme_license",
@@ -1791,7 +1777,7 @@
       "node_kind": "heading",
       "norm_label": "license",
       "source_file": "README.md",
-      "source_location": "L146"
+      "source_location": "L150"
     },
     {
       "id": "readme_limitations_and_failure_cases",
@@ -1803,7 +1789,7 @@
       "node_kind": "heading",
       "norm_label": "limitations and failure cases",
       "source_file": "README.md",
-      "source_location": "L112"
+      "source_location": "L114"
     },
     {
       "id": "readme_models",
@@ -1815,7 +1801,7 @@
       "node_kind": "heading",
       "norm_label": "models",
       "source_file": "README.md",
-      "source_location": "L56"
+      "source_location": "L58"
     },
     {
       "id": "readme_pipeline",
@@ -1827,7 +1813,7 @@
       "node_kind": "heading",
       "norm_label": "pipeline",
       "source_file": "README.md",
-      "source_location": "L40"
+      "source_location": "L42"
     },
     {
       "id": "readme_results",
@@ -1851,14 +1837,14 @@
       "node_kind": "heading",
       "norm_label": "setup",
       "source_file": "README.md",
-      "source_location": "L69"
+      "source_location": "L71"
     },
     {
       "id": "src_tabletop",
       "label": "tabletop.py",
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "tabletop.py",
       "source_file": "src/tabletop.py",
@@ -1869,7 +1855,7 @@
       "label": "Any",
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "any",
       "source_file": "",
@@ -1880,18 +1866,51 @@
       "label": "ndarray",
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "code",
       "norm_label": "ndarray",
       "source_file": "",
       "source_location": ""
     },
     {
+      "id": "tests_make_fake_reconstruction",
+      "label": "make_fake_reconstruction.py",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "numpy",
+      "file_type": "code",
+      "norm_label": "make_fake_reconstruction.py",
+      "source_file": "tests/make_fake_reconstruction.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_make_fake_reconstruction_py_ndarray",
+      "label": "ndarray",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "numpy",
+      "file_type": "code",
+      "norm_label": "ndarray",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "src_geometry_rationale_52",
+      "label": "Flatten the cloud with the confidence filter applied. Returns (points [N,3],\u2026",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "numpy",
+      "file_type": "rationale",
+      "norm_label": "flatten the cloud with the confidence filter applied. returns (points [n,3],...",
+      "source_file": "src/geometry.py",
+      "source_location": "L52"
+    },
+    {
       "id": "src_tabletop_rationale_1",
       "label": "Tabletop change detection (CPU) - the appearance-based diff mode. Why this\u2026",
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "rationale",
       "norm_label": "tabletop change detection (cpu) - the appearance-based diff mode. why this...",
       "source_file": "src/tabletop.py",
@@ -1902,7 +1921,7 @@
       "label": "Per-channel robust plane fit (a + b*x + c*y) over valid cells. Models the\u2026",
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "rationale",
       "norm_label": "per-channel robust plane fit (a + b*x + c*y) over valid cells. models the...",
       "source_file": "src/tabletop.py",
@@ -1913,7 +1932,7 @@
       "label": "Per-cell distance from the fitted table colour (0-255 RGB units).",
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "rationale",
       "norm_label": "per-cell distance from the fitted table colour (0-255 rgb units).",
       "source_file": "src/tabletop.py",
@@ -1924,7 +1943,7 @@
       "label": "Cast-robust comparison: how different are the two colours *relative* to their\u2026",
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "rationale",
       "norm_label": "cast-robust comparison: how different are the two colours *relative* to their...",
       "source_file": "src/tabletop.py",
@@ -1935,7 +1954,7 @@
       "label": "Gather the actual cloud points that fall into the given cells (vectorised).",
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "rationale",
       "norm_label": "gather the actual cloud points that fall into the given cells (vectorised).",
       "source_file": "src/tabletop.py",
@@ -1943,43 +1962,43 @@
     },
     {
       "id": "src_tabletop_rationale_168",
-      "label": "Shared preprocessing for detect() and static_object_mask().",
+      "label": "Shared preprocessing for detect() and static_object_mask(). Steps (all CPU, all\u2026",
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "rationale",
-      "norm_label": "shared preprocessing for detect() and static_object_mask().",
+      "norm_label": "shared preprocessing for detect() and static_object_mask(). steps (all cpu, all...",
       "source_file": "src/tabletop.py",
       "source_location": "L168"
     },
     {
-      "id": "src_tabletop_rationale_198",
+      "id": "src_tabletop_rationale_216",
       "label": "Cells where BOTH videos show an object (objA > T and objB > T). These are\u2026",
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "rationale",
       "norm_label": "cells where both videos show an object (obja > t and objb > t). these are...",
       "source_file": "src/tabletop.py",
-      "source_location": "L198"
+      "source_location": "L216"
     },
     {
-      "id": "src_tabletop_rationale_211",
+      "id": "src_tabletop_rationale_229",
       "label": "Run the tabletop photometric diff. Returns kept clusters (pipeline format).",
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "rationale",
       "norm_label": "run the tabletop photometric diff. returns kept clusters (pipeline format).",
       "source_file": "src/tabletop.py",
-      "source_location": "L211"
+      "source_location": "L229"
     },
     {
       "id": "src_tabletop_rationale_45",
       "label": "z = a*x + b*y + c for the dominant surface, via iterative reweighting.",
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "rationale",
       "norm_label": "z = a*x + b*y + c for the dominant surface, via iterative reweighting.",
       "source_file": "src/tabletop.py",
@@ -1990,7 +2009,7 @@
       "label": "In-plane bounding box (x, y) around the points near the plane.",
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "rationale",
       "norm_label": "in-plane bounding box (x, y) around the points near the plane.",
       "source_file": "src/tabletop.py",
@@ -2001,11 +2020,44 @@
       "label": "Rasterise into (height [nx,ny], colour [nx,ny,3], count [nx,ny], point_codes\u2026",
       "_origin": "ast",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "file_type": "rationale",
       "norm_label": "rasterise into (height [nx,ny], colour [nx,ny,3], count [nx,ny], point_codes...",
       "source_file": "src/tabletop.py",
       "source_location": "L76"
+    },
+    {
+      "id": "src_visualize_rationale_64",
+      "label": "Background cloud (dim/voxelized) + per-change colored point sets.",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "numpy",
+      "file_type": "rationale",
+      "norm_label": "background cloud (dim/voxelized) + per-change colored point sets.",
+      "source_file": "src/visualize.py",
+      "source_location": "L64"
+    },
+    {
+      "id": "tests_make_fake_reconstruction_rationale_1",
+      "label": "Generate a synthetic reconstruction cache for smoke-testing the CPU stages. NOT\u2026",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "numpy",
+      "file_type": "rationale",
+      "norm_label": "generate a synthetic reconstruction cache for smoke-testing the cpu stages. not...",
+      "source_file": "tests/make_fake_reconstruction.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "tests_make_fake_reconstruction_rationale_38",
+      "label": "Analytical depth + colour for a camera with identity rotation at t.",
+      "_origin": "ast",
+      "community": 11,
+      "community_name": "numpy",
+      "file_type": "rationale",
+      "norm_label": "analytical depth + colour for a camera with identity rotation at t.",
+      "source_file": "tests/make_fake_reconstruction.py",
+      "source_location": "L38"
     },
     {
       "id": "docs_setup_batch_jobs",
@@ -2104,88 +2156,59 @@
       "source_location": "L10"
     },
     {
-      "id": "docs_results_ablations_observed_not_benchmarked",
-      "label": "Ablations (observed, not benchmarked)",
+      "id": "scripts_inspect_cache",
+      "label": "inspect_cache.py",
       "_origin": "ast",
       "community": 13,
-      "community_name": "Results",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "ablations (observed, not benchmarked)",
-      "source_file": "docs/results.md",
-      "source_location": "L78"
-    },
-    {
-      "id": "docs_results_detection_vs_ground_truth",
-      "label": "Detection vs ground truth",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "Results",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "detection vs ground truth",
-      "source_file": "docs/results.md",
-      "source_location": "L8"
-    },
-    {
-      "id": "docs_results_how_this_run_was_produced",
-      "label": "How this run was produced",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "Results",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "how this run was produced",
-      "source_file": "docs/results.md",
-      "source_location": "L52"
-    },
-    {
-      "id": "docs_results_limitations_and_failure_cases_as_observed_on_this_scene",
-      "label": "Limitations and failure cases (as observed on this scene)",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "Results",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "limitations and failure cases (as observed on this scene)",
-      "source_file": "docs/results.md",
-      "source_location": "L93"
-    },
-    {
-      "id": "docs_results_outputs_of_the_run",
-      "label": "Outputs of the run",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "Results",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "outputs of the run",
-      "source_file": "docs/results.md",
-      "source_location": "L30"
-    },
-    {
-      "id": "docs_results_results",
-      "label": "Results",
-      "_origin": "ast",
-      "community": 13,
-      "community_name": "Results",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "results",
-      "source_file": "docs/results.md",
+      "community_name": "inspect_cache.py",
+      "file_type": "code",
+      "norm_label": "inspect_cache.py",
+      "source_file": "scripts/inspect_cache.py",
       "source_location": "L1"
     },
     {
-      "id": "docs_results_timings_wall_clock_this_run",
-      "label": "Timings (wall clock, this run)",
+      "id": "scripts_inspect_cache_py_path",
+      "label": "Path",
       "_origin": "ast",
       "community": 13,
-      "community_name": "Results",
-      "file_type": "document",
-      "node_kind": "heading",
-      "norm_label": "timings (wall clock, this run)",
-      "source_file": "docs/results.md",
-      "source_location": "L67"
+      "community_name": "inspect_cache.py",
+      "file_type": "code",
+      "norm_label": "path",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "tests_prepare_gpu_smoke",
+      "label": "prepare_gpu_smoke.py",
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "inspect_cache.py",
+      "file_type": "code",
+      "norm_label": "prepare_gpu_smoke.py",
+      "source_file": "tests/prepare_gpu_smoke.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "scripts_inspect_cache_rationale_2",
+      "label": "Inspect every cached artifact of the pipeline - the first debugging tool.\u2026",
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "inspect_cache.py",
+      "file_type": "rationale",
+      "norm_label": "inspect every cached artifact of the pipeline - the first debugging tool....",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L2"
+    },
+    {
+      "id": "tests_prepare_gpu_smoke_rationale_1",
+      "label": "Prepare a real-image GPU smoke test for src/reconstruct.py. Fetches the VGGT\u2026",
+      "_origin": "ast",
+      "community": 13,
+      "community_name": "inspect_cache.py",
+      "file_type": "rationale",
+      "norm_label": "prepare a real-image gpu smoke test for src/reconstruct.py. fetches the vggt...",
+      "source_file": "tests/prepare_gpu_smoke.py",
+      "source_location": "L1"
     },
     {
       "id": "scripts_download_models",
@@ -2386,48 +2409,148 @@
       "source_location": "L1"
     },
     {
-      "id": "tests_make_fake_reconstruction",
-      "label": "make_fake_reconstruction.py",
+      "id": "docs_verification_2_self_consistency_override_removed_added",
+      "label": "2. Self-consistency override (removed/added)",
       "_origin": "ast",
       "community": 19,
-      "community_name": "make_fake_reconstruction.py",
-      "file_type": "code",
-      "norm_label": "make_fake_reconstruction.py",
-      "source_file": "tests/make_fake_reconstruction.py",
+      "community_name": "The rules, in order",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "2. self-consistency override (removed/added)",
+      "source_file": "docs/verification.md",
+      "source_location": "L28"
+    },
+    {
+      "id": "docs_verification_3_mutual_cancellation",
+      "label": "3. Mutual cancellation",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "The rules, in order",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "3. mutual cancellation",
+      "source_file": "docs/verification.md",
+      "source_location": "L37"
+    },
+    {
+      "id": "docs_verification_4_score_floor_semantics_min_change_score_default_80",
+      "label": "4. Score floor (`semantics.min_change_score`, default 80)",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "The rules, in order",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "4. score floor (`semantics.min_change_score`, default 80)",
+      "source_file": "docs/verification.md",
+      "source_location": "L44"
+    },
+    {
+      "id": "docs_verification_5_static_object_suppression_src_tabletop_static_object_mask",
+      "label": "5. Static-object suppression (`src.tabletop.static_object_mask`)",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "The rules, in order",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "5. static-object suppression (`src.tabletop.static_object_mask`)",
+      "source_file": "docs/verification.md",
+      "source_location": "L50"
+    },
+    {
+      "id": "docs_verification_6_replaced_pixel_gate_semantics_replaced_min_pixel_diff_default_70",
+      "label": "6. Replaced pixel gate (`semantics.replaced_min_pixel_diff`, default 70)",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "The rules, in order",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "6. replaced pixel gate (`semantics.replaced_min_pixel_diff`, default 70)",
+      "source_file": "docs/verification.md",
+      "source_location": "L58"
+    },
+    {
+      "id": "docs_verification_7_same_appearance_rejection_semantics_same_appearance_threshold_0_80",
+      "label": "7. Same-appearance rejection (`semantics.same_appearance_threshold`, 0.80)",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "The rules, in order",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "7. same-appearance rejection (`semantics.same_appearance_threshold`, 0.80)",
+      "source_file": "docs/verification.md",
+      "source_location": "L68"
+    },
+    {
+      "id": "docs_verification_8_duplicate_rules",
+      "label": "8. Duplicate rules",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "The rules, in order",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "8. duplicate rules",
+      "source_file": "docs/verification.md",
+      "source_location": "L75"
+    },
+    {
+      "id": "docs_verification_9_fragment_merging",
+      "label": "9. Fragment merging",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "The rules, in order",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "9. fragment merging",
+      "source_file": "docs/verification.md",
+      "source_location": "L83"
+    },
+    {
+      "id": "docs_verification_final_outcome_on_the_demo_scene",
+      "label": "Final outcome on the demo scene",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "The rules, in order",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "final outcome on the demo scene",
+      "source_file": "docs/verification.md",
+      "source_location": "L91"
+    },
+    {
+      "id": "docs_verification_the_rules_in_order",
+      "label": "The rules, in order",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "The rules, in order",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "the rules, in order",
+      "source_file": "docs/verification.md",
+      "source_location": "L15"
+    },
+    {
+      "id": "docs_verification_verification_from_26_candidates_to_3_changes",
+      "label": "Verification: from 26 candidates to 3 changes",
+      "_origin": "ast",
+      "community": 19,
+      "community_name": "The rules, in order",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "verification: from 26 candidates to 3 changes",
+      "source_file": "docs/verification.md",
       "source_location": "L1"
     },
     {
-      "id": "tests_make_fake_reconstruction_py_ndarray",
-      "label": "ndarray",
+      "id": "docs_verification_why_this_much_machinery",
+      "label": "Why this much machinery?",
       "_origin": "ast",
       "community": 19,
-      "community_name": "make_fake_reconstruction.py",
-      "file_type": "code",
-      "norm_label": "ndarray",
-      "source_file": "",
-      "source_location": ""
-    },
-    {
-      "id": "tests_make_fake_reconstruction_rationale_1",
-      "label": "Generate a synthetic reconstruction cache for smoke-testing the CPU stages. NOT\u2026",
-      "_origin": "ast",
-      "community": 19,
-      "community_name": "make_fake_reconstruction.py",
-      "file_type": "rationale",
-      "norm_label": "generate a synthetic reconstruction cache for smoke-testing the cpu stages. not...",
-      "source_file": "tests/make_fake_reconstruction.py",
-      "source_location": "L1"
-    },
-    {
-      "id": "tests_make_fake_reconstruction_rationale_38",
-      "label": "Analytical depth + colour for a camera with identity rotation at t.",
-      "_origin": "ast",
-      "community": 19,
-      "community_name": "make_fake_reconstruction.py",
-      "file_type": "rationale",
-      "norm_label": "analytical depth + colour for a camera with identity rotation at t.",
-      "source_file": "tests/make_fake_reconstruction.py",
-      "source_location": "L38"
+      "community_name": "The rules, in order",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "why this much machinery?",
+      "source_file": "docs/verification.md",
+      "source_location": "L100"
     },
     {
       "id": "agent_plan",
@@ -2475,7 +2598,19 @@
       "node_kind": "heading",
       "norm_label": "caches and outputs",
       "source_file": "docs/architecture.md",
-      "source_location": "L77"
+      "source_location": "L78"
+    },
+    {
+      "id": "docs_architecture_config_reference",
+      "label": "Config reference",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "docs/README.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "config reference",
+      "source_file": "docs/architecture.md",
+      "source_location": "L58"
     },
     {
       "id": "docs_architecture_conventions",
@@ -2487,7 +2622,7 @@
       "node_kind": "heading",
       "norm_label": "conventions",
       "source_file": "docs/architecture.md",
-      "source_location": "L83"
+      "source_location": "L84"
     },
     {
       "id": "docs_architecture_module_responsibilities",
@@ -2499,7 +2634,7 @@
       "node_kind": "heading",
       "norm_label": "module responsibilities",
       "source_file": "docs/architecture.md",
-      "source_location": "L41"
+      "source_location": "L42"
     },
     {
       "id": "docs_architecture_repository_layout",
@@ -2584,6 +2719,18 @@
       "norm_label": "recording guide (from `agent_plan.md` \u00a76, phase 0)",
       "source_file": "docs/data.md",
       "source_location": "L6"
+    },
+    {
+      "id": "docs_debugging",
+      "label": "debugging.md",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "docs/README.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "debugging.md",
+      "source_file": "docs/debugging.md",
+      "source_location": "L1"
     },
     {
       "id": "docs_models",
@@ -2718,6 +2865,90 @@
       "source_location": "L1"
     },
     {
+      "id": "docs_results_ablations_observed_not_benchmarked",
+      "label": "Ablations (observed, not benchmarked)",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "docs/README.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "ablations (observed, not benchmarked)",
+      "source_file": "docs/results.md",
+      "source_location": "L78"
+    },
+    {
+      "id": "docs_results_detection_vs_ground_truth",
+      "label": "Detection vs ground truth",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "docs/README.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "detection vs ground truth",
+      "source_file": "docs/results.md",
+      "source_location": "L8"
+    },
+    {
+      "id": "docs_results_how_this_run_was_produced",
+      "label": "How this run was produced",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "docs/README.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "how this run was produced",
+      "source_file": "docs/results.md",
+      "source_location": "L52"
+    },
+    {
+      "id": "docs_results_limitations_and_failure_cases_as_observed_on_this_scene",
+      "label": "Limitations and failure cases (as observed on this scene)",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "docs/README.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "limitations and failure cases (as observed on this scene)",
+      "source_file": "docs/results.md",
+      "source_location": "L93"
+    },
+    {
+      "id": "docs_results_outputs_of_the_run",
+      "label": "Outputs of the run",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "docs/README.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "outputs of the run",
+      "source_file": "docs/results.md",
+      "source_location": "L30"
+    },
+    {
+      "id": "docs_results_results",
+      "label": "Results",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "docs/README.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "results",
+      "source_file": "docs/results.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "docs_results_timings_wall_clock_this_run",
+      "label": "Timings (wall clock, this run)",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "docs/README.md",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "timings (wall clock, this run)",
+      "source_file": "docs/results.md",
+      "source_location": "L67"
+    },
+    {
       "id": "docs_roadmap",
       "label": "roadmap.md",
       "_origin": "ast",
@@ -2835,6 +3066,18 @@
       "node_kind": "heading",
       "norm_label": "troubleshooting",
       "source_file": "docs/troubleshooting.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "docs_verification",
+      "label": "verification.md",
+      "_origin": "ast",
+      "community": 2,
+      "community_name": "docs/README.md",
+      "file_type": "document",
+      "node_kind": "page",
+      "norm_label": "verification.md",
+      "source_file": "docs/verification.md",
       "source_location": "L1"
     },
     {
@@ -2968,6 +3211,17 @@
       "norm_label": "ground truth \u2014 demo scene",
       "source_file": "data/ground_truth.md",
       "source_location": "L1"
+    },
+    {
+      "id": "src_common_rationale_221",
+      "label": "Wall-clock context manager used by run.py for per-stage timings.",
+      "_origin": "ast",
+      "community": 22,
+      "community_name": "Timer",
+      "file_type": "rationale",
+      "norm_label": "wall-clock context manager used by run.py for per-stage timings.",
+      "source_file": "src/common.py",
+      "source_location": "L221"
     },
     {
       "id": "agent_plan_0_critical_rules_read_first",
@@ -3507,7 +3761,52 @@
       "source_location": ""
     },
     {
-      "id": "src_common_rationale_174",
+      "id": "src_geometry_py_any",
+      "label": "Any",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "describe.py",
+      "file_type": "code",
+      "norm_label": "any",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "src_geometry_py_ndarray",
+      "label": "ndarray",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "describe.py",
+      "file_type": "code",
+      "norm_label": "ndarray",
+      "source_file": "",
+      "source_location": ""
+    },
+    {
+      "id": "tests_gpu_describe_smoke",
+      "label": "gpu_describe_smoke.py",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "describe.py",
+      "file_type": "code",
+      "norm_label": "gpu_describe_smoke.py",
+      "source_file": "tests/gpu_describe_smoke.py",
+      "source_location": "L1"
+    },
+    {
+      "id": "docs_verification_1_vlm_verification_prompt_verify",
+      "label": "1. VLM verification (`PROMPT_VERIFY`)",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "describe.py",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "1. vlm verification (`prompt_verify`)",
+      "source_file": "docs/verification.md",
+      "source_location": "L17"
+    },
+    {
+      "id": "src_common_rationale_185",
       "label": "Pin the ``n`` idlest GPUs via CUDA_VISIBLE_DEVICES if none are pinned. This\u2026",
       "_origin": "ast",
       "community": 5,
@@ -3515,7 +3814,7 @@
       "file_type": "rationale",
       "norm_label": "pin the ``n`` idlest gpus via cuda_visible_devices if none are pinned. this...",
       "source_file": "src/common.py",
-      "source_location": "L174"
+      "source_location": "L185"
     },
     {
       "id": "src_common_rationale_75",
@@ -3604,6 +3903,39 @@
       "norm_label": "model-space pixel bbox -> original-frame pixel bbox (clamped).",
       "source_file": "src/geometry.py",
       "source_location": "L119"
+    },
+    {
+      "id": "src_geometry_rationale_83",
+      "label": "World -> pixel. Returns uv [N,2] float, z [N] (camera-frame depth).",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "describe.py",
+      "file_type": "rationale",
+      "norm_label": "world -> pixel. returns uv [n,2] float, z [n] (camera-frame depth).",
+      "source_file": "src/geometry.py",
+      "source_location": "L83"
+    },
+    {
+      "id": "src_geometry_rationale_91",
+      "label": "Nearest-neighbour depth lookup. Returns (depth, in_bounds).",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "describe.py",
+      "file_type": "rationale",
+      "norm_label": "nearest-neighbour depth lookup. returns (depth, in_bounds).",
+      "source_file": "src/geometry.py",
+      "source_location": "L91"
+    },
+    {
+      "id": "tests_gpu_describe_smoke_rationale_1",
+      "label": "GPU smoke test for src/describe.py's model paths (validation, not results).\u2026",
+      "_origin": "ast",
+      "community": 5,
+      "community_name": "describe.py",
+      "file_type": "rationale",
+      "norm_label": "gpu smoke test for src/describe.py's model paths (validation, not results)....",
+      "source_file": "tests/gpu_describe_smoke.py",
+      "source_location": "L1"
     },
     {
       "id": "rules_1_stay_inside_this_folder",
@@ -3969,6 +4301,126 @@
       "source_location": "L15"
     },
     {
+      "id": "docs_debugging_change_detection_misses_or_spams_candidates",
+      "label": "Change detection: misses or spams candidates",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "build_change_list",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "change detection: misses or spams candidates",
+      "source_file": "docs/debugging.md",
+      "source_location": "L68"
+    },
+    {
+      "id": "docs_debugging_debugging",
+      "label": "Debugging",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "build_change_list",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "debugging",
+      "source_file": "docs/debugging.md",
+      "source_location": "L1"
+    },
+    {
+      "id": "docs_debugging_frame_extraction",
+      "label": "Frame extraction",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "build_change_list",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "frame extraction",
+      "source_file": "docs/debugging.md",
+      "source_location": "L51"
+    },
+    {
+      "id": "docs_debugging_gpu_debugging",
+      "label": "GPU debugging",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "build_change_list",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "gpu debugging",
+      "source_file": "docs/debugging.md",
+      "source_location": "L114"
+    },
+    {
+      "id": "docs_debugging_logs",
+      "label": "Logs",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "build_change_list",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "logs",
+      "source_file": "docs/debugging.md",
+      "source_location": "L125"
+    },
+    {
+      "id": "docs_debugging_playbook_by_symptom",
+      "label": "Playbook by symptom",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "build_change_list",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "playbook by symptom",
+      "source_file": "docs/debugging.md",
+      "source_location": "L49"
+    },
+    {
+      "id": "docs_debugging_reconstruction",
+      "label": "Reconstruction",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "build_change_list",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "reconstruction",
+      "source_file": "docs/debugging.md",
+      "source_location": "L59"
+    },
+    {
+      "id": "docs_debugging_report_visualization",
+      "label": "Report / visualization",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "build_change_list",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "report / visualization",
+      "source_file": "docs/debugging.md",
+      "source_location": "L106"
+    },
+    {
+      "id": "docs_debugging_semantics_crops_vlm_verification",
+      "label": "Semantics (crops, VLM, verification)",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "build_change_list",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "semantics (crops, vlm, verification)",
+      "source_file": "docs/debugging.md",
+      "source_location": "L93"
+    },
+    {
+      "id": "docs_debugging_the_cache_map_what_each_stage_reads_and_writes",
+      "label": "The cache map (what each stage reads and writes)",
+      "_origin": "ast",
+      "community": 9,
+      "community_name": "build_change_list",
+      "file_type": "document",
+      "node_kind": "heading",
+      "norm_label": "the cache map (what each stage reads and writes)",
+      "source_file": "docs/debugging.md",
+      "source_location": "L23"
+    },
+    {
       "id": "src_geometry_rationale_137",
       "label": "Merge clusters + VLM verification + DINOv2 matches into final changes. Sources\u2026",
       "_origin": "ast",
@@ -3980,6 +4432,17 @@
       "source_location": "L137"
     },
     {
+      "id": "argparse",
+      "label": "argparse",
+      "community": 0,
+      "community_name": "common.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "argparse",
+      "source_file": "",
+      "type": "external"
+    },
+    {
       "id": "datetime",
       "label": "datetime",
       "community": 0,
@@ -3987,17 +4450,6 @@
       "external": true,
       "file_type": "concept",
       "norm_label": "datetime",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "gc",
-      "label": "gc",
-      "community": 0,
-      "community_name": "common.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "gc",
       "source_file": "",
       "type": "external"
     },
@@ -4013,28 +4465,6 @@
       "type": "external"
     },
     {
-      "id": "json",
-      "label": "json",
-      "community": 0,
-      "community_name": "common.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "json",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "logging",
-      "label": "logging",
-      "community": 0,
-      "community_name": "common.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "logging",
-      "source_file": "",
-      "type": "external"
-    },
-    {
       "id": "pathlib",
       "label": "pathlib",
       "community": 0,
@@ -4042,17 +4472,6 @@
       "external": true,
       "file_type": "concept",
       "norm_label": "pathlib",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "pil",
-      "label": "pil",
-      "community": 0,
-      "community_name": "common.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "pil",
       "source_file": "",
       "type": "external"
     },
@@ -4068,24 +4487,13 @@
       "type": "external"
     },
     {
-      "id": "shutil",
-      "label": "shutil",
+      "id": "scipy_spatial",
+      "label": "scipy_spatial",
       "community": 0,
       "community_name": "common.py",
       "external": true,
       "file_type": "concept",
-      "norm_label": "shutil",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "subprocess",
-      "label": "subprocess",
-      "community": 0,
-      "community_name": "common.py",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "subprocess",
+      "norm_label": "scipy_spatial",
       "source_file": "",
       "type": "external"
     },
@@ -4101,31 +4509,20 @@
       "type": "external"
     },
     {
-      "id": "time",
-      "label": "time",
+      "id": "typing",
+      "label": "typing",
       "community": 0,
       "community_name": "common.py",
       "external": true,
       "file_type": "concept",
-      "norm_label": "time",
-      "source_file": "",
-      "type": "external"
-    },
-    {
-      "id": "argparse",
-      "label": "argparse",
-      "community": 1,
-      "community_name": "numpy",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "argparse",
+      "norm_label": "typing",
       "source_file": "",
       "type": "external"
     },
     {
       "id": "numpy",
       "label": "numpy",
-      "community": 1,
+      "community": 11,
       "community_name": "numpy",
       "external": true,
       "file_type": "concept",
@@ -4134,21 +4531,10 @@
       "type": "external"
     },
     {
-      "id": "scipy_spatial",
-      "label": "scipy_spatial",
-      "community": 1,
-      "community_name": "numpy",
-      "external": true,
-      "file_type": "concept",
-      "norm_label": "scipy_spatial",
-      "source_file": "",
-      "type": "external"
-    },
-    {
       "id": "scipy_ndimage",
       "label": "scipy_ndimage",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "external": true,
       "file_type": "concept",
       "norm_label": "scipy_ndimage",
@@ -4159,7 +4545,7 @@
       "id": "sklearn_cluster",
       "label": "sklearn_cluster",
       "community": 11,
-      "community_name": "tabletop.py",
+      "community_name": "numpy",
       "external": true,
       "file_type": "concept",
       "norm_label": "sklearn_cluster",
@@ -4167,13 +4553,68 @@
       "type": "external"
     },
     {
-      "id": "typing",
-      "label": "typing",
-      "community": 11,
-      "community_name": "tabletop.py",
+      "id": "json",
+      "label": "json",
+      "community": 13,
+      "community_name": "inspect_cache.py",
       "external": true,
       "file_type": "concept",
-      "norm_label": "typing",
+      "norm_label": "json",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "shutil",
+      "label": "shutil",
+      "community": 13,
+      "community_name": "inspect_cache.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "shutil",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "subprocess",
+      "label": "subprocess",
+      "community": 13,
+      "community_name": "inspect_cache.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "subprocess",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "gc",
+      "label": "gc",
+      "community": 5,
+      "community_name": "describe.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "gc",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "logging",
+      "label": "logging",
+      "community": 5,
+      "community_name": "describe.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "logging",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "pil",
+      "label": "pil",
+      "community": 5,
+      "community_name": "describe.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "pil",
       "source_file": "",
       "type": "external"
     },
@@ -4185,6 +4626,17 @@
       "external": true,
       "file_type": "concept",
       "norm_label": "re",
+      "source_file": "",
+      "type": "external"
+    },
+    {
+      "id": "time",
+      "label": "time",
+      "community": 5,
+      "community_name": "describe.py",
+      "external": true,
+      "file_type": "concept",
+      "norm_label": "time",
       "source_file": "",
       "type": "external"
     },
@@ -4307,6 +4759,270 @@
       "context": "call",
       "source_file": "scripts/download_models.sh",
       "source_location": "L37",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_diff",
+      "target": "scripts_inspect_cache_section",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L102",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_diff",
+      "target": "scripts_inspect_cache_read_json",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L108",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_diff",
+      "target": "scripts_inspect_cache_fmt",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L116",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_frames",
+      "target": "scripts_inspect_cache_section",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_frames",
+      "target": "scripts_inspect_cache_read_json",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L55",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_frames",
+      "target": "numpy",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L65",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_outputs",
+      "target": "scripts_inspect_cache_section",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L167",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_outputs",
+      "target": "scripts_inspect_cache_read_json",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L176",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_reconstruction",
+      "target": "scripts_inspect_cache_section",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L72",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_reconstruction",
+      "target": "scripts_inspect_cache_read_json",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L77",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_reconstruction",
+      "target": "numpy",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L84",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_semantics",
+      "target": "scripts_inspect_cache_section",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L129",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_semantics",
+      "target": "scripts_inspect_cache_read_json",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L134",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_main",
+      "target": "argparse",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L185",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_main",
+      "target": "src_common_load_config",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L192",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_main",
+      "target": "src_common_repo_path",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L197",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_main",
+      "target": "scripts_inspect_cache_inspect_frames",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L201",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_main",
+      "target": "scripts_inspect_cache_inspect_reconstruction",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L202",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_main",
+      "target": "scripts_inspect_cache_inspect_diff",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L203",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_main",
+      "target": "scripts_inspect_cache_inspect_semantics",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L204",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_main",
+      "target": "scripts_inspect_cache_inspect_outputs",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L205",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_read_json",
+      "target": "json",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L33",
       "weight": 1.0
     },
     {
@@ -4546,7 +5262,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/common.py",
-      "source_location": "L164",
+      "source_location": "L175",
       "weight": 1.0
     },
     {
@@ -4558,7 +5274,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/common.py",
-      "source_location": "L229",
+      "source_location": "L240",
       "weight": 1.0
     },
     {
@@ -4834,7 +5550,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/describe.py",
-      "source_location": "L433",
+      "source_location": "L434",
       "weight": 1.0
     },
     {
@@ -4846,7 +5562,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/describe.py",
-      "source_location": "L442",
+      "source_location": "L443",
       "weight": 1.0
     },
     {
@@ -4858,7 +5574,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/describe.py",
-      "source_location": "L550",
+      "source_location": "L552",
       "weight": 1.0
     },
     {
@@ -4870,7 +5586,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/describe.py",
-      "source_location": "L657",
+      "source_location": "L661",
       "weight": 1.0
     },
     {
@@ -4882,7 +5598,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/describe.py",
-      "source_location": "L663",
+      "source_location": "L667",
       "weight": 1.0
     },
     {
@@ -5830,7 +6546,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/tabletop.py",
-      "source_location": "L213",
+      "source_location": "L231",
       "weight": 1.0
     },
     {
@@ -5842,7 +6558,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/tabletop.py",
-      "source_location": "L264",
+      "source_location": "L282",
       "weight": 1.0
     },
     {
@@ -5854,7 +6570,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/tabletop.py",
-      "source_location": "L290",
+      "source_location": "L313",
       "weight": 1.0
     },
     {
@@ -5890,7 +6606,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/tabletop.py",
-      "source_location": "L175",
+      "source_location": "L190",
       "weight": 1.0
     },
     {
@@ -5902,7 +6618,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/tabletop.py",
-      "source_location": "L180",
+      "source_location": "L195",
       "weight": 1.0
     },
     {
@@ -5914,7 +6630,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/tabletop.py",
-      "source_location": "L181",
+      "source_location": "L196",
       "weight": 1.0
     },
     {
@@ -5926,7 +6642,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/tabletop.py",
-      "source_location": "L181",
+      "source_location": "L198",
       "weight": 1.0
     },
     {
@@ -5938,7 +6654,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/tabletop.py",
-      "source_location": "L182",
+      "source_location": "L200",
       "weight": 1.0
     },
     {
@@ -5950,7 +6666,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/tabletop.py",
-      "source_location": "L188",
+      "source_location": "L206",
       "weight": 1.0
     },
     {
@@ -5962,7 +6678,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/tabletop.py",
-      "source_location": "L190",
+      "source_location": "L208",
       "weight": 1.0
     },
     {
@@ -5974,7 +6690,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/tabletop.py",
-      "source_location": "L192",
+      "source_location": "L210",
       "weight": 1.0
     },
     {
@@ -5998,7 +6714,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/tabletop.py",
-      "source_location": "L205",
+      "source_location": "L223",
       "weight": 1.0
     },
     {
@@ -6490,7 +7206,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/describe.py",
-      "source_location": "L480",
+      "source_location": "L481",
       "weight": 1.0
     },
     {
@@ -6502,7 +7218,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/describe.py",
-      "source_location": "L526",
+      "source_location": "L527",
       "weight": 1.0
     },
     {
@@ -6514,7 +7230,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/describe.py",
-      "source_location": "L571",
+      "source_location": "L575",
       "weight": 1.0
     },
     {
@@ -6526,7 +7242,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/describe.py",
-      "source_location": "L587",
+      "source_location": "L591",
       "weight": 1.0
     },
     {
@@ -6634,7 +7350,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/tabletop.py",
-      "source_location": "L237",
+      "source_location": "L255",
       "weight": 1.0
     },
     {
@@ -6658,7 +7374,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/common.py",
-      "source_location": "L150",
+      "source_location": "L153",
       "weight": 1.0
     },
     {
@@ -6718,7 +7434,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/common.py",
-      "source_location": "L227",
+      "source_location": "L238",
       "weight": 1.0
     },
     {
@@ -6730,7 +7446,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/common.py",
-      "source_location": "L227",
+      "source_location": "L238",
       "weight": 1.0
     },
     {
@@ -6826,7 +7542,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/tabletop.py",
-      "source_location": "L210",
+      "source_location": "L228",
       "weight": 1.0
     },
     {
@@ -6850,7 +7566,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "src/tabletop.py",
-      "source_location": "L197",
+      "source_location": "L215",
       "weight": 1.0
     },
     {
@@ -6959,6 +7675,78 @@
       "context": "import",
       "source_file": "run.py",
       "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache",
+      "target": "argparse",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L19",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache",
+      "target": "json",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache",
+      "target": "sys",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache",
+      "target": "numpy",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L24",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache",
+      "target": "src_common_load_config",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache",
+      "target": "src_common_repo_path",
+      "relation": "imports",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -7450,7 +8238,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/describe.py",
-      "source_location": "L549",
+      "source_location": "L551",
       "weight": 1.0
     },
     {
@@ -8230,7 +9018,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "src/tabletop.py",
-      "source_location": "L169",
+      "source_location": "L184",
       "weight": 1.0
     },
     {
@@ -8639,6 +9427,30 @@
       "context": "import",
       "source_file": "run.py",
       "source_location": "L20",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache",
+      "target": "pathlib",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L22",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache",
+      "target": "src_common",
+      "relation": "imports_from",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "import",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L28",
       "weight": 1.0
     },
     {
@@ -9134,6 +9946,78 @@
       "weight": 1.0
     },
     {
+      "source": "scripts_inspect_cache_inspect_diff",
+      "target": "scripts_inspect_cache_py_path",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L101",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_frames",
+      "target": "scripts_inspect_cache_py_path",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_outputs",
+      "target": "scripts_inspect_cache_py_path",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L166",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_reconstruction",
+      "target": "scripts_inspect_cache_py_path",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L71",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_inspect_semantics",
+      "target": "scripts_inspect_cache_py_path",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L128",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_read_json",
+      "target": "scripts_inspect_cache_py_path",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "parameter_type",
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
       "source": "src_common_add_common_args",
       "target": "argumentparser",
       "relation": "references",
@@ -9154,7 +10038,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "src/common.py",
-      "source_location": "L150",
+      "source_location": "L153",
       "weight": 1.0
     },
     {
@@ -9190,7 +10074,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "src/common.py",
-      "source_location": "L173",
+      "source_location": "L184",
       "weight": 1.0
     },
     {
@@ -9442,7 +10326,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "src/common.py",
-      "source_location": "L163",
+      "source_location": "L166",
       "weight": 1.0
     },
     {
@@ -9908,7 +10792,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/architecture.md",
-      "source_location": "L41",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -9919,7 +10803,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/architecture.md",
-      "source_location": "L57",
+      "source_location": "L58",
       "weight": 1.0
     },
     {
@@ -9930,7 +10814,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/architecture.md",
-      "source_location": "L77",
+      "source_location": "L78",
       "weight": 1.0
     },
     {
@@ -9941,7 +10825,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/architecture.md",
-      "source_location": "L83",
+      "source_location": "L84",
       "weight": 1.0
     },
     {
@@ -9997,6 +10881,116 @@
       "confidence_score": 1.0,
       "source_file": "docs/data.md",
       "source_location": "L6",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_debugging",
+      "target": "docs_debugging_debugging",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/debugging.md",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_debugging_debugging",
+      "target": "docs_debugging_gpu_debugging",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/debugging.md",
+      "source_location": "L114",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_debugging_debugging",
+      "target": "docs_debugging_logs",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/debugging.md",
+      "source_location": "L125",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_debugging_debugging",
+      "target": "docs_debugging_the_cache_map_what_each_stage_reads_and_writes",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/debugging.md",
+      "source_location": "L23",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_debugging_debugging",
+      "target": "docs_debugging_playbook_by_symptom",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/debugging.md",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_debugging_playbook_by_symptom",
+      "target": "docs_debugging_report_visualization",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/debugging.md",
+      "source_location": "L106",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_debugging_playbook_by_symptom",
+      "target": "docs_debugging_frame_extraction",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/debugging.md",
+      "source_location": "L51",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_debugging_playbook_by_symptom",
+      "target": "docs_debugging_reconstruction",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/debugging.md",
+      "source_location": "L59",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_debugging_playbook_by_symptom",
+      "target": "docs_debugging_change_detection_misses_or_spams_candidates",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/debugging.md",
+      "source_location": "L68",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_debugging_playbook_by_symptom",
+      "target": "docs_debugging_semantics_crops_vlm_verification",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/debugging.md",
+      "source_location": "L93",
       "weight": 1.0
     },
     {
@@ -10440,6 +11434,149 @@
       "weight": 1.0
     },
     {
+      "source": "docs_verification",
+      "target": "docs_verification_verification_from_26_candidates_to_3_changes",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/verification.md",
+      "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_verification_the_rules_in_order",
+      "target": "docs_verification_1_vlm_verification_prompt_verify",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/verification.md",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_verification_the_rules_in_order",
+      "target": "docs_verification_2_self_consistency_override_removed_added",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/verification.md",
+      "source_location": "L28",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_verification_the_rules_in_order",
+      "target": "docs_verification_3_mutual_cancellation",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/verification.md",
+      "source_location": "L37",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_verification_the_rules_in_order",
+      "target": "docs_verification_4_score_floor_semantics_min_change_score_default_80",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/verification.md",
+      "source_location": "L44",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_verification_the_rules_in_order",
+      "target": "docs_verification_5_static_object_suppression_src_tabletop_static_object_mask",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/verification.md",
+      "source_location": "L50",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_verification_the_rules_in_order",
+      "target": "docs_verification_6_replaced_pixel_gate_semantics_replaced_min_pixel_diff_default_70",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/verification.md",
+      "source_location": "L58",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_verification_the_rules_in_order",
+      "target": "docs_verification_7_same_appearance_rejection_semantics_same_appearance_threshold_0_80",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/verification.md",
+      "source_location": "L68",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_verification_the_rules_in_order",
+      "target": "docs_verification_8_duplicate_rules",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/verification.md",
+      "source_location": "L75",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_verification_the_rules_in_order",
+      "target": "docs_verification_9_fragment_merging",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/verification.md",
+      "source_location": "L83",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_verification_verification_from_26_candidates_to_3_changes",
+      "target": "docs_verification_why_this_much_machinery",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/verification.md",
+      "source_location": "L100",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_verification_verification_from_26_candidates_to_3_changes",
+      "target": "docs_verification_the_rules_in_order",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/verification.md",
+      "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_verification_verification_from_26_candidates_to_3_changes",
+      "target": "docs_verification_final_outcome_on_the_demo_scene",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/verification.md",
+      "source_location": "L91",
+      "weight": 1.0
+    },
+    {
       "source": "gpu",
       "target": "gpu_gpu_access_on_this_cluster",
       "relation": "contains",
@@ -10744,7 +11881,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L100",
+      "source_location": "L102",
       "weight": 1.0
     },
     {
@@ -10755,7 +11892,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L112",
+      "source_location": "L114",
       "weight": 1.0
     },
     {
@@ -10766,7 +11903,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L130",
+      "source_location": "L132",
       "weight": 1.0
     },
     {
@@ -10788,7 +11925,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L146",
+      "source_location": "L150",
       "weight": 1.0
     },
     {
@@ -10799,7 +11936,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L40",
+      "source_location": "L42",
       "weight": 1.0
     },
     {
@@ -10810,7 +11947,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L56",
+      "source_location": "L58",
       "weight": 1.0
     },
     {
@@ -10821,7 +11958,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L69",
+      "source_location": "L71",
       "weight": 1.0
     },
     {
@@ -10832,7 +11969,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L78",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -10990,6 +12127,105 @@
       "weight": 1.0
     },
     {
+      "source": "scripts_inspect_cache",
+      "target": "scripts_inspect_cache_inspect_diff",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L101",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache",
+      "target": "scripts_inspect_cache_inspect_semantics",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L128",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache",
+      "target": "scripts_inspect_cache_inspect_outputs",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L166",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache",
+      "target": "scripts_inspect_cache_main",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L184",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache",
+      "target": "scripts_inspect_cache_read_json",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L31",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache",
+      "target": "scripts_inspect_cache_fmt",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L38",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache",
+      "target": "scripts_inspect_cache_section",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L45",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache",
+      "target": "scripts_inspect_cache_inspect_frames",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L49",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache",
+      "target": "scripts_inspect_cache_inspect_reconstruction",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L71",
+      "weight": 1.0
+    },
+    {
       "source": "scripts_setup_env",
       "target": "scripts_setup_env_sh__entry",
       "relation": "contains",
@@ -11074,7 +12310,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/common.py",
-      "source_location": "L150",
+      "source_location": "L153",
       "weight": 1.0
     },
     {
@@ -11085,7 +12321,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/common.py",
-      "source_location": "L163",
+      "source_location": "L166",
       "weight": 1.0
     },
     {
@@ -11096,7 +12332,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/common.py",
-      "source_location": "L173",
+      "source_location": "L184",
       "weight": 1.0
     },
     {
@@ -11107,7 +12343,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/common.py",
-      "source_location": "L209",
+      "source_location": "L220",
       "weight": 1.0
     },
     {
@@ -11118,7 +12354,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/common.py",
-      "source_location": "L227",
+      "source_location": "L238",
       "weight": 1.0
     },
     {
@@ -11624,7 +12860,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/tabletop.py",
-      "source_location": "L197",
+      "source_location": "L215",
       "weight": 1.0
     },
     {
@@ -11635,7 +12871,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/tabletop.py",
-      "source_location": "L210",
+      "source_location": "L228",
       "weight": 1.0
     },
     {
@@ -11899,7 +13135,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/common.py",
-      "source_location": "L212",
+      "source_location": "L223",
       "weight": 1.0
     },
     {
@@ -11910,7 +13146,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/common.py",
-      "source_location": "L215",
+      "source_location": "L226",
       "weight": 1.0
     },
     {
@@ -11921,7 +13157,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/common.py",
-      "source_location": "L219",
+      "source_location": "L230",
       "weight": 1.0
     },
     {
@@ -11933,6 +13169,17 @@
       "confidence_score": 1.0,
       "source_file": "run.py",
       "source_location": "L1",
+      "weight": 1.0
+    },
+    {
+      "source": "scripts_inspect_cache_rationale_2",
+      "target": "scripts_inspect_cache",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/inspect_cache.py",
+      "source_location": "L2",
       "weight": 1.0
     },
     {
@@ -11958,36 +13205,47 @@
       "weight": 1.0
     },
     {
-      "source": "src_common_rationale_174",
+      "source": "src_common_rationale_167",
+      "target": "src_common_setup_logging",
+      "relation": "rationale_for",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/common.py",
+      "source_location": "L167",
+      "weight": 1.0
+    },
+    {
+      "source": "src_common_rationale_185",
       "target": "src_common_pin_idle_gpus",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/common.py",
-      "source_location": "L174",
+      "source_location": "L185",
       "weight": 1.0
     },
     {
-      "source": "src_common_rationale_210",
+      "source": "src_common_rationale_221",
       "target": "src_common_timer",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/common.py",
-      "source_location": "L210",
+      "source_location": "L221",
       "weight": 1.0
     },
     {
-      "source": "src_common_rationale_228",
+      "source": "src_common_rationale_239",
       "target": "src_common_stage_outputs",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/common.py",
-      "source_location": "L228",
+      "source_location": "L239",
       "weight": 1.0
     },
     {
@@ -12376,25 +13634,25 @@
       "weight": 1.0
     },
     {
-      "source": "src_tabletop_rationale_198",
+      "source": "src_tabletop_rationale_216",
       "target": "src_tabletop_static_object_mask",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/tabletop.py",
-      "source_location": "L198",
+      "source_location": "L216",
       "weight": 1.0
     },
     {
-      "source": "src_tabletop_rationale_211",
+      "source": "src_tabletop_rationale_229",
       "target": "src_tabletop_detect",
       "relation": "rationale_for",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/tabletop.py",
-      "source_location": "L211",
+      "source_location": "L229",
       "weight": 1.0
     },
     {
@@ -12559,7 +13817,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/architecture.md",
-      "source_location": "L79",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -12575,7 +13833,7 @@
     },
     {
       "source": "docs_readme",
-      "target": "docs_data",
+      "target": "docs_setup",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -12586,7 +13844,7 @@
     },
     {
       "source": "docs_readme",
-      "target": "docs_architecture",
+      "target": "docs_models",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -12597,7 +13855,7 @@
     },
     {
       "source": "docs_readme",
-      "target": "docs_results",
+      "target": "docs_data",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -12608,7 +13866,7 @@
     },
     {
       "source": "docs_readme",
-      "target": "docs_troubleshooting",
+      "target": "docs_architecture",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -12619,7 +13877,7 @@
     },
     {
       "source": "docs_readme",
-      "target": "docs_roadmap",
+      "target": "docs_results",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -12630,7 +13888,7 @@
     },
     {
       "source": "docs_readme",
-      "target": "gpu",
+      "target": "docs_troubleshooting",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -12641,13 +13899,35 @@
     },
     {
       "source": "docs_readme",
-      "target": "rules",
+      "target": "docs_roadmap",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "docs/README.md",
       "source_location": "L16",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme",
+      "target": "gpu",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/README.md",
+      "source_location": "L17",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_readme",
+      "target": "rules",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/README.md",
+      "source_location": "L18",
       "weight": 1.0
     },
     {
@@ -12674,7 +13954,7 @@
     },
     {
       "source": "docs_readme",
-      "target": "docs_setup",
+      "target": "docs_verification",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -12685,7 +13965,7 @@
     },
     {
       "source": "docs_readme",
-      "target": "docs_models",
+      "target": "docs_debugging",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -12761,6 +14041,28 @@
       "weight": 1.0
     },
     {
+      "source": "docs_verification",
+      "target": "docs_debugging",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/verification.md",
+      "source_location": "L114",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_verification",
+      "target": "docs_pipeline",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "docs/verification.md",
+      "source_location": "L3",
+      "weight": 1.0
+    },
+    {
       "source": "readme",
       "target": "docs_results",
       "relation": "references",
@@ -12784,7 +14086,7 @@
     },
     {
       "source": "readme",
-      "target": "docs_data",
+      "target": "docs_verification",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -12795,7 +14097,7 @@
     },
     {
       "source": "readme",
-      "target": "docs_architecture",
+      "target": "docs_debugging",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -12806,13 +14108,35 @@
     },
     {
       "source": "readme",
+      "target": "docs_data",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L142",
+      "weight": 1.0
+    },
+    {
+      "source": "readme",
+      "target": "docs_architecture",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "README.md",
+      "source_location": "L143",
+      "weight": 1.0
+    },
+    {
+      "source": "readme",
       "target": "docs_troubleshooting",
       "relation": "references",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L141",
+      "source_location": "L145",
       "weight": 1.0
     },
     {
@@ -12823,7 +14147,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L144",
+      "source_location": "L148",
       "weight": 1.0
     },
     {
@@ -12834,7 +14158,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L54",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -12845,7 +14169,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L67",
+      "source_location": "L69",
       "weight": 1.0
     },
     {
@@ -12856,7 +14180,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L71",
+      "source_location": "L73",
       "weight": 1.0
     },
     {
@@ -12867,7 +14191,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L71",
+      "source_location": "L73",
       "weight": 1.0
     },
     {
@@ -12878,7 +14202,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "README.md",
-      "source_location": "L97",
+      "source_location": "L99",
       "weight": 1.0
     },
     {
@@ -12930,6 +14254,30 @@
       "weight": 1.0
     },
     {
+      "source": "docs_debugging_semantics_crops_vlm_verification",
+      "target": "src_describe_best_crop_for_cluster",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "context": "best_crop_for_cluster",
+      "source_file": "docs/debugging.md",
+      "source_location": "L98",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_verification_1_vlm_verification_prompt_verify",
+      "target": "src_describe_best_crop_for_cluster",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "context": "best_crop_for_cluster",
+      "source_file": "docs/verification.md",
+      "source_location": "L21",
+      "weight": 1.0
+    },
+    {
       "source": "docs_architecture_config_reference",
       "target": "src_common_cache_dir",
       "relation": "references",
@@ -12938,7 +14286,19 @@
       "confidence_score": 0.95,
       "context": "cache_dir",
       "source_file": "docs/architecture.md",
-      "source_location": "L65",
+      "source_location": "L66",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_debugging_gpu_debugging",
+      "target": "src_common_pin_idle_gpus",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "context": "common.pin_idle_gpus()",
+      "source_file": "docs/debugging.md",
+      "source_location": "L119",
       "weight": 1.0
     },
     {
@@ -12950,7 +14310,19 @@
       "confidence_score": 0.95,
       "context": "common.resolve_model",
       "source_file": "docs/architecture.md",
-      "source_location": "L68",
+      "source_location": "L69",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_debugging_report_visualization",
+      "target": "src_geometry_build_change_list",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "context": "geometry.build_change_list",
+      "source_file": "docs/debugging.md",
+      "source_location": "L111",
       "weight": 1.0
     },
     {
@@ -12962,10 +14334,22 @@
       "confidence_score": 0.95,
       "context": "out_dir",
       "source_file": "docs/architecture.md",
-      "source_location": "L65",
+      "source_location": "L66",
+      "weight": 1.0
+    },
+    {
+      "source": "docs_verification_5_static_object_suppression_src_tabletop_static_object_mask",
+      "target": "src_tabletop_static_object_mask",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "INFERRED",
+      "confidence_score": 0.95,
+      "context": "src.tabletop.static_object_mask",
+      "source_file": "docs/verification.md",
+      "source_location": "L50",
       "weight": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "ec566ae7467a2117e14eca16dcf4871f18dc783a"
+  "built_at_commit": "d1002b39dd9a4d30aa8a03353e8184a831e19515"
 }

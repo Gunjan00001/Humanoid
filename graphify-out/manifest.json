@@ -24,15 +24,15 @@
     "semantic_hash": ""
   },
   "src/common.py": {
-    "mtime": 1791633775.0,
-    "seen": 1791641718.7442994,
-    "ast_hash": "8aeb6241f4de901252d4cce3946b4b6d",
+    "mtime": 1791642354.0,
+    "seen": 1791642562.3200185,
+    "ast_hash": "8927926949275284a366e08282d7d3d0",
     "semantic_hash": ""
   },
   "src/describe.py": {
-    "mtime": 1791641206.0,
-    "seen": 1791641718.744301,
-    "ast_hash": "1d998583c4887d9ba46ebb06b4a20597",
+    "mtime": 1791642464.0,
+    "seen": 1791642562.3200197,
+    "ast_hash": "ab77d14eda26e38821186796b5d5973c",
     "semantic_hash": ""
   },
   "src/diff.py": {
@@ -108,9 +108,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1791641660.0,
-    "seen": 1791641718.7443209,
-    "ast_hash": "d09ce8d243d1104138b791d03ef49110",
+    "mtime": 1791642547.0,
+    "seen": 1791642562.3200407,
+    "ast_hash": "92af1ae02a88e3cafad6068e094d12b3",
     "semantic_hash": ""
   },
   "configs/default.yaml": {
@@ -120,15 +120,15 @@
     "semantic_hash": ""
   },
   "docs/README.md": {
-    "mtime": 1791630377.0,
-    "seen": 1791632480.2735052,
-    "ast_hash": "1d481e90670ad201eee231cf09ac34ca",
+    "mtime": 1791642537.0,
+    "seen": 1791642562.320044,
+    "ast_hash": "0018cc650c532892178df976a6de8a77",
     "semantic_hash": ""
   },
   "docs/architecture.md": {
-    "mtime": 1791636806.0,
-    "seen": 1791641718.7443256,
-    "ast_hash": "82740faea547797a1aa82f68f2a96b42",
+    "mtime": 1791642553.0,
+    "seen": 1791642562.3200455,
+    "ast_hash": "ca1b7f96054568dda95e509846864c8d",
     "semantic_hash": ""
   },
   "docs/data.md": {
@@ -210,9 +210,9 @@
     "semantic_hash": ""
   },
   "src/tabletop.py": {
-    "mtime": 1791640420.0,
-    "seen": 1791641718.7443082,
-    "ast_hash": "16800ef85d8410269afdd3546f448caf",
+    "mtime": 1791642434.0,
+    "seen": 1791642562.3200283,
+    "ast_hash": "be953efd1fc3a4c6f401eecbf8de7db1",
     "semantic_hash": ""
   },
   "tests/gpu_describe_smoke.py": {
@@ -405,6 +405,24 @@
     "mtime": 1791633774.0,
     "seen": 1791641718.7443728,
     "ast_hash": "e67698723f8a1add2e9d04330a75b0a3",
+    "semantic_hash": ""
+  },
+  "scripts/inspect_cache.py": {
+    "mtime": 1791642399.0,
+    "seen": 1791642562.320012,
+    "ast_hash": "e0e7abee0bbd768333687ba2add7f51c",
+    "semantic_hash": ""
+  },
+  "docs/debugging.md": {
+    "mtime": 1791642502.0,
+    "seen": 1791642562.3200479,
+    "ast_hash": "9724a8486682ffeabc50f0cc8ef96e3c",
+    "semantic_hash": ""
+  },
+  "docs/verification.md": {
+    "mtime": 1791642527.0,
+    "seen": 1791642562.3200574,
+    "ast_hash": "1d8854998ddfd800b9161b0114c8d3ba",
     "semantic_hash": ""
   }
 }

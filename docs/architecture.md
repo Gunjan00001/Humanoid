@@ -27,6 +27,7 @@ Planned layout from [`../AGENT_PLAN.md`](../AGENT_PLAN.md) §4; the root maps to
 | `scripts/setup_env.sh` | conda env + pip (cu126) | ✅ |
 | `scripts/download_models.sh` | run on login node | ✅ |
 | `scripts/job_*.pbs` | PBS job templates | ✅ |
+| `scripts/inspect_cache.py` | read-only cache inspector (first debugging tool) | ✅ |
 | `tests/` | synthetic smoke tests (not results) | ✅ |
 | `data/` | input videos + ground truth | ⬜ videos not recorded yet |
 | `cache/` | expensive intermediate artifacts (gitignored) | ✅ produced by stages |

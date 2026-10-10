@@ -423,6 +423,7 @@ def main() -> int:
                                    [Image.open(entry["crop"]).convert("RGB")], PROMPT_SINGLE)
                 two_view = False
             parsed = parse_json_reply(reply)
+            log.debug("  raw reply for %s: %s", cid, reply[:300].replace("\n", " "))
             changed = parsed.get("changed") if two_view else None
             if isinstance(changed, str):
                 changed = changed.strip().lower() in ("true", "yes", "1")
@@ -529,6 +530,7 @@ def main() -> int:
                          "reason": reason,
                          "vlm": {k: vlm_cache.get(cid, {}).get(k)
                                  for k in ("label", "first", "second")}}
+        log.debug("  reject %s (%s): %s", cid, c["type"], reason)
 
     # weak fragments are noise, not changes (the pen scores 90, the comb 110)
     min_score = float(cfg["semantics"].get("min_change_score", 80))
@@ -557,6 +559,8 @@ def main() -> int:
                 iy = ((pts[:, 1] - sbounds[2]) / scell).astype(int)
                 ok = (ix >= 0) & (ix < smask_d.shape[0]) & (iy >= 0) & (iy < smask_d.shape[1])
                 frac = float(smask_d[ix[ok], iy[ok]].mean()) if ok.any() else 0.0
+                log.debug("  static-object overlap for %s: %.0f%% of its points",
+                          c["id"], 100 * frac)
                 if frac >= 0.5:
                     _reject(c, f"inside an object present in both videos "
                                f"({frac:.0%} of its points) - lighting/blur artefact")

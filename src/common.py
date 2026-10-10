@@ -145,6 +145,9 @@ def add_common_args(parser: argparse.ArgumentParser) -> None:
                         help="override paths.cache_dir")
     parser.add_argument("--force", action="store_true",
                         help="redo this stage even if its cache exists")
+    parser.add_argument("--debug", action="store_true",
+                        help="verbose logging: per-cluster/per-cell decision "
+                             "numbers (see docs/debugging.md)")
 
 
 def apply_overrides(cfg: dict[str, Any], args: argparse.Namespace) -> dict[str, Any]:
@@ -161,6 +164,14 @@ def apply_overrides(cfg: dict[str, Any], args: argparse.Namespace) -> dict[str, 
 
 
 def setup_logging(name: str, level: int = logging.INFO) -> logging.Logger:
+    """Configure stage logging.
+
+    Pass ``--debug`` on any stage command line to switch every logger to
+    DEBUG level: the stages then print per-cluster / per-cell decision numbers
+    that make the pipeline's choices traceable (see docs/debugging.md).
+    """
+    if "--debug" in sys.argv:
+        level = logging.DEBUG
     logging.basicConfig(
         level=level,
         format="%(asctime)s  %(levelname)-7s %(message)s",

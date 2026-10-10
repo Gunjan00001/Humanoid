@@ -165,7 +165,22 @@ def _cells_to_points(cell_ij: np.ndarray, cloud_codes: np.ndarray, points: np.nd
 
 
 def _prepare(recon: dict[str, Any], cfg: dict[str, Any]):
-    """Shared preprocessing for detect() and static_object_mask()."""
+    """Shared preprocessing for detect() and static_object_mask().
+
+    Steps (all CPU, all vectorised):
+      1. load the tagged cloud with the confidence filter applied;
+      2. fit the dominant plane of EACH video separately (the table) - this
+         absorbs any global tilt/offset between the two reconstructions;
+      3. rasterise both clouds into a common cell grid (5mm default):
+         height above the plane, mean colour, point count per cell;
+      4. fit a smooth per-channel colour field for each video (the table's own
+         colour gradient) and measure per-cell *objectness* = colour distance
+         from that field.  An object is 'colourful compared to the local table'
+         no matter whether it is 2cm or 20cm wide;
+      5. cast-robust ratio distance: colour relative to each video's own table
+         colour - this is what tells a real appearance change (black->white)
+         from the global colour-cast difference between the recordings.
+    """
     from src.geometry import tagged_points
 
     tcfg = cfg["diff"]["tabletop"]
@@ -178,7 +193,10 @@ def _prepare(recon: dict[str, Any], cfg: dict[str, Any]):
     B, CB = pts[b_mask], rgb[b_mask]
 
     coef_a, coef_b = fit_dominant_plane(A), fit_dominant_plane(B)
+    log.debug("planes: A=%s B=%s", np.round(coef_a, 4).tolist(),
+              np.round(coef_b, 4).tolist())
     bounds = grid_bounds(np.concatenate([A, B]), coef_a, cell)
+    log.debug("grid bounds: %s (cell %.0fmm)", np.round(bounds, 3).tolist(), cell * 1000)
     HA, CMA, NA, codesA = cell_maps(A, CA, coef_a, cell, bounds)
     HB, CMB, NB, codesB = cell_maps(B, CB, coef_b, cell, bounds)
 
@@ -276,9 +294,14 @@ def detect(recon: dict[str, Any], cfg: dict[str, Any]) -> list[dict]:
             filled = binary_fill_holes(grid)
             hole_ratio = 1.0 - grid.sum() / max(filled.sum(), 1)
             min_cells = int(tcfg["min_cells"] if verified else tcfg["min_cells_unverified"])
+            log.debug("  candidate %s: %d cells, hole_ratio %.2f (min_cells %d)",
+                      ctype, grid.sum(), hole_ratio, min_cells)
             if grid.sum() < min_cells:
                 log.info("  drop %s cluster: %d cells < min_cells", ctype, grid.sum())
                 continue
+            # a *ring* of changed cells is how a static object looks in the XOR
+            # masks (its interior is unchanged, only its edges differ because
+            # the two videos blur/expose it differently) - drop those
             if hole_ratio > float(tcfg["ring_hole_ratio"]):
                 log.info("  drop %s cluster: ring shape (hole ratio %.2f)", ctype, hole_ratio)
                 continue
