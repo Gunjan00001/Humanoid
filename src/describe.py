@@ -313,6 +313,19 @@ def _same_objects(a, b) -> bool:
     return bool(wa) and wa == wb
 
 
+def _background_words(s) -> bool:
+    """True when a free-text description names no object (only background).
+
+    'a black chair' -> False; 'empty table surface' -> True (every significant
+    word is background vocabulary or a stopword).
+    """
+    words = {w for w in re.sub(r"[^a-z0-9 ]", " ", str(s or "").lower()).split()
+             if w and w not in _STOPWORDS}
+    background = {"floor", "ground", "wall", "background", "room", "nothing",
+                  "empty", "air", "space", "scene"}
+    return not words or words <= background
+
+
 # ---------------------------------------------------------------------------
 # DINOv2
 
@@ -555,8 +568,15 @@ def main() -> int:
     add = [c for c in confirmed if c["type"] == "added"]
     for r in rem:
         for a in add:
-            lr = _norm(vlm_cache.get(str(r["id"]), {}).get("label"))
-            la = _norm(vlm_cache.get(str(a["id"]), {}).get("label"))
+            vr = vlm_cache.get(str(r["id"]), {})
+            va = vlm_cache.get(str(a["id"]), {})
+            # compare the object each cluster sees in ITS OWN video: the
+            # removed cluster's "first" (video A) against the added cluster's
+            # "second" (video B). The stored label can name the other video's
+            # object (scene4's added apple carried the label "scissors" from
+            # its A-side view and cancelled a genuine apple arrival).
+            lr = _norm(vr.get("first") or vr.get("label"))
+            la = _norm(va.get("second") or va.get("label"))
             if lr and la and (lr in la or la in lr) and _dist(r, a) < 0.12:
                 for c, why in ((r, "removed"), (a, "added")):
                     cid = str(c["id"])
@@ -589,6 +609,129 @@ def main() -> int:
     log.info("VLM verification: %d confirmed, %d rejected, %d unverified kept",
              len(confirmed), len(rejected), len(uncertain_kept))
 
+    # ---- 3a) move matching (runs BEFORE the type correction + filters) ----
+    # A moved object appears as a confirmed "removed" cluster at its origin
+    # and a confirmed "added" cluster at its destination; DINOv2 crop
+    # similarity + a VLM move question turn the pair into one "moved" change.
+    # This runs before the structural filters on purpose: those filters can
+    # drop or rewrite the destination cluster (scene4's apple arrival was
+    # rejected as a duplicate of a replaced scissor fragment, so the move was
+    # never found).
+    matches: list[dict] = []
+    arrivals: list[dict] = []          # objects now occupying a move's origin
+    moved_ids: set[int] = set()
+    moved_origins: dict[int, list] = {}
+    moved_centroids: dict[int, list] = {}
+    if not args.skip_vlm and confirmed:
+        import torch
+        from PIL import Image
+
+        matchable = [c for c in confirmed if c["type"] in ("removed", "added")
+                     and str(c["id"]) in crops and "crop" in crops[str(c["id"])]]
+        if matchable:
+            matcher, matcher_processor = load_matcher(cfg)
+            ids = [c["id"] for c in matchable]
+            paths = [crops[str(i)]["crop"] for i in ids]
+            emb = embed_crops(matcher, matcher_processor, paths)
+            np.savez(sem_dir / "embeddings.npz",
+                     ids=np.array(ids), vectors=emb,
+                     files=np.array([crops[str(i)]["frame"] for i in ids]))
+            del matcher, matcher_processor
+            gc.collect()
+            torch.cuda.empty_cache()
+
+            scfg = cfg["semantics"]
+            by_id = {c["id"]: c for c in matchable}
+            pairs = []
+            for i, ri in enumerate(ids):
+                if by_id[ri]["type"] != "removed":
+                    continue
+                for j, aj in enumerate(ids):
+                    if by_id[aj]["type"] != "added":
+                        continue
+                    sim = float(np.dot(emb[i], emb[j]))
+                    dist = float(np.linalg.norm(
+                        np.asarray(by_id[ri]["centroid"]) - np.asarray(by_id[aj]["centroid"])))
+                    if sim >= float(scfg["match_similarity_threshold"]) and dist >= float(scfg["match_min_distance"]):
+                        pairs.append({"removed_id": ri, "added_id": aj,
+                                      "similarity": round(sim, 4), "distance": round(dist, 4)})
+            # similarity first; within a 0.05 band prefer the cluster with
+            # more evidence (scene4's apple had a clean 102-cell destination
+            # and a cluttered 52-cell fragment, scored 0.704 vs 0.732)
+            pairs.sort(key=lambda p: (-round(p["similarity"], 1),
+                                      -by_id[p["added_id"]].get("n_cells",
+                                          by_id[p["added_id"]].get("n_points", 0))))
+            if pairs and vlm_model is None:
+                vlm_model, vlm_processor, _ = load_vlm(cfg)
+            used: set[int] = set()
+            for p in pairs:
+                if p["removed_id"] in used or p["added_id"] in used:
+                    continue
+                used.update({p["removed_id"], p["added_id"]})
+                entry = dict(p)
+                entry["label"] = (vlm_cache.get(str(p["removed_id"]), {}).get("label")
+                                  or vlm_cache.get(str(p["added_id"]), {}).get("label"))
+                imgs = [Image.open(crops[str(p["removed_id"])]["crop"]).convert("RGB"),
+                        Image.open(crops[str(p["added_id"])]["crop"]).convert("RGB")]
+                reply = vlm_answer(vlm_model, vlm_processor, imgs, PROMPT_MOVE)
+                parsed = parse_json_reply(reply)
+                entry["label"] = parsed.get("label") or entry["label"]
+                entry["sentence"] = parsed.get("sentence") or parsed.get("description")
+                entry["raw"] = reply[:500]
+                log.info("moved %s: %s (sim %.3f)", [p["removed_id"], p["added_id"]],
+                         entry["sentence"], p["similarity"])
+                matches.append(entry)
+                moved_ids.update({p["removed_id"], p["added_id"]})
+                moved_origins[p["removed_id"]] = by_id[p["removed_id"]]["centroid"]
+                moved_centroids[p["added_id"]] = by_id[p["added_id"]]["centroid"]
+
+                # other added fragments that show the same object are pieces
+                # of the same arrival (scene4's apple had a second fragment)
+                for c in confirmed:
+                    if (c["type"] == "added" and c["id"] not in moved_ids
+                            and _objects_overlap(
+                                vlm_cache.get(str(c["id"]), {}).get("second"),
+                                entry["label"])):
+                        _reject(c, f"same object as the moved {entry['label']} "
+                                   f"(fragment of its arrival)")
+                        moved_ids.add(c["id"])
+
+                # what occupies the origin now? the origin's own before/after
+                # verification already saw it (scene4: a bottle appeared where
+                # the apple used to be) - report it as its own added change
+                v_rem = vlm_cache.get(str(p["removed_id"]), {})
+                second = v_rem.get("second")
+                if (second and not _objects_overlap(second, entry["label"])
+                        and not _background_words(second)):
+                    rem = by_id[p["removed_id"]]
+                    arrivals.append({
+                        "id": 900 + len(arrivals),
+                        "type": "added",
+                        "source_tag": "b",
+                        "n_points": int(rem.get("n_points") or rem.get("n_cells") or 200),
+                        "centroid": rem["centroid"],
+                        "bbox_min": rem["bbox_min"], "bbox_max": rem["bbox_max"],
+                        "extent": rem.get("extent"),
+                        "sample_points": rem.get("sample_points", []),
+                        "arrival_at": p["removed_id"], "moved_label": entry["label"],
+                        "label": second,
+                    })
+                    log.info("arrival at #%s origin: %r", p["removed_id"], second)
+            log.info("move matches: %d (%d arrivals)", len(matches), len(arrivals))
+            for a in arrivals:
+                vlm_cache[str(a["id"])] = {
+                    "label": a["label"],
+                    "description": f"a {a['label']} appeared where the "
+                                   f"{a['moved_label']} was before it moved",
+                    "changed": True, "model": "derived", "created": stamp()}
+            if arrivals:
+                write_json(vlm_path, vlm_cache)
+            write_json(matches_path, matches)
+
+    # the matched clusters are reported through matches.json; they stay in
+    # confirmed.json (build_change_list renders the move from the removed
+    # cluster + the pair) but every later step skips them
+
     # ---- 3a) type correction with geometric evidence ---------------------
     # The photometric mask alone cannot separate "removed" from "replaced":
     # the other video's crop may show a NEIGHBOURING object (chair #2 behind
@@ -608,19 +751,12 @@ def main() -> int:
         frac, _ = visibility_check(pts, other, recon, cfg)
         return frac
 
-    def _background_words(s) -> bool:
-        words = {w for w in re.sub(r"[^a-z0-9 ]", " ", str(s or "").lower()).split()
-                 if w and w not in _STOPWORDS}
-        background = {"floor", "ground", "wall", "background", "room", "nothing",
-                      "empty", "air", "space", "scene"}
-        return not words or words <= background
-
     reclassified: list[dict] = []
     if not args.skip_vlm:
         keep_frac = float(cfg["semantics"].get("reclassify_empty_fraction", 0.30))
         occ_frac = float(cfg["semantics"].get("reclassify_occupied_fraction", 0.15))
         for c in confirmed:
-            if c["type"] not in ("removed", "replaced"):
+            if c["type"] not in ("removed", "replaced") or c["id"] in moved_ids:
                 continue
             frac = _empty_fraction(c)
             if not np.isfinite(frac):
@@ -677,6 +813,9 @@ def main() -> int:
     min_score = float(cfg["semantics"].get("min_change_score", 80))
     kept = []
     for c in confirmed:
+        if c["id"] in moved_ids:      # moves carry their own verification
+            kept.append(c)
+            continue
         score = c.get("mean_change_score")
         if (c["type"] in ("removed", "added") and score is not None
                 and float(score) < min_score):
@@ -695,6 +834,9 @@ def main() -> int:
         smask_d = binary_dilation(smask, iterations=2)
         kept = []
         for c in confirmed:
+            if c["id"] in moved_ids:
+                kept.append(c)
+                continue
             pts = cluster_points.get(c["id"])
             # an explicit empty-space confirmation (from the type-correction
             # step) is stronger evidence than the both-present heuristic -
@@ -719,16 +861,66 @@ def main() -> int:
     except Exception as exc:  # noqa: BLE001 - never fail the stage over this
         log.warning("static-object suppression skipped: %s", exc)
 
-    # removed/added fragments overlapping a confirmed replaced change are the
-    # same physical change seen twice
+    # composite replaced clusters: when BOTH sides of a "replaced" claim are
+    # independently confirmed changes nearby, the replacement is a composite,
+    # not a real event. scene4: the moved apple landed on the removed scissor's
+    # pixels - A shows the scissor, B the apple - and the mask calls the mix
+    # "replaced"; both sides are already reported (removed scissors + moved
+    # apple), so the composite is dropped instead of double-counted.
     def _bbox_close(c1: dict, c2: dict, pad: float = 0.01) -> bool:
         return all(c1["bbox_min"][i] - pad <= c2["bbox_max"][i]
                    and c2["bbox_min"][i] - pad <= c1["bbox_max"][i] for i in range(3))
 
-    replaced_boxes = [c for c in confirmed if c["type"] == "replaced"]
+    comp_dist = float(cfg["semantics"].get("composite_match_distance", 0.15))
+
+    def _label_near(centroid, label, pool: list[tuple]) -> str | None:
+        for lab, cent, why in pool:
+            if lab and _objects_overlap(label, lab) and float(np.linalg.norm(
+                    np.asarray(centroid, dtype=float) - np.asarray(cent, dtype=float))) < comp_dist:
+                return why
+        return None
+
+    origin_pool: list[tuple] = []
+    dest_pool: list[tuple] = []
+    for c in confirmed:
+        lab = vlm_cache.get(str(c["id"]), {}).get("label")
+        if not lab:
+            continue
+        if c["type"] == "removed":
+            origin_pool.append((lab, c["centroid"], f"removed #{c['id']}"))
+        elif c["type"] == "added":
+            dest_pool.append((lab, c["centroid"], f"added #{c['id']}"))
+    for m in matches:
+        if m.get("label") and m["removed_id"] in moved_origins:
+            origin_pool.append((m["label"], moved_origins[m["removed_id"]],
+                                f"moved #{m['removed_id']}"))
+        if m.get("label") and m["added_id"] in moved_centroids:
+            dest_pool.append((m["label"], moved_centroids[m["added_id"]],
+                              f"moved #{m['added_id']}"))
+
+    replaced_boxes = []
     kept = []
     for c in confirmed:
-        if c["type"] in ("removed", "added") and any(_bbox_close(c, r) for r in replaced_boxes):
+        if c["type"] != "replaced":
+            kept.append(c)
+            continue
+        v = vlm_cache.get(str(c["id"]), {})
+        why_a = _label_near(c["centroid"], v.get("first"), origin_pool)
+        why_b = _label_near(c["centroid"], v.get("second"), dest_pool)
+        if why_a and why_b:
+            _reject(c, f"composite of two confirmed changes ({why_a}; {why_b}) - "
+                       f"not a replacement")
+            continue
+        replaced_boxes.append(c)
+        kept.append(c)
+    confirmed = kept
+
+    # removed/added fragments overlapping a confirmed replaced change are the
+    # same physical change seen twice
+    kept = []
+    for c in confirmed:
+        if (c["type"] in ("removed", "added") and c["id"] not in moved_ids
+                and any(_bbox_close(c, r) for r in replaced_boxes)):
             dup = next(r["id"] for r in replaced_boxes if _bbox_close(c, r))
             _reject(c, f"overlaps the verified replaced change #{dup} (same physical change)")
         else:
@@ -745,9 +937,13 @@ def main() -> int:
     for i, c in enumerate(confirmed):
         if c["id"] in merged_flags:
             continue
+        if c["id"] in moved_ids:      # a move is one change already
+            merged.append(c)
+            continue
         group = [c]
         for other in confirmed[i + 1:]:
-            if other["id"] in merged_flags or other["type"] != c["type"]:
+            if (other["id"] in merged_flags or other["type"] != c["type"]
+                    or other["id"] in moved_ids):
                 continue
             if c["type"] not in ("removed", "added", "replaced"):
                 continue
@@ -817,6 +1013,8 @@ def main() -> int:
             matcher, matcher_processor = load_matcher(cfg)
             sims = {}
             for c in confirmed:
+                if c["id"] in moved_ids:
+                    continue
                 if str(c["id"]) in crops and "crop" in crops[str(c["id"])] \
                         and "crop_other" in crops[str(c["id"])]:
                     ci = crops[str(c["id"])]
@@ -825,6 +1023,9 @@ def main() -> int:
             threshold = float(cfg["semantics"].get("same_appearance_threshold", 0.80))
             still = []
             for c in confirmed:
+                if c["id"] in moved_ids:
+                    still.append(c)
+                    continue
                 sim = sims.get(c["id"])
                 if sim is not None and sim > threshold:
                     cid = str(c["id"])
@@ -846,67 +1047,14 @@ def main() -> int:
             gc.collect()
             torch.cuda.empty_cache()
 
-    # ---- 4) DINOv2 embeddings + move matching ---------------------------
-    matches: list[dict] = []
-    if not args.skip_vlm and confirmed:
-        import torch
-        from PIL import Image
-
-        matchable = [c for c in confirmed if c["type"] in ("removed", "added")
-                     and str(c["id"]) in crops and "crop" in crops[str(c["id"])]]
-        if matchable:
-            matcher, matcher_processor = load_matcher(cfg)
-            ids = [c["id"] for c in matchable]
-            paths = [crops[str(i)]["crop"] for i in ids]
-            emb = embed_crops(matcher, matcher_processor, paths)
-            np.savez(sem_dir / "embeddings.npz",
-                     ids=np.array(ids), vectors=emb,
-                     files=np.array([crops[str(i)]["frame"] for i in ids]))
-            del matcher, matcher_processor
-            gc.collect()
-            torch.cuda.empty_cache()
-
-            scfg = cfg["semantics"]
-            by_id = {c["id"]: c for c in matchable}
-            pairs = []
-            for i, ri in enumerate(ids):
-                if by_id[ri]["type"] != "removed":
-                    continue
-                for j, aj in enumerate(ids):
-                    if by_id[aj]["type"] != "added":
-                        continue
-                    sim = float(np.dot(emb[i], emb[j]))
-                    dist = float(np.linalg.norm(
-                        np.asarray(by_id[ri]["centroid"]) - np.asarray(by_id[aj]["centroid"])))
-                    if sim >= float(scfg["match_similarity_threshold"]) and dist >= float(scfg["match_min_distance"]):
-                        pairs.append({"removed_id": ri, "added_id": aj,
-                                      "similarity": round(sim, 4), "distance": round(dist, 4)})
-            pairs.sort(key=lambda p: -p["similarity"])
-            used: set[int] = set()
-            for p in pairs:
-                if p["removed_id"] in used or p["added_id"] in used:
-                    continue
-                used.update({p["removed_id"], p["added_id"]})
-                entry = dict(p)
-                entry["label"] = (vlm_cache.get(str(p["removed_id"]), {}).get("label")
-                                  or vlm_cache.get(str(p["added_id"]), {}).get("label"))
-                imgs = [Image.open(crops[str(p["removed_id"])]["crop"]).convert("RGB"),
-                        Image.open(crops[str(p["added_id"])]["crop"]).convert("RGB")]
-                reply = vlm_answer(vlm_model, vlm_processor, imgs, PROMPT_MOVE)
-                parsed = parse_json_reply(reply)
-                entry["label"] = parsed.get("label") or entry["label"]
-                entry["sentence"] = parsed.get("sentence") or parsed.get("description")
-                entry["raw"] = reply[:500]
-                log.info("moved %s: %s (sim %.3f)", [p["removed_id"], p["added_id"]],
-                         entry["sentence"], p["similarity"])
-                matches.append(entry)
-            log.info("move matches: %d", len(matches))
-
-    write_json(matches_path, matches)
     write_json(sem_dir / "rejected.json",
                {"created": stamp(), "config_hash": cfg["_config_hash"],
                 "note": "candidates the VLM denied or duplicates of confirmed changes",
                 "rejected": rejected})
+    # arrivals (objects that now occupy a moved object's origin) bypass the
+    # structural filters: they are derived from the move's own verified
+    # before/after evidence, not from an independent photometric candidate
+    confirmed = confirmed + arrivals
     write_json(sem_dir / "confirmed.json",
                {"created": stamp(), "config_hash": cfg["_config_hash"],
                 "clusters": confirmed, "uncertain": uncertain_kept})

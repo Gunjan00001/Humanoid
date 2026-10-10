@@ -82,13 +82,14 @@ def write_viewer(cfg: dict, out_dir: Path, bg_pts: np.ndarray, bg_rgb: np.ndarra
     }
     for c in change_pts:
         ch = c["change"]
-        if not len(c["points"]):
-            continue
+        # changes without their own point sample (e.g. an arrival at a move's
+        # origin) still ship a bbox + label, so keep them
         entry = payload(c["points"], (c["colors"] * 255).astype(np.uint8))
         entry.update({
             "id": ch["id"], "type": ch["type"], "verified": bool(c["verified"]),
             "label": ch.get("label"), "description": ch.get("description"),
             "bbox_min": ch["bbox_min"], "bbox_max": ch["bbox_max"],
+            "from": ch.get("from"), "to": ch.get("to"),
         })
         data["changes"].append(entry)
 
@@ -182,11 +183,21 @@ scene.add(pa, pb);
 const changeGroup = new THREE.Group(); scene.add(changeGroup);
 const COL = {removed:0xf23333, added:0x40e659, moved:0xff991a, replaced:0xf23ff2};
 for(const c of DATA.changes){
-  const pts = points(c, RADIUS/160); changeGroup.add(pts);
+  if(c.n > 0){ const pts = points(c, RADIUS/160); changeGroup.add(pts); }
   const lo = new THREE.Vector3(...c.bbox_min), hi = new THREE.Vector3(...c.bbox_max);
   const box = new THREE.Box3Helper(new THREE.Box3(lo,hi),
       new THREE.Color(c.verified ? (COL[c.type]||0xffffff) : 0x59bfd9));
   changeGroup.add(box);
+  if(c.type === 'moved' && c.from && c.to){       // show where it went
+    const fr = new THREE.Vector3(...c.from), to = new THREE.Vector3(...c.to);
+    const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([fr, to]),
+        new THREE.LineDashedMaterial({color: COL.moved, dashSize: RADIUS/25,
+                                      gapSize: RADIUS/40}));
+    line.computeLineDistances(); changeGroup.add(line);
+    const mark = new THREE.Mesh(new THREE.SphereGeometry(RADIUS/80, 10, 8),
+        new THREE.MeshBasicMaterial({color: COL.moved}));
+    mark.position.copy(to); changeGroup.add(mark);
+  }
 }
 const labelDivs = DATA.changes.map(c=>{
   const d = document.createElement('div'); d.className='lab';
