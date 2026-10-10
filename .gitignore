@@ -32,3 +32,4 @@ data/*.mov
 .vscode/
 .idea/
 .DS_Store
+third_party/
