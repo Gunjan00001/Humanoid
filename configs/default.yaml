@@ -86,8 +86,10 @@ semantics:
                              # are the same appearance -> not a change
   crop_margin: 0.25          # margin around the projected crop, relative to size
   min_crop_pixels: 48
-  verify_crop_margin: 0.6    # verification crops need context around the cluster
-  verify_min_crop_pixels: 160
+  verify_crop_margin: 0.3     # verification crops: tight enough that both
+                             # views frame the same region (large margins can
+                             # catch a neighbour object in only one view)
+  verify_min_crop_pixels: 120
   max_crop_frames: 40        # cap frames scanned for the best view
   use_sam2: false            # stretch goal: SAM 2 masks before cropping
 
