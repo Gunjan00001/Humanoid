@@ -332,6 +332,11 @@ are unchanged.
 
 ### Step 6 — regression + pad experiment
 
-See the results section: the demo regression (diff + describe + report) and
-the `input_mode=pad` end-to-end comparison are recorded in
-`docs/results.md` with the measured detection counts.
+- Demo regression (crop default): **3/3 changes, 0 false positives — unchanged**
+  (`logs/pbs_demo_reg.log`).
+- `input_mode=pad` on the portrait demo: **worse, with evidence** — 5 entries
+  vs 3: the pen missed and three extra entries (frame-edge artifact +
+  highlighter fragments). Pad renders the content at ~1.76× coarser pixels.
+- **Decision: crop stays the default**; the option remains for scenes whose
+  content sits at the frame edges. Full table in
+  `docs/results.md#visualization-rework-steps-05`.
