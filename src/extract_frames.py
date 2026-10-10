@@ -120,8 +120,13 @@ def extract_one(video: Path, tag: str, cfg: dict) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     add_common_args(parser)
+    parser.add_argument("--blur_threshold", type=float, default=None,
+                        help="override frames.blur_threshold (per-scene tuning: "
+                             "a soft recording may need 25 instead of 100)")
     args = parser.parse_args()
     cfg = apply_overrides(load_config(args.config), args)
+    if args.blur_threshold is not None:
+        cfg["frames"]["blur_threshold"] = args.blur_threshold
 
     index_path = cache_dir(cfg, "frames") / "index.json"
     if index_path.exists() and not args.force:
