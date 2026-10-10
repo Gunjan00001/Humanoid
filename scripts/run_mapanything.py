@@ -182,7 +182,8 @@ def main() -> int:
             # external wrappers follow the same forward() interface and return
             # the unified output format directly (see their README)
             import torch as _torch
-            dtype = getattr(_torch, amp_dtype)
+            dtype = {"bf16": _torch.bfloat16, "fp16": _torch.float16,
+                     "fp32": _torch.float32}.get(amp_dtype, _torch.bfloat16)
             model.eval()
             with _torch.no_grad(), _torch.autocast("cuda", dtype=dtype):
                 predictions = model(views)
