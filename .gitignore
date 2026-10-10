@@ -15,6 +15,7 @@ outputs/*
 !outputs/change.gif
 !outputs/changes/
 !outputs/changes/*.png
+!outputs/viewer.html
 # per-scene results (scene2, scene3, ...) - keep the deliverables, not the PLY
 !outputs/scene*/
 !outputs/scene*/report.json
@@ -22,6 +23,7 @@ outputs/*
 !outputs/scene*/change.gif
 !outputs/scene*/changes/
 !outputs/scene*/changes/*.png
+!outputs/scene*/viewer.html
 models/
 *.pt
 *.pth
@@ -29,6 +31,11 @@ models/
 *.onnx
 *.safetensors
 *.ply
+
+# --- scene deliverables that ARE PLY but small (part of the gallery) ---
+# (these exceptions must come after *.ply - the last matching pattern wins)
+!outputs/scene_mesh.ply
+!outputs/scene*/scene_mesh.ply
 
 # --- data: keep small samples, ignore large recordings ---
 data/*.mp4
