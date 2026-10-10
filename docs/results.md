@@ -207,8 +207,9 @@ All structural, not scene-specific (VGGT demo regression: identical clusters):
 
 ## Results across all scenes
 
-Updated 2026-10-10/11 (`v0.7.0`): all uploaded video sets were run through the
-full pipeline. The demo scene remains the primary result; the two extra scenes
+Updated 2026-10-11 (`v0.10.0`): all uploaded video sets were run through the
+full pipeline. The demo scene remains the primary result; scene4 (`data-v0.3`)
+runs with the default mode and no tuning; the two earlier extra scenes
 (`data-v0.2`) needed a short per-scene tuning pass, documented here with the
 exact knobs so the choices are reproducible.
 
@@ -218,6 +219,7 @@ exact knobs so the choices are reproducible.
 | scene2 | coconut removed | `geometric` | `--blur_threshold 25` | **1/1** (coconut, 5896 pts seen empty) | 4 (coverage artifacts) |
 | scene2 | coconut removed | `tabletop` | `--objectness_margin 80` | 0/1 (missed) | 1 (apple, false positive) + 11 unverified |
 | scene3 | chair removed, apple→cup | `tabletop` | `--min_change_score 85` | 2/2 objects, **types now correct** (chair `removed`, apple→cup `replaced` - v0.9.0) | 2 extra entries + unreliable naming (see the correctness pass below) |
+| scene4 | apple moved, scissor removed, bottle added | `tabletop` | none (defaults) | **3/3** (`moved` apple, `removed` scissors, `added` bottle - v0.10.0) | **0** |
 
 ### scene2 — why the mode matters
 
@@ -243,6 +245,60 @@ changes and no false positives. Notes: the chair's removal is typed `replaced`
 (the VLM's before/after crops see the chair's absence as a change of state),
 and the apple→cup replacement is labeled generically ("tabletop objects
 removed") — both are type/label nuances, not detection misses.
+
+### scene4
+
+`data/scene4/` (46 s portrait videos, blur p50 137-163 - the default blur
+threshold works): before = cup, scissor, apple; after = the apple moved to the
+scissor's spot, the scissor removed, and a bottle placed where the apple was.
+**Result: exactly the three ground-truth changes, default mode, no tuning:**
+
+| # | type | label | evidence |
+|---|---|---|---|
+| 1 | moved | apple | DINOv2 crop similarity 0.704 + VLM move confirmation ("the apple moved slightly to the right and upward"); origin → destination drawn as a dashed line |
+| 2 | removed | scissors | the scissor's space is seen empty by video B (99%) |
+| 3 | added | plastic bottle | the apple's own before/after verification saw the bottle at its origin; reported as an arrival |
+
+The scene exposed four structural issues in `describe.py`, all fixed (v0.10.0):
+
+1. **Move matching ran after the structural filters** - the apple's arrival
+   cluster had already been dropped as a "duplicate" of a replaced scissor
+   fragment, so the move was never found. Move matching now runs right after
+   the VLM confirmation; its clusters skip the later stages but stay in
+   `confirmed.json` (the report renders the move from them).
+2. **Mutual cancellation compared stored labels**, which can name the other
+   video's object (the arrival cluster carried the label "scissors" from its
+   A-side view) - it now compares the removed cluster's `first` (video A)
+   with the added cluster's `second` (video B). No other scene ever used this
+   rule (checked across all caches).
+3. **The match threshold was too strict for viewpoint changes**: the same
+   apple seen from two angles scores 0.704, different objects (comb vs pen)
+   0.134. Threshold lowered 0.75 → 0.65 (the VLM move question is the final
+   arbiter); among near-tie pairs the cluster with more evidence wins (the
+   clean 102-cell destination beat a 52-cell fragment at 0.732).
+4. **New rules**: objects that now occupy a moved object's origin are reported
+   as their own `added` change (the bottle); a `replaced` claim whose two
+   sides are each independently confirmed changes is dropped as a *composite*
+   (the moved apple landing on the removed scissor's pixels used to be read as
+   "scissors replaced by an apple").
+
+Regression after the changes (re-run + table diff against the committed
+outputs): **demo 3/3 with 0 extras - identical**; **scene2 and scene3
+identical**. The demo regression initially failed (a highlighter fragment
+became a 4th change because the empty-space skip of the both-present
+suppression was too broad); the skip now requires that the VLM did not name
+the same object in both views ("highlighter" vs "highlighter" = present in
+both, suppressed; the scene3 chair's differing descriptions still skip).
+
+Honest notes for scene4:
+
+- The removed-scissors sentence is inherited from the two-view verification
+  ("The scissors were removed and replaced with an apple") - the type is
+  right, the wording reflects the apple that moved next to the spot.
+- 7 unverified candidates (floor/wall/metal fragments at the scene edges) are
+  listed in the report for transparency; they are not counted as changes.
+- The moved apple's sentence ("slightly to the right and upward") is the
+  VLM's view-relative wording, not a metric direction.
 
 ### Pipeline fixes that came out of these runs
 

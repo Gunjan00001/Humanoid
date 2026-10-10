@@ -1,0 +1,385 @@
+{
+  "meta": {
+    "video_a": "/home/user/Desktop/Humanoid/data/scene4/a.mp4",
+    "video_b": "/home/user/Desktop/Humanoid/data/scene4/b.mp4",
+    "backend": "vggt",
+    "model": "/home/user/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-10T21:42:01Z",
+    "config_hash": "2514ba94c2d8",
+    "num_frames": 60,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "moved",
+      "label": "apple",
+      "description": "the apple moved slightly to the right and upward",
+      "centroid": [
+        -0.0054,
+        -0.3649,
+        1.0553
+      ],
+      "bbox": [
+        -0.05,
+        -0.4448,
+        1.0059,
+        0.035,
+        -0.3301,
+        1.0889
+      ],
+      "from": [
+        -0.0054,
+        -0.3649,
+        1.0553
+      ],
+      "to": [
+        0.1903,
+        -0.1427,
+        0.9451
+      ],
+      "confidence": 0.76,
+      "cluster_ids": [
+        2,
+        6
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00690.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00210.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 2,
+      "type": "removed",
+      "label": "scissors",
+      "description": "The scissors were removed and replaced with an apple.",
+      "centroid": [
+        0.1653,
+        -0.188,
+        0.9721
+      ],
+      "bbox": [
+        0.0809,
+        -0.205,
+        0.9629,
+        0.225,
+        -0.1753,
+        0.9878
+      ],
+      "from": [
+        0.1653,
+        -0.188,
+        0.9721
+      ],
+      "to": null,
+      "confidence": 0.6,
+      "cluster_ids": [
+        3
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00210.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 3,
+      "type": "added",
+      "label": "plastic bottle",
+      "description": "a plastic bottle appeared where the apple was before it moved",
+      "centroid": [
+        -0.0054,
+        -0.3649,
+        1.0553
+      ],
+      "bbox": [
+        -0.05,
+        -0.4448,
+        1.0059,
+        0.035,
+        -0.3301,
+        1.0889
+      ],
+      "from": null,
+      "to": [
+        -0.0054,
+        -0.3649,
+        1.0553
+      ],
+      "confidence": 0.75,
+      "cluster_ids": [
+        900
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    }
+  ],
+  "unverified_changes": [
+    {
+      "id": 4,
+      "type": "removed",
+      "label": "concrete floor",
+      "description": "dark, textured surface of a concrete floor with minor debris and discoloration.",
+      "centroid": [
+        -0.3338,
+        -0.0471,
+        0.8645
+      ],
+      "bbox": [
+        -0.3499,
+        -0.0649,
+        0.8477,
+        -0.3201,
+        -0.0201,
+        0.8818
+      ],
+      "from": [
+        -0.3338,
+        -0.0471,
+        0.8645
+      ],
+      "to": null,
+      "confidence": 0.07,
+      "cluster_ids": [
+        9
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_01060.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 5,
+      "type": "removed",
+      "label": "hole in floor",
+      "description": "a circular hole in a dark floor surface, possibly from damage or wear.",
+      "centroid": [
+        -0.321,
+        -0.1145,
+        0.9084
+      ],
+      "bbox": [
+        -0.3298,
+        -0.1298,
+        0.895,
+        -0.3101,
+        -0.1001,
+        0.9219
+      ],
+      "from": [
+        -0.321,
+        -0.1145,
+        0.9084
+      ],
+      "to": null,
+      "confidence": 0.03,
+      "cluster_ids": [
+        10
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_01060.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 6,
+      "type": "removed",
+      "label": "concrete wall",
+      "description": "a textured, gray concrete wall surface with minor imperfections and a vertical edge on the right.",
+      "centroid": [
+        0.3439,
+        0.0903,
+        0.8103
+      ],
+      "bbox": [
+        0.332,
+        0.0751,
+        0.7988,
+        0.3499,
+        0.1098,
+        0.8232
+      ],
+      "from": [
+        0.3439,
+        0.0903,
+        0.8103
+      ],
+      "to": null,
+      "confidence": 0.03,
+      "cluster_ids": [
+        11
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_01270.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 7,
+      "type": "added",
+      "label": "metal surface",
+      "description": "a close-up of a smooth, gray metallic surface with a small circular indentation at the bottom.",
+      "centroid": [
+        -0.3343,
+        -0.2872,
+        1.0184
+      ],
+      "bbox": [
+        -0.3499,
+        -0.2998,
+        1.0059,
+        -0.3152,
+        -0.27,
+        1.0273
+      ],
+      "from": null,
+      "to": [
+        -0.3343,
+        -0.2872,
+        1.0184
+      ],
+      "confidence": 0.05,
+      "cluster_ids": [
+        12
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00370.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 8,
+      "type": "added",
+      "label": "metal door frame",
+      "description": "a close-up of a metallic door frame with a glass panel, showing part of a hinge and surrounding wall.",
+      "centroid": [
+        0.3163,
+        -0.5079,
+        1.1837
+      ],
+      "bbox": [
+        0.2852,
+        -0.5596,
+        1.1543,
+        0.335,
+        -0.4656,
+        1.2148
+      ],
+      "from": null,
+      "to": [
+        0.3163,
+        -0.5079,
+        1.1837
+      ],
+      "confidence": 0.15,
+      "cluster_ids": [
+        13
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00910.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 9,
+      "type": "added",
+      "label": "metal railing",
+      "description": "a curved metal railing with a dark finish, likely part of a staircase or balcony, visible against a blurred background.",
+      "centroid": [
+        0.3175,
+        -0.4414,
+        1.1419
+      ],
+      "bbox": [
+        0.3101,
+        -0.45,
+        1.1318,
+        0.325,
+        -0.4302,
+        1.1494
+      ],
+      "from": null,
+      "to": [
+        0.3175,
+        -0.4414,
+        1.1419
+      ],
+      "confidence": 0.02,
+      "cluster_ids": [
+        14
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00880.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 10,
+      "type": "added",
+      "label": "metal chair leg",
+      "description": "a curved metal leg of a chair, partially visible with a shiny surface.",
+      "centroid": [
+        0.4094,
+        -0.4935,
+        1.1768
+      ],
+      "bbox": [
+        0.3953,
+        -0.5098,
+        1.1514,
+        0.4148,
+        -0.4702,
+        1.2842
+      ],
+      "from": null,
+      "to": [
+        0.4094,
+        -0.4935,
+        1.1768
+      ],
+      "confidence": 0.03,
+      "cluster_ids": [
+        15
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00810.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    }
+  ]
+}
