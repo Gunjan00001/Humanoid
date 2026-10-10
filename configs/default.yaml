@@ -105,6 +105,16 @@ semantics:
                              # are the same appearance -> not a change
   min_change_score: 80       # removed/added candidates need at least this much
                              # colour evidence (weak fragments are noise)
+  reclassify_empty_fraction: 0.15   # 'replaced' with >= this fraction of its
+                             # points seen empty by the other video -> removed
+                             # (calibrated: chair 0.21 vs remote 0.00)
+  reclassify_occupied_fraction: 0.15  # 'removed' with <= this fraction seen
+                             # empty (occupied) -> replaced if the other view
+                             # names an object (calibrated: apple/cup 0.01 vs
+                             # comb 0.73)
+  crop_occlusion_tol: 0.15   # crop framing: a point counts as in-view when it
+                             # is not behind the observed surface by more than
+                             # this (works for removed objects too)
   replaced_min_pixel_diff: 70  # a real flip/replacement changes the pixels
                              # strongly; blur/exposure differences score low
   crop_margin: 0.25          # margin around the projected crop, relative to size
