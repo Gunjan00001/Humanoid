@@ -164,8 +164,28 @@ def main() -> int:
         [], [], [], [], [], [], []
     msf_values = []
     hw = None
-    for f, pred in zip(frames, predictions):
-        arr = prediction_to_arrays(pred)
+    for i, (f, pred, view) in enumerate(zip(frames, predictions, views)):
+        if i == 0:
+            # helpful when a new MapAnything release changes its output keys
+            log.debug("prediction keys: %s", sorted(pred.keys()))
+            if "img_no_norm" in pred and pred["img_no_norm"] is not None:
+                log.debug("img_no_norm max: %s", float(pred["img_no_norm"].max()))
+        # model input size from the preprocessed view (1,3,H,W)
+        model_h, model_w = (int(x) for x in view["img"].shape[-2:])
+        with Image.open(f["path"]) as im:
+            orig_w, orig_h = im.size
+        tr = transform_for(orig_w, orig_h, model_w, model_h)
+        # crop-resize the original JPEG to model space for the colour channel
+        # (replicates MapAnything's crop_resize: uniform resize + centre crop)
+        im = Image.open(f["path"]).convert("RGB")
+        resized = im.resize(
+            (int(np.floor(orig_w * tr["scale_w"])),
+             int(np.floor(orig_h * tr["scale_h"]))), Image.LANCZOS)
+        resized = resized.crop((tr["crop_left"], tr["crop_top"],
+                                tr["crop_left"] + model_w, tr["crop_top"] + model_h))
+        fallback = np.asarray(resized, dtype=np.uint8)
+
+        arr = prediction_to_arrays(pred, fallback_colors=fallback)
         if hw is None:
             hw = arr["image_hw"]
         elif arr["image_hw"] != hw:
@@ -173,11 +193,7 @@ def main() -> int:
                 f"frame {f['file']} has model size {arr['image_hw']} but earlier "
                 f"frames have {hw} - mixed aspect ratios need separate batches"
             )
-        with Image.open(f["path"]) as im:
-            orig_w, orig_h = im.size
-        # arr["image_hw"] is (H, W); transform_for wants (model_w, model_h)
-        transforms.append(transform_for(orig_w, orig_h,
-                                        arr["image_hw"][1], arr["image_hw"][0]))
+        transforms.append(tr)
         extrinsics.append(arr["extrinsic"])
         intrinsics.append(arr["intrinsic"])
         depths.append(arr["depth"])

@@ -76,6 +76,9 @@ diff:
   # tabletop (photometric) parameters:
   tabletop:
     cell_size: 0.005         # raster cell over the dominant plane
+    height_band: 0.15        # only points within +/-15cm of the plane count
+                             # (walls/floor share the x/y footprint in
+                             # room-scale clouds like MapAnything's)
     min_cell_points: 5       # a cell needs this many points in each video
     objectness_threshold: 70 # colour distance from the fitted table colour
     objectness_margin: 40    # |objA - objB| needed for removed/added

@@ -95,8 +95,14 @@ def _squeeze_batch(x: Any) -> np.ndarray:
     return a
 
 
-def prediction_to_arrays(pred: dict[str, Any]) -> dict[str, Any]:
+def prediction_to_arrays(pred: dict[str, Any],
+                         fallback_colors: np.ndarray | None = None) -> dict[str, Any]:
     """Convert one MapAnything per-view prediction into contract arrays.
+
+    `fallback_colors` (H,W,3 uint8) is used when the prediction does not carry
+    usable `img_no_norm` images (observed: the field can be absent, or all
+    zeros, depending on the inference options). The worker passes the
+    correctly crop-resized original JPEG there, so colours are always correct.
 
     Raises ValueError with a helpful message when a required field is missing
     or has an unexpected shape - the worker logs the full prediction keys so
@@ -129,11 +135,22 @@ def prediction_to_arrays(pred: dict[str, Any]) -> dict[str, Any]:
     world2cam = np.linalg.inv(cam2world)
     extrinsic = world2cam[:3, :4].astype(np.float32)
 
-    # colours: de-normalised model-resolution image [0,255] -> uint8
+    # colours: de-normalised model-resolution image [0,255] -> uint8.
+    # The field can be absent OR all zeros depending on inference options, so
+    # we only trust it when it actually contains image data; otherwise the
+    # caller's crop-resized original JPEG is used.
+    colors = None
     if "img_no_norm" in pred and pred["img_no_norm"] is not None:
-        colors = np.clip(_squeeze_batch(pred["img_no_norm"]), 0, 255).astype(np.uint8)
-    else:                                          # fallback: zero colours
-        colors = np.zeros((*depth.shape, 3), dtype=np.uint8)
+        candidate = _squeeze_batch(pred["img_no_norm"])
+        if candidate.size and float(np.asarray(candidate).max()) > 1.0:
+            colors = np.clip(candidate, 0, 255).astype(np.uint8)
+    if colors is None:
+        if fallback_colors is None:
+            raise ValueError(
+                "prediction has no usable img_no_norm and no fallback_colors "
+                "was provided - the worker must pass the resized original image"
+            )
+        colors = np.asarray(fallback_colors, dtype=np.uint8)
 
     msf = pred.get("metric_scaling_factor")
     if msf is not None:

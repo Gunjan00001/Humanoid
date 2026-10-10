@@ -119,6 +119,25 @@ def test_prediction_conversion() -> None:
     arr = prediction_to_arrays(pred)
     check("masked conf all zero", float(np.abs(arr["depth_conf"]).max()) == 0.0)
 
+    print("colour fallback: img_no_norm absent or all-zero -> fallback_colors")
+    fallback = np.full((6, 4, 3), 77, dtype=np.uint8)
+    pred = _fake_pred()
+    del pred["img_no_norm"]
+    arr = prediction_to_arrays(pred, fallback_colors=fallback)
+    check("fallback used when field absent",
+          int(arr["colors"].max()) == 77 and arr["colors"].shape == (6, 4, 3))
+    pred = _fake_pred()
+    pred["img_no_norm"] = np.zeros((1, 6, 4, 3), dtype=np.float32)
+    arr = prediction_to_arrays(pred, fallback_colors=fallback)
+    check("fallback used when field is zeros", int(arr["colors"].max()) == 77)
+    pred = _fake_pred()
+    del pred["img_no_norm"]
+    try:
+        prediction_to_arrays(pred)                     # no fallback given
+        check("missing colours raise", False)
+    except ValueError:
+        check("missing colours raise with a clear message", True)
+
     print("error handling: missing key / shape mismatch")
     bad = _fake_pred()
     del bad["conf"]

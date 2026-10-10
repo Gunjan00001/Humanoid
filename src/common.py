@@ -143,6 +143,11 @@ def add_common_args(parser: argparse.ArgumentParser) -> None:
                         help="override paths.out_dir")
     parser.add_argument("--cache", dest="cache_dir", default=None,
                         help="override paths.cache_dir")
+    parser.add_argument("--conf_percentile", dest="conf_percentile", type=float,
+                        default=None,
+                        help="override reconstruction.conf_percentile (per-backend "
+                             "tuning: MapAnything's confidence floor needs 25 on "
+                             "the demo scene - see docs/results.md)")
     parser.add_argument("--force", action="store_true",
                         help="redo this stage even if its cache exists")
     parser.add_argument("--debug", action="store_true",
@@ -156,9 +161,10 @@ def apply_overrides(cfg: dict[str, Any], args: argparse.Namespace) -> dict[str, 
         ("video_b", ("paths", "video_b")),
         ("out_dir", ("paths", "out_dir")),
         ("cache_dir", ("paths", "cache_dir")),
+        ("conf_percentile", ("reconstruction", "conf_percentile")),
     ):
         value = getattr(args, key, None)
-        if value:
+        if value is not None:
             cfg[cfgpath[0]][cfgpath[1]] = value
     return cfg
 
