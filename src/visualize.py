@@ -159,6 +159,8 @@ def main() -> int:
     # ---- per-change screenshots ----------------------------------------
     changes_dir = out / "changes"
     changes_dir.mkdir(parents=True, exist_ok=True)
+    for stale in changes_dir.glob("change_*.png"):
+        stale.unlink()               # re-runs must not leave stale screenshots
     for c in change_pts:
         ch = c["change"]
         p = c["points"]
