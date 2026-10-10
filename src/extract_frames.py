@@ -94,6 +94,8 @@ def extract_one(video: Path, tag: str, cfg: dict) -> dict:
         )
 
     tag_dir = cache_dir(cfg, "frames", tag)
+    for old in tag_dir.glob("frame_*.jpg"):    # --force reruns: drop stale frames
+        old.unlink()
     frames = []
     for i, item in enumerate(keep):
         name = f"frame_{item['source_frame']:05d}.jpg"
