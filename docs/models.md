@@ -55,6 +55,8 @@ huggingface-cli download <model-id>     # fill in the exact IDs below
 | VGGT | `facebook/VGGT-1B`, code `facebookresearch/vggt` | HF sha `860abec7937d`, repo commit `a288dd0f` | **CC-BY-NC-4.0** | ❌ non-commercial | agent, 2026-10-10 (HF API) |
 | MapAnything (used) | `facebook/map-anything-apache`, code `facebookresearch/map-anything` | HF sha `00f9c245bbcb`, v1.1.4 | **Apache-2.0** | ✅ | agent, 2026-10-10 (HF API) |
 | MapAnything (default) | `facebook/map-anything` | — | **CC-BY-NC-4.0** | ❌ non-commercial | agent, 2026-10-10 (HF API) |
+| Depth Anything 3 (used, stretch) | `depth-anything/DA3-LARGE-1.1` via MapAnything's unified interface | HF sha — (fetched at run time) | **Apache-2.0** | ✅ | agent, 2026-10-10 (HF API) |
+| Depth Anything 3 (MapAnything default) | `depth-anything/DA3-GIANT-1.1` | HF sha `72ee9f89ce4e` | **CC-BY-NC-4.0** | ❌ non-commercial | agent, 2026-10-10 (HF API) |
 | MASt3R | `naver/mast3r` | — | repository **gated**, license not verifiable on this account | unknown | agent, 2026-10-10 (HF API 401) |
 | COLMAP | `colmap/colmap` | — | repo LICENSE (BSD-3-Clause style; SPDX not auto-detected) | likely yes — verify before commercial use | agent, 2026-10-10 (GitHub API) |
 | hloc | `cvg/Hierarchical-Localization` | — | Apache-2.0 | ✅ | agent, 2026-10-10 (GitHub API) |
