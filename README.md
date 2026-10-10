@@ -18,6 +18,8 @@ On the demo scene (two 8–12 s phone recordings of a table; ground truth: comb
 detected and described all three changes with **no false positives** in the
 final report:
 
+![3D change visualization](outputs/change.gif)
+
 | # | Ground truth | Detected | Description (Qwen3-VL) | Confidence |
 |---|---|---|---|---|
 | 1 | comb removed | `removed` | "The comb was removed from the table." | 0.87 |
