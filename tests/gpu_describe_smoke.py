@@ -36,8 +36,8 @@ def main() -> int:
             raise FileNotFoundError(f"run tests/prepare_gpu_smoke.py first: {p}")
 
     t0 = time.time()
-    model, processor = describe.load_vlm(cfg)
-    log.info("VLM loaded in %.1fs", time.time() - t0)
+    model, processor, vlm_ref = describe.load_vlm(cfg)
+    log.info("VLM loaded in %.1fs (%s)", time.time() - t0, vlm_ref)
 
     crop_a = Image.open(frame_a).convert("RGB")
     t0 = time.time()

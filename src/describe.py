@@ -162,7 +162,7 @@ def load_vlm(cfg: dict):
     model.eval()
     processor = AutoProcessor.from_pretrained(ref)
     log.info("VLM ready on %s", getattr(model, "hf_device_map", "?"))
-    return model, processor
+    return model, processor, ref
 
 
 def vlm_answer(model, processor, images: list, prompt: str) -> str:
@@ -279,19 +279,23 @@ def main() -> int:
     vlm_cache = read_json(vlm_path) if vlm_path.exists() and not args.force else {}
     vlm_cache = {k: v for k, v in vlm_cache.items() if int(k) in keep_ids}
     vlm_model = vlm_processor = None
+    vlm_ref = None
     if not args.skip_vlm and crops:
         from PIL import Image
-        vlm_model, vlm_processor = load_vlm(cfg)
+        vlm_model, vlm_processor, vlm_ref = load_vlm(cfg)
         for c in clusters:
             cid = str(c["id"])
-            if cid not in crops or cid in vlm_cache:
+            if cid not in crops:
                 continue
+            cached = vlm_cache.get(cid)
+            if cached and cached.get("model") == vlm_ref:
+                continue                      # same model already answered
             img = Image.open(crops[cid]["crop"]).convert("RGB")
             reply = vlm_answer(vlm_model, vlm_processor, [img], PROMPT_SINGLE)
             parsed = parse_json_reply(reply)
             vlm_cache[cid] = {"label": parsed.get("label"),
                               "description": parsed.get("description"),
-                              "raw": reply[:500], "created": stamp()}
+                              "raw": reply[:500], "model": vlm_ref, "created": stamp()}
             log.info("cluster %s -> %s", cid, vlm_cache[cid]["label"])
             write_json(vlm_path, vlm_cache)   # incremental: crash-safe cache
     write_json(vlm_path, vlm_cache)
