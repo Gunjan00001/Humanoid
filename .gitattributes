@@ -17,3 +17,4 @@ data/scene2/a.mp4  -filter -diff -merge -text
 data/scene2/b.mp4  -filter -diff -merge -text
 data/scene3/a.mp4  -filter -diff -merge -text
 data/scene3/b.mp4  -filter -diff -merge -text
+data/scene5/a.mp4  -filter -diff -merge -text
