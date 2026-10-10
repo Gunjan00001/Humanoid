@@ -245,3 +245,20 @@ useful. GPU jobs should report an estimated remaining time to the user.
 - This is exactly what a robustness run should reveal: the thresholds and the
   verification prompts are tuned on the demo scene; a new scene needs its own
   tuning pass (`docs/debugging.md`). Recorded honestly in `docs/results.md`.
+
+### Observation: scene2 end-to-end (honest robustness finding)
+
+- After the blur fix: **1 change reported** ("apple removed", conf 0.81) vs the
+  ground truth's coconut removal.
+- **Analysis (from the caches):** the verified cluster has 4179 cells — far
+  larger than the apple (~80). The coconut's removal **merged with a broad
+  table-appearance change** (video B's lighting/angle differs strongly from
+  A's) into one candidate region; the VLM labeled it from the crop at its
+  centroid, which lands on the apple. The coconut's removal is inside the
+  region but the entry names the apple. A separate "added" cluster was not
+  verified.
+- **Takeaway:** the difference-margin logic (`objectness_margin`) is
+  calibrated on the demo scene's lighting difference; scenes with a larger
+  A/B lighting shift need the margin raised or the videos re-recorded under
+  similar light. Both scene findings are in `docs/results.md`
+  ("Robustness on the extra scenes").
