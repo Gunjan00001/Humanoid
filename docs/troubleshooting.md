@@ -1,0 +1,37 @@
+# Troubleshooting
+
+Cluster details are in [`../gpu.md`](../gpu.md); this page collects the failure
+modes most likely to hit this project.
+
+## Cluster / environment
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| `torch.cuda.is_available()` is `False`, but `nvidia-smi` lists GPUs | PBS sets `CUDA_VISIBLE_DEVICES` to an empty string | `unset CUDA_VISIBLE_DEVICES` (or `export CUDA_VISIBLE_DEVICES=0`) |
+| `CUDA initialization: The NVIDIA driver ... is too old (found version 12030)` | CUDA-13 torch build on the 525 driver | install `cu126` wheels; never `cu130` |
+| `qsub -I` → "standard input and output must be a terminal" | no TTY | submit a batch job, or wrap with `script -qec` |
+| Job killed with `Cgroup mem limit exceeded` | default 32 GB RAM cgroup | raise with `-l mem=` (max `64gb`) |
+| `ModuleNotFoundError` on a compute node | env not activated / package only on login node | activate the conda env in the job; install into it, not into `base` |
+| `huggingface-cli` can't reach the internet inside a job | compute nodes may have no internet | pre-download on the login node into `~/models/` |
+| GPU shows ~100% / 60 GB used by someone else | shared node, PBS does not pin GPUs | pick an idle GPU (`nvidia-smi`), set `CUDA_VISIBLE_DEVICES=<id>` |
+
+## Model / pipeline
+
+| Symptom | Likely cause | Mitigation (in order) |
+|---|---|---|
+| A and B clouds do not overlap | not enough overlap / frames | more frames, more overlap, ICP on static regions (`src/align.py`) |
+| VGGT runs out of GPU memory | too many frames / too high resolution | reduce frames or resolution; chunk the input |
+| Qwen3-VL-32B won't fit | ~64 GB in bf16 | request 2 GPUs + `device_map="auto"`; fall back to Qwen3-VL-8B |
+| Host RAM exhausted while loading a model | model materialised in RAM first | `low_cpu_mem_usage=True`, load straight to GPU, bf16 |
+| "removed" objects that are actually just occluded | naive diff | keep the visibility check enabled; verify poses/depth cached correctly |
+| Many tiny noisy clusters | voxel/threshold too aggressive | tune `diff.*` in the config (voxel size, DBSCAN eps/min points) |
+| Moved object split into removed + added | weak crop match | lower `match_similarity_threshold`, improve crops (SAM 2 masks) |
+| Poor reconstruction of walls | textureless surfaces | add texture/more views; state as a limitation |
+| False changes from lighting | different light between recordings | re-record under similar light; note as a limitation |
+
+## Debugging workflow
+
+1. Reproduce on the smallest input (2–3 frames) in an interactive GPU session.
+2. Confirm the stage's cached artifact exists and is sane before the next stage.
+3. Only then scale back up to 20–30 frames.
+4. Keep thresholds in `configs/default.yaml` — never patch them inside scripts.
