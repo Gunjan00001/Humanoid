@@ -116,10 +116,16 @@ def main() -> int:
     add_common_args(parser)
     parser.add_argument("--method", default=None,
                         help="override diff.method (geometric | tabletop)")
+    parser.add_argument("--objectness_margin", type=float, default=None,
+                        help="override diff.tabletop.objectness_margin (per-scene "
+                             "tuning: a larger A/B lighting shift needs a larger "
+                             "margin; see docs/results.md)")
     args = parser.parse_args()
     cfg = apply_overrides(load_config(args.config), args)
     if args.method:
         cfg["diff"]["method"] = args.method
+    if args.objectness_margin is not None:
+        cfg["diff"]["tabletop"]["objectness_margin"] = args.objectness_margin
 
     diff_dir = cache_dir(cfg, "diff")
     clusters_path = diff_dir / "clusters.json"

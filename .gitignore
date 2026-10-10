@@ -15,6 +15,13 @@ outputs/*
 !outputs/change.gif
 !outputs/changes/
 !outputs/changes/*.png
+# per-scene results (scene2, scene3, ...) - keep the deliverables, not the PLY
+!outputs/scene*/
+!outputs/scene*/report.json
+!outputs/scene*/report.md
+!outputs/scene*/change.gif
+!outputs/scene*/changes/
+!outputs/scene*/changes/*.png
 models/
 *.pt
 *.pth
