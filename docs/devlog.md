@@ -206,3 +206,14 @@ useful. GPU jobs should report an estimated remaining time to the user.
 - Added this devlog; rules updated: tags are now `major.minor.bugs`, and GPU
   work must pick another GPU instead of waiting when one is busy.
 - Next: robustness runs on the extra scenes (`data-v0.2`: scene2, scene3).
+
+## 2026-10-10 — Robustness runs on the extra scenes (`data-v0.2`)
+
+- Ground truth: scene2 = coconut removed (1 change); scene3 = chair removed +
+  apple replaced by a cup (2 changes).
+- Launched both scenes **in parallel** (2× 2-GPU batch jobs) while the user's
+  other agent held other GPUs — GPUs 1 and 7 were idle, so both jobs started
+  immediately (no queue wait), per the updated rules §6. Estimated ~25 min
+  wall clock.
+- Logs: `logs/pbs_scene2.log`, `logs/pbs_scene3.log`; results land in
+  `cache/scene{2,3}` and `outputs/scene{2,3}`.
