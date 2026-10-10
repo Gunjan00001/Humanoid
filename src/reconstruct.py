@@ -1,9 +1,15 @@
 """Stage 2 - joint 3D reconstruction (GPU, 1 device).
 
-Runs VGGT on ALL frames of both videos together so everything lands in one
-shared coordinate frame: camera poses, depth maps and a colored point cloud
-(with a per-point source tag A/B). Backend selectable via config
-(`vggt` primary -> `mast3r` -> `colmap` fallbacks, see docs/models.md).
+Runs the configured backend on ALL frames of both videos together so everything
+lands in one shared coordinate frame: camera poses, depth maps and a colored
+point cloud (with a per-point source tag A/B).
+
+Backends (config `reconstruction.backend`):
+    vggt         in-process, this env (docs/models.md)
+    mapanything  subprocess in the separate `spatialdiff-ma` env - its
+                 dependency pins conflict with ours, so the worker
+                 (scripts/run_mapanything.py) writes the same artifact contract
+    mast3r / colmap   planned fallbacks (raise NotImplementedError)
 
     python src/reconstruct.py --config configs/default.yaml
     python src/reconstruct.py --config configs/default.yaml --limit_per_video 6  # smoke test
@@ -14,9 +20,9 @@ Writes cache/reconstruction/:
     dense.npz     depth [S,H,W], depth_conf [S,H,W], world_points [S,H,W,3]
     colors.npz    images [S,H,W,3] uint8 (model-resolution colors)
 
-Memory note: with 60 frames at 518px in bf16 the model fits one A100-80GB.
-If it does not (torch.cuda.OutOfMemoryError), lower frames.max_frames_per_video
-or use --limit_per_video for a chunked workflow.
+Memory note: with 60 frames at 518px in bf16 VGGT fits one A100-80GB. If it
+does not (torch.cuda.OutOfMemoryError), lower frames.max_frames_per_video or
+use --limit_per_video for a chunked workflow.
 """
 
 from __future__ import annotations
@@ -24,6 +30,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import random
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -32,6 +39,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src.common import (  # noqa: E402
+    PROJECT_ROOT,
     add_common_args,
     apply_overrides,
     cache_dir,
@@ -76,7 +84,7 @@ def load_frame_list(cfg: dict, limit_per_video: int | None = None) -> list[dict]
 # backends
 
 
-def run_vggt(frames: list[dict], cfg: dict) -> dict:
+def run_vggt(frames: list[dict], cfg: dict, limit_per_video: int | None = None) -> dict:
     import os
 
     import torch
@@ -117,16 +125,21 @@ def run_vggt(frames: list[dict], cfg: dict) -> dict:
     log.info("model loaded in %.1fs", time.perf_counter() - t0)
 
     paths = [f["path"] for f in frames]
-    images = load_and_preprocess_images(paths).to(device)  # [S,3,H,W] float32
+    # input_mode: "crop" (VGGT default: width->518, height centre-cropped;
+    # portrait frames lose ~44% of their area) or "pad" (whole frame, white
+    # padding to square). See docs/pipeline.md and the Step-0 diagnosis in
+    # docs/results.md.
+    input_mode = str(rcfg.get("input_mode", "crop"))
+    images = load_and_preprocess_images(paths, mode=input_mode).to(device)  # [S,3,H,W]
     s, _, h, w = images.shape
-    log.info("%d frames preprocessed to %dx%d", s, h, w)
+    log.info("%d frames preprocessed to %dx%d (input_mode=%s)", s, h, w, input_mode)
 
     # verify our transform model matches the loaded tensor shape
     transforms = []
     for f in frames:
         with Image.open(f["path"]) as im:
             orig_w, orig_h = im.size
-        tr = model_to_original_transform(orig_w, orig_h)
+        tr = model_to_original_transform(orig_w, orig_h, mode=input_mode)
         if (tr["model_h"], tr["model_w"]) != (h, w):
             log.warning("preprocessing transform mismatch for %s: %s vs loaded %dx%d",
                         f["file"], (tr["model_h"], tr["model_w"]), h, w)
@@ -134,6 +147,7 @@ def run_vggt(frames: list[dict], cfg: dict) -> dict:
 
     t0 = time.perf_counter()
     images_batched = images[None]                     # [1,S,3,H,W] (as in demo_colmap)
+    torch.cuda.reset_peak_memory_stats(device)
     with torch.no_grad(), torch.autocast("cuda", dtype=dtype):
         aggregated_tokens_list, ps_idx = model.aggregator(images_batched)
         pose_enc = model.camera_head(aggregated_tokens_list)[-1]
@@ -141,12 +155,28 @@ def run_vggt(frames: list[dict], cfg: dict) -> dict:
         depth, depth_conf = model.depth_head(aggregated_tokens_list, images_batched, ps_idx)
     torch.cuda.synchronize()
     infer_s = time.perf_counter() - t0
-    log.info("inference done in %.1fs (%.2fs/frame)", infer_s, infer_s / s)
+    peak_gb = torch.cuda.max_memory_allocated(device) / 2**30
+    log.info("inference done in %.1fs (%.2fs/frame) | peak GPU memory %.1f GiB",
+             infer_s, infer_s / s, peak_gb)
 
     extrinsic = extrinsic.squeeze(0).float().cpu().numpy()          # [S,3,4]
     intrinsic = intrinsic.squeeze(0).float().cpu().numpy()          # [S,3,3]
     depth = depth.squeeze(0).squeeze(-1).float().cpu().numpy()      # [S,H,W]
     depth_conf = depth_conf.squeeze(0).float().cpu().numpy()        # [S,H,W]
+
+    # pad mode: the white border is not scene content - zero the confidence
+    # there so padding can never become points (the diff filters on confidence)
+    if input_mode == "pad":
+        for i, tr in enumerate(transforms):
+            ph, pw = tr.get("pad_h", h), tr.get("pad_w", w)
+            pt, pl = tr["crop_top"], tr["crop_left"]
+            depth_conf[i][:pt, :] = 0
+            depth_conf[i][pt + ph:, :] = 0
+            depth_conf[i][:, :pl] = 0
+            depth_conf[i][:, pl + pw:] = 0
+        log.info("pad mode: confidence zeroed outside the %dx%d content area",
+                 tr.get("pad_w"), tr.get("pad_h"))
+
     # note: this helper squeezes the channel dim itself -> pass [S,H,W,1]
     world_points = unproject_depth_map_to_point_map(depth[..., None], extrinsic, intrinsic)
 
@@ -162,13 +192,58 @@ def run_vggt(frames: list[dict], cfg: dict) -> dict:
         "transforms": transforms,
         "backend": "vggt",
         "model": model_ref,
+        "input_mode": input_mode,
         "device": str(torch.cuda.get_device_name(device)),
         "dtype": str(dtype).replace("torch.", ""),
         "inference_seconds": round(infer_s, 1),
+        "peak_gpu_gib": round(peak_gb, 1),
     }
 
 
-def run_mast3r(frames: list[dict], cfg: dict) -> dict:  # pragma: no cover
+def run_mapanything(frames: list[dict], cfg: dict, limit_per_video: int | None = None) -> dict:
+    """MapAnything backend - a subprocess in the `spatialdiff-ma` conda env.
+
+    MapAnything's dependency pins (e.g. opencv-python-headless==4.10.0.84)
+    conflict with the main env, so it runs isolated. The worker
+    (scripts/run_mapanything.py) performs the whole stage: it loads the model
+    from the local path, runs one joint inference over all frames and writes
+    the exact same artifact contract as the VGGT backend
+    (cache/reconstruction/{cameras,dense,colors}.npz + meta.json). The parent
+    therefore only launches it and returns `wrote_files: True`.
+    """
+    macfg = cfg["reconstruction"].get("mapanything", {})
+    env_python = Path(str(macfg.get("env_python",
+                                    "~/miniconda3/envs/spatialdiff-ma/bin/python"))).expanduser()
+    if not env_python.exists():
+        raise RuntimeError(
+            f"MapAnything env python not found: {env_python}\n"
+            "Create the isolated env with: bash scripts/setup_env.sh"
+        )
+
+    out_dir = cache_dir(cfg, "reconstruction")
+    frames_index = repo_path(cfg["paths"]["cache_dir"]) / "frames" / "index.json"
+    cmd = [
+        str(env_python), str(PROJECT_ROOT / "scripts" / "run_mapanything.py"),
+        "--config", str(cfg["_config_path"]),
+        "--frames-index", str(frames_index),
+        "--out", str(out_dir),
+        "--force",                       # the parent already decided to run
+    ]
+    if limit_per_video is not None:
+        cmd += ["--limit_per_video", str(int(limit_per_video))]
+    log.info("launching MapAnything worker: %s", " ".join(cmd))
+    # stream the worker's log to this job's output (no capture) so the PBS log
+    # contains the full model-loading/inference trace
+    proc = subprocess.run(cmd, cwd=PROJECT_ROOT)
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"MapAnything worker failed with exit code {proc.returncode}; "
+            "see the log above (and logs/setup_ma_env.log for env issues)"
+        )
+    return {"backend": "mapanything", "wrote_files": True}
+
+
+def run_mast3r(frames: list[dict], cfg: dict, limit_per_video: int | None = None) -> dict:  # pragma: no cover
     raise NotImplementedError(
         "MASt3R fallback backend not implemented yet. The HF repo is gated and "
         "the checkpoint is unavailable to this account; see docs/models.md and "
@@ -176,11 +251,12 @@ def run_mast3r(frames: list[dict], cfg: dict) -> dict:  # pragma: no cover
     )
 
 
-def run_colmap(frames: list[dict], cfg: dict) -> dict:  # pragma: no cover
+def run_colmap(frames: list[dict], cfg: dict, limit_per_video: int | None = None) -> dict:  # pragma: no cover
     raise NotImplementedError("COLMAP fallback backend not implemented yet - see docs/roadmap.md.")
 
 
-BACKENDS = {"vggt": run_vggt, "mast3r": run_mast3r, "colmap": run_colmap}
+BACKENDS = {"vggt": run_vggt, "mapanything": run_mapanything,
+            "mast3r": run_mast3r, "colmap": run_colmap}
 
 
 # ---------------------------------------------------------------------------
@@ -192,8 +268,12 @@ def main() -> int:
     add_common_args(parser)
     parser.add_argument("--limit_per_video", type=int, default=None,
                         help="debug: use only the first N frames of each video")
+    parser.add_argument("--backend", default=None,
+                        help="override reconstruction.backend (vggt | mapanything | ...)")
     args = parser.parse_args()
     cfg = apply_overrides(load_config(args.config), args)
+    if args.backend:
+        cfg["reconstruction"]["backend"] = args.backend
 
     recon_dir = cache_dir(cfg, "reconstruction")
     meta_path = recon_dir / "meta.json"
@@ -211,9 +291,10 @@ def main() -> int:
 
     backend = cfg["reconstruction"]["backend"]
     if backend not in BACKENDS:
-        raise ValueError(f"unknown reconstruction.backend: {backend!r}")
+        raise ValueError(f"unknown reconstruction.backend: {backend!r} "
+                         f"(available: {sorted(BACKENDS)})")
     try:
-        result = BACKENDS[backend](frames, cfg)
+        result = BACKENDS[backend](frames, cfg, limit_per_video=args.limit_per_video)
     except Exception as exc:  # noqa: BLE001 - keep the OOM hint
         if "out of memory" in str(exc).lower():
             raise RuntimeError(
@@ -222,6 +303,13 @@ def main() -> int:
                 "reduce frames.fps."
             ) from exc
         raise
+
+    # some backends (mapanything) run isolated and write the artifacts
+    # themselves through their worker - nothing left to save here
+    if result.get("wrote_files"):
+        log.info("backend '%s' wrote cache/reconstruction/ directly; done",
+                 result.get("backend", backend))
+        return 0
 
     # ---- save -----------------------------------------------------------
     np.savez_compressed(
@@ -246,6 +334,7 @@ def main() -> int:
         "config_hash": cfg["_config_hash"],
         "backend": result["backend"],
         "model": result["model"],
+        "input_mode": result.get("input_mode"),
         "device": result["device"],
         "dtype": result["dtype"],
         "num_frames": len(frames),
@@ -253,6 +342,7 @@ def main() -> int:
         "conf_percentile": cfg["reconstruction"]["conf_percentile"],
         "limit_per_video": args.limit_per_video,
         "inference_seconds": result.get("inference_seconds"),
+        "peak_gpu_gib": result.get("peak_gpu_gib"),
         "frames_index_sha1": hashlib.sha1(index_path.read_bytes()).hexdigest()[:12],
         "frames": [
             {"file": f["file"], "tag": f["tag"],

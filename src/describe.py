@@ -92,6 +92,22 @@ PROMPT_MOVE = (
     '"sentence": "<one sentence describing the move, e.g. the blue mug moved '
     'from the desk to the floor>"}'
 )
+PROMPT_REPLACE = (
+    "These two crops show the same spot in a small indoor scene at two times. "
+    "The object visible in the FIRST image was replaced by a different object "
+    "in the SECOND image.\n"
+    'Answer with JSON only, no other text: {"label": "<the new object, 2-4 words>", '
+    '"sentence": "<one sentence naming BOTH objects, e.g. the apple was replaced '
+    'by a cup>"}'
+)
+PROMPT_REMOVED = (
+    "These two crops show the same spot in a small indoor scene at two times. "
+    "An object is visible in the FIRST image and gone in the SECOND; the space "
+    "is empty now.\n"
+    'Answer with JSON only, no other text: {"label": "<the removed object, 2-4 words>", '
+    '"sentence": "<one sentence naming the object and its removal, e.g. the chair '
+    'was removed from the room>"}'
+)
 
 
 # ---------------------------------------------------------------------------
@@ -125,11 +141,18 @@ def best_crop_for_cluster(cid: int, points: np.ndarray, tag: str, recon: dict, c
         own_frames = [own_frames[i] for i in sorted(set(sel.tolist()))]
 
     views = []
+    occ_tol = float(scfg.get("crop_occlusion_tol", 0.15))
     for i in own_frames:
         uv, z = project_points(points, recon["extrinsic"][i], recon["intrinsic"][i])
         observed, in_bounds = sample_depth(recon["depth"][i], uv)
         conf_ok = sample_depth(recon["depth_conf"][i], uv)[0] >= conf_q
-        visible = in_bounds & conf_ok & (np.abs(z - observed) <= 0.05)
+        # crop-framing visibility: the region is IN VIEW and NOT occluded by a
+        # surface much closer to the camera.  NOTE: this is deliberately not
+        # the "object is there" test (|z-depth| small) - in the other video a
+        # removed object is *gone*, so its points sit in front of the
+        # background; the old test made those frames look empty and the crop
+        # landed on neighbouring objects (scene3's "chair replaced" misreads).
+        visible = in_bounds & conf_ok & (z <= observed + occ_tol)
         views.append({"frame_index": i, "n_visible": int(visible.sum()),
                       "visible": visible, "uv": uv})
     if not views:
@@ -140,7 +163,10 @@ def best_crop_for_cluster(cid: int, points: np.ndarray, tag: str, recon: dict, c
                     cid, tag, suffix, n_max)
         return None
     if ref_frame is not None:
-        enough = [v for v in views if v["n_visible"] >= max(5, 0.25 * n_max)]
+        # prefer frames where MOST of the cluster is in view; among those the
+        # pose-closest to the own view. A frame where only a few points are in
+        # view puts the crop on whatever happens to be there.
+        enough = [v for v in views if v["n_visible"] >= max(5, 0.5 * n_max)]
         best = min(enough, key=lambda v: _pose_score(recon, ref_frame, v["frame_index"])) \
             if enough else max(views, key=lambda v: v["n_visible"])
     else:
@@ -330,8 +356,13 @@ def main() -> int:
                         help="crops only; no verification, labels or matching")
     parser.add_argument("--limit_clusters", type=int, default=None,
                         help="debug: only process the first N clusters")
+    parser.add_argument("--min_change_score", type=float, default=None,
+                        help="override semantics.min_change_score (per-backend "
+                             "calibration; see docs/results.md backend comparison)")
     args = parser.parse_args()
     cfg = apply_overrides(load_config(args.config), args)
+    if args.min_change_score is not None:
+        cfg["semantics"]["min_change_score"] = args.min_change_score
 
     sem_dir = cache_dir(cfg, "semantics")
     matches_path = sem_dir / "matches.json"
@@ -398,7 +429,26 @@ def main() -> int:
     vlm_ref = None
     if not args.skip_vlm:
         from PIL import Image
-        vlm_model, vlm_processor, vlm_ref = load_vlm(cfg)
+
+        key = cfg["semantics"]["vlm"]
+        vlm_ref = resolve_model(cfg["models"]["vlm_primary" if key == "primary"
+                                             else "vlm_fallback"],
+                               cfg["paths"]["model_dir"])
+
+        # load the VLM lazily: skip the multi-minute model load entirely when
+        # every answer is already cached (common when re-running post-filters)
+        def _needs_vlm_call() -> bool:
+            for c in clusters + uncertain:
+                cached = vlm_cache.get(str(c["id"]))
+                if not (cached and cached.get("model") == vlm_ref
+                        and "changed" in cached):
+                    return True
+            return False
+
+        if _needs_vlm_call():
+            vlm_model, vlm_processor, _ = load_vlm(cfg)
+        else:
+            log.info("all VLM answers cached - skipping the model load")
         for c in clusters:
             cid = str(c["id"])
             entry = crops.get(cid, {})
@@ -464,16 +514,32 @@ def main() -> int:
     write_json(vlm_path, vlm_cache)
 
     # ---- 3) keep only VLM-confirmed verified clusters --------------------
+    def _reject(c: dict, reason: str) -> None:
+        """Record a rejected candidate (never drop silently)."""
+        cid = str(c["id"])
+        rejected[cid] = {"type": c["type"], "centroid": c["centroid"],
+                         "reason": reason,
+                         "vlm": {k: vlm_cache.get(cid, {}).get(k)
+                                 for k in ("label", "first", "second")}}
+        log.debug("  reject %s (%s): %s", cid, c["type"], reason)
+
     confirmed = []
+    single_view: list[dict] = []
     for c in clusters:
         cid = str(c["id"])
         v = vlm_cache.get(cid, {})
-        if args.skip_vlm or v.get("changed", True) is not False:
-            confirmed.append(c)      # kept unless the VLM explicitly denied it
+        if args.skip_vlm:
+            confirmed.append(c)
+        elif v.get("changed") is False:
+            _reject(c, "VLM denied the change (same object visible in both videos)")
+        elif v.get("changed") is None and v.get("first") is None and v.get("second") is None:
+            # the two-view verification could not run (the other video's crop
+            # was unavailable): a label-only answer must NOT count as a
+            # confirmed change - downgrade to the unverified list
+            single_view.append(c)
+            log.info("cluster %s: no two-view verification available -> unverified", cid)
         else:
-            rejected[cid] = {"type": c["type"], "centroid": c["centroid"],
-                             "reason": "VLM denied the change (same object visible in both videos)",
-                             "vlm": {k: v.get(k) for k in ("label", "raw")}}
+            confirmed.append(c)
 
     # mutual cancellation: a confirmed "removed X" and "added X" with the same
     # label at (nearly) the same spot mean X is present in BOTH videos - the
@@ -511,7 +577,7 @@ def main() -> int:
                    and c2["bbox_min"][i] - pad <= c1["bbox_max"][i] for i in range(3))
 
     uncertain_kept = []
-    for c in uncertain:
+    for c in list(uncertain) + single_view:
         cid = str(c["id"])
         dup = next((cc["id"] for cc in confirmed if _bbox_close(c, cc)), None)
         if dup is not None:
@@ -523,22 +589,98 @@ def main() -> int:
     log.info("VLM verification: %d confirmed, %d rejected, %d unverified kept",
              len(confirmed), len(rejected), len(uncertain_kept))
 
-    # ---- 3b) structural post-filters --------------------------------------
-    def _reject(c: dict, reason: str) -> None:
-        cid = str(c["id"])
-        rejected[cid] = {"type": c["type"], "centroid": c["centroid"],
-                         "reason": reason,
-                         "vlm": {k: vlm_cache.get(cid, {}).get(k)
-                                 for k in ("label", "first", "second")}}
-        log.debug("  reject %s (%s): %s", cid, c["type"], reason)
+    # ---- 3a) type correction with geometric evidence ---------------------
+    # The photometric mask alone cannot separate "removed" from "replaced":
+    # the other video's crop may show a NEIGHBOURING object (chair #2 behind
+    # the removed chair) or the space may be occupied by a different object
+    # (cup where the apple was). The pipeline's own design principle resolves
+    # it: a *removed* object's space is seen EMPTY by the other video, while a
+    # *replaced* object's space is OCCUPIED (by something at a similar depth).
+    # We run the geometric empty-space test on the cluster's points and correct
+    # the type; corrected clusters get a fresh sentence from the VLM.
+    def _empty_fraction(c: dict) -> float:
+        from src.diff import visibility_check
+        pts = cluster_points.get(c["id"])
+        if pts is None or not len(pts):
+            return float("nan")
+        own = c["source_tag"] if c["source_tag"] in ("a", "b") else "a"
+        other = [i for i, t in enumerate(recon["tags"]) if t != own]
+        frac, _ = visibility_check(pts, other, recon, cfg)
+        return frac
 
-    # weak fragments are noise, not changes (the pen scores 90, the comb 110)
+    def _background_words(s) -> bool:
+        words = {w for w in re.sub(r"[^a-z0-9 ]", " ", str(s or "").lower()).split()
+                 if w and w not in _STOPWORDS}
+        background = {"floor", "ground", "wall", "background", "room", "nothing",
+                      "empty", "air", "space", "scene"}
+        return not words or words <= background
+
+    reclassified: list[dict] = []
+    if not args.skip_vlm:
+        keep_frac = float(cfg["semantics"].get("reclassify_empty_fraction", 0.30))
+        occ_frac = float(cfg["semantics"].get("reclassify_occupied_fraction", 0.15))
+        for c in confirmed:
+            if c["type"] not in ("removed", "replaced"):
+                continue
+            frac = _empty_fraction(c)
+            if not np.isfinite(frac):
+                continue
+            v = vlm_cache.get(str(c["id"]), {})
+            if c["type"] == "replaced" and frac >= keep_frac:
+                c["type"] = "removed"
+                c["reclassified_from"] = "replaced"
+                c["empty_fraction"] = round(frac, 3)
+                reclassified.append(c)
+                log.info("reclassify %s: replaced -> removed (space seen empty %.0f%%)",
+                         c["id"], 100 * frac)
+            elif (c["type"] == "removed" and frac <= occ_frac
+                    and not _background_words(v.get("second"))):
+                c["type"] = "replaced"
+                c["reclassified_from"] = "removed"
+                c["empty_fraction"] = round(frac, 3)
+                reclassified.append(c)
+                log.info("reclassify %s: removed -> replaced (space occupied %.0f%%, "
+                         "other view names %r)", c["id"], 100 * frac, v.get("second"))
+
+    # fresh sentences for corrected types (the old ones describe the wrong
+    # event, e.g. "the black bowl was replaced by a black chair" for a removal)
+    if reclassified and vlm_model is not None:
+        from PIL import Image
+        for c in reclassified:
+            cid = str(c["id"])
+            ci = crops.get(cid, {})
+            if "crop" not in ci or "crop_other" not in ci:
+                continue
+            own_tag = ci.get("tag", "a")
+            first, second = ((ci["crop"], ci["crop_other"]) if own_tag == "a"
+                             else (ci["crop_other"], ci["crop"]))
+            prompt = (PROMPT_REPLACE if c["type"] == "replaced" else PROMPT_REMOVED)
+            reply = vlm_answer(vlm_model, vlm_processor,
+                               [Image.open(first).convert("RGB"),
+                                Image.open(second).convert("RGB")], prompt)
+            parsed = parse_json_reply(reply)
+            vlm_cache[cid]["label"] = parsed.get("label") or vlm_cache[cid].get("label")
+            vlm_cache[cid]["description"] = (parsed.get("sentence")
+                                             or parsed.get("description")
+                                             or vlm_cache[cid].get("description"))
+            vlm_cache[cid]["reclassified_from"] = c["reclassified_from"]
+            log.info("reclassified %s sentence: %s", cid, vlm_cache[cid]["description"])
+            write_json(vlm_path, vlm_cache)
+
+    # ---- 3b) structural post-filters --------------------------------------
+    # (_reject is defined above, before the confirmation filter)
+
+    # weak fragments are noise, not changes (the pen scores 90, the comb 110).
+    # NOTE: only photometric candidates carry a change score; geometric ones
+    # are evidence-checked by the visibility test instead, so the floor must
+    # not reject them just because the field is absent.
     min_score = float(cfg["semantics"].get("min_change_score", 80))
     kept = []
     for c in confirmed:
-        if (c["type"] in ("removed", "added")
-                and float(c.get("mean_change_score") or 0) < min_score):
-            _reject(c, f"weak evidence (change score {c.get('mean_change_score')} < {min_score})")
+        score = c.get("mean_change_score")
+        if (c["type"] in ("removed", "added") and score is not None
+                and float(score) < min_score):
+            _reject(c, f"weak evidence (change score {score} < {min_score})")
         else:
             kept.append(c)
     confirmed = kept
@@ -554,6 +696,13 @@ def main() -> int:
         kept = []
         for c in confirmed:
             pts = cluster_points.get(c["id"])
+            # an explicit empty-space confirmation (from the type-correction
+            # step) is stronger evidence than the both-present heuristic -
+            # e.g. scene3's chair sits next to the OTHER chair, which made the
+            # both-present mask fire; the empty-check proved it was removed
+            if c.get("empty_fraction") is not None and c.get("reclassified_from"):
+                kept.append(c)
+                continue
             if c["type"] in ("removed", "added") and pts is not None and len(pts):
                 ix = ((pts[:, 0] - sbounds[0]) / scell).astype(int)
                 iy = ((pts[:, 1] - sbounds[2]) / scell).astype(int)
@@ -600,7 +749,7 @@ def main() -> int:
         for other in confirmed[i + 1:]:
             if other["id"] in merged_flags or other["type"] != c["type"]:
                 continue
-            if c["type"] not in ("removed", "added"):
+            if c["type"] not in ("removed", "added", "replaced"):
                 continue
             li = vlm_cache.get(str(c["id"]), {}).get("label")
             lo = vlm_cache.get(str(other["id"]), {}).get("label")
@@ -613,7 +762,8 @@ def main() -> int:
             pts = np.concatenate([np.asarray(g["sample_points"], dtype=np.float32)
                                   for g in group if g.get("sample_points")])
             c = dict(c)
-            c["n_cells"] = int(sum(g["n_cells"] for g in group))
+            # photometric clusters have n_cells; geometric ones n_points only
+            c["n_cells"] = int(sum(g.get("n_cells", g.get("n_points", 0)) for g in group))
             c["merged_ids"] = [g["id"] for g in group]
             c["sample_points"] = [[round(float(v), 4) for v in p] for p in pts[:200]]
             c["centroid"] = [round(float(v), 4) for v in pts.mean(axis=0)]
@@ -643,6 +793,12 @@ def main() -> int:
             replaced_rejects: set[int] = set()
             for c in confirmed:
                 if c["type"] != "replaced":
+                    continue
+                if c.get("reclassified_from"):
+                    # the replacement was established from occupied-space
+                    # evidence; the pixel gate exists for photometric
+                    # candidates and would reject a visually odd (occluded)
+                    # crop of a genuine replacement
                     continue
                 ci = crops.get(str(c["id"]), {})
                 if "crop" not in ci or "crop_other" not in ci:

@@ -192,13 +192,37 @@ def _prepare(recon: dict[str, Any], cfg: dict[str, Any]):
     A, CA = pts[a_mask], rgb[a_mask]
     B, CB = pts[b_mask], rgb[b_mask]
 
-    coef_a, coef_b = fit_dominant_plane(A), fit_dominant_plane(B)
-    log.debug("planes: A=%s B=%s", np.round(coef_a, 4).tolist(),
-              np.round(coef_b, 4).tolist())
-    bounds = grid_bounds(np.concatenate([A, B]), coef_a, cell)
+    # --- one JOINT plane for both videos -------------------------------
+    # The cells of A and B must correspond spatially, so a single plane is the
+    # correct choice. Two-stage fit: coarse fit on the joint cloud, then a
+    # refit on the dense surface band only. This keeps the plane on the TABLE
+    # even in room-scale clouds (MapAnything), where a plain iterative fit can
+    # converge to a wall/floor blend (observed: A and B fits disagreed by 10
+    # degrees on the demo scene before this refinement).
+    joint = np.concatenate([A, B])
+    coef = fit_dominant_plane(joint)
+    near = np.abs(plane_height(joint, coef)) < 0.08
+    if near.sum() > 10_000:
+        coef = fit_dominant_plane(joint[near])
+    log.debug("joint plane: %s (refined on %d surface points)",
+              np.round(coef, 4).tolist(), int(near.sum()))
+
+    # Restrict to a band around the fitted plane. The tabletop mode analyses
+    # ONE surface: without the band, points from walls/floor that share the
+    # x/y footprint (common with room-scale reconstructions like MapAnything's)
+    # would pollute the per-cell colours. Objects up to `height_band` tall
+    # stay included; taller objects are documented as clipped (their base and
+    # edges still contribute).
+    band = float(tcfg.get("height_band", 0.15))
+    ha, hb = plane_height(A, coef), plane_height(B, coef)
+    A, CA = A[np.abs(ha) <= band], CA[np.abs(ha) <= band]
+    B, CB = B[np.abs(hb) <= band], CB[np.abs(hb) <= band]
+    log.debug("height band %.2fm: A=%d B=%d points remain", band, len(A), len(B))
+
+    bounds = grid_bounds(np.concatenate([A, B]), coef, cell)
     log.debug("grid bounds: %s (cell %.0fmm)", np.round(bounds, 3).tolist(), cell * 1000)
-    HA, CMA, NA, codesA = cell_maps(A, CA, coef_a, cell, bounds)
-    HB, CMB, NB, codesB = cell_maps(B, CB, coef_b, cell, bounds)
+    HA, CMA, NA, codesA = cell_maps(A, CA, coef, cell, bounds)
+    HB, CMB, NB, codesB = cell_maps(B, CB, coef, cell, bounds)
 
     min_pts = int(tcfg["min_cell_points"])
     obsA = NA >= min_pts

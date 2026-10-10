@@ -24,17 +24,33 @@ frames:
   jpeg_quality: 92
 
 reconstruction:
-  backend: vggt              # vggt | mast3r | colmap
+  backend: vggt              # vggt | mapanything | mast3r | colmap
   use_icp_refinement: true   # run src/align.py after reconstruction (the demo
                              # scene needed it: static mean NN 15mm -> 11mm)
   device: cuda
   gpu_index: null            # pin a specific GPU id (shared node, see gpu.md)
   conf_percentile: 50.0      # keep points with confidence >= this percentile
+  input_mode: crop           # crop | pad - VGGT preprocessing: "crop" discards
+                             # the top/bottom of portrait frames (56% of the
+                             # frame reaches the model); "pad" keeps the whole
+                             # frame at lower resolution (see docs/results.md,
+                             # Step-0 diagnosis)
   icp_max_correspondence: 0.05
   icp_iterations: 30
+  # MapAnything backend: runs as a subprocess in an isolated conda env because
+  # its dependency pins conflict with the main env (see docs/models.md and
+  # scripts/run_mapanything.py)
+  mapanything:
+    env_python: ~/miniconda3/envs/spatialdiff-ma/bin/python
+    memory_efficient_inference: true
+    minibatch_size: null     # null = dynamic; set 1 for smallest GPU memory
+    use_amp: true
+    amp_dtype: bf16
+    apply_confidence_mask: false
 
 models:
   vggt: facebook/VGGT-1B
+  mapanything: facebook/map-anything-apache   # Apache-2.0 checkpoint (docs/models.md)
   vlm_primary: Qwen/Qwen3-VL-32B-Instruct
   vlm_fallback: Qwen/Qwen3-VL-8B-Instruct
   matcher: facebook/dinov2-large
@@ -65,6 +81,9 @@ diff:
   # tabletop (photometric) parameters:
   tabletop:
     cell_size: 0.005         # raster cell over the dominant plane
+    height_band: 0.15        # only points within +/-15cm of the plane count
+                             # (walls/floor share the x/y footprint in
+                             # room-scale clouds like MapAnything's)
     min_cell_points: 5       # a cell needs this many points in each video
     objectness_threshold: 70 # colour distance from the fitted table colour
     objectness_margin: 40    # |objA - objB| needed for removed/added
@@ -86,6 +105,16 @@ semantics:
                              # are the same appearance -> not a change
   min_change_score: 80       # removed/added candidates need at least this much
                              # colour evidence (weak fragments are noise)
+  reclassify_empty_fraction: 0.15   # 'replaced' with >= this fraction of its
+                             # points seen empty by the other video -> removed
+                             # (calibrated: chair 0.21 vs remote 0.00)
+  reclassify_occupied_fraction: 0.15  # 'removed' with <= this fraction seen
+                             # empty (occupied) -> replaced if the other view
+                             # names an object (calibrated: apple/cup 0.01 vs
+                             # comb 0.73)
+  crop_occlusion_tol: 0.15   # crop framing: a point counts as in-view when it
+                             # is not behind the observed surface by more than
+                             # this (works for removed objects too)
   replaced_min_pixel_diff: 70  # a real flip/replacement changes the pixels
                              # strongly; blur/exposure differences score low
   crop_margin: 0.25          # margin around the projected crop, relative to size
@@ -98,10 +127,22 @@ semantics:
   use_sam2: false            # stretch goal: SAM 2 masks before cropping
 
 visualize:
-  background_voxel: 0.01     # display resolution of the static background
-  static_dim: 0.35           # background brightness factor (0 = black)
+  conf_percentile: 5.0       # DISPLAY cloud cutoff - lower than the detection
+                             # cutoff; the detection pipeline keeps its own
+  voxel_size: 0.008          # display resolution (finer than diff.voxel_size)
+  static_dim: 0.8            # keep true colours (0.35 was the dark-sliver cause)
   max_background_points: 150000
-  gif_frames: 36             # frames in the rotating change.gif
+  splat_size: 14             # marker size at the framing distance (1/z scaled)
+  orbit_elev: 40             # camera elevation (35-45 deg, table-plane up)
+  display_crop_radius: 0.4   # display geometry is cropped to this radius
+                             # around the changed region (metres)
+  viewer_crop_radius: 0.4    # viewer.html default crop ("full scene" toggle)
+  chrome_gif: true           # render the GIF from viewer.html with headless
+                             # Chrome (matches the interactive viewer);
+                             # falls back to matplotlib if Chrome is missing
+  gif_frames: 24             # frames in the rotating change.gif
+  export_mesh: true          # colored TSDF mesh -> scene_mesh.ply (<= 10 MB)
+  export_viewer: true        # self-contained HTML viewer -> viewer.html
 
 gpu:
   vlm_gpus: 2                # Qwen3-VL-32B bf16 needs ~2 A100s

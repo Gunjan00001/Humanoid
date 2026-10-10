@@ -1,15 +1,23 @@
 """Stage 6 - visualization (CPU).
 
-Colored point cloud + screenshots + a rotating GIF:
+Renders the scene the way the Step-0 diagnosis showed it should be: the
+reconstruction is faithful, so the display just has to stop hiding it.
 
-    red    = removed
-    green  = added
-    orange = moved (old and new position, arrow between)
+Design (see docs/results.md, "Visualization rework"):
+  - a *display* cloud with its own settings (`visualize.*`): lower confidence
+    cutoff, finer voxels, true colours barely dimmed - the detection pipeline
+    keeps its own (stricter) settings and is unaffected;
+  - dark neutral background, point splats sized by distance to the camera;
+  - the camera is framed on the changed region, not the whole scene;
+  - per confirmed change: a 3D bounding box + text label; a legend; unverified
+    candidates only as a dim cyan style;
+  - per-change PNG: before frame | after frame | 3D view with highlights;
+  - scene GIF: the same three-panel layout with the 3D panel orbiting;
+  - optional colored TSDF mesh (`src/mesh.py`) and a self-contained
+    interactive HTML viewer (`src/viewer.py`).
 
     python src/visualize.py --config configs/default.yaml
-    python src/visualize.py --config configs/default.yaml --view   # interactive (needs display)
-
-Writes outputs/scene.ply, outputs/changes/change_XXX.png, outputs/change.gif
+    python src/visualize.py --config configs/default.yaml --view   # Open3D viewer
 """
 
 from __future__ import annotations
@@ -27,6 +35,7 @@ from src.common import (  # noqa: E402
     apply_overrides,
     load_config,
     out_dir,
+    read_json,
     repo_path,
     setup_logging,
 )
@@ -35,12 +44,14 @@ from src.geometry import build_change_list, load_reconstruction, tagged_points, 
 log = setup_logging("visualize")
 
 COLORS = {
-    "removed": (0.87, 0.15, 0.15),
-    "added": (0.20, 0.80, 0.25),
-    "moved": (1.00, 0.55, 0.05),
-    "replaced": (0.85, 0.12, 0.85),
+    "removed": (0.95, 0.20, 0.20),
+    "added": (0.25, 0.90, 0.35),
+    "moved": (1.00, 0.60, 0.10),
+    "replaced": (0.95, 0.25, 0.95),
 }
-UNVERIFIED_COLOR = (0.10, 0.75, 0.90)   # cyan: one video never saw this area
+UNVERIFIED_COLOR = (0.35, 0.75, 0.85)
+BG_COLOR = "#101418"
+LABEL_COLOR = "#f2f2f2"
 
 
 def write_ply(path: Path, points: np.ndarray, colors: np.ndarray) -> None:
@@ -60,16 +71,29 @@ def write_ply(path: Path, points: np.ndarray, colors: np.ndarray) -> None:
         fh.write(arr.tobytes())
 
 
+# ---------------------------------------------------------------------------
+# scene data
+
+
 def scene_arrays(cfg: dict):
-    """Background cloud (dim/voxelized) + per-change colored point sets."""
+    """Display cloud + per-change point sets.
+
+    Uses the *display* settings (visualize.conf_percentile / voxel_size /
+    static_dim), never the detection ones.
+    """
     vcfg = cfg["visualize"]
     recon = load_reconstruction(cfg)
-    pts, rgb, tags, _ = tagged_points(recon, cfg["reconstruction"]["conf_percentile"])
-    bg_pts, bg_rgb = voxel_downsample(pts, rgb, voxel=float(vcfg["background_voxel"]))
+    pts, rgb, tags, _ = tagged_points(recon, float(vcfg["conf_percentile"]))
+    log.info("display cloud: %d points at conf>p%s", len(pts), vcfg["conf_percentile"])
+    bg_pts, bg_rgb, bg_tags = voxel_downsample(pts, rgb, tags,
+                                               voxel=float(vcfg["voxel_size"]))
     if len(bg_pts) > int(vcfg["max_background_points"]):
-        idx = np.linspace(0, len(bg_pts) - 1, int(vcfg["max_background_points"])).round().astype(int)
-        bg_pts, bg_rgb = bg_pts[idx], bg_rgb[idx]
+        idx = np.linspace(0, len(bg_pts) - 1,
+                          int(vcfg["max_background_points"])).round().astype(int)
+        bg_pts, bg_rgb, bg_tags = bg_pts[idx], bg_rgb[idx], bg_tags[idx]
     bg_rgb = (bg_rgb.astype(np.float32) * float(vcfg["static_dim"])).astype(np.uint8)
+    log.info("display cloud after %sm voxels: %d points",
+             vcfg["voxel_size"], len(bg_pts))
 
     diff_dir = repo_path(cfg["paths"]["cache_dir"]) / "diff"
     points = np.load(diff_dir / "points.npz")
@@ -79,9 +103,10 @@ def scene_arrays(cfg: dict):
     changes = build_change_list(cfg)
     change_pts: list[dict] = []
     for ch in changes:
+        verified = ch.get("verified", True)
         color = np.array(COLORS.get(ch["type"], (0.6, 0.6, 0.6)), dtype=np.float32)
-        if not ch.get("verified", True):
-            color = np.array(UNVERIFIED_COLOR, dtype=np.float32)
+        if not verified:
+            color = np.array(UNVERIFIED_COLOR, dtype=np.float32) * 0.6
         arrays = []
         for cid in ch["cluster_ids"]:
             for tag in ("a", "b"):
@@ -92,17 +117,141 @@ def scene_arrays(cfg: dict):
                         arrays.append(sel)
         pts_c = np.concatenate(arrays) if arrays else np.zeros((0, 3), dtype=np.float32)
         change_pts.append({"change": ch, "points": pts_c.astype(np.float32),
-                           "colors": np.tile(color, (len(pts_c), 1))})
+                           "colors": np.tile(color, (len(pts_c), 1)),
+                           "verified": verified})
 
-    # remove background points that coincide with change points (radius covers
-    # the lattice offset between the two downsample grids)
+    # remove display-cloud points that coincide with change points
     if len(change_pts):
         all_c = np.concatenate([c["points"] for c in change_pts if len(c["points"])])
         if len(all_c):
             dist, _ = cKDTree(all_c).query(bg_pts, k=1, workers=-1)
-            keep = dist > float(cfg["visualize"]["background_voxel"]) * 2.0
-            bg_pts, bg_rgb = bg_pts[keep], bg_rgb[keep]
-    return bg_pts, bg_rgb, change_pts
+            keep = dist > float(vcfg["voxel_size"]) * 2.0
+            bg_pts, bg_rgb, bg_tags = bg_pts[keep], bg_rgb[keep], bg_tags[keep]
+    return bg_pts, bg_rgb, bg_tags, change_pts
+
+
+def change_framing(change_pts: list[dict], bg_pts: np.ndarray):
+    """Camera focus + radius on the union of the confirmed changes' extents."""
+    verified = [c for c in change_pts if c["verified"] and len(c["points"])]
+    if verified:
+        p = np.concatenate([c["points"] for c in verified])
+        lo, hi = p.min(axis=0), p.max(axis=0)
+        focus = (lo + hi) / 2
+        radius = float(np.linalg.norm(hi - lo)) / 2 + 0.25
+        return focus, max(radius, 0.35)
+    if len(bg_pts):                                   # no changes: whole scene
+        lo, hi = bg_pts.min(axis=0), bg_pts.max(axis=0)
+        focus = (lo + hi) / 2
+        return focus, float(np.linalg.norm(hi - lo)) / 2 + 0.05
+    return np.zeros(3), 1.0
+
+
+# ---------------------------------------------------------------------------
+# 3D rendering
+
+
+def _camera_pos(focus: np.ndarray, radius: float, azimuth: float, elev: float) -> np.ndarray:
+    a, e = np.radians(azimuth), np.radians(elev)
+    d = np.array([np.cos(e) * np.cos(a), np.cos(e) * np.sin(a), np.sin(e)])
+    return focus - d * (2.6 * radius)
+
+
+def draw_3d(ax, bg_pts, bg_rgb, change_pts, focus, radius, azimuth, elev,
+            splat: float, show_labels: bool = True) -> None:
+    """Dark background, distance-sized splats, change boxes + labels, legend."""
+    ax.set_facecolor(BG_COLOR)
+    cam = _camera_pos(focus, radius, azimuth, elev)
+
+    def splat_sizes(points: np.ndarray, base: float) -> np.ndarray:
+        """Marker size proportional to 1/distance (nearer points look bigger)."""
+        if not len(points):
+            return np.zeros(0)
+        d = np.linalg.norm(points - cam, axis=1)
+        return np.clip(base * (2.2 * radius) / np.maximum(d, 1e-6), 1.0, 4.0 * base)
+
+    if len(bg_pts):
+        ax.scatter(bg_pts[:, 0], bg_pts[:, 1], bg_pts[:, 2],
+                   s=splat_sizes(bg_pts, splat), c=bg_rgb / 255.0,
+                   linewidths=0, depthshade=False)
+
+    for c in change_pts:
+        p, ch = c["points"], c["change"]
+        if not len(p):
+            continue
+        ax.scatter(p[:, 0], p[:, 1], p[:, 2], s=splat_sizes(p, splat * 1.6),
+                   c=c["colors"], linewidths=0, depthshade=False)
+        if not c["verified"]:
+            continue
+        # bounding box wireframe
+        lo = np.asarray(ch["bbox_min"], dtype=float)
+        hi = np.asarray(ch["bbox_max"], dtype=float)
+        corners = np.array([[x, y, z] for x in (lo[0], hi[0])
+                            for y in (lo[1], hi[1]) for z in (lo[2], hi[2])])
+        edges = [(0, 1), (2, 3), (4, 5), (6, 7), (0, 2), (1, 3),
+                 (4, 6), (5, 7), (0, 4), (1, 5), (2, 6), (3, 7)]
+        color = COLORS.get(ch["type"], (0.8, 0.8, 0.8))
+        for e in edges:
+            a, b = corners[e[0]], corners[e[1]]
+            ax.plot([a[0], b[0]], [a[1], b[1]], [a[2], b[2]], c=color, lw=1.2, alpha=0.9)
+        if show_labels:
+            label = f"{ch['id']}: {ch['type']} - {ch.get('label') or '?'}"
+            ax.text(lo[0], lo[1], hi[2] + 0.02 * max(radius, 0.3), label,
+                    color=LABEL_COLOR, fontsize=8, zorder=10, clip_on=False,
+                    bbox=dict(facecolor=color, alpha=0.55, edgecolor="none", pad=1.5))
+
+    ax.set_box_aspect((1, 1, 1))
+    ax.set_xlim(focus[0] - radius, focus[0] + radius)
+    ax.set_ylim(focus[1] - radius, focus[1] + radius)
+    ax.set_zlim(focus[2] - radius, focus[2] + radius)
+    ax.view_init(elev=elev, azim=azimuth)
+    ax.set_axis_off()
+    ax.grid(False)
+
+
+def legend_handles(change_pts: list[dict]):
+    """Proxy artists for the figure-level legend (outside the 3D panel)."""
+    from matplotlib.lines import Line2D
+    handles = [Line2D([], [], marker="o", ls="", color=COLORS[t], label=t)
+               for t in ("removed", "added", "moved", "replaced")]
+    if any(not c["verified"] for c in change_pts):
+        handles.append(Line2D([], [], marker="o", ls="", color=UNVERIFIED_COLOR,
+                              label="unverified"))
+    return handles
+
+
+def table_up_rotation(bg_pts: np.ndarray) -> np.ndarray:
+    """Rotation aligning the dominant (table) plane normal with +z.
+
+    The camera then orbits with the table's own up axis as 'up', which makes
+    the scene read like the real tabletop instead of an arbitrary model frame.
+    """
+    from src.tabletop import fit_dominant_plane
+    sub = bg_pts[:: max(1, len(bg_pts) // 50000)] if len(bg_pts) else bg_pts
+    coef = fit_dominant_plane(sub)
+    n = np.array([-coef[0], -coef[1], 1.0])
+    n /= np.linalg.norm(n)
+    z = np.array([0.0, 0.0, 1.0])
+    v = np.cross(n, z)
+    s = float(np.linalg.norm(v))
+    c = float(n @ z)
+    if s < 1e-8:
+        return np.eye(3) if c > 0 else np.diag([1.0, -1.0, -1.0])
+    k = np.array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0.0]])
+    return np.eye(3) + k + k @ k * ((1 - c) / s ** 2)
+
+
+def load_evidence_frame(cfg: dict, file: str | None):
+    """Load an evidence JPEG (relative to cache/frames) for the side panels."""
+    if not file:
+        return None
+    from PIL import Image
+    path = repo_path(cfg["paths"]["cache_dir"]) / "frames" / file
+    if not path.exists():
+        return None
+    return np.asarray(Image.open(path).convert("RGB"))
+
+
+# ---------------------------------------------------------------------------
 
 
 def main() -> int:
@@ -116,15 +265,51 @@ def main() -> int:
     args = parser.parse_args()
     cfg = apply_overrides(load_config(args.config), args)
 
+    vcfg = cfg["visualize"]
     out = out_dir(cfg)
-    bg_pts, bg_rgb, change_pts = scene_arrays(cfg)
-    log.info("background: %d points, %d change groups", len(bg_pts), len(change_pts))
+    bg_pts, bg_rgb, bg_tags, change_pts = scene_arrays(cfg)
+
+    # table-plane-up frame: rotate everything so the dominant (table) normal
+    # is +z; the orbit then has the table's own up axis as "up"
+    rot = table_up_rotation(bg_pts)
+    bg_pts = bg_pts @ rot.T
+    for c in change_pts:
+        c["points"] = c["points"] @ rot.T
+        ch = c["change"]
+        for key in ("centroid", "from", "to"):
+            if ch.get(key) is not None:
+                ch[key] = (np.asarray(ch[key], dtype=float) @ rot.T).round(4).tolist()
+        if ch.get("bbox_min") is not None:
+            # rotate the AABB properly: all 8 corners, then min/max - rotating
+            # just the two corners swaps the component-wise order (negative
+            # extents broke the viewer's Box3Helper)
+            lo, hi = np.asarray(ch["bbox_min"], float), np.asarray(ch["bbox_max"], float)
+            corners = np.array([[x, y, z] for x in (lo[0], hi[0])
+                                for y in (lo[1], hi[1]) for z in (lo[2], hi[2])]) @ rot.T
+            ch["bbox_min"] = corners.min(axis=0).round(4).tolist()
+            ch["bbox_max"] = corners.max(axis=0).round(4).tolist()
+
+    focus, radius = change_framing(change_pts, bg_pts)
+    # the viewer embeds the FULL rotated cloud (its "full scene" toggle and
+    # its own crop-by-drawRange need the whole geometry)
+    bg_full = (bg_pts, bg_rgb, bg_tags)
+
+    # focused display crop for the renders: ~0.4 m around the changed region
+    crop_r = float(vcfg.get("display_crop_radius", 0.4))
+    if any(c["verified"] for c in change_pts):
+        d = np.linalg.norm(bg_pts - focus, axis=1)
+        keep = d <= crop_r
+        log.info("display crop: keeping %d/%d points within %.2f m of the changes",
+                 int(keep.sum()), len(bg_pts), crop_r)
+        bg_pts, bg_rgb, bg_tags = bg_pts[keep], bg_rgb[keep], bg_tags[keep]
+    log.info("framing on %s (radius %.2f m, table-up)", np.round(focus, 2).tolist(), radius)
 
     # ---- PLY ------------------------------------------------------------
     all_pts = [bg_pts] + [c["points"] for c in change_pts]
     all_rgb = [(bg_rgb / 255.0).astype(np.float32)] + [c["colors"] for c in change_pts]
-    pts = np.concatenate(all_pts)
-    cols = (np.concatenate(all_rgb) * 255).astype(np.uint8)
+    pts = np.concatenate(all_pts) if all_pts else np.zeros((0, 3), np.float32)
+    cols = (np.concatenate(all_rgb) * 255).astype(np.uint8) if all_rgb else \
+        np.zeros((0, 3), np.uint8)
     write_ply(out / "scene.ply", pts, cols)
     log.info("wrote %s (%d points)", out / "scene.ply", len(pts))
 
@@ -132,94 +317,135 @@ def main() -> int:
         log.warning("empty scene - nothing to render")
         return 0
 
-    scene_center = bg_pts.mean(axis=0) if len(bg_pts) else pts.mean(axis=0)
-    scene_radius = float(np.linalg.norm(bg_pts - scene_center, axis=1).max()) if len(bg_pts) else 1.0
+    splat = float(vcfg.get("splat_size", 14))
+    elev = float(vcfg.get("orbit_elev", 22))
 
-    def draw_scene(ax, highlight: dict | None = None, azimuth: float = -60):
-        ax.scatter(bg_pts[:, 0], bg_pts[:, 1], bg_pts[:, 2], s=1,
-                   c=bg_rgb / 255.0, linewidths=0, depthshade=False)
-        for c in change_pts:
-            if highlight is not None and c["change"]["id"] != highlight["change"]["id"]:
-                continue
-            p = c["points"]
-            if len(p):
-                ax.scatter(p[:, 0], p[:, 1], p[:, 2], s=6, c=c["colors"], linewidths=0)
-            ch = c["change"]
-            if ch["type"] == "moved":
-                f, t = np.array(ch["from"]), np.array(ch["to"])
-                ax.plot([f[0], t[0]], [f[1], t[1]], [f[2], t[2]], c=COLORS["moved"], lw=2)
-        ax.set_box_aspect((1, 1, 1))
-        r = scene_radius * 1.05
-        ax.set_xlim(scene_center[0] - r, scene_center[0] + r)
-        ax.set_ylim(scene_center[1] - r, scene_center[1] + r)
-        ax.set_zlim(scene_center[2] - r, scene_center[2] + r)
-        ax.view_init(elev=22, azim=azimuth)
-        ax.set_axis_off()
-
-    # ---- per-change screenshots ----------------------------------------
+    # ---- per-change composites: before | after | 3D ----------------------
     changes_dir = out / "changes"
     changes_dir.mkdir(parents=True, exist_ok=True)
+    for stale in changes_dir.glob("change_*.png"):
+        stale.unlink()
+    crops = {}
+    crops_path = repo_path(cfg["paths"]["cache_dir"]) / "semantics" / "crops.json"
+    if crops_path.exists():
+        crops = read_json(crops_path)
     for c in change_pts:
         ch = c["change"]
-        p = c["points"]
-        if ch["type"] == "moved":
-            f, t = np.array(ch["from"]), np.array(ch["to"])
-            focus = (f + t) / 2
-            span = np.linalg.norm(t - f)
-            reach = np.linalg.norm(p - focus, axis=1).max() if len(p) else 0.0
-            radius = max(span * 0.75 + reach, 0.35)
-        else:
-            focus = np.array(ch["centroid"])
-            radius = max((np.linalg.norm(p - focus, axis=1).max() if len(p) else 0.0) * 2.0, 0.35)
-        near = np.linalg.norm(bg_pts - focus, axis=1) < radius * 2 if len(bg_pts) else np.zeros(0, bool)
-        fig = plt.figure(figsize=(7, 6), dpi=110)
-        ax = fig.add_subplot(111, projection="3d")
-        if near.any():
-            q = bg_pts[near]
-            ax.scatter(q[:, 0], q[:, 1], q[:, 2], s=1, c=bg_rgb[near] / 255.0,
-                       linewidths=0, depthshade=False)
-        if len(p):
-            ax.scatter(p[:, 0], p[:, 1], p[:, 2], s=8, c=c["colors"],
-                       linewidths=0, depthshade=False)
-        if ch["type"] == "moved":
-            f, t = np.array(ch["from"]), np.array(ch["to"])
-            ax.plot([f[0], t[0]], [f[1], t[1]], [f[2], t[2]], c=COLORS["moved"], lw=2.5)
-        ax.set_box_aspect((1, 1, 1))
-        ax.set_xlim(focus[0] - radius, focus[0] + radius)
-        ax.set_ylim(focus[1] - radius, focus[1] + radius)
-        ax.set_zlim(focus[2] - radius, focus[2] + radius)
-        ax.view_init(elev=22, azim=-60)
-        ax.set_axis_off()
+        ci = crops.get(str(ch["cluster_ids"][0]), {})
+        before = load_evidence_frame(cfg, ci.get("frame"))
+        after = load_evidence_frame(cfg, ci.get("frame_other"))
+        # two rows: [before | after] on top (larger), a large 3D panel below
+        fig = plt.figure(figsize=(12, 10.5), dpi=110, facecolor=BG_COLOR)
+        gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 1.5],
+                              hspace=0.06, wspace=0.02)
+        for k, (img, title) in enumerate(((before, "before (video A)"),
+                                          (after, "after (video B)"))):
+            ax = fig.add_subplot(gs[0, k])
+            ax.set_facecolor(BG_COLOR)
+            if img is not None:
+                ax.imshow(img)
+            ax.set_title(title, color=LABEL_COLOR, fontsize=11)
+            ax.set_xticks([]); ax.set_yticks([])
+            for sp in ax.spines.values():
+                sp.set_color("#333")
+        ax3 = fig.add_subplot(gs[1, :], projection="3d")
+        ch_focus = np.asarray(ch["centroid"], dtype=float)
+        ch_radius = max(float(np.linalg.norm(
+            np.asarray(ch["bbox_max"]) - np.asarray(ch["bbox_min"]))) * 1.4, 0.3)
+        draw_3d(ax3, bg_pts, bg_rgb, [c], ch_focus, ch_radius, -52, elev, splat)
+        fig.legend(handles=legend_handles([c]), loc="lower center",
+                   ncol=5, framealpha=0.15, labelcolor=LABEL_COLOR, fontsize=9)
         title = f"{ch['id']:02d} - {ch['type'].upper()}"
-        if not ch.get("verified", True):
+        if not c["verified"]:
             title += " (UNVERIFIED)"
         if ch.get("label"):
             title += f": {ch['label']}"
-        ax.set_title(title, fontsize=11)
-        if ch.get("description"):
-            fig.text(0.5, 0.02, ch["description"], ha="center", fontsize=9, wrap=True)
+        fig.suptitle(title + (f"   |   {ch['description']}" if ch.get("description") else ""),
+                     color=LABEL_COLOR, fontsize=12)
+        fig.subplots_adjust(top=0.92, bottom=0.07, left=0.02, right=0.98)
         path = changes_dir / f"change_{ch['id']:03d}.png"
-        fig.savefig(path, bbox_inches="tight")
+        fig.savefig(path, facecolor=BG_COLOR)
         plt.close(fig)
         log.info("wrote %s", path)
+    # defensive: only screenshots whose id is in the CURRENT change list may
+    # remain (re-runs must never leave files the report does not reference)
+    valid_ids = {c["change"]["id"] for c in change_pts}
+    for png in changes_dir.glob("change_*.png"):
+        try:
+            cid = int(png.stem.split("_")[1])
+        except (IndexError, ValueError):
+            continue
+        if cid not in valid_ids:
+            png.unlink()
 
-    # ---- rotating GIF ---------------------------------------------------
+    if vcfg.get("export_viewer", False):
+        try:
+            from src.viewer import write_viewer
+            write_viewer(cfg, out, bg_full[0], bg_full[1], bg_full[2], change_pts,
+                         focus=focus, radius=radius)
+        except Exception as exc:  # noqa: BLE001
+            log.warning("viewer export skipped: %s", exc)
+
+    # ---- scene GIF: rendered from viewer.html via headless Chrome ---------
     gif_path = out / "change.gif"
-    fig = plt.figure(figsize=(6, 6), dpi=80)
-    ax = fig.add_subplot(111, projection="3d")
-    frames = []
-    n = int(cfg["visualize"]["gif_frames"])
-    for k in range(n):
-        ax.clear()
-        draw_scene(ax, azimuth=-60 + 360 * k / n)
-        fig.canvas.draw()
-        frames.append(np.asarray(fig.canvas.buffer_rgba()).copy())
-    plt.close(fig)
-    from PIL import Image
-    imgs = [Image.fromarray(f) for f in frames]
-    imgs[0].save(gif_path, save_all=True, append_images=imgs[1:], duration=120, loop=0)
-    log.info("wrote %s (%d frames)", gif_path, n)
+    headline = next((c for c in change_pts if c["verified"]),
+                    change_pts[0] if change_pts else None)
+    ci = crops.get(str(headline["change"]["cluster_ids"][0]), {}) if headline else {}
+    before_file, after_file = ci.get("frame"), ci.get("frame_other")
 
+    def _abs(file):
+        return str(repo_path(cfg["paths"]["cache_dir"]) / "frames" / file) if file else None
+
+    made = None
+    if vcfg.get("chrome_gif", True):
+        try:
+            from src.render_gif import render_gif
+            made = render_gif(cfg, out, _abs(before_file), _abs(after_file),
+                              frames=int(vcfg["gif_frames"]))
+        except Exception as exc:  # noqa: BLE001
+            log.warning("chrome GIF failed (%s) - falling back to matplotlib", exc)
+    if made is None:
+        before = load_evidence_frame(cfg, before_file)
+        after = load_evidence_frame(cfg, after_file)
+        fig = plt.figure(figsize=(12, 10.5), dpi=80, facecolor=BG_COLOR)
+        frames = []
+        n = int(vcfg["gif_frames"])
+        for k in range(n):
+            fig.clf()
+            gs = fig.add_gridspec(2, 2, height_ratios=[1.0, 1.5],
+                                  hspace=0.06, wspace=0.02)
+            for j, (img, title) in enumerate(((before, "before (video A)"),
+                                              (after, "after (video B)"))):
+                ax = fig.add_subplot(gs[0, j])
+                ax.set_facecolor(BG_COLOR)
+                if img is not None:
+                    ax.imshow(img)
+                ax.set_title(title, color=LABEL_COLOR, fontsize=11)
+                ax.set_xticks([]); ax.set_yticks([])
+                for sp in ax.spines.values():
+                    sp.set_color("#333")
+            ax3 = fig.add_subplot(gs[1, :], projection="3d")
+            draw_3d(ax3, bg_pts, bg_rgb, change_pts, focus, radius,
+                    -52 + 360 * k / n, elev, splat)
+            fig.legend(handles=legend_handles(change_pts), loc="lower center",
+                       ncol=5, framealpha=0.15, labelcolor=LABEL_COLOR, fontsize=9)
+            fig.subplots_adjust(top=0.94, bottom=0.07, left=0.02, right=0.98)
+            fig.canvas.draw()
+            frames.append(np.asarray(fig.canvas.buffer_rgba()).copy())
+        plt.close(fig)
+        from PIL import Image
+        imgs = [Image.fromarray(f) for f in frames]
+        imgs[0].save(gif_path, save_all=True, append_images=imgs[1:],
+                     duration=150, loop=0)
+        log.info("wrote %s (%d frames, matplotlib fallback)", gif_path, n)
+
+    # ---- optional mesh + interactive viewer ------------------------------
+    if vcfg.get("export_mesh", False):
+        try:
+            from src.mesh import export_mesh
+            export_mesh(cfg, out)
+        except Exception as exc:  # noqa: BLE001 - never fail the stage over extras
+            log.warning("mesh export skipped: %s", exc)
     if args.view:
         try:
             import open3d as o3d

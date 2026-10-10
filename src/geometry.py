@@ -98,28 +98,55 @@ def sample_depth(depth_map: np.ndarray, uv: np.ndarray) -> tuple[np.ndarray, np.
     return out, ok
 
 
-def model_to_original_transform(orig_w: int, orig_h: int, target: int = MODEL_TARGET) -> dict:
-    """Replicates vggt.utils.load_fn.load_and_preprocess_images(mode='crop'):
-    resize so width == target, height rounded to a multiple of 14, center-crop
-    height to <= target. Used to map model-space crops back to the JPEG."""
-    scale_w = target / orig_w
-    new_h = round(orig_h * scale_w / 14) * 14
+def model_to_original_transform(orig_w: int, orig_h: int, target: int = MODEL_TARGET,
+                                mode: str = "crop") -> dict:
+    """Replicates the model preprocessing so model-space coordinates can be
+    mapped back to the JPEG (and padding can be masked).
+
+    ``mode="crop"`` (VGGT default): resize so width == target, height rounded
+    to a multiple of 14, then center-crop height to <= target.  Portrait frames
+    lose the top/bottom (44% of a 480x854 frame).
+
+    ``mode="pad"``: the largest side becomes ``target``, the smaller side is
+    padded with white to a square.  The whole frame is seen; the padded border
+    is recorded so the reconstruction can zero its confidence there.
+    """
+    scale = target / max(orig_w, orig_h) if mode == "pad" else target / orig_w
+    if mode == "pad":
+        new_w = round(orig_w * scale / 14) * 14
+        new_h = round(orig_h * scale / 14) * 14
+        pad_left = (target - new_w) // 2
+        pad_top = (target - new_h) // 2
+        return {
+            "orig_w": int(orig_w), "orig_h": int(orig_h),
+            "scale_w": round(scale, 6), "scale_h": round(scale, 6),
+            "crop_top": int(pad_top), "crop_left": int(pad_left),
+            "model_w": int(target), "model_h": int(target),
+            "pad_w": int(new_w), "pad_h": int(new_h), "pad_mode": True,
+        }
+    new_h = round(orig_h * scale / 14) * 14
     scale_h = new_h / orig_h
     crop_top = max(0, (new_h - target) // 2)
     return {
         "orig_w": int(orig_w), "orig_h": int(orig_h),
-        "scale_w": round(scale_w, 6), "scale_h": round(scale_h, 6),
-        "crop_top": int(crop_top),
+        "scale_w": round(scale, 6), "scale_h": round(scale_h, 6),
+        "crop_top": int(crop_top), "crop_left": 0,
         "model_w": int(target), "model_h": int(min(new_h, target)),
+        "pad_mode": False,
     }
 
 
 def model_bbox_to_original(bbox_xyxy: tuple[float, float, float, float],
                            tr: dict[str, Any]) -> tuple[int, int, int, int]:
-    """Model-space pixel bbox -> original-frame pixel bbox (clamped)."""
+    """Model-space pixel bbox -> original-frame pixel bbox (clamped).
+
+    Works for both backends: VGGT's crop mode has crop_left == 0; MapAnything
+    can crop in both axes (see src/ma_contract.transform_for).
+    """
     x1, y1, x2, y2 = bbox_xyxy
-    ox1 = x1 / tr["scale_w"]
-    ox2 = x2 / tr["scale_w"]
+    crop_left = tr.get("crop_left", 0)
+    ox1 = (x1 + crop_left) / tr["scale_w"]
+    ox2 = (x2 + crop_left) / tr["scale_w"]
     oy1 = (y1 + tr["crop_top"]) / tr["scale_h"]
     oy2 = (y2 + tr["crop_top"]) / tr["scale_h"]
     ox1 = int(max(0, min(ox1, tr["orig_w"] - 1)))

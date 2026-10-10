@@ -1,0 +1,1028 @@
+{
+  "meta": {
+    "video_a": "/home/jiit_992401210050/Desktop/Humanoid/data/scene3/a.mp4",
+    "video_b": "/home/jiit_992401210050/Desktop/Humanoid/data/scene3/b.mp4",
+    "backend": "vggt",
+    "model": "/home/jiit_992401210050/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-10T20:35:54Z",
+    "config_hash": "2b487e1c26d7",
+    "num_frames": 30,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "table leg",
+      "description": "The metal table leg was removed from the surface.",
+      "centroid": [
+        -0.1632,
+        0.2636,
+        0.8471
+      ],
+      "bbox": [
+        -0.1749,
+        0.2451,
+        0.8188,
+        -0.1454,
+        0.2798,
+        0.8745
+      ],
+      "from": [
+        -0.1632,
+        0.2636,
+        0.8471
+      ],
+      "to": null,
+      "confidence": 0.35,
+      "cluster_ids": [
+        3
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    }
+  ],
+  "unverified_changes": [
+    {
+      "id": 2,
+      "type": "removed",
+      "label": "cracked floor",
+      "description": "a white tiled floor with visible cracks running across the surface.",
+      "centroid": [
+        -0.7038,
+        -0.0153,
+        1.1888
+      ],
+      "bbox": [
+        -0.8745,
+        -0.1595,
+        1.0605,
+        -0.5854,
+        0.075,
+        1.3232
+      ],
+      "from": [
+        -0.7038,
+        -0.0153,
+        1.1888
+      ],
+      "to": null,
+      "confidence": 0.3,
+      "cluster_ids": [
+        30
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 3,
+      "type": "removed",
+      "label": "wall corner",
+      "description": "a close-up of an indoor wall corner with a textured surface and a dark vertical edge.",
+      "centroid": [
+        -0.7882,
+        -0.5102,
+        1.2725
+      ],
+      "bbox": [
+        -0.7998,
+        -0.5249,
+        1.2471,
+        -0.7803,
+        -0.4951,
+        1.2988
+      ],
+      "from": [
+        -0.7882,
+        -0.5102,
+        1.2725
+      ],
+      "to": null,
+      "confidence": 0.03,
+      "cluster_ids": [
+        31
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00010.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 4,
+      "type": "removed",
+      "label": "window frame",
+      "description": "a close-up of a dark window frame with a white wall beside it, showing part of a glass pane.",
+      "centroid": [
+        -0.6901,
+        -0.396,
+        1.2908
+      ],
+      "bbox": [
+        -0.7549,
+        -0.5249,
+        1.1348,
+        -0.6304,
+        -0.2451,
+        1.3789
+      ],
+      "from": [
+        -0.6901,
+        -0.396,
+        1.2908
+      ],
+      "to": null,
+      "confidence": 0.3,
+      "cluster_ids": [
+        32
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 5,
+      "type": "removed",
+      "label": "metal chair leg",
+      "description": "a curved metal chair leg with a shiny surface, partially visible next to a blue curtain and dark wall.",
+      "centroid": [
+        -0.58,
+        -0.3341,
+        1.3192
+      ],
+      "bbox": [
+        -0.6196,
+        -0.3899,
+        1.0439,
+        -0.5352,
+        -0.2351,
+        1.3594
+      ],
+      "from": [
+        -0.58,
+        -0.3341,
+        1.3192
+      ],
+      "to": null,
+      "confidence": 0.3,
+      "cluster_ids": [
+        33
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 6,
+      "type": "removed",
+      "label": "marble surface",
+      "description": "a close-up of a white marble surface with gray veining patterns.",
+      "centroid": [
+        -0.5811,
+        0.0092,
+        1.172
+      ],
+      "bbox": [
+        -0.5947,
+        0.0001,
+        1.1504,
+        -0.5601,
+        0.015,
+        1.1816
+      ],
+      "from": [
+        -0.5811,
+        0.0092,
+        1.172
+      ],
+      "to": null,
+      "confidence": 0.03,
+      "cluster_ids": [
+        34
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 7,
+      "type": "removed",
+      "label": "cracked surface",
+      "description": "a close-up of a white surface with dark, irregular cracks resembling marble or dried paint.",
+      "centroid": [
+        -0.5403,
+        0.0662,
+        1.1041
+      ],
+      "bbox": [
+        -0.5649,
+        0.055,
+        1.085,
+        -0.5151,
+        0.08,
+        1.124
+      ],
+      "from": [
+        -0.5403,
+        0.0662,
+        1.1041
+      ],
+      "to": null,
+      "confidence": 0.05,
+      "cluster_ids": [
+        35
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 8,
+      "type": "removed",
+      "label": "cracked surface",
+      "description": "a close-up of a white surface with dark, irregular cracks resembling marble or dried paint.",
+      "centroid": [
+        -0.4786,
+        0.0828,
+        1.0847
+      ],
+      "bbox": [
+        -0.5146,
+        0.07,
+        1.0527,
+        -0.4351,
+        0.095,
+        1.1094
+      ],
+      "from": [
+        -0.4786,
+        0.0828,
+        1.0847
+      ],
+      "to": null,
+      "confidence": 0.1,
+      "cluster_ids": [
+        36
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 9,
+      "type": "removed",
+      "label": "metal chair back",
+      "description": "a curved, shiny metal chair back with a dark blue curtain in the background.",
+      "centroid": [
+        -0.4969,
+        -0.3517,
+        1.3374
+      ],
+      "bbox": [
+        -0.5098,
+        -0.365,
+        1.1289,
+        -0.4807,
+        -0.3208,
+        1.3564
+      ],
+      "from": [
+        -0.4969,
+        -0.3517,
+        1.3374
+      ],
+      "to": null,
+      "confidence": 0.06,
+      "cluster_ids": [
+        37
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00020.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 10,
+      "type": "removed",
+      "label": "metal chair back",
+      "description": "a curved, shiny metal chair back with a decorative top, positioned near a blue curtain and wooden surface.",
+      "centroid": [
+        -0.4313,
+        -0.3669,
+        1.3207
+      ],
+      "bbox": [
+        -0.45,
+        -0.3899,
+        1.2334,
+        -0.405,
+        -0.3301,
+        1.3486
+      ],
+      "from": [
+        -0.4313,
+        -0.3669,
+        1.3207
+      ],
+      "to": null,
+      "confidence": 0.12,
+      "cluster_ids": [
+        38
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 11,
+      "type": "removed",
+      "label": "metal railing",
+      "description": "a curved, shiny metal railing next to a wooden surface and dark curtain.",
+      "centroid": [
+        -0.3476,
+        -0.3954,
+        1.2938
+      ],
+      "bbox": [
+        -0.365,
+        -0.4199,
+        1.2324,
+        -0.3206,
+        -0.3652,
+        1.3271
+      ],
+      "from": [
+        -0.3476,
+        -0.3954,
+        1.2938
+      ],
+      "to": null,
+      "confidence": 0.09,
+      "cluster_ids": [
+        39
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 12,
+      "type": "removed",
+      "label": "metal table leg",
+      "description": "A shiny metal table leg standing on a tiled floor with visible cracks.",
+      "centroid": [
+        -0.2633,
+        0.199,
+        0.9356
+      ],
+      "bbox": [
+        -0.2749,
+        0.1801,
+        0.9238,
+        -0.2502,
+        0.215,
+        0.9648
+      ],
+      "from": [
+        -0.2633,
+        0.199,
+        0.9356
+      ],
+      "to": null,
+      "confidence": 0.03,
+      "cluster_ids": [
+        40
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 13,
+      "type": "removed",
+      "label": "metal chair",
+      "description": "a chrome-finished metal chair with curved backrest and armrests, partially visible next to a wooden table.",
+      "centroid": [
+        -0.2404,
+        -0.1906,
+        0.9883
+      ],
+      "bbox": [
+        -0.2649,
+        -0.2395,
+        0.8877,
+        -0.2301,
+        -0.1356,
+        1.2041
+      ],
+      "from": [
+        -0.2404,
+        -0.1906,
+        0.9883
+      ],
+      "to": null,
+      "confidence": 0.16,
+      "cluster_ids": [
+        41
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00020.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 14,
+      "type": "removed",
+      "label": "wooden table corner",
+      "description": "a close-up of the corner of a wooden table with a dark finish, partially visible next to a blue curtain.",
+      "centroid": [
+        -0.2385,
+        -0.2825,
+        0.9703
+      ],
+      "bbox": [
+        -0.2539,
+        -0.2996,
+        0.9453,
+        -0.2301,
+        -0.2705,
+        1.002
+      ],
+      "from": [
+        -0.2385,
+        -0.2825,
+        0.9703
+      ],
+      "to": null,
+      "confidence": 0.02,
+      "cluster_ids": [
+        42
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 15,
+      "type": "removed",
+      "label": "apple on table",
+      "description": "A red apple sits on a wooden table in a dimly lit indoor setting.",
+      "centroid": [
+        -0.2334,
+        -0.4206,
+        1.1858
+      ],
+      "bbox": [
+        -0.2443,
+        -0.4348,
+        1.1387,
+        -0.2253,
+        -0.4009,
+        1.2197
+      ],
+      "from": [
+        -0.2334,
+        -0.4206,
+        1.1858
+      ],
+      "to": null,
+      "confidence": 0.03,
+      "cluster_ids": [
+        43
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00010.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 16,
+      "type": "removed",
+      "label": "bar stool",
+      "description": "A black, round, leather-upholstered bar stool with a chrome metal frame and legs, placed on a tiled floor.",
+      "centroid": [
+        -0.0958,
+        0.01,
+        0.7993
+      ],
+      "bbox": [
+        -0.225,
+        -0.0641,
+        0.7261,
+        -0.0151,
+        0.085,
+        1.1133
+      ],
+      "from": [
+        -0.0958,
+        0.01,
+        0.7993
+      ],
+      "to": null,
+      "confidence": 0.3,
+      "cluster_ids": [
+        44
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00070.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 17,
+      "type": "removed",
+      "label": "bar stool",
+      "description": "a metal bar stool with a black seat and chrome legs, partially visible in a cropped indoor setting.",
+      "centroid": [
+        -0.1353,
+        0.1014,
+        0.7659
+      ],
+      "bbox": [
+        -0.1498,
+        0.0856,
+        0.7207,
+        -0.1251,
+        0.115,
+        1.0264
+      ],
+      "from": [
+        -0.1353,
+        0.1014,
+        0.7659
+      ],
+      "to": null,
+      "confidence": 0.03,
+      "cluster_ids": [
+        46
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00020.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 18,
+      "type": "removed",
+      "label": "metal chair leg",
+      "description": "A shiny, cylindrical metal leg of a chair standing on a cracked white surface.",
+      "centroid": [
+        -0.0247,
+        0.1691,
+        0.9335
+      ],
+      "bbox": [
+        -0.0349,
+        0.15,
+        0.9033,
+        -0.0162,
+        0.1942,
+        0.9644
+      ],
+      "from": [
+        -0.0247,
+        0.1691,
+        0.9335
+      ],
+      "to": null,
+      "confidence": 0.04,
+      "cluster_ids": [
+        47
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 19,
+      "type": "removed",
+      "label": "metal chair leg",
+      "description": "A close-up of a metal chair leg on a white floor with visible cracks and a black cable nearby.",
+      "centroid": [
+        0.1324,
+        0.2651,
+        0.8148
+      ],
+      "bbox": [
+        0.1003,
+        0.2201,
+        0.7231,
+        0.1492,
+        0.2898,
+        0.8818
+      ],
+      "from": [
+        0.1324,
+        0.2651,
+        0.8148
+      ],
+      "to": null,
+      "confidence": 0.11,
+      "cluster_ids": [
+        48
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 20,
+      "type": "removed",
+      "label": "stacked metal bowls",
+      "description": "a close-up of shiny, reflective metal bowls stacked on top of each other.",
+      "centroid": [
+        0.278,
+        -0.0093,
+        0.7938
+      ],
+      "bbox": [
+        0.2551,
+        -0.0199,
+        0.6772,
+        0.3049,
+        0.0033,
+        0.9824
+      ],
+      "from": [
+        0.278,
+        -0.0093,
+        0.7938
+      ],
+      "to": null,
+      "confidence": 0.06,
+      "cluster_ids": [
+        50
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00080.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 21,
+      "type": "removed",
+      "label": "metal bowl",
+      "description": "a shiny, curved edge of a metal bowl reflecting light.",
+      "centroid": [
+        0.3288,
+        -0.0669,
+        0.8897
+      ],
+      "bbox": [
+        0.3,
+        -0.085,
+        0.6948,
+        0.355,
+        -0.04,
+        1.0029
+      ],
+      "from": [
+        0.3288,
+        -0.0669,
+        0.8897
+      ],
+      "to": null,
+      "confidence": 0.11,
+      "cluster_ids": [
+        51
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00090.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 22,
+      "type": "removed",
+      "label": "metal chair frame",
+      "description": "a close-up of a shiny chrome chair frame with curved armrests and a hinge mechanism.",
+      "centroid": [
+        0.3823,
+        -0.0772,
+        0.86
+      ],
+      "bbox": [
+        0.3572,
+        -0.09,
+        0.6899,
+        0.4048,
+        -0.0605,
+        0.9917
+      ],
+      "from": [
+        0.3823,
+        -0.0772,
+        0.86
+      ],
+      "to": null,
+      "confidence": 0.06,
+      "cluster_ids": [
+        52
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00080.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 23,
+      "type": "removed",
+      "label": "doorframe",
+      "description": "a vertical edge of a door or wall with a visible seam and adjacent flooring.",
+      "centroid": [
+        0.5136,
+        0.2547,
+        0.7448
+      ],
+      "bbox": [
+        0.4902,
+        0.2251,
+        0.6382,
+        0.5249,
+        0.2993,
+        0.79
+      ],
+      "from": [
+        0.5136,
+        0.2547,
+        0.7448
+      ],
+      "to": null,
+      "confidence": 0.08,
+      "cluster_ids": [
+        53
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00030.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 24,
+      "type": "added",
+      "label": "wooden table leg",
+      "description": "A close-up of a wooden table leg with a visible grain pattern and a metal tabletop above it.",
+      "centroid": [
+        -0.2155,
+        -0.2432,
+        0.9533
+      ],
+      "bbox": [
+        -0.2295,
+        -0.2649,
+        0.9141,
+        -0.2003,
+        -0.2201,
+        1.0156
+      ],
+      "from": null,
+      "to": [
+        -0.2155,
+        -0.2432,
+        0.9533
+      ],
+      "confidence": 0.08,
+      "cluster_ids": [
+        55
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 25,
+      "type": "added",
+      "label": "dark vertical object",
+      "description": "a blurry, dark, vertical object with a light-colored edge, possibly a door frame or furniture leg.",
+      "centroid": [
+        -0.1966,
+        -0.5084,
+        1.1403
+      ],
+      "bbox": [
+        -0.2242,
+        -0.5249,
+        1.0781,
+        -0.1804,
+        -0.4851,
+        1.2158
+      ],
+      "from": null,
+      "to": [
+        -0.1966,
+        -0.5084,
+        1.1403
+      ],
+      "confidence": 0.07,
+      "cluster_ids": [
+        56
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00140.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 26,
+      "type": "added",
+      "label": "cracked wall",
+      "description": "a white wall with multiple dark cracks spreading across its surface.",
+      "centroid": [
+        -0.1773,
+        -0.2469,
+        1.1731
+      ],
+      "bbox": [
+        -0.1949,
+        -0.2598,
+        0.9946,
+        -0.165,
+        -0.2362,
+        1.2158
+      ],
+      "from": null,
+      "to": [
+        -0.1773,
+        -0.2469,
+        1.1731
+      ],
+      "confidence": 0.03,
+      "cluster_ids": [
+        57
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 27,
+      "type": "added",
+      "label": "metal chair leg",
+      "description": "a close-up of a metal chair leg with a circular base, casting a shadow on a light-colored floor.",
+      "centroid": [
+        0.1455,
+        0.3159,
+        0.8122
+      ],
+      "bbox": [
+        0.13,
+        0.3052,
+        0.771,
+        0.1599,
+        0.325,
+        0.8428
+      ],
+      "from": null,
+      "to": [
+        0.1455,
+        0.3159,
+        0.8122
+      ],
+      "confidence": 0.04,
+      "cluster_ids": [
+        60
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 28,
+      "type": "added",
+      "label": "door frame",
+      "description": "a close-up of a wooden door frame with a light-colored wall and a metal threshold below.",
+      "centroid": [
+        0.4093,
+        0.4991,
+        0.4778
+      ],
+      "bbox": [
+        0.3652,
+        0.415,
+        0.3376,
+        0.45,
+        0.5747,
+        0.6802
+      ],
+      "from": null,
+      "to": [
+        0.4093,
+        0.4991,
+        0.4778
+      ],
+      "confidence": 0.3,
+      "cluster_ids": [
+        62
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    }
+  ]
+}
