@@ -330,8 +330,13 @@ def main() -> int:
                         help="crops only; no verification, labels or matching")
     parser.add_argument("--limit_clusters", type=int, default=None,
                         help="debug: only process the first N clusters")
+    parser.add_argument("--min_change_score", type=float, default=None,
+                        help="override semantics.min_change_score (per-backend "
+                             "calibration; see docs/results.md backend comparison)")
     args = parser.parse_args()
     cfg = apply_overrides(load_config(args.config), args)
+    if args.min_change_score is not None:
+        cfg["semantics"]["min_change_score"] = args.min_change_score
 
     sem_dir = cache_dir(cfg, "semantics")
     matches_path = sem_dir / "matches.json"
