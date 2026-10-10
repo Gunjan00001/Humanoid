@@ -39,25 +39,27 @@ huggingface-cli download <model-id>     # fill in the exact IDs below
 
 ## Exact identifiers and licenses — CHECKLIST
 
-> **Status: not yet verified.** Fill every cell in during Phase 1 and before any
-> public release. Some reconstruction checkpoints are known to be
-> **non-commercial**; if the challenge requires commercial-friendly licensing,
-> the affected backend must be swapped or the limitation stated prominently.
+> **Status: verified 2026-10-10** via the Hugging Face / GitHub APIs. Key
+> finding: **VGGT (the primary reconstruction model) is CC-BY-NC-4.0 —
+> non-commercial.** The challenge submission is fine, but any commercial use
+> would need a swap to a permissive backend (e.g. COLMAP/hloc) or a license
+> from Meta. This is stated prominently in the README.
 
-| Model | Exact ID / repo (fill in) | Version / commit | License (fill in) | Commercial use OK? | Verified by / date |
+| Model | Exact ID / repo | Version / commit | License | Commercial use OK? | Verified by / date |
 |---|---|---|---|---|---|
-| VGGT | TODO | TODO | TODO — check before use | TODO | TODO |
-| MASt3R | TODO | TODO | TODO — commonly non-commercial | TODO | TODO |
-| COLMAP / hloc | TODO | TODO | TODO | TODO | TODO |
-| Qwen3-VL-32B-Instruct | TODO | TODO | TODO | TODO | TODO |
-| Qwen3-VL-8B | TODO | TODO | TODO | TODO | TODO |
-| DINOv2 | TODO | TODO | TODO | TODO | TODO |
-| SigLIP 2 | TODO | TODO | TODO | TODO | TODO |
-| SAM 2 | TODO | TODO | TODO | TODO | TODO |
+| VGGT | `facebook/VGGT-1B`, code `facebookresearch/vggt` | HF sha `860abec7937d`, repo commit `a288dd0f` | **CC-BY-NC-4.0** | ❌ non-commercial | agent, 2026-10-10 (HF API) |
+| MASt3R | `naver/mast3r` | — | repository **gated**, license not verifiable on this account | unknown | agent, 2026-10-10 (HF API 401) |
+| COLMAP | `colmap/colmap` | — | repo LICENSE (BSD-3-Clause style; SPDX not auto-detected) | likely yes — verify before commercial use | agent, 2026-10-10 (GitHub API) |
+| hloc | `cvg/Hierarchical-Localization` | — | Apache-2.0 | ✅ | agent, 2026-10-10 (GitHub API) |
+| Qwen3-VL-32B-Instruct | `Qwen/Qwen3-VL-32B-Instruct` | sha `0cfaf48183f5` | Apache-2.0 | ✅ | agent, 2026-10-10 (HF API) |
+| Qwen3-VL-8B-Instruct | `Qwen/Qwen3-VL-8B-Instruct` | sha `0c351dd01ed8` | Apache-2.0 | ✅ | agent, 2026-10-10 (HF API) |
+| DINOv2 | `facebook/dinov2-large` | sha `47b73eefe95e` | Apache-2.0 | ✅ | agent, 2026-10-10 (HF API) |
+| SigLIP 2 | `google/siglip2-base-patch16-224` | — | Apache-2.0 | ✅ | agent, 2026-10-10 (HF API) |
+| SAM 2 | `facebook/sam2-hiera-large` | — | Apache-2.0 | ✅ | agent, 2026-10-10 (HF API) |
 
-The verified licenses will be summarised in the main README once filled in —
-the plan (§3, §9) requires "models used, why they were chosen, and their
-licenses" there.
+VGGT is installed in the env via `pip install git+https://github.com/facebookresearch/vggt.git`
+(package name `vggt`, commit above). The weights are downloaded separately by
+`scripts/download_models.sh` and load offline from `~/models/VGGT-1B/`.
 
 ## Why these models
 

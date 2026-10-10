@@ -21,7 +21,7 @@
 5. **Ablations** (optional, from the plan): occlusion-aware vs naive diff;
    Qwen3-VL-32B vs 8B; VGGT vs MASt3R.
 
-## `outputs/report.json` schema (planned)
+## `outputs/report.json` schema (implemented; filled by real runs)
 
 ```json
 {
@@ -29,13 +29,17 @@
     "video_a": "data/a.mp4",
     "video_b": "data/b.mp4",
     "backend": "vggt",
+    "model": "<resolved model path or id>",
     "created": "<ISO-8601 timestamp>",
-    "config_hash": "<hash>"
+    "config_hash": "<12-hex hash>",
+    "num_frames": 60,
+    "semantics": "vlm+dinov2 | not run",
+    "confidence_note": "<how confidence is computed>"
   },
   "changes": [
     {
       "id": 1,
-      "type": "moved",
+      "type": "moved | added | removed",
       "label": "<short object label>",
       "description": "<one-sentence description>",
       "centroid": [0.0, 0.0, 0.0],
@@ -43,14 +47,22 @@
       "from": [0.0, 0.0, 0.0],
       "to": [0.0, 0.0, 0.0],
       "confidence": 0.0,
-      "evidence": { "frames_a": [], "frames_b": [] }
+      "cluster_ids": [1, 2],
+      "evidence": {
+        "frames_a": ["a/frame_00123.jpg"],
+        "frames_b": ["b/frame_00045.jpg"],
+        "confirmed_empty_in": [{"frame": 5, "file": "b/frame_00045.jpg", "n_valid": 180, "n_empty": 176}]
+      }
     }
   ]
 }
 ```
 
-`outputs/report.md` will present the same information as a human-readable table
-plus the change descriptions.
+`confidence` is a documented heuristic (cluster size, visibility fraction,
+DINOv2 similarity for moved objects), not a calibrated probability.
+`from`/`to` are `null` for pure added/removed entries. `outputs/report.md`
+presents the same information as a human-readable table plus the change
+descriptions.
 
 ## How results get here
 

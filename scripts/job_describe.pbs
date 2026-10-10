@@ -1,0 +1,22 @@
+#!/bin/bash
+# Semantics (Qwen3-VL + DINOv2) on two A100s - submit from the repo root:
+#     qsub scripts/job_describe.pbs
+# The 32B model needs ~64 GB in bf16, hence ngpus=2 and device_map="auto".
+#PBS -N describe
+#PBS -q gpu
+#PBS -l select=1:ncpus=12:mem=60gb:ngpus=2
+#PBS -l walltime=03:00:00
+#PBS -j oe
+#PBS -o logs/pbs_describe.log
+
+cd "$PBS_O_WORKDIR" || exit 1
+mkdir -p logs
+
+unset CUDA_VISIBLE_DEVICES          # required: PBS sets this empty, hiding all GPUs
+# export CUDA_VISIBLE_DEVICES=2,3   # optionally pin two idle GPUs (check nvidia-smi first)
+
+source "$HOME/miniconda3/etc/profile.d/conda.sh"
+conda activate spatialdiff
+export PATH="$CONDA_PREFIX/bin:$PATH"   # guard against PATH pollution (docs/troubleshooting.md)
+
+python src/describe.py --config configs/default.yaml

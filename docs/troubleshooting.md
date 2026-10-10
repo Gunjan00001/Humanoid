@@ -8,12 +8,14 @@ modes most likely to hit this project.
 | Symptom | Cause | Fix |
 |---|---|---|
 | `torch.cuda.is_available()` is `False`, but `nvidia-smi` lists GPUs | PBS sets `CUDA_VISIBLE_DEVICES` to an empty string | `unset CUDA_VISIBLE_DEVICES` (or `export CUDA_VISIBLE_DEVICES=0`) |
+| `conda activate spatialdiff` "works" but `python`/`pip` still resolve to the shared Python 3.8 | the session PATH contains duplicated `/cm/shared/apps/anaconda3/bin` entries *before* the env; activation inserts the env at a later position | run `export PATH="$CONDA_PREFIX/bin:$PATH"` after activating (all scripts here already do), or call `~/miniconda3/envs/spatialdiff/bin/python` directly |
+| pip installs land in `~/.local/lib/python3.8/site-packages` unexpectedly | same PATH problem: pip ran with the shared python | check `python -c "import sys; print(sys.executable)"` before installing; use the env interpreter explicitly |
 | `CUDA initialization: The NVIDIA driver ... is too old (found version 12030)` | CUDA-13 torch build on the 525 driver | install `cu126` wheels; never `cu130` |
 | `qsub -I` → "standard input and output must be a terminal" | no TTY | submit a batch job, or wrap with `script -qec` |
 | Job killed with `Cgroup mem limit exceeded` | default 32 GB RAM cgroup | raise with `-l mem=` (max `64gb`) |
 | `ModuleNotFoundError` on a compute node | env not activated / package only on login node | activate the conda env in the job; install into it, not into `base` |
 | `huggingface-cli` can't reach the internet inside a job | compute nodes may have no internet | pre-download on the login node into `~/models/` |
-| GPU shows ~100% / 60 GB used by someone else | shared node, PBS does not pin GPUs | pick an idle GPU (`nvidia-smi`), set `CUDA_VISIBLE_DEVICES=<id>` |
+| GPU shows ~100% / 60 GB used by someone else | shared node, PBS does not pin GPUs | pick an idle GPU (`nvidia-smi`), then `export CUDA_VISIBLE_DEVICES=<id>` (or set `reconstruction.gpu_index`) |
 
 ## Model / pipeline
 

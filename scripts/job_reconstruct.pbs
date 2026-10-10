@@ -1,0 +1,22 @@
+#!/bin/bash
+# Reconstruction (VGGT) on one A100 - submit from the repo root:
+#     qsub scripts/job_reconstruct.pbs
+# See gpu.md for the cluster gotchas (CUDA_VISIBLE_DEVICES, CUDA 12.6 wheels).
+#PBS -N reconstruct
+#PBS -q gpu
+#PBS -l select=1:ncpus=8:mem=48gb:ngpus=1
+#PBS -l walltime=02:00:00
+#PBS -j oe
+#PBS -o logs/pbs_reconstruct.log
+
+cd "$PBS_O_WORKDIR" || exit 1
+mkdir -p logs
+
+unset CUDA_VISIBLE_DEVICES          # required: PBS sets this empty, hiding all GPUs
+# export CUDA_VISIBLE_DEVICES=3     # optionally pin an idle GPU (check nvidia-smi first)
+
+source "$HOME/miniconda3/etc/profile.d/conda.sh"
+conda activate spatialdiff
+export PATH="$CONDA_PREFIX/bin:$PATH"   # guard against PATH pollution (docs/troubleshooting.md)
+
+python src/reconstruct.py --config configs/default.yaml
