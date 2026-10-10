@@ -167,16 +167,25 @@ def main() -> int:
     minibatch = macfg.get("minibatch_size")
     t0 = time.perf_counter()
     try:
-        predictions = model.infer(
-            views,
-            memory_efficient_inference=bool(macfg.get("memory_efficient_inference", True)),
-            minibatch_size=int(minibatch) if minibatch else None,
-            use_amp=bool(macfg.get("use_amp", True)),
-            amp_dtype=amp_dtype,
-            apply_mask=True,
-            mask_edges=True,
-            apply_confidence_mask=bool(macfg.get("apply_confidence_mask", False)),
-        )
+        if model_key == "mapanything":
+            predictions = model.infer(
+                views,
+                memory_efficient_inference=bool(macfg.get("memory_efficient_inference", True)),
+                minibatch_size=int(minibatch) if minibatch else None,
+                use_amp=bool(macfg.get("use_amp", True)),
+                amp_dtype=amp_dtype,
+                apply_mask=True,
+                mask_edges=True,
+                apply_confidence_mask=bool(macfg.get("apply_confidence_mask", False)),
+            )
+        else:
+            # external wrappers follow the same forward() interface and return
+            # the unified output format directly (see their README)
+            import torch as _torch
+            dtype = getattr(_torch, amp_dtype)
+            model.eval()
+            with _torch.no_grad(), _torch.autocast("cuda", dtype=dtype):
+                predictions = model(views)
     except torch.cuda.OutOfMemoryError as exc:
         raise RuntimeError(
             "MapAnything ran out of GPU memory. Options: lower "
