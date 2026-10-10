@@ -12,6 +12,9 @@ logs/
 outputs/*
 !outputs/report.json
 !outputs/report.md
+!outputs/change.gif
+!outputs/changes/
+!outputs/changes/*.png
 models/
 *.pt
 *.pth
