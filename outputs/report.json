@@ -5,18 +5,18 @@
     "backend": "vggt",
     "model": "/home/user/models/VGGT-1B",
     "diff_method": "tabletop",
-    "created": "2026-10-10T12:52:22Z",
-    "config_hash": "900dd917074e",
+    "created": "2026-10-10T13:11:15Z",
+    "config_hash": "eb78e286bd44",
     "num_frames": 49,
-    "semantics": "not run",
+    "semantics": "vlm-verified",
     "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
   },
   "changes": [
     {
       "id": 1,
       "type": "removed",
-      "label": null,
-      "description": null,
+      "label": "small object",
+      "description": "the small object was removed",
       "centroid": [
         -0.2897,
         -0.0721,
@@ -41,16 +41,20 @@
         1
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00072.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00030.jpg"
+        ],
         "confirmed_empty_in": []
       }
     },
     {
       "id": 2,
       "type": "removed",
-      "label": null,
-      "description": null,
+      "label": "black remote",
+      "description": "the black remote was removed",
       "centroid": [
         -0.2464,
         -0.3435,
@@ -75,16 +79,20 @@
         2
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00234.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
         "confirmed_empty_in": []
       }
     },
     {
       "id": 3,
       "type": "removed",
-      "label": null,
-      "description": null,
+      "label": "comb",
+      "description": "the comb was removed",
       "centroid": [
         -0.1252,
         0.1002,
@@ -109,16 +117,20 @@
         3
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00030.jpg"
+        ],
         "confirmed_empty_in": []
       }
     },
     {
       "id": 4,
       "type": "removed",
-      "label": null,
-      "description": null,
+      "label": "digital timer",
+      "description": "the digital timer was removed",
       "centroid": [
         -0.1604,
         -0.1589,
@@ -143,16 +155,20 @@
         4
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
         "confirmed_empty_in": []
       }
     },
     {
       "id": 5,
       "type": "removed",
-      "label": null,
-      "description": null,
+      "label": "timer",
+      "description": "the timer was removed",
       "centroid": [
         -0.0787,
         -0.165,
@@ -177,16 +193,20 @@
         5
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00504.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00030.jpg"
+        ],
         "confirmed_empty_in": []
       }
     },
     {
       "id": 6,
       "type": "removed",
-      "label": null,
-      "description": null,
+      "label": "digital timer",
+      "description": "the digital timer was removed",
       "centroid": [
         -0.0955,
         -0.0601,
@@ -211,16 +231,20 @@
         6
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
         "confirmed_empty_in": []
       }
     },
     {
       "id": 7,
       "type": "removed",
-      "label": null,
-      "description": null,
+      "label": "comb",
+      "description": "the comb was removed",
       "centroid": [
         -0.0882,
         0.0253,
@@ -245,16 +269,20 @@
         7
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00576.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00030.jpg"
+        ],
         "confirmed_empty_in": []
       }
     },
     {
       "id": 8,
       "type": "removed",
-      "label": null,
-      "description": null,
+      "label": "digital timer",
+      "description": "the digital timer was removed",
       "centroid": [
         -0.0408,
         -0.0966,
@@ -279,16 +307,20 @@
         8
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
         "confirmed_empty_in": []
       }
     },
     {
       "id": 9,
       "type": "removed",
-      "label": null,
-      "description": null,
+      "label": "wooden comb",
+      "description": "the wooden comb was removed",
       "centroid": [
         0.0195,
         0.1505,
@@ -313,84 +345,20 @@
         9
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00030.jpg"
+        ],
         "confirmed_empty_in": []
       }
     },
     {
       "id": 10,
-      "type": "removed",
-      "label": null,
-      "description": null,
-      "centroid": [
-        0.1343,
-        -0.2136,
-        0.9571
-      ],
-      "bbox": [
-        0.0501,
-        -0.2495,
-        0.9434,
-        0.23,
-        -0.1851,
-        0.9722
-      ],
-      "from": [
-        0.1343,
-        -0.2136,
-        0.9571
-      ],
-      "to": null,
-      "confidence": 0.81,
-      "cluster_ids": [
-        10
-      ],
-      "evidence": {
-        "frames_a": [],
-        "frames_b": [],
-        "confirmed_empty_in": []
-      }
-    },
-    {
-      "id": 11,
-      "type": "removed",
-      "label": null,
-      "description": null,
-      "centroid": [
-        0.1677,
-        -0.1767,
-        0.9601
-      ],
-      "bbox": [
-        0.125,
-        -0.2048,
-        0.9409,
-        0.215,
-        -0.1552,
-        0.9795
-      ],
-      "from": [
-        0.1677,
-        -0.1767,
-        0.9601
-      ],
-      "to": null,
-      "confidence": 0.66,
-      "cluster_ids": [
-        11
-      ],
-      "evidence": {
-        "frames_a": [],
-        "frames_b": [],
-        "confirmed_empty_in": []
-      }
-    },
-    {
-      "id": 12,
       "type": "added",
-      "label": null,
-      "description": null,
+      "label": "remote control",
+      "description": "a remote control was added to the table",
       "centroid": [
         -0.1104,
         -0.076,
@@ -415,118 +383,20 @@
         12
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00060.jpg"
+        ],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 13,
+      "id": 11,
       "type": "added",
-      "label": null,
-      "description": null,
-      "centroid": [
-        -0.0965,
-        -0.0134,
-        0.9151
-      ],
-      "bbox": [
-        -0.12,
-        -0.0449,
-        0.9102,
-        -0.065,
-        0.01,
-        0.9214
-      ],
-      "from": null,
-      "to": [
-        -0.0965,
-        -0.0134,
-        0.9151
-      ],
-      "confidence": 0.44,
-      "cluster_ids": [
-        13
-      ],
-      "evidence": {
-        "frames_a": [],
-        "frames_b": [],
-        "confirmed_empty_in": []
-      }
-    },
-    {
-      "id": 14,
-      "type": "added",
-      "label": null,
-      "description": null,
-      "centroid": [
-        -0.0545,
-        -0.0548,
-        0.9167
-      ],
-      "bbox": [
-        -0.095,
-        -0.105,
-        0.9102,
-        -0.0151,
-        -0.005,
-        0.9268
-      ],
-      "from": null,
-      "to": [
-        -0.0545,
-        -0.0548,
-        0.9167
-      ],
-      "confidence": 0.79,
-      "cluster_ids": [
-        14
-      ],
-      "evidence": {
-        "frames_a": [],
-        "frames_b": [],
-        "confirmed_empty_in": []
-      }
-    },
-    {
-      "id": 15,
-      "type": "added",
-      "label": null,
-      "description": null,
-      "centroid": [
-        0.0944,
-        -0.1935,
-        0.9504
-      ],
-      "bbox": [
-        0.0601,
-        -0.215,
-        0.939,
-        0.1249,
-        -0.16,
-        0.9736
-      ],
-      "from": null,
-      "to": [
-        0.0944,
-        -0.1935,
-        0.9504
-      ],
-      "confidence": 0.53,
-      "cluster_ids": [
-        15
-      ],
-      "evidence": {
-        "frames_a": [],
-        "frames_b": [],
-        "confirmed_empty_in": []
-      }
-    },
-    {
-      "id": 16,
-      "type": "added",
-      "label": null,
-      "description": null,
+      "label": "white electronic device",
+      "description": "a white electronic device was added to the table",
       "centroid": [
         0.0778,
         -0.029,
@@ -551,16 +421,20 @@
         16
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00030.jpg"
+        ],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 17,
+      "id": 12,
       "type": "added",
-      "label": null,
-      "description": null,
+      "label": "highlighter",
+      "description": "a highlighter was added to the table",
       "centroid": [
         0.1173,
         -0.1007,
@@ -585,16 +459,20 @@
         17
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 18,
+      "id": 13,
       "type": "replaced",
-      "label": null,
-      "description": null,
+      "label": "remote control",
+      "description": "the remote control was flipped over",
       "centroid": [
         -0.2166,
         -0.3368,
@@ -623,16 +501,20 @@
         18
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00234.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 19,
+      "id": 14,
       "type": "replaced",
-      "label": null,
-      "description": null,
+      "label": "timer",
+      "description": "the timer was moved and its display changed",
       "centroid": [
         -0.1055,
         -0.0429,
@@ -661,16 +543,20 @@
         19
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00130.jpg"
+        ],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 20,
+      "id": 15,
       "type": "replaced",
-      "label": null,
-      "description": null,
+      "label": "digital timer",
+      "description": "the digital timer was flipped over",
       "centroid": [
         -0.067,
         -0.0799,
@@ -699,16 +585,20 @@
         20
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 21,
+      "id": 16,
       "type": "replaced",
-      "label": null,
-      "description": null,
+      "label": "digital timer",
+      "description": "the digital timer was moved and rotated",
       "centroid": [
         -0.0384,
         -0.0346,
@@ -737,16 +627,20 @@
         21
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00030.jpg"
+        ],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 22,
+      "id": 17,
       "type": "replaced",
-      "label": null,
-      "description": null,
+      "label": "highlighter",
+      "description": "the highlighter was moved",
       "centroid": [
         0.1008,
         -0.1944,
@@ -775,148 +669,15 @@
         22
       ],
       "evidence": {
-        "frames_a": [],
-        "frames_b": [],
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
         "confirmed_empty_in": []
       }
     }
   ],
-  "unverified_changes": [
-    {
-      "id": 23,
-      "type": "removed",
-      "label": null,
-      "description": null,
-      "centroid": [
-        -0.1216,
-        0.1319,
-        0.9158
-      ],
-      "bbox": [
-        -0.1399,
-        0.125,
-        0.9023,
-        -0.105,
-        0.1399,
-        0.9321
-      ],
-      "from": [
-        -0.1216,
-        0.1319,
-        0.9158
-      ],
-      "to": null,
-      "confidence": 0.03,
-      "cluster_ids": [
-        23
-      ],
-      "evidence": {
-        "frames_a": [],
-        "frames_b": [],
-        "confirmed_empty_in": []
-      }
-    },
-    {
-      "id": 24,
-      "type": "removed",
-      "label": null,
-      "description": null,
-      "centroid": [
-        -0.0102,
-        0.1606,
-        0.9111
-      ],
-      "bbox": [
-        -0.0949,
-        0.125,
-        0.8936,
-        0.11,
-        0.205,
-        0.9321
-      ],
-      "from": [
-        -0.0102,
-        0.1606,
-        0.9111
-      ],
-      "to": null,
-      "confidence": 0.3,
-      "cluster_ids": [
-        24
-      ],
-      "evidence": {
-        "frames_a": [],
-        "frames_b": [],
-        "confirmed_empty_in": []
-      }
-    },
-    {
-      "id": 25,
-      "type": "removed",
-      "label": null,
-      "description": null,
-      "centroid": [
-        0.0601,
-        0.1613,
-        0.9057
-      ],
-      "bbox": [
-        0.0401,
-        0.15,
-        0.897,
-        0.075,
-        0.1699,
-        0.9199
-      ],
-      "from": [
-        0.0601,
-        0.1613,
-        0.9057
-      ],
-      "to": null,
-      "confidence": 0.03,
-      "cluster_ids": [
-        25
-      ],
-      "evidence": {
-        "frames_a": [],
-        "frames_b": [],
-        "confirmed_empty_in": []
-      }
-    },
-    {
-      "id": 26,
-      "type": "added",
-      "label": null,
-      "description": null,
-      "centroid": [
-        -0.1171,
-        -0.3563,
-        0.9426
-      ],
-      "bbox": [
-        -0.2549,
-        -0.3899,
-        0.9233,
-        -0.015,
-        -0.3,
-        0.9814
-      ],
-      "from": null,
-      "to": [
-        -0.1171,
-        -0.3563,
-        0.9426
-      ],
-      "confidence": 0.3,
-      "cluster_ids": [
-        26
-      ],
-      "evidence": {
-        "frames_a": [],
-        "frames_b": [],
-        "confirmed_empty_in": []
-      }
-    }
-  ]
+  "unverified_changes": []
 }
