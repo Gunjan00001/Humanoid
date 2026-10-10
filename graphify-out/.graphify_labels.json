@@ -21,5 +21,11 @@
   "19": "The rules, in order",
   "20": "Details",
   "21": "ground_truth.md",
-  "22": "Timer"
+  "22": "Timer",
+  "23": "run_mapanything.py",
+  "24": "Development log",
+  "25": "Backend comparison: VGGT vs MapAnything vs Depth Anything 3",
+  "26": "make_fake_reconstruction.py",
+  "27": "scene2/ground_truth.md",
+  "28": "scene3/ground_truth.md"
 }
