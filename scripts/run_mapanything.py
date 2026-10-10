@@ -76,6 +76,12 @@ def main() -> int:
     parser.add_argument("--frames-index", required=True)
     parser.add_argument("--out", required=True, help="reconstruction output directory")
     parser.add_argument("--limit-per-video", type=int, default=None)
+    parser.add_argument("--model-key", default="mapanything",
+                        help="'mapanything' loads the fine-tuned checkpoint; any "
+                             "other key (e.g. da3, vggt) uses MapAnything's "
+                             "unified external-model interface "
+                             "(init_model_from_config) - stretch goal, see "
+                             "docs/models.md")
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
 
@@ -117,12 +123,25 @@ def main() -> int:
     model_ref = resolve_model(cfg["models"]["mapanything"], cfg["paths"]["model_dir"])
     device = torch.device("cuda")
     amp_dtype = str(macfg.get("amp_dtype", "bf16"))
-    log.info("loading MapAnything from %s onto %s (%s)", model_ref,
-             torch.cuda.get_device_name(device), amp_dtype)
-    t0 = time.perf_counter()
-    model = MapAnything.from_pretrained(model_ref).to(device).eval()
-    load_s = time.perf_counter() - t0
+    model_key = args.model_key or "mapanything"
+    if model_key == "mapanything":
+        log.info("loading MapAnything from %s onto %s (%s)", model_ref,
+                 torch.cuda.get_device_name(device), amp_dtype)
+        t0 = time.perf_counter()
+        model = MapAnything.from_pretrained(model_ref).to(device).eval()
+        load_s = time.perf_counter() - t0
+    else:
+        # stretch goal: any model in MapAnything's unified interface (da3,
+        # vggt, pi3, ...) - see docs/models.md. Outputs use the same unified
+        # format, so the conversion below is unchanged.
+        from mapanything.models import init_model_from_config
+        log.info("loading external model '%s' via init_model_from_config onto %s",
+                 model_key, torch.cuda.get_device_name(device))
+        t0 = time.perf_counter()
+        model = init_model_from_config(model_key, device=str(device))
+        load_s = time.perf_counter() - t0
     log.info("model loaded in %.1fs", load_s)
+    model_label = model_ref if model_key == "mapanything" else f"external:{model_key}"
 
     # --- MapAnything's own preprocessing (518-px fixed mapping + dinov2 norm)
     t0 = time.perf_counter()
@@ -216,7 +235,8 @@ def main() -> int:
         "created": stamp(),
         "config_hash": cfg["_config_hash"],
         "backend": "mapanything",
-        "model": model_ref,
+        "model": model_label,
+        "model_key": model_key,
         "device": str(torch.cuda.get_device_name(device)),
         "dtype": amp_dtype,
         "num_frames": len(frames),
