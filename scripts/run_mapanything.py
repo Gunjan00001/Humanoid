@@ -193,6 +193,16 @@ def main() -> int:
             model.eval()
             with _torch.no_grad(), _torch.autocast("cuda", dtype=dtype):
                 predictions = model(views)
+            # the wrappers return the RAW unified format (cam_quats, cam_trans,
+            # depth_along_ray, ...); MapAnything's own postprocessing derives
+            # the final fields our contract needs (depth_z, intrinsics,
+            # camera_poses, img_no_norm, mask)
+            from mapanything.utils.inference import postprocess_model_outputs_for_inference
+            predictions = postprocess_model_outputs_for_inference(
+                predictions, views,
+                apply_mask=True, mask_edges=True,
+                apply_confidence_mask=bool(macfg.get("apply_confidence_mask", False)),
+            )
     except torch.cuda.OutOfMemoryError as exc:
         raise RuntimeError(
             "MapAnything ran out of GPU memory. Options: lower "
