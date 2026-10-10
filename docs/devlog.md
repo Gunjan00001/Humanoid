@@ -294,3 +294,44 @@ useful. GPU jobs should report an estimated remaining time to the user.
 
 Both fixes are structural (they apply to every scene); the demo-scene results
 are unchanged.
+
+## 2026-10-11 — Visualization rework: faithful 3D display (Steps 0–5)
+
+**Task:** the `change.gif`s looked like dark slivers, not like the scene.
+
+### Step 0 — diagnosis (numbers before any change)
+
+- `tests/diagnose_projection.py` reprojects the fused cloud into the first
+  camera and prints per-view counts + model-input coverage.
+- **Result: the reconstruction is faithful** — the reprojection reproduces the
+  table and every object with true colours; 100% of the frame is covered by
+  points. The problem was the **rendering**: `static_dim 0.35` (dark cloud),
+  1-pixel markers, and whole-scene framing (the table became a sliver in a
+  room-sized 3D box).
+- Measured: demo/scene2 are portrait 480×85x → VGGT crop mode delivers
+  **56.1%** of each frame to the model (top/bottom discarded). **scene3 is
+  landscape 860×480** — the task's portrait premise does not hold there; it
+  loses nothing.
+
+### Steps 1–5 (all structural)
+
+- `reconstruction.input_mode: crop | pad` (default crop until the regression
+  below proves otherwise); pad-mode padding is masked out of the confidence.
+- Display cloud separated from detection (`visualize.conf_percentile` 5,
+  `voxel_size` 8 mm, `static_dim` 0.8, true colours).
+- Colored TSDF mesh per scene (`src/mesh.py`, 85–115k triangles,
+  3.5–4.4 MB ≤ 10 MB budget).
+- Renderer rewritten (`src/visualize.py`): dark neutral background,
+  distance-sized splats, camera framed on the changed region, per-change
+  bounding boxes + labels + legend, unverified candidates dim cyan,
+  before|after|3D composites and the same layout in the GIF.
+- Self-contained HTML viewer (`src/viewer.py`, three.js r128 pinned from
+  cdnjs, inline orbit controls, quantized embedded cloud, toggles, labels):
+  1.7 MB per scene. Validated by screenshotting it in **headless Chrome**
+  (SwiftShader) — the change boxes and labels render correctly.
+
+### Step 6 — regression + pad experiment
+
+See the results section: the demo regression (diff + describe + report) and
+the `input_mode=pad` end-to-end comparison are recorded in
+`docs/results.md` with the measured detection counts.

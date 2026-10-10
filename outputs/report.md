@@ -4,7 +4,7 @@
 - video B: `/home/user/Desktop/Humanoid/data/b.mp4`
 - reconstruction: `vggt` (/home/user/models/VGGT-1B)
 - frames: 49 | semantics: vlm-verified
-- generated: 2026-10-10T14:14:57Z | config `d98e21943934`
+- generated: 2026-10-10T20:06:23Z | config `fc279e4beff6`
 
 **3 change(s) detected**: 1 added, 1 removed, 1 replaced
 
