@@ -8,6 +8,7 @@ env/
 
 # --- caches / large artifacts ---
 cache/
+logs/
 outputs/*
 !outputs/report.json
 !outputs/report.md

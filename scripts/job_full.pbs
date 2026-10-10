@@ -1,0 +1,23 @@
+#!/bin/bash
+# Full pipeline on one node (2 GPUs: reconstruct uses one, describe needs two)
+#     qsub scripts/job_full.pbs
+# From an interactive GPU session you can of course just run:
+#     python run.py --video_a data/a.mp4 --video_b data/b.mp4 --out outputs/
+#PBS -N full_pipeline
+#PBS -q gpu
+#PBS -l select=1:ncpus=12:mem=60gb:ngpus=2
+#PBS -l walltime=08:00:00
+#PBS -j oe
+#PBS -o logs/pbs_full.log
+
+cd "$PBS_O_WORKDIR" || exit 1
+mkdir -p logs
+
+unset CUDA_VISIBLE_DEVICES          # required: PBS sets this empty, hiding all GPUs
+# export CUDA_VISIBLE_DEVICES=2,3   # optionally pin two idle GPUs (check nvidia-smi first)
+
+source "$HOME/miniconda3/etc/profile.d/conda.sh"
+conda activate spatialdiff
+export PATH="$CONDA_PREFIX/bin:$PATH"   # guard against PATH pollution (docs/troubleshooting.md)
+
+python run.py --video_a data/a.mp4 --video_b data/b.mp4 --out outputs/

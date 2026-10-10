@@ -10,30 +10,40 @@ Planned layout from [`../AGENT_PLAN.md`](../AGENT_PLAN.md) §4; the root maps to
 | `README.md` | Project front page | ✅ (results pending) |
 | `AGENT_PLAN.md` | Plan, phases, checkpoints | ✅ |
 | `LICENSE` | MIT for this repo (models keep their own licenses) | ✅ |
-| `requirements.txt` | pip pins | ⬜ planned |
-| `environment.yml` | conda env export | ⬜ planned |
-| `run.py` | One-command pipeline | ⬜ planned |
-| `configs/default.yaml` | All models, paths, thresholds | ⬜ planned |
-| `src/extract_frames.py` | video → sharp tagged frames | ⬜ planned |
-| `src/reconstruct.py` | VGGT / MASt3R / COLMAP switch | ⬜ planned |
-| `src/align.py` | optional ICP refinement | ⬜ planned |
-| `src/diff.py` | voxel diff, DBSCAN, visibility check | ⬜ planned |
-| `src/describe.py` | crops, Qwen3-VL labels, DINOv2 matching | ⬜ planned |
-| `src/visualize.py` | colored PLY, arrows, viewer | ⬜ planned |
-| `src/report.py` | JSON + Markdown report | ⬜ planned |
-| `scripts/setup_env.sh` | conda env + pip (cu126) | ⬜ planned |
-| `scripts/download_models.sh` | run on login node | ⬜ planned |
-| `scripts/job_*.pbs` | PBS job templates | ⬜ planned |
-| `data/` | input videos + ground truth | ⬜ |
-| `cache/` | expensive intermediate artifacts (gitignored) | ⬜ |
-| `outputs/` | PLY, JSON, MD, images, GIF | ⬜ |
+| `requirements.txt` | pip pins | ✅ |
+| `environment.yml` | conda env export | ⬜ generated after the env is verified |
+| `run.py` | One-command pipeline | ✅ |
+| `configs/default.yaml` | All models, paths, thresholds | ✅ |
+| `src/common.py` | config/CLI/JSON helpers shared by all stages | ✅ |
+| `src/geometry.py` | reconstruction loading, camera math, change list | ✅ |
+| `src/extract_frames.py` | video → sharp tagged frames | ✅ |
+| `src/reconstruct.py` | VGGT / MASt3R / COLMAP switch | ✅ VGGT (fallbacks raise) |
+| `src/align.py` | optional ICP refinement | ✅ |
+| `src/diff.py` | voxel diff, DBSCAN, visibility check | ✅ |
+| `src/describe.py` | crops, Qwen3-VL labels, DINOv2 matching | ✅ (GPU validation pending) |
+| `src/visualize.py` | colored PLY, arrows, viewer | ✅ |
+| `src/report.py` | JSON + Markdown report | ✅ |
+| `scripts/setup_env.sh` | conda env + pip (cu126) | ✅ |
+| `scripts/download_models.sh` | run on login node | ✅ |
+| `scripts/job_*.pbs` | PBS job templates | ✅ |
+| `tests/` | synthetic smoke tests (not results) | ✅ |
+| `data/` | input videos + ground truth | ⬜ videos not recorded yet |
+| `cache/` | expensive intermediate artifacts (gitignored) | ✅ produced by stages |
+| `outputs/` | PLY, JSON, MD, images, GIF | ✅ produced by stages |
 | `docs/` | this documentation | ✅ |
+
+> `src/common.py` and `src/geometry.py` are shared helpers added during
+> implementation: `common` holds config/CLI/JSON plumbing (no heavy imports),
+> `geometry` holds the reconstruction formats and camera math used by the CPU
+> stages. They are the only modules besides the stages in `src/`.
 
 ## Module responsibilities
 
 | Module | Responsibility | Must NOT do |
 |---|---|---|
 | `run.py` | Parse CLI + config, call stages in order, skip stages whose cache exists | contain model logic |
+| `common.py` | config loading, path resolution, model-path resolution, JSON/CLI/stage-output plumbing | import torch or heavy deps |
+| `geometry.py` | load reconstruction artifacts, voxel/conf helpers, camera projection, model↔original mapping, derived change list | write to cache or files |
 | `extract_frames.py` | Decode videos, sample fps, blur-filter, tag frames with source video | touch the GPU |
 | `reconstruct.py` | Run the configured backend on **all** frames of A and B together; emit poses, depth, tagged cloud | do the diff |
 | `align.py` | Optional ICP over static regions only | run unless enabled in config |
@@ -44,43 +54,20 @@ Planned layout from [`../AGENT_PLAN.md`](../AGENT_PLAN.md) §4; the root maps to
 
 ## Config reference
 
-Everything tunable lives in `configs/default.yaml` (skeleton from the plan):
+`configs/default.yaml` is the single source of truth for every model name,
+path and threshold — scripts never hard-code values. Sections:
 
-```yaml
-paths:
-  video_a: data/a.mp4
-  video_b: data/b.mp4
-  cache_dir: cache/
-  out_dir: outputs/
-  model_dir: ~/models/
-
-frames:
-  fps: 2
-  max_frames_per_video: 30
-  blur_threshold: 100.0
-
-reconstruction:
-  backend: vggt          # vggt | mast3r | colmap
-  use_icp_refinement: false
-
-diff:
-  voxel_size: 0.02
-  change_distance: 0.05
-  dbscan_eps: 0.08
-  dbscan_min_points: 50
-  visibility_check: true
-
-semantics:
-  vlm: qwen3-vl-32b-instruct   # or qwen3-vl-8b-instruct
-  matcher: dinov2
-  match_similarity_threshold: 0.75
-  use_sam2: false
-
-gpu:
-  vlm_gpus: 2
-  dtype: bfloat16
-  torch_cuda: cu126
-```
+| Section | Contains |
+|---|---|
+| `seed` | global RNG seed |
+| `paths` | `video_a`, `video_b`, `cache_dir`, `out_dir`, `model_dir` (~/models) |
+| `frames` | sampling fps, `max_frames_per_video`, blur threshold, `min_frames`, jpeg quality |
+| `reconstruction` | backend switch, optional ICP, device / `gpu_index`, confidence percentile, ICP params |
+| `models` | VGGT / VLM / matcher references (HF ids or local paths, resolved via `common.resolve_model`) |
+| `diff` | voxel size, change distance, DBSCAN eps/min points, outlier removal, cluster minimum, visibility check params |
+| `semantics` | VLM choice (primary/fallback), matcher, match thresholds, crop params |
+| `visualize` | background voxel/dimming, GIF frames |
+| `gpu` | VLM GPU count, dtype, torch CUDA tag |
 
 Values are starting points and get tuned against the demo scene — **in the
 config, not in code**.

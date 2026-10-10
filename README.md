@@ -42,8 +42,9 @@ Stage-by-stage detail: [`docs/pipeline.md`](docs/pipeline.md).
 | Cross-scene object matching ("moved") | DINOv2 | SigLIP 2 |
 | Object masks (stretch goal) | SAM 2 | DBSCAN clusters only |
 
-Model licenses must be verified before publishing results — some reconstruction
-checkpoints are non-commercial. See [`docs/models.md`](docs/models.md).
+Model licenses — **verified 2026-10-10**: Qwen3-VL, DINOv2, SigLIP 2, SAM 2 are
+Apache-2.0; **VGGT is CC-BY-NC-4.0 (non-commercial)**; MASt3R's repo is gated.
+See [`docs/models.md`](docs/models.md) for IDs, commits, and the checklist.
 
 ## Setup
 
