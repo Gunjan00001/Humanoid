@@ -1,0 +1,206 @@
+{
+  "run.py": {
+    "mtime": 1791631720.0,
+    "seen": 1791632480.2734776,
+    "ast_hash": "260d443f3dc9df4b481e599e5b89832b",
+    "semantic_hash": ""
+  },
+  "scripts/download_models.sh": {
+    "mtime": 1791631900.0,
+    "seen": 1791632480.2734833,
+    "ast_hash": "55ffd66db43cb8534fb2b2f72d077db1",
+    "semantic_hash": ""
+  },
+  "scripts/setup_env.sh": {
+    "mtime": 1791631894.0,
+    "seen": 1791632480.2734857,
+    "ast_hash": "beadb9e7cf9df471a25d67f65b39866d",
+    "semantic_hash": ""
+  },
+  "src/align.py": {
+    "mtime": 1791631384.0,
+    "seen": 1791632480.273487,
+    "ast_hash": "32e11bc0b3f65df94dd0e09b5d8b0dae",
+    "semantic_hash": ""
+  },
+  "src/common.py": {
+    "mtime": 1791631130.0,
+    "seen": 1791632480.273488,
+    "ast_hash": "1f8252ceec7a38d95a238d5131fc49bf",
+    "semantic_hash": ""
+  },
+  "src/describe.py": {
+    "mtime": 1791632000.0,
+    "seen": 1791632480.2734897,
+    "ast_hash": "0819a33238103219b91cd3ecd4ce648a",
+    "semantic_hash": ""
+  },
+  "src/diff.py": {
+    "mtime": 1791631450.0,
+    "seen": 1791632480.273491,
+    "ast_hash": "14c959763726d1bc1c6c9393acb057a0",
+    "semantic_hash": ""
+  },
+  "src/extract_frames.py": {
+    "mtime": 1791631155.0,
+    "seen": 1791632480.2734919,
+    "ast_hash": "a658596d14300338765090b660622b4a",
+    "semantic_hash": ""
+  },
+  "src/geometry.py": {
+    "mtime": 1791631639.0,
+    "seen": 1791632480.273493,
+    "ast_hash": "fb1b54a3c03347cac18c343a4dbb88db",
+    "semantic_hash": ""
+  },
+  "src/reconstruct.py": {
+    "mtime": 1791632331.0,
+    "seen": 1791632480.273494,
+    "ast_hash": "eab1bb9d1842087781428d217f678b94",
+    "semantic_hash": ""
+  },
+  "src/report.py": {
+    "mtime": 1791631742.0,
+    "seen": 1791632480.2734947,
+    "ast_hash": "64de5ce69180ca1f727af8ea4138f608",
+    "semantic_hash": ""
+  },
+  "src/visualize.py": {
+    "mtime": 1791631767.0,
+    "seen": 1791632480.2734962,
+    "ast_hash": "339b2ab32733444443dbfe37e5129ebc",
+    "semantic_hash": ""
+  },
+  "tests/gpu_smoke_test.sh": {
+    "mtime": 1791632418.0,
+    "seen": 1791632480.273497,
+    "ast_hash": "4f5d5b4fb56823123fab2359e03b5584",
+    "semantic_hash": ""
+  },
+  "tests/make_fake_reconstruction.py": {
+    "mtime": 1791631482.0,
+    "seen": 1791632480.273498,
+    "ast_hash": "445bf31b7ce7189d4c810a81b7a1ddd9",
+    "semantic_hash": ""
+  },
+  "tests/make_test_videos.py": {
+    "mtime": 1791631204.0,
+    "seen": 1791632480.2734988,
+    "ast_hash": "e0631701e3b6a6148e3ab4c3170e331a",
+    "semantic_hash": ""
+  },
+  "tests/prepare_gpu_smoke.py": {
+    "mtime": 1791632294.0,
+    "seen": 1791632480.2735,
+    "ast_hash": "41ae89ba05d2f12540e503ccbd14b3c4",
+    "semantic_hash": ""
+  },
+  "AGENTS.md": {
+    "mtime": 1791628485.0,
+    "seen": 1791632480.273501,
+    "ast_hash": "6a47d64fcc136324ca395065a707ef76",
+    "semantic_hash": ""
+  },
+  "AGENT_PLAN.md": {
+    "mtime": 1791629842.0,
+    "seen": 1791632480.2735019,
+    "ast_hash": "748da43e29fa04419866161120acda58",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1791632336.0,
+    "seen": 1791632480.2735033,
+    "ast_hash": "08d3f2f69f7650be0c0928f9eef2d456",
+    "semantic_hash": ""
+  },
+  "configs/default.yaml": {
+    "mtime": 1791631644.0,
+    "seen": 1791632480.2735043,
+    "ast_hash": "3ec7e2b76af2e286ab9523998d62c94f",
+    "semantic_hash": ""
+  },
+  "docs/README.md": {
+    "mtime": 1791630377.0,
+    "seen": 1791632480.2735052,
+    "ast_hash": "1d481e90670ad201eee231cf09ac34ca",
+    "semantic_hash": ""
+  },
+  "docs/architecture.md": {
+    "mtime": 1791632088.0,
+    "seen": 1791632480.2735064,
+    "ast_hash": "365b814239ec237cf11c40ac86a26d78",
+    "semantic_hash": ""
+  },
+  "docs/data.md": {
+    "mtime": 1791630403.0,
+    "seen": 1791632480.273508,
+    "ast_hash": "9e441171ac688decd89ea991b1edecc9",
+    "semantic_hash": ""
+  },
+  "docs/models.md": {
+    "mtime": 1791632060.0,
+    "seen": 1791632480.2735088,
+    "ast_hash": "5bf9d31d316ade4cc3da50356de04d2d",
+    "semantic_hash": ""
+  },
+  "docs/pipeline.md": {
+    "mtime": 1791630377.0,
+    "seen": 1791632480.27351,
+    "ast_hash": "e48c36c86abef3d0f712b3fa4f6f7b72",
+    "semantic_hash": ""
+  },
+  "docs/results.md": {
+    "mtime": 1791632116.0,
+    "seen": 1791632480.273511,
+    "ast_hash": "735e97a08810a6dec91a33b05b054135",
+    "semantic_hash": ""
+  },
+  "docs/roadmap.md": {
+    "mtime": 1791632109.0,
+    "seen": 1791632480.273512,
+    "ast_hash": "e4733fa7852ef349686b8a5ee37325b1",
+    "semantic_hash": ""
+  },
+  "docs/setup.md": {
+    "mtime": 1791632352.0,
+    "seen": 1791632480.2735126,
+    "ast_hash": "6014dc6659e971acba9066fe1ace729c",
+    "semantic_hash": ""
+  },
+  "docs/troubleshooting.md": {
+    "mtime": 1791632096.0,
+    "seen": 1791632480.2735138,
+    "ast_hash": "522cfa9277d3d99a672b695a4a0b0ae5",
+    "semantic_hash": ""
+  },
+  "environment.yml": {
+    "mtime": 1791632475.0,
+    "seen": 1791632480.2735145,
+    "ast_hash": "2b34482835e58b695d990c6dfb2b60d9",
+    "semantic_hash": ""
+  },
+  "gpu.md": {
+    "mtime": 1791628439.0,
+    "seen": 1791632480.2735155,
+    "ast_hash": "077b7f90f8f7c89a846caee40ee55485",
+    "semantic_hash": ""
+  },
+  "requirements.txt": {
+    "mtime": 1791632030.0,
+    "seen": 1791632480.2735167,
+    "ast_hash": "2c4bb53d5b52fb1b74622d32b329112f",
+    "semantic_hash": ""
+  },
+  "rules.md": {
+    "mtime": 1791630576.0,
+    "seen": 1791632480.2735176,
+    "ast_hash": "6092da73608ec35ee47340ec81513132",
+    "semantic_hash": ""
+  },
+  "tests/README.md": {
+    "mtime": 1791632135.0,
+    "seen": 1791632480.2735186,
+    "ast_hash": "ea8af6346d07f6eeadf7e15c88757731",
+    "semantic_hash": ""
+  }
+}

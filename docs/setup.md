@@ -26,22 +26,29 @@ report locally.
 ## Cluster environment
 
 Python 3.10, PyTorch built for **CUDA 12.6 (`cu126`)** — verified working on the
-525 driver.
+525 driver. `scripts/setup_env.sh` does all of this in one go (idempotent):
+it installs torch/torchvision from the cu126 index, the pipeline dependencies
+from `requirements.txt`, and VGGT from its official repository.
+
+```bash
+bash scripts/setup_env.sh
+```
+
+Manual equivalent:
 
 ```bash
 conda create -n spatialdiff python=3.10 -y
 conda activate spatialdiff
+export PATH="$CONDA_PREFIX/bin:$PATH"        # see the PATH gotcha in troubleshooting.md
 pip install torch torchvision torchaudio \
     --index-url https://download.pytorch.org/whl/cu126
-pip install open3d opencv-python transformers accelerate \
-    scikit-learn scipy pyyaml huggingface_hub
+pip install -r requirements.txt
 ```
 
-Then install **VGGT** from its official repository, following that repo's
-README (record the exact URL + commit in [`models.md`](models.md)).
-
-Environment file: `environment.yml` and `scripts/setup_env.sh` (planned, see
-[`roadmap.md`](roadmap.md)).
+The scripts never rely on `conda activate` alone: this cluster's sessions can
+carry a PATH where the shared anaconda's python 3.8 wins over the env (see
+[`troubleshooting.md`](troubleshooting.md)). They call the env interpreter by
+absolute path, and PBS jobs re-prepend `$CONDA_PREFIX/bin` after activating.
 
 ### Verify CUDA inside a GPU job
 
@@ -61,15 +68,19 @@ Expected: `True <n>` (all 8 A100s are visible unless you pin one).
 ### Batch jobs
 
 Templates: `scripts/job_reconstruct.pbs`, `scripts/job_describe.pbs`,
-`scripts/job_full.pbs` (planned). Every job must include:
+`scripts/job_full.pbs`. Every job includes:
 
 ```bash
 unset CUDA_VISIBLE_DEVICES   # otherwise PBS hides all GPUs
 ```
 
+Submit from the repo root: `qsub scripts/job_full.pbs`.
+
 Requests available to you (per `gpu.md`): up to 16 CPUs, 64 GB RAM, 24 h
-walltime, 5 concurrent jobs. Load large models straight to GPU with
+walltime, 5 concurrent jobs. Large models load straight onto the GPU with
 `device_map="auto"` and `low_cpu_mem_usage=True` to stay under the RAM cap.
+PBS does not pin GPUs on this cluster — check `nvidia-smi` and optionally pin
+an idle GPU in the job (`export CUDA_VISIBLE_DEVICES=3` after the `unset`).
 
 ## Model weights
 
@@ -77,11 +88,12 @@ Compute nodes may have **no internet**. Download everything on the login node
 into the shared model folder:
 
 ```bash
-export HF_HOME=~/models
-huggingface-cli download <model-id>        # exact IDs in docs/models.md
+bash scripts/download_models.sh        # ~88 GB: VGGT, DINOv2, Qwen3-VL 8B + 32B
 ```
 
-Then point `paths.model_dir` in `configs/default.yaml` at `~/models/`.
+It writes `~/models/<Model-Name>/` (resumable; rerun any time). The pipeline
+resolves `models.*` config entries against `paths.model_dir` first, so it loads
+from disk offline. Exact IDs/licenses: [`models.md`](models.md).
 
 ## Laptop environment (CPU stages)
 
