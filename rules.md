@@ -59,7 +59,40 @@ Rules for exceptions:
   overwriting. Ask when unsure.
 - Do not delete files outside the workspace at all.
 
-## 5. Resource use (this is an HPC cluster)
+## 5. Git conventions
+
+### 5.1 Tags: `major.minor`
+- Every milestone/release is tagged as **`v<major>.<minor>`** — two numbers only,
+  no patch component. Examples: `v0.1`, `v0.2`, `v1.0`, `v2.0`.
+- Increment **minor** for each completed stage/checkpoint; increment **major**
+  for milestones that change the project's public behaviour or deliverable.
+- Tag from `main` only, after the checkpoint has been verified.
+- Use annotated tags with a short message, and always push tags:
+  ```bash
+  git tag -a v0.1 -m "Docs and plan complete"
+  git push origin v0.1
+  ```
+- Never move or re-point a published tag; make a new one instead.
+
+### 5.2 Large files: use Git LFS when needed
+- Use **Git LFS** for any large binary asset that must be versioned: videos
+  (`*.mp4`, `*.mov`, `*.avi`), point clouds (`*.ply`), model weights and
+  checkpoints (`*.pt`, `*.pth`, `*.ckpt`, `*.safetensors`, `*.onnx`).
+- Do **not** put large binaries in regular git. If an asset is reproducible,
+  don't commit it at all (`cache/`, `outputs/*`, `models/` are gitignored).
+- When a large asset genuinely needs versioning, track it via LFS:
+  ```bash
+  git lfs install            # once per machine
+  git lfs track "*.mp4"      # writes/updates .gitattributes
+  git add .gitattributes <file>
+  ```
+  `.gitattributes` is committed, so every clone uses the same filters.
+- `.gitignore` excludes large media by default; a file that must be versioned
+  despite that may need `git add -f` once it is LFS-tracked.
+- Never rewrite, prune, or delete LFS objects without the user's approval, and
+  never run `git lfs migrate` on history without explicit instruction.
+
+## 6. Resource use (this is an HPC cluster)
 
 - Be a good citizen: GPUs on `jiit-gpu01` are shared and often busy. Check
   `nvidia-smi` and pick an idle GPU; don't hog all 8.
@@ -68,7 +101,7 @@ Rules for exceptions:
 - Respect the PBS limits (`gpu` queue: 5 running jobs/user, max 16 CPUs,
   max 64 GB, 24 h walltime).
 
-## 6. Reporting
+## 7. Reporting
 
 - When a task requires touching anything outside this folder, **say so and get
   confirmation first**.
