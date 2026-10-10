@@ -170,6 +170,42 @@ def setup_logging(name: str, level: int = logging.INFO) -> logging.Logger:
     return logging.getLogger(name)
 
 
+def pin_idle_gpus(n: int, log: logging.Logger | None = None) -> str | None:
+    """Pin the ``n`` idlest GPUs via CUDA_VISIBLE_DEVICES if none are pinned.
+
+    This cluster's PBS does not pin GPUs (gpu.md, Gotcha 1 + Bonus), so batch
+    jobs see all 8 A100s and `device_map="auto"` would spread a model over all
+    of them, colliding with other users. Must be called before CUDA is
+    initialised (i.e. before the first torch CUDA call).
+
+    Returns the chosen "0,1"-style string, or None when nothing was changed.
+    """
+    import os
+    import subprocess
+
+    if os.environ.get("CUDA_VISIBLE_DEVICES"):
+        return None  # already pinned (or PBS handed us devices)
+    try:
+        out = subprocess.run(
+            ["nvidia-smi", "--query-gpu=index,memory.used",
+             "--format=csv,noheader,nounits"],
+            capture_output=True, text=True, timeout=15, check=True,
+        )
+        rows = [line.split(", ") for line in out.stdout.strip().splitlines() if line]
+        rows.sort(key=lambda r: int(r[1]))          # least used memory first
+        ids = [r[0] for r in rows[:max(1, n)]]
+        chosen = ",".join(ids)
+        os.environ["CUDA_VISIBLE_DEVICES"] = chosen
+        if log:
+            log.info("pinned CUDA_VISIBLE_DEVICES=%s (idlest %d of %d GPUs)",
+                     chosen, len(ids), len(rows))
+        return chosen
+    except Exception as exc:  # noqa: BLE001 - never fail the job over this
+        if log:
+            log.warning("could not pick idle GPUs (%s); leaving visibility as-is", exc)
+        return None
+
+
 class Timer:
     """Wall-clock context manager used by run.py for per-stage timings."""
 

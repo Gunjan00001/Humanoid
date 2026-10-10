@@ -36,6 +36,7 @@ from src.common import (  # noqa: E402
     apply_overrides,
     cache_dir,
     load_config,
+    pin_idle_gpus,
     read_json,
     repo_path,
     resolve_model,
@@ -76,12 +77,22 @@ def load_frame_list(cfg: dict, limit_per_video: int | None = None) -> list[dict]
 
 
 def run_vggt(frames: list[dict], cfg: dict) -> dict:
+    import os
+
     import torch
     from PIL import Image
     from vggt.models.vggt import VGGT
     from vggt.utils.geometry import unproject_depth_map_to_point_map
     from vggt.utils.load_fn import load_and_preprocess_images
     from vggt.utils.pose_enc import pose_encoding_to_extri_intri
+
+    rcfg = cfg["reconstruction"]
+    # pin a GPU BEFORE any CUDA initialisation (is_available() below would lock
+    # the device list); shared node, PBS does not pin - see gpu.md
+    if rcfg.get("gpu_index") is not None:
+        os.environ["CUDA_VISIBLE_DEVICES"] = str(int(rcfg["gpu_index"]))
+    else:
+        pin_idle_gpus(1, log)
 
     if not torch.cuda.is_available():
         raise RuntimeError(
@@ -90,15 +101,12 @@ def run_vggt(frames: list[dict], cfg: dict) -> dict:
             "before running (see gpu.md, Gotcha 1)."
         )
 
-    rcfg = cfg["reconstruction"]
     seed = int(cfg.get("seed", 0))
     random.seed(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)
 
-    if rcfg.get("gpu_index") is not None:
-        torch.cuda.set_device(int(rcfg["gpu_index"]))
     device = torch.device("cuda")
     dtype = torch.bfloat16 if torch.cuda.get_device_capability(device)[0] >= 8 else torch.float16
 
