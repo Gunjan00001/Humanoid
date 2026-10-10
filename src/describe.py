@@ -98,9 +98,25 @@ PROMPT_MOVE = (
 # crop selection
 
 
+def _pose_score(recon: dict, ref: int, other: int) -> float:
+    """How different are two camera poses (degrees + 60 x metres)."""
+    ei, ej = recon["extrinsic"][ref], recon["extrinsic"][other]
+    r_rel = ei[:, :3].T @ ej[:, :3]
+    cos = float(np.clip((np.trace(r_rel) - 1) / 2, -1, 1))
+    angle = float(np.degrees(np.arccos(cos)))
+    dist = float(np.linalg.norm(ei[:, 3] - ej[:, 3]))
+    return angle + 60.0 * dist
+
+
 def best_crop_for_cluster(cid: int, points: np.ndarray, tag: str, recon: dict, cfg: dict,
-                          suffix: str = "") -> dict | None:
-    """Pick the frame of the given video that sees the cluster best, crop it."""
+                          suffix: str = "", ref_frame: int | None = None) -> dict | None:
+    """Pick the frame of the given video that sees the cluster best, crop it.
+
+    When ``ref_frame`` is given (the own-video best frame), the frame is chosen
+    to be *pose-similar* to it among the sufficiently-visible candidates, so
+    the two verification crops show the same view - otherwise the VLM ends up
+    comparing different scenes and invents changes.
+    """
     scfg = cfg["semantics"]
     conf_q = float(np.percentile(recon["depth_conf"], cfg["reconstruction"]["conf_percentile"]))
     own_frames = [i for i, t in enumerate(recon["tags"]) if t == tag]
@@ -108,20 +124,27 @@ def best_crop_for_cluster(cid: int, points: np.ndarray, tag: str, recon: dict, c
         sel = np.linspace(0, len(own_frames) - 1, int(scfg["max_crop_frames"])).round().astype(int)
         own_frames = [own_frames[i] for i in sorted(set(sel.tolist()))]
 
-    best = None
+    views = []
     for i in own_frames:
         uv, z = project_points(points, recon["extrinsic"][i], recon["intrinsic"][i])
         observed, in_bounds = sample_depth(recon["depth"][i], uv)
         conf_ok = sample_depth(recon["depth_conf"][i], uv)[0] >= conf_q
         visible = in_bounds & conf_ok & (np.abs(z - observed) <= 0.05)
-        n_vis = int(visible.sum())
-        if best is None or n_vis > best["n_visible"]:
-            best = {"frame_index": i, "n_visible": n_vis, "visible": visible, "uv": uv}
-
-    if best is None or best["n_visible"] < 5:
-        log.warning("cluster %d (%s%s): no good view found (%s visible points)",
-                    cid, tag, suffix, None if best is None else best["n_visible"])
+        views.append({"frame_index": i, "n_visible": int(visible.sum()),
+                      "visible": visible, "uv": uv})
+    if not views:
         return None
+    n_max = max(v["n_visible"] for v in views)
+    if n_max < 5:
+        log.warning("cluster %d (%s%s): no good view found (%d visible points)",
+                    cid, tag, suffix, n_max)
+        return None
+    if ref_frame is not None:
+        enough = [v for v in views if v["n_visible"] >= max(5, 0.25 * n_max)]
+        best = min(enough, key=lambda v: _pose_score(recon, ref_frame, v["frame_index"])) \
+            if enough else max(views, key=lambda v: v["n_visible"])
+    else:
+        best = max(views, key=lambda v: v["n_visible"])
 
     uv = best["uv"][best["visible"]]
     x1, y1 = uv.min(axis=0)
@@ -222,7 +245,18 @@ def parse_json_reply(text: str) -> dict:
 
 _STOPWORDS = {"the", "a", "an", "and", "of", "with", "on", "in", "is", "are", "no",
               "none", "empty", "table", "surface", "visible", "object", "objects",
-              "there", "it", "its", "small", "large", "other"}
+              "there", "it", "its", "small", "large", "other",
+              # descriptors: colours, shapes, qualities - two different objects
+              # can share them ("dark surface", "white rectangular")
+              "dark", "light", "bright", "blurred", "blurry", "sharp", "shiny",
+              "edge", "edges", "corner", "top", "bottom", "left", "right",
+              "front", "back", "side", "middle", "centre", "center",
+              "rectangular", "round", "square", "circular", "cylindrical",
+              "white", "black", "blue", "yellow", "green", "red", "brown",
+              "orange", "pink", "purple", "grey", "gray", "silver", "golden",
+              "thin", "thick", "long", "short", "flat", "smooth", "rough",
+              "partially", "part", "piece", "portion", "area", "region",
+              "possibly", "maybe", "appears", "seems", "like", "looks"}
 
 
 def _objects_overlap(a, b) -> bool:
@@ -340,10 +374,11 @@ def main() -> int:
             info = best_crop_for_cluster(cid, pts, own_tag, recon, cfg)
             if info:
                 entry.update(info)
-        # other-video view (verified clusters only)
-        if c.get("verified", True) and "crop_other" not in entry:
+        # other-video view (verified clusters only): pose-matched to the own view
+        if c.get("verified", True) and "crop_other" not in entry and "frame_index" in entry:
             other_tag = "b" if own_tag == "a" else "a"
-            info = best_crop_for_cluster(cid, pts, other_tag, recon, cfg, suffix="_other")
+            info = best_crop_for_cluster(cid, pts, other_tag, recon, cfg, suffix="_other",
+                                         ref_frame=int(entry["frame_index"]))
             if info:
                 entry.update({f"{k}_other" if k != "cluster_id" else k: v
                               for k, v in info.items()})
