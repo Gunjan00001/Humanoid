@@ -41,22 +41,61 @@ COMB_BBOX = (-0.205, -0.025, 0.045, 0.14)     # x0, x1, y0, y1
 PEN_BBOX = (-0.13, -0.095, 0.175, 0.205)
 
 
-def region_height_above_table(pts: np.ndarray, coef: np.ndarray,
-                              bbox: tuple, cell: float = 0.006) -> dict:
-    """Mean/median height of points in `bbox` above the table plane fitted to
-    the points OUTSIDE the region (so the object does not bias its own base)."""
+def region_height_above_table(pts: np.ndarray, bbox: tuple,
+                              cell: float = 0.006, ring_mm: float = 60.0) -> dict:
+    """Height of the object region above its LOCAL table surface.
+
+    Fits the plane on a ring around the region (bbox expanded by 20mm..80mm)
+    so surface *warp* does not bias the measurement - important because
+    MapAnything's table carries a ~+/-2cm warp on this scene, which a global
+    plane would misattribute to the object.
+    """
     x0, x1, y0, y1 = bbox
+    pad_in, pad_out = 0.02, ring_mm / 1000.0
     inside = (pts[:, 0] >= x0) & (pts[:, 0] <= x1) & (pts[:, 1] >= y0) & (pts[:, 1] <= y1)
-    q = pts[inside]
-    if len(q) < 50:
-        return {"n": int(len(q)), "median_mm": None, "p90_mm": None}
+    ring = ((pts[:, 0] >= x0 - pad_out) & (pts[:, 0] <= x1 + pad_out)
+            & (pts[:, 1] >= y0 - pad_out) & (pts[:, 1] <= y1 + pad_out)
+            & ~((pts[:, 0] >= x0 - pad_in) & (pts[:, 0] <= x1 + pad_in)
+                & (pts[:, 1] >= y0 - pad_in) & (pts[:, 1] <= y1 + pad_in)))
+    q, r = pts[inside], pts[ring]
+    if len(q) < 50 or len(r) < 500:
+        return {"n": int(len(q)), "ring_n": int(len(r)), "median_mm": None, "p90_mm": None}
+    coef = fit_dominant_plane(r)                    # local table plane
     h = plane_height(q, coef)
-    return {"n": int(len(q)),
+    return {"n": int(len(q)), "ring_n": int(len(r)),
             "median_mm": round(float(np.median(h)) * 1000, 1),
             "p90_mm": round(float(np.percentile(h, 90)) * 1000, 1)}
 
 
-def comb_length_mm(pts: np.ndarray, coef: np.ndarray) -> float | None:
+def cluster_height_above_table(pts: np.ndarray, cluster: dict,
+                               ring_in: float = 0.04, ring_out: float = 0.10) -> dict:
+    """Height of a detected cluster's points above its LOCAL table surface.
+
+    Uses the backend's OWN cluster location (frames differ between backends, so
+    fixed world-space boxes are not comparable). The table plane is fitted on a
+    ring around the cluster centroid, excluding the cluster itself, so surface
+    warp cannot masquerade as object height.
+
+    Interpretation: an object that is *visible in the depth maps* rises its
+    own thickness above the ring plane (comb ~10mm, pen ~10mm). A backend that
+    absorbs thin objects shows a median near 0 with no positive tail.
+    """
+    c = np.asarray(cluster["centroid"], dtype=float)
+    d = np.linalg.norm(pts[:, :2] - c[:2], axis=1)
+    core = d < ring_in
+    ring = (d >= ring_in) & (d <= ring_out)
+    q, r = pts[core], pts[ring]
+    if len(q) < 30 or len(r) < 300:
+        return {"n": int(len(q)), "ring_n": int(len(r)),
+                "median_mm": None, "p90_mm": None}
+    coef = fit_dominant_plane(r)
+    h = plane_height(q, coef)
+    return {"n": int(len(q)), "ring_n": int(len(r)),
+            "median_mm": round(float(np.median(h)) * 1000, 1),
+            "p90_mm": round(float(np.percentile(h, 90)) * 1000, 1)}
+
+
+def comb_length_mm(pts: np.ndarray) -> float | None:
     """Principal-axis extent of the comb region in mm (plausibility check)."""
     x0, x1, y0, y1 = COMB_BBOX
     m = (pts[:, 0] >= x0) & (pts[:, 0] <= x1) & (pts[:, 1] >= y0) & (pts[:, 1] <= y1)
@@ -70,25 +109,39 @@ def comb_length_mm(pts: np.ndarray, coef: np.ndarray) -> float | None:
     return round(float(np.percentile(proj, 95) - np.percentile(proj, 5)) * 1000, 1)
 
 
-def analyse(label: str, cache: Path, cfg: dict) -> dict:
+def cluster_heights(pts: np.ndarray, cache: Path) -> list[dict]:
+    """Height above the local table for each of the backend's own detected
+    clusters (answers: does this backend's depth show the objects?)."""
+    cpath = cache / "diff" / "clusters.json"
+    if not cpath.exists():
+        return []
+    out = []
+    for c in read_json(cpath)["clusters"]:
+        h = cluster_height_above_table(pts, c)
+        out.append({"id": c["id"], "type": c["type"], "centroid": c["centroid"],
+                    **h})
+    return out
+
+
+def analyse(label: str, cache: Path, cfg: dict, conf_percentile: float) -> dict:
     """Measure one reconstruction cache. `cfg` is copied with cache_dir pointed
     at `cache`, so load_reconstruction resolves that cache's artifacts
-    (including its aligned/ dir when it exists)."""
+    (including its aligned/ dir when it exists). `conf_percentile` is the
+    per-backend working point (see --conf-ma)."""
     cfg = {**cfg, "paths": {**cfg["paths"], "cache_dir": str(cache)}}
+    cfg["reconstruction"] = {**cfg["reconstruction"], "conf_percentile": conf_percentile}
     recon = load_reconstruction(cfg, prefer_aligned=True)
     rdir = recon["dir"]
     meta = recon["meta"]
     depth_conf = recon["depth_conf"]
 
-    conf_q = float(np.percentile(depth_conf, cfg["reconstruction"]["conf_percentile"]))
+    conf_q = float(np.percentile(depth_conf, conf_percentile))
     n_raw = int((depth_conf >= conf_q).sum())
-    pts, rgb, ptags, _ = tagged_points(recon, cfg["reconstruction"]["conf_percentile"])
+    pts, rgb, ptags, _ = tagged_points(recon, conf_percentile)
     av, = voxel_downsample(pts[ptags == "a"], voxel=0.006)
     bv, = voxel_downsample(pts[ptags == "b"], voxel=0.006)
     da, _ = cKDTree(bv).query(av, k=1, workers=-1)
 
-    # table plane from the A+B cloud (for the thin-object height measurements)
-    coef = fit_dominant_plane(pts)
     out = {
         "label": label,
         "backend": meta.get("backend"),
@@ -96,7 +149,10 @@ def analyse(label: str, cache: Path, cfg: dict) -> dict:
         "num_frames": meta.get("num_frames"),
         "image_hw": meta.get("image_hw"),
         "inference_seconds": meta.get("inference_seconds"),
-        "peak_gpu_gib": meta.get("peak_gpu_gib"),
+        "peak_gpu_gib": meta.get("peak_gpu_gib")
+        if meta.get("peak_gpu_gib") is not None else
+        (read_json(cache / "reconstruction" / "meta.json").get("peak_gpu_gib")
+         if (cache / "reconstruction" / "meta.json").exists() else None),
         "points_raw": n_raw,
         "voxels_6mm": {"a": int(len(av)), "b": int(len(bv))},
         "a_to_b_nn_mm": {
@@ -104,11 +160,8 @@ def analyse(label: str, cache: Path, cfg: dict) -> dict:
             "p75": round(float(np.percentile(da, 75)) * 1000, 1),
             "p90": round(float(np.percentile(da, 90)) * 1000, 1),
         },
-        "thin_object_height": {
-            "comb": region_height_above_table(pts, coef, COMB_BBOX),
-            "pen": region_height_above_table(pts, coef, PEN_BBOX),
-        },
-        "comb_length_mm": comb_length_mm(pts, coef),
+        "cluster_heights": cluster_heights(pts, cache),
+        "comb_length_mm": comb_length_mm(pts),
     }
     icp = cache / "reconstruction" / "aligned" / "transform.json"
     if icp.exists():
@@ -124,12 +177,18 @@ def main() -> int:
     parser.add_argument("--config", default="configs/default.yaml")
     parser.add_argument("--cache-vggt", default="cache")
     parser.add_argument("--cache-ma", default="cache/ma_run")
+    parser.add_argument("--conf-vggt", type=float, default=50.0,
+                        help="confidence percentile for VGGT (its working point)")
+    parser.add_argument("--conf-ma", type=float, default=25.0,
+                        help="confidence percentile for MapAnything: its head "
+                             "sits at the floor for the blurrier video B, so "
+                             "p50 discards 99%% of B (see docs/results.md)")
     parser.add_argument("--out", default="logs/backend_comparison.json")
     args = parser.parse_args()
     cfg = load_config(args.config)
 
-    results = [analyse("VGGT", repo_path(args.cache_vggt), cfg),
-               analyse("MapAnything", repo_path(args.cache_ma), cfg)]
+    results = [analyse("VGGT", repo_path(args.cache_vggt), cfg, args.conf_vggt),
+               analyse("MapAnything", repo_path(args.cache_ma), cfg, args.conf_ma)]
 
     for r in results:
         print(f"\n=== {r['label']} ({r['backend']}) ===")
@@ -142,9 +201,11 @@ def main() -> int:
         if "icp" in r:
             print(f"  ICP static mean NN: {r['icp']['static_nn_before_mm']} -> "
                   f"{r['icp']['static_nn_after_mm']} mm (fitness {r['icp']['fitness']})")
-        for k, v in r["thin_object_height"].items():
-            print(f"  {k} height above table: median {v['median_mm']} mm "
-                  f"(p90 {v['p90_mm']}, n={v['n']})")
+        print("  detected clusters, height above their local table surface:")
+        for c in r.get("cluster_heights", []):
+            print(f"    #{c['id']} {c['type']:<9} n={c['n']:>6} "
+                  f"median {c['median_mm']} mm, p90 {c['p90_mm']} mm "
+                  f"at {[round(x, 2) for x in c['centroid']]}")
         print(f"  comb principal-axis length: {r['comb_length_mm']} mm "
               f"(plausibility check, typical comb ~200mm)")
     write_json(repo_path(args.out), {"created": None, "results": results})
