@@ -121,14 +121,16 @@ def best_crop_for_cluster(cid: int, points: np.ndarray, tag: str, recon: dict, c
     uv = best["uv"][best["visible"]]
     x1, y1 = uv.min(axis=0)
     x2, y2 = uv.max(axis=0)
-    margin = float(scfg["crop_margin"])
+    # verification crops need context around the cluster: a tight crop of a
+    # fragment can miss the very object in the other video and fake a change
+    margin = float(scfg.get("verify_crop_margin", scfg["crop_margin"]))
     mx, my = (x2 - x1) * margin, (y2 - y1) * margin
     frame_idx = best["frame_index"]
     tr = recon["meta"]["frames"][frame_idx]
     bbox_orig = model_bbox_to_original((x1 - mx, y1 - my, x2 + mx, y2 + my), tr)
 
     # enforce a minimum crop size around its centre
-    min_px = int(scfg["min_crop_pixels"])
+    min_px = int(scfg.get("verify_min_crop_pixels", scfg["min_crop_pixels"]))
     cx, cy = (bbox_orig[0] + bbox_orig[2]) // 2, (bbox_orig[1] + bbox_orig[3]) // 2
     bx1 = max(0, min(cx - min_px // 2, max(0, tr["orig_w"] - min_px)))
     by1 = max(0, min(cy - min_px // 2, max(0, tr["orig_h"] - min_px)))
@@ -386,23 +388,49 @@ def main() -> int:
             rejected[cid] = {"type": c["type"], "centroid": c["centroid"],
                              "reason": "VLM denied the change (same object visible in both videos)",
                              "vlm": {k: v.get(k) for k in ("label", "raw")}}
-    # drop unverified duplicates of confirmed changes (same label nearby)
+
+    # mutual cancellation: a confirmed "removed X" and "added X" with the same
+    # label at (nearly) the same spot mean X is present in BOTH videos - the
+    # fragments came from lighting/blur differences, so both are dropped
+    def _norm(s) -> str:
+        return (s or "").lower().strip()
+
+    def _dist(c1: dict, c2: dict) -> float:
+        return float(np.linalg.norm(np.asarray(c1["centroid"]) - np.asarray(c2["centroid"])))
+
+    cancel: set[int] = set()
+    rem = [c for c in confirmed if c["type"] == "removed"]
+    add = [c for c in confirmed if c["type"] == "added"]
+    for r in rem:
+        for a in add:
+            lr = _norm(vlm_cache.get(str(r["id"]), {}).get("label"))
+            la = _norm(vlm_cache.get(str(a["id"]), {}).get("label"))
+            if lr and la and (lr in la or la in lr) and _dist(r, a) < 0.12:
+                for c, why in ((r, "removed"), (a, "added")):
+                    cid = str(c["id"])
+                    if c["id"] not in cancel:
+                        rejected[cid] = {"type": c["type"], "centroid": c["centroid"],
+                                         "reason": "contradicted by a confirmed opposite change with "
+                                                   "the same label nearby (object present in both videos)",
+                                         "vlm": {"label": vlm_cache.get(cid, {}).get("label")}}
+                    cancel.add(c["id"])
+                log.info("cancel contradictory pair %s/%s (%s)",
+                         r["id"], a["id"], vlm_cache.get(str(r["id"]), {}).get("label"))
+    confirmed = [c for c in confirmed if c["id"] not in cancel]
+
+    # drop unverified duplicates of confirmed changes (same physical change,
+    # seen from the other video): bbox adjacency
+    def _bbox_close(c1: dict, c2: dict, pad: float = 0.01) -> bool:
+        return all(c1["bbox_min"][i] - pad <= c2["bbox_max"][i]
+                   and c2["bbox_min"][i] - pad <= c1["bbox_max"][i] for i in range(3))
+
     uncertain_kept = []
     for c in uncertain:
         cid = str(c["id"])
-        label = (vlm_cache.get(cid, {}).get("label") or "").lower().strip()
-        dup = None
-        for cc in confirmed:
-            if not label:
-                break
-            cl = (vlm_cache.get(str(cc["id"]), {}).get("label") or "").lower().strip()
-            dist = float(np.linalg.norm(np.asarray(cc["centroid"]) - np.asarray(c["centroid"])))
-            if label and cl and (label in cl or cl in label) and dist < 0.15:
-                dup = cc["id"]
-                break
+        dup = next((cc["id"] for cc in confirmed if _bbox_close(c, cc)), None)
         if dup is not None:
             rejected[cid] = {"type": c["type"], "centroid": c["centroid"],
-                             "reason": f"duplicate of verified change #{dup} (same label nearby)",
+                             "reason": f"duplicate of verified change #{dup} (overlapping region)",
                              "vlm": {"label": vlm_cache.get(cid, {}).get("label")}}
         else:
             uncertain_kept.append(c)
