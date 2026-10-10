@@ -84,6 +84,8 @@ semantics:
   match_min_distance: 0.10   # a "moved" pair must have moved at least this far
   crop_margin: 0.25          # margin around the projected crop, relative to size
   min_crop_pixels: 48
+  verify_crop_margin: 0.6    # verification crops need context around the cluster
+  verify_min_crop_pixels: 160
   max_crop_frames: 40        # cap frames scanned for the best view
   use_sam2: false            # stretch goal: SAM 2 masks before cropping
 
