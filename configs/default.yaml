@@ -25,7 +25,8 @@ frames:
 
 reconstruction:
   backend: vggt              # vggt | mast3r | colmap
-  use_icp_refinement: false  # run src/align.py after reconstruction
+  use_icp_refinement: true   # run src/align.py after reconstruction (the demo
+                             # scene needed it: static mean NN 15mm -> 11mm)
   device: cuda
   gpu_index: null            # pin a specific GPU id (shared node, see gpu.md)
   conf_percentile: 50.0      # keep points with confidence >= this percentile
@@ -42,10 +43,13 @@ models:
   # a repo id (login node only - compute nodes may have no internet).
 
 diff:
-  # Tuned on the demo scene (tabletop, phone videos): the changed objects
-  # (comb, pen, remote) are 1-2 cm thick, so the defaults from the plan
-  # skeleton (voxel 2 cm / distance 5 cm) could not see them. For larger
-  # rooms/objects, scale voxel_size and change_distance up together.
+  method: tabletop           # geometric | tabletop (see src/tabletop.py)
+  # geometric: 3D nearest-neighbour distance between the two clouds.
+  # tabletop: appearance comparison over the dominant plane - needed because
+  # VGGT absorbs objects thinner than its patch scale (~1.4cm here); the comb
+  # and pen are 1cm thick and do not exist in the depth maps.
+  #
+  # geometric parameters (also used by align.py):
   voxel_size: 0.006          # metres (reconstruction scale is approximate)
   change_distance: 0.012     # NN distance above which a point is a candidate
   dbscan_eps: 0.025          # ~4 voxels radius
@@ -57,6 +61,21 @@ diff:
   visibility_check: true     # occlusion-aware classification
   visibility_tol: 0.006      # depth tolerance when testing "seen empty"
   visibility_min_fraction: 0.15  # fraction of cluster points that must be seen empty
+
+  # tabletop (photometric) parameters:
+  tabletop:
+    cell_size: 0.005         # raster cell over the dominant plane
+    min_cell_points: 5       # a cell needs this many points in each video
+    objectness_threshold: 70 # colour distance from the fitted table colour
+    objectness_margin: 40    # |objA - objB| needed for removed/added
+    ratio_threshold: 100     # relative-colour distance for "replaced"
+    dbscan_eps_cells: 2.0
+    dbscan_min_samples: 8
+    min_cells: 18            # discard smaller blobs
+    min_cells_unverified: 10 # one-video-only objects can be thin (e.g. a pen)
+    boundary_erode_cells: 0  # 0 = no erosion; the masks already require the other video to show table
+    ring_hole_ratio: 0.4     # static objects appear as rings - drop them
+    max_points_per_cell: 50
 
 semantics:
   vlm: primary               # primary | fallback

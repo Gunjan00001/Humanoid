@@ -16,6 +16,7 @@ Planned layout from [`../AGENT_PLAN.md`](../AGENT_PLAN.md) §4; the root maps to
 | `configs/default.yaml` | All models, paths, thresholds | ✅ |
 | `src/common.py` | config/CLI/JSON helpers shared by all stages | ✅ |
 | `src/geometry.py` | reconstruction loading, camera math, change list | ✅ |
+| `src/tabletop.py` | photometric tabletop diff (thin-object mode) | ✅ |
 | `src/extract_frames.py` | video → sharp tagged frames | ✅ |
 | `src/reconstruct.py` | VGGT / MASt3R / COLMAP switch | ✅ VGGT (fallbacks raise) |
 | `src/align.py` | optional ICP refinement | ✅ |
@@ -44,6 +45,7 @@ Planned layout from [`../AGENT_PLAN.md`](../AGENT_PLAN.md) §4; the root maps to
 | `run.py` | Parse CLI + config, call stages in order, skip stages whose cache exists | contain model logic |
 | `common.py` | config loading, path resolution, model-path resolution, JSON/CLI/stage-output plumbing | import torch or heavy deps |
 | `geometry.py` | load reconstruction artifacts, voxel/conf helpers, camera projection, model↔original mapping, derived change list | write to cache or files |
+| `tabletop.py` | photometric tabletop diff (plane fit, cell maps, objectness, replaced/unverified logic) | touch the GPU |
 | `extract_frames.py` | Decode videos, sample fps, blur-filter, tag frames with source video | touch the GPU |
 | `reconstruct.py` | Run the configured backend on **all** frames of A and B together; emit poses, depth, tagged cloud | do the diff |
 | `align.py` | Optional ICP over static regions only | run unless enabled in config |

@@ -1,0 +1,922 @@
+{
+  "meta": {
+    "video_a": "/home/jiit_992401210050/Desktop/Humanoid/data/a.mp4",
+    "video_b": "/home/jiit_992401210050/Desktop/Humanoid/data/b.mp4",
+    "backend": "vggt",
+    "model": "/home/jiit_992401210050/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-10T12:52:22Z",
+    "config_hash": "900dd917074e",
+    "num_frames": 49,
+    "semantics": "not run",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.2897,
+        -0.0721,
+        0.9235
+      ],
+      "bbox": [
+        -0.3096,
+        -0.0845,
+        0.9194,
+        -0.28,
+        -0.0551,
+        0.9326
+      ],
+      "from": [
+        -0.2897,
+        -0.0721,
+        0.9235
+      ],
+      "to": null,
+      "confidence": 0.3,
+      "cluster_ids": [
+        1
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 2,
+      "type": "removed",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.2464,
+        -0.3435,
+        0.9525
+      ],
+      "bbox": [
+        -0.2644,
+        -0.3621,
+        0.9424,
+        -0.2301,
+        -0.3303,
+        0.9619
+      ],
+      "from": [
+        -0.2464,
+        -0.3435,
+        0.9525
+      ],
+      "to": null,
+      "confidence": 0.47,
+      "cluster_ids": [
+        2
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 3,
+      "type": "removed",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.1252,
+        0.1002,
+        0.9146
+      ],
+      "bbox": [
+        -0.205,
+        0.045,
+        0.894,
+        -0.025,
+        0.1399,
+        0.9336
+      ],
+      "from": [
+        -0.1252,
+        0.1002,
+        0.9146
+      ],
+      "to": null,
+      "confidence": 0.87,
+      "cluster_ids": [
+        3
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 4,
+      "type": "removed",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.1604,
+        -0.1589,
+        0.9423
+      ],
+      "bbox": [
+        -0.1849,
+        -0.1748,
+        0.9351,
+        -0.14,
+        -0.15,
+        0.9517
+      ],
+      "from": [
+        -0.1604,
+        -0.1589,
+        0.9423
+      ],
+      "to": null,
+      "confidence": 0.33,
+      "cluster_ids": [
+        4
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 5,
+      "type": "removed",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.0787,
+        -0.165,
+        0.9456
+      ],
+      "bbox": [
+        -0.1399,
+        -0.205,
+        0.9248,
+        0.025,
+        -0.13,
+        0.9624
+      ],
+      "from": [
+        -0.0787,
+        -0.165,
+        0.9456
+      ],
+      "to": null,
+      "confidence": 0.77,
+      "cluster_ids": [
+        5
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 6,
+      "type": "removed",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.0955,
+        -0.0601,
+        0.9228
+      ],
+      "bbox": [
+        -0.1349,
+        -0.12,
+        0.9023,
+        -0.0551,
+        -0.005,
+        0.9551
+      ],
+      "from": [
+        -0.0955,
+        -0.0601,
+        0.9228
+      ],
+      "to": null,
+      "confidence": 0.79,
+      "cluster_ids": [
+        6
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 7,
+      "type": "removed",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.0882,
+        0.0253,
+        0.9404
+      ],
+      "bbox": [
+        -0.1447,
+        0.0051,
+        0.9219,
+        -0.0351,
+        0.055,
+        0.9517
+      ],
+      "from": [
+        -0.0882,
+        0.0253,
+        0.9404
+      ],
+      "to": null,
+      "confidence": 0.66,
+      "cluster_ids": [
+        7
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 8,
+      "type": "removed",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.0408,
+        -0.0966,
+        0.924
+      ],
+      "bbox": [
+        -0.0948,
+        -0.1499,
+        0.9058,
+        -0.0,
+        -0.035,
+        0.9541
+      ],
+      "from": [
+        -0.0408,
+        -0.0966,
+        0.924
+      ],
+      "to": null,
+      "confidence": 0.88,
+      "cluster_ids": [
+        8
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 9,
+      "type": "removed",
+      "label": null,
+      "description": null,
+      "centroid": [
+        0.0195,
+        0.1505,
+        0.9054
+      ],
+      "bbox": [
+        -0.0049,
+        0.14,
+        0.895,
+        0.0399,
+        0.1649,
+        0.9204
+      ],
+      "from": [
+        0.0195,
+        0.1505,
+        0.9054
+      ],
+      "to": null,
+      "confidence": 0.42,
+      "cluster_ids": [
+        9
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 10,
+      "type": "removed",
+      "label": null,
+      "description": null,
+      "centroid": [
+        0.1343,
+        -0.2136,
+        0.9571
+      ],
+      "bbox": [
+        0.0501,
+        -0.2495,
+        0.9434,
+        0.23,
+        -0.1851,
+        0.9722
+      ],
+      "from": [
+        0.1343,
+        -0.2136,
+        0.9571
+      ],
+      "to": null,
+      "confidence": 0.81,
+      "cluster_ids": [
+        10
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 11,
+      "type": "removed",
+      "label": null,
+      "description": null,
+      "centroid": [
+        0.1677,
+        -0.1767,
+        0.9601
+      ],
+      "bbox": [
+        0.125,
+        -0.2048,
+        0.9409,
+        0.215,
+        -0.1552,
+        0.9795
+      ],
+      "from": [
+        0.1677,
+        -0.1767,
+        0.9601
+      ],
+      "to": null,
+      "confidence": 0.66,
+      "cluster_ids": [
+        11
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 12,
+      "type": "added",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.1104,
+        -0.076,
+        0.9417
+      ],
+      "bbox": [
+        -0.1298,
+        -0.6396,
+        0.9038,
+        -0.0901,
+        0.2046,
+        1.0049
+      ],
+      "from": null,
+      "to": [
+        -0.1104,
+        -0.076,
+        0.9417
+      ],
+      "confidence": 0.38,
+      "cluster_ids": [
+        12
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 13,
+      "type": "added",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.0965,
+        -0.0134,
+        0.9151
+      ],
+      "bbox": [
+        -0.12,
+        -0.0449,
+        0.9102,
+        -0.065,
+        0.01,
+        0.9214
+      ],
+      "from": null,
+      "to": [
+        -0.0965,
+        -0.0134,
+        0.9151
+      ],
+      "confidence": 0.44,
+      "cluster_ids": [
+        13
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 14,
+      "type": "added",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.0545,
+        -0.0548,
+        0.9167
+      ],
+      "bbox": [
+        -0.095,
+        -0.105,
+        0.9102,
+        -0.0151,
+        -0.005,
+        0.9268
+      ],
+      "from": null,
+      "to": [
+        -0.0545,
+        -0.0548,
+        0.9167
+      ],
+      "confidence": 0.79,
+      "cluster_ids": [
+        14
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 15,
+      "type": "added",
+      "label": null,
+      "description": null,
+      "centroid": [
+        0.0944,
+        -0.1935,
+        0.9504
+      ],
+      "bbox": [
+        0.0601,
+        -0.215,
+        0.939,
+        0.1249,
+        -0.16,
+        0.9736
+      ],
+      "from": null,
+      "to": [
+        0.0944,
+        -0.1935,
+        0.9504
+      ],
+      "confidence": 0.53,
+      "cluster_ids": [
+        15
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 16,
+      "type": "added",
+      "label": null,
+      "description": null,
+      "centroid": [
+        0.0778,
+        -0.029,
+        0.9464
+      ],
+      "bbox": [
+        0.06,
+        -0.0449,
+        0.937,
+        0.095,
+        -0.0151,
+        0.958
+      ],
+      "from": null,
+      "to": [
+        0.0778,
+        -0.029,
+        0.9464
+      ],
+      "confidence": 0.23,
+      "cluster_ids": [
+        16
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 17,
+      "type": "added",
+      "label": null,
+      "description": null,
+      "centroid": [
+        0.1173,
+        -0.1007,
+        0.9568
+      ],
+      "bbox": [
+        0.085,
+        -0.115,
+        0.9448,
+        0.1499,
+        -0.0853,
+        0.9727
+      ],
+      "from": null,
+      "to": [
+        0.1173,
+        -0.1007,
+        0.9568
+      ],
+      "confidence": 0.27,
+      "cluster_ids": [
+        17
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 18,
+      "type": "replaced",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.2166,
+        -0.3368,
+        0.9471
+      ],
+      "bbox": [
+        -0.2549,
+        -0.3599,
+        0.9297,
+        -0.16,
+        -0.3152,
+        0.9624
+      ],
+      "from": [
+        -0.2166,
+        -0.3368,
+        0.9471
+      ],
+      "to": [
+        -0.2107,
+        -0.3377,
+        0.9316
+      ],
+      "confidence": 0.84,
+      "cluster_ids": [
+        18
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 19,
+      "type": "replaced",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.1055,
+        -0.0429,
+        0.9336
+      ],
+      "bbox": [
+        -0.125,
+        -0.075,
+        0.9053,
+        -0.085,
+        -0.005,
+        0.9551
+      ],
+      "from": [
+        -0.1055,
+        -0.0429,
+        0.9336
+      ],
+      "to": [
+        -0.1066,
+        -0.0453,
+        0.9151
+      ],
+      "confidence": 0.63,
+      "cluster_ids": [
+        19
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 20,
+      "type": "replaced",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.067,
+        -0.0799,
+        0.9189
+      ],
+      "bbox": [
+        -0.08,
+        -0.0999,
+        0.9077,
+        -0.055,
+        -0.0601,
+        0.9268
+      ],
+      "from": [
+        -0.067,
+        -0.0799,
+        0.9189
+      ],
+      "to": [
+        -0.0665,
+        -0.0795,
+        0.9159
+      ],
+      "confidence": 0.56,
+      "cluster_ids": [
+        20
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 21,
+      "type": "replaced",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.0384,
+        -0.0346,
+        0.9312
+      ],
+      "bbox": [
+        -0.0649,
+        -0.0599,
+        0.9048,
+        -0.015,
+        -0.0101,
+        0.9521
+      ],
+      "from": [
+        -0.0384,
+        -0.0346,
+        0.9312
+      ],
+      "to": [
+        -0.0363,
+        -0.035,
+        0.9183
+      ],
+      "confidence": 0.66,
+      "cluster_ids": [
+        21
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 22,
+      "type": "replaced",
+      "label": null,
+      "description": null,
+      "centroid": [
+        0.1008,
+        -0.1944,
+        0.9583
+      ],
+      "bbox": [
+        0.0601,
+        -0.215,
+        0.9409,
+        0.1399,
+        -0.17,
+        0.9751
+      ],
+      "from": [
+        0.1008,
+        -0.1944,
+        0.9583
+      ],
+      "to": [
+        0.1012,
+        -0.1944,
+        0.9496
+      ],
+      "confidence": 0.75,
+      "cluster_ids": [
+        22
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    }
+  ],
+  "unverified_changes": [
+    {
+      "id": 23,
+      "type": "removed",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.1216,
+        0.1319,
+        0.9158
+      ],
+      "bbox": [
+        -0.1399,
+        0.125,
+        0.9023,
+        -0.105,
+        0.1399,
+        0.9321
+      ],
+      "from": [
+        -0.1216,
+        0.1319,
+        0.9158
+      ],
+      "to": null,
+      "confidence": 0.03,
+      "cluster_ids": [
+        23
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 24,
+      "type": "removed",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.0102,
+        0.1606,
+        0.9111
+      ],
+      "bbox": [
+        -0.0949,
+        0.125,
+        0.8936,
+        0.11,
+        0.205,
+        0.9321
+      ],
+      "from": [
+        -0.0102,
+        0.1606,
+        0.9111
+      ],
+      "to": null,
+      "confidence": 0.3,
+      "cluster_ids": [
+        24
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 25,
+      "type": "removed",
+      "label": null,
+      "description": null,
+      "centroid": [
+        0.0601,
+        0.1613,
+        0.9057
+      ],
+      "bbox": [
+        0.0401,
+        0.15,
+        0.897,
+        0.075,
+        0.1699,
+        0.9199
+      ],
+      "from": [
+        0.0601,
+        0.1613,
+        0.9057
+      ],
+      "to": null,
+      "confidence": 0.03,
+      "cluster_ids": [
+        25
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 26,
+      "type": "added",
+      "label": null,
+      "description": null,
+      "centroid": [
+        -0.1171,
+        -0.3563,
+        0.9426
+      ],
+      "bbox": [
+        -0.2549,
+        -0.3899,
+        0.9233,
+        -0.015,
+        -0.3,
+        0.9814
+      ],
+      "from": null,
+      "to": [
+        -0.1171,
+        -0.3563,
+        0.9426
+      ],
+      "confidence": 0.3,
+      "cluster_ids": [
+        26
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    }
+  ]
+}
