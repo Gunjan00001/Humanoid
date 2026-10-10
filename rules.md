@@ -61,18 +61,22 @@ Rules for exceptions:
 
 ## 5. Git conventions
 
-### 5.1 Tags: `major.minor`
-- Every milestone/release is tagged as **`v<major>.<minor>`** — two numbers only,
-  no patch component. Examples: `v0.1`, `v0.2`, `v1.0`, `v2.0`.
-- Increment **minor** for each completed stage/checkpoint; increment **major**
-  for milestones that change the project's public behaviour or deliverable.
+### 5.1 Tags: `major.minor.bugs`
+- Every milestone/release is tagged as **`v<major>.<minor>.<bugs>`** — three
+  numbers. Examples: `v0.5.1`, `v0.6.0`, `v1.0.0`.
+- Increment **bugs** for fixes, documentation and tooling changes that do not
+  change behaviour; increment **minor** for each completed stage/checkpoint;
+  increment **major** for milestones that change the project's public
+  behaviour or deliverable.
+- Tags published before 2026-10-10 used the old two-number format
+  (`v0.1` … `v0.5`); they stay as they are. Never move or re-point a published
+  tag; make a new one instead.
 - Tag from `main` only, after the checkpoint has been verified.
 - Use annotated tags with a short message, and always push tags:
   ```bash
-  git tag -a v0.1 -m "Docs and plan complete"
-  git push origin v0.1
+  git tag -a v0.6.0 -m "Extra scenes robustness results"
+  git push origin v0.6.0
   ```
-- Never move or re-point a published tag; make a new one instead.
 
 ### 5.2 Large files: use Git LFS when needed
 - Use **Git LFS** for any large binary asset that must be versioned: videos
@@ -96,12 +100,30 @@ Rules for exceptions:
 
 - Be a good citizen: GPUs on `the GPU node` are shared and often busy. Check
   `nvidia-smi` and pick an idle GPU; don't hog all 8.
+- **Never wait on a busy GPU.** If the GPU you would use is busy (e.g. another
+  agent's job), pick another idle GPU instead of queueing behind it. Jobs that
+  can be split across free GPUs should be submitted in parallel rather than
+  serialised; when a job must queue, prefer resource shapes that fit the free
+  capacity (fewer GPUs/CPUs) over waiting.
+- **Report an estimated remaining time** for every GPU job when launching it
+  and when reporting progress (use `qstat` elapsed times and the observed
+  durations of comparable previous runs).
 - Clean up after yourself: `qdel` jobs you no longer need (`gpu-session stop`),
   and remove scratch files you created.
 - Respect the PBS limits (`gpu` queue: 5 running jobs/user, max 16 CPUs,
   max 64 GB, 24 h walltime).
 
-## 7. Reporting
+## 7. Development log
+
+- **Append an entry to [`docs/devlog.md`](docs/devlog.md) after every working
+  step** — including failed attempts. Each entry: what was done, the failure
+  symptom, the root cause, and the fix. This is the institutional memory for
+  future developers and agents; the expensive debugging lessons (PATH/conda
+  activation, the thin-object problem, the verification rule chain, the DA3
+  integration chain) must stay discoverable.
+- Keep entries short; reference commits/tags when useful.
+
+## 8. Reporting
 
 - When a task requires touching anything outside this folder, **say so and get
   confirmation first**.

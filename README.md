@@ -39,6 +39,68 @@ the remote's in-place flip is reported as `replaced` rather than `moved`; the
 pen's label includes the neighbouring timer; one-video-only areas can only
 produce *unverified* candidates.
 
+### Backend comparison (v0.5)
+
+Two more reconstruction backends were added and compared against VGGT on the
+same frames ([full numbers](docs/results.md#backend-comparison-vggt-vs-mapanything-vs-depth-anything-3)):
+
+- **VGGT + `tabletop` remains the best single configuration** (3/3 changes,
+  0 false positives).
+- **MapAnything** (Apache-2.0) matches it with its threshold calibrated
+  (3/3, 0 FP) and brings **metric scale by construction** plus a geometric
+  diff that sees the 1 cm-thick comb and pen (VGGT's depth maps cannot).
+- **Depth Anything 3** (DA3-LARGE-1.1, Apache-2.0, stretch goal, via
+  MapAnything's unified interface) is the **fastest and lightest** backend
+  (0.10 s/frame, 6.2 GiB), aligns best, and shows the strongest thin-object
+  response; its appearance scores need calibration and it kept one timer false
+  positive in tabletop mode.
+- Backend choice is `reconstruction.backend: vggt | mapanything` (DA3 via
+  `--model-key da3_apache`); the default stays VGGT + `tabletop`.
+
+### Results across all scenes (v0.7.0)
+
+All four runs (same pipeline, per-scene working points; full details in
+[`docs/results.md`](docs/results.md#results-across-all-scenes)):
+
+| Scene | Ground truth | Detected | False positives | Mode / tuning |
+|---|---|---|---|---|
+| **demo** (`data/`) | comb removed, pen added, remote moved+flipped | **3/3** | **0** | `tabletop` (default) |
+| **scene2** (`data/scene2/`) | coconut removed | **1/1** (coconut ✓) | 4 extra entries | `geometric` (big object; lighting-immune) + `--blur_threshold 25` |
+| **scene3** (`data/scene3/`) | chair removed, apple→cup | **2/2** | **0** | `tabletop` + `--min_change_score 85` |
+
+**scene2** — coconut removed (`geometric` mode; the visibility check confirmed
+it with 5896 points seen empty). The `tabletop` mode misses it because video
+B's lighting differs strongly; the geometric mode adds 4 coverage-difference
+entries (its known weakness with limited A coverage).
+
+![scene2 result](outputs/scene2_geo/change.gif)
+
+**scene3** — both changes found with zero false positives: the chair (typed
+`replaced`, see the note in `docs/results.md`) and the apple→cup replacement.
+
+![scene3 result](outputs/scene3/change.gif)
+
+Honest summary: the demo scene reaches 3/3 with 0 false positives; the extra
+scenes run end-to-end and find their ground-truth changes, but each needed a
+short per-scene tuning pass and scene2 still shows the geometric mode's
+coverage artifacts. That is the expected behaviour of a scene-tuned
+photometric pipeline and is documented rather than hidden.
+
+**Faithful 3D rendering (v0.8.0)** — each scene now ships a dark-background
+render with per-change bounding boxes + labels and a before | after | 3D
+layout, a colored **TSDF mesh** (`scene_mesh.ply`, ≤ 10 MB) and a
+**self-contained interactive viewer** (`viewer.html` — open it in any browser:
+orbit, zoom, toggle video A / B / changes / full scene).
+Diagnosis and the `input_mode=pad` experiment:
+[visualization rework](docs/results.md#visualization-rework-steps-05).
+
+**Live interactive viewers** (GitHub Pages — enable once, see
+[`docs/hosting.md`](docs/hosting.md)):
+[demo](https://gunjan00001.github.io/Humanoid/outputs/viewer.html) ·
+[scene2](https://gunjan00001.github.io/Humanoid/outputs/scene2/viewer.html) ·
+[scene2 geometric](https://gunjan00001.github.io/Humanoid/outputs/scene2_geo/viewer.html) ·
+[scene3](https://gunjan00001.github.io/Humanoid/outputs/scene3/viewer.html)
+
 ## Pipeline
 
 ```
@@ -59,13 +121,20 @@ Stage-by-stage detail: [`docs/pipeline.md`](docs/pipeline.md).
 
 | Role | Primary | Fallback |
 |---|---|---|
-| 3D reconstruction (poses, depth, point cloud) | VGGT | MASt3R → COLMAP/hloc |
+| 3D reconstruction (poses, depth, point cloud) | VGGT | MapAnything → MASt3R → COLMAP/hloc |
 | Labels and descriptions | Qwen3-VL-32B-Instruct | Qwen3-VL-8B, Gemma (vision) |
 | Cross-scene object matching ("moved") | DINOv2 | SigLIP 2 |
 | Object masks (stretch goal) | SAM 2 | DBSCAN clusters only |
 
-Model licenses — **verified 2026-10-10**: Qwen3-VL, DINOv2, SigLIP 2, SAM 2 are
-Apache-2.0; **VGGT is CC-BY-NC-4.0 (non-commercial)**; MASt3R's repo is gated.
+Two reconstruction backends are implemented and write the same artifact
+contract, so the rest of the pipeline is backend-agnostic
+(`reconstruction.backend: vggt | mapanything`). The measured comparison
+(alignment, metric scale, thin-object visibility, end-to-end results) is in
+[`docs/results.md`](docs/results.md#backend-comparison-vggt-vs-mapanything).
+
+Model licenses — **verified 2026-10-10**: Qwen3-VL, DINOv2, SigLIP 2, SAM 2 and
+the MapAnything checkpoint we use are Apache-2.0; **VGGT is CC-BY-NC-4.0
+(non-commercial)**; MASt3R's repo is gated.
 See [`docs/models.md`](docs/models.md) for IDs, commits, and the checklist.
 
 ## Setup

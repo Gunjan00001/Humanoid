@@ -35,11 +35,23 @@ Video B ─┘            shared frame       A / B tags └─> diff + visibilit
   frame through reconstruction so the diff can separate the two captures.
 
 ### 2. Joint reconstruction (most important)
-- **VGGT runs on all frames of both videos together**, producing one coordinate
-  frame: camera poses, depth maps, and a colored point cloud.
+- **VGGT or MapAnything runs on all frames of both videos together** (backend
+  selectable via `reconstruction.backend`), producing one coordinate frame:
+  camera poses, depth maps, and a colored point cloud.
 - Each point carries a source tag (`A` or `B`).
-- Backend is selectable: `vggt` (primary) → `mast3r` → `colmap`.
-- If GPU memory is tight: fewer frames or lower resolution first; chunking second.
+- **Input fidelity** (`reconstruction.input_mode`, VGGT only): `crop` (default)
+  discards the top/bottom of portrait frames (56% of a 480×854 frame reaches
+  the model); `pad` keeps the whole frame at lower resolution with the white
+  border masked out of the confidence. See the Step-0 diagnosis in
+  [`results.md`](results.md#visualization-rework-steps-05).
+- Both backends write the **same artifact contract**
+  (`cache/reconstruction/{cameras,dense,colors}.npz` + `meta.json`), so every
+  downstream stage works unchanged. MapAnything runs in an isolated conda env
+  (`spatialdiff-ma`) as a subprocess - see `scripts/run_mapanything.py` and
+  `src/ma_contract.py`.
+- Fallback order: `vggt` / `mapanything` → `mast3r` → `colmap`.
+- If GPU memory is tight: fewer frames or lower resolution first; chunking
+  second (MapAnything: `reconstruction.mapanything.minibatch_size`).
 
 ### 3. Alignment (optional)
 - ICP refinement over static regions only, if A and B clouds drift apart.
@@ -87,9 +99,17 @@ depth maps*, their z equals the table's):
 - All VLM outputs are cached so re-runs don't re-spend GPU time.
 
 ### 6. Visualization
-- PLY coloring: **red = removed, green = added, orange = moved**, background gray
-  or true color; arrows from old to new position for moved objects.
-- Interactive viewer (Open3D/Rerun) plus static screenshots/GIF for the README.
+- Display cloud with its own settings (`visualize.conf_percentile` lower than
+  the detection cutoff, `voxel_size`, `static_dim 0.8` — true colours).
+- PLY coloring: **red = removed, green = added, orange = moved, magenta =
+  replaced**, background in true (slightly dimmed) colours.
+- Per-change PNGs: **before frame | after frame | 3D view** with a bounding
+  box and label per confirmed change; unverified candidates render dim cyan.
+- `change.gif`: the same three-panel layout with the 3D view orbiting, framed
+  on the changed region.
+- Colored TSDF mesh (`scene_mesh.ply`, ≤ 10 MB, `src/mesh.py`) and a
+  self-contained interactive HTML viewer (`viewer.html`, ≤ 5 MB,
+  `src/viewer.py`: orbit controls, A/B/change toggles, labels).
 
 ### 7. Report
 - `outputs/report.json`: one entry per change (type, label, description,

@@ -15,6 +15,15 @@ python src/diff.py --config configs/default.yaml --debug
 python src/describe.py --config configs/default.yaml --debug
 ```
 
+A third tool repairs the most common broken artifact without a GPU rerun:
+
+```bash
+# rebuild cache/reconstruction/colors.npz from the original frames using the
+# per-frame transforms in meta.json (e.g. after a model stopped returning
+# denormalised images - observed with MapAnything's img_no_norm)
+python scripts/rebuild_colors.py --config configs/default.yaml --cache cache/ma_run
+```
+
 `scripts/inspect_cache.py` prints, for each stage: what the artifact contains,
 per-cluster tables with the change-detector's and the VLM's decisions, the
 rejection reasons, consistency checks, and the exact command to produce the
