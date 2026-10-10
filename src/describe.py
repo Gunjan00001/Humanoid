@@ -389,7 +389,9 @@ def main() -> int:
 
     # ---- 2) VLM verification + labels -----------------------------------
     vlm_path = sem_dir / "vlm.json"
-    vlm_cache = read_json(vlm_path) if vlm_path.exists() and not args.force else {}
+    # always reuse cached answers (they are keyed by model): --force re-runs
+    # the stage but must not re-spend GPU time on identical VLM calls
+    vlm_cache = read_json(vlm_path) if vlm_path.exists() else {}
     vlm_cache = {k: v for k, v in vlm_cache.items() if int(k) in keep_ids}
     rejected: dict[str, dict] = {}
     vlm_model = vlm_processor = None
@@ -598,7 +600,9 @@ def main() -> int:
                 continue
             li = vlm_cache.get(str(c["id"]), {}).get("label")
             lo = vlm_cache.get(str(other["id"]), {}).get("label")
-            if _objects_overlap(li, lo) and _dist(c, other) < 0.15:
+            same_name = _objects_overlap(li, lo)
+            adjacent = _bbox_close(c, other, pad=0.06)   # bbox within 6cm
+            if (same_name or adjacent) and _dist(c, other) < 0.25:
                 group.append(other)
                 merged_flags.add(other["id"])
         if len(group) > 1:
