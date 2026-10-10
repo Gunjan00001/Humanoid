@@ -57,16 +57,19 @@ same frames ([full numbers](docs/results.md#backend-comparison-vggt-vs-mapanythi
 - Backend choice is `reconstruction.backend: vggt | mapanything` (DA3 via
   `--model-key da3_apache`); the default stays VGGT + `tabletop`.
 
-### Results across all scenes (v0.10.0)
+### Results on the development scenes (v0.10.0)
 
-All five runs (same pipeline, per-scene working points; full details in
-[`docs/results.md`](docs/results.md#results-across-all-scenes)):
+**These are development scenes, not a held-out test.** The pipeline's defaults
+and the per-scene thresholds (scene2, scene3) were tuned on these same
+recordings, so the numbers below measure fit on development data. All five
+runs use the same pipeline; full details in
+[`docs/results.md`](docs/results.md#results-across-all-scenes):
 
 | Scene | Ground truth | Detected | False positives | Mode / tuning |
 |---|---|---|---|---|
 | **demo** (`data/`) | comb removed, pen added, remote moved+flipped | **3/3** | **0** | `tabletop` (default) |
 | **scene2** (`data/scene2/`) | coconut removed | **1/1** (coconut ✓) | 4 extra entries | `geometric` (big object; lighting-immune) + `--blur_threshold 25` |
-| **scene3** (`data/scene3/`) | chair removed, apple→cup | **2/2** (types corrected: chair `removed`, apple→cup `replaced`) | 2 extra entries | `tabletop` + `--min_change_score 85` |
+| **scene3** (`data/scene3/`) | chair removed, apple→cup | **2/2** objects, types now correct (chair `removed`, apple→cup `replaced` — v0.9.0) | 2 extra entries + unreliable naming (see results.md) | `tabletop` + `--min_change_score 85` |
 | **scene4** (`data/scene4/`) | apple moved, scissor removed, bottle added | **3/3** (`moved` apple ✓, `removed` scissors ✓, `added` bottle ✓) | **0 extra entries** | `tabletop` (default) |
 
 **scene2** — coconut removed (`geometric` mode; the visibility check confirmed
@@ -95,19 +98,46 @@ are independently confirmed changes are dropped as composites — see
 
 ![scene4 result](outputs/scene4/change.gif)
 
-Honest summary: the demo scene reaches 3/3 with 0 false positives and scene4
-reaches 3/3 with 0 extras using the default mode; scene2 and scene3 find their
-ground-truth changes but each needed a short per-scene tuning pass, and both
-carry documented extras. That is the expected behaviour of a scene-tuned
-photometric pipeline and is documented rather than hidden.
+Honest summary, **on these development scenes**: 9/9 ground-truth changes
+found overall (demo 3/3, scene2 1/1, scene3 2/2, scene4 3/3). The demo and
+scene4 reach their totals with 0 extra entries using the default mode; scene2
+and scene3 each needed a short per-scene tuning pass and both carry documented
+extra entries. That is the expected behaviour of a scene-tuned photometric
+pipeline — and because the thresholds were tuned on these same recordings, the
+9/9 should not be read as a held-out benchmark result.
 
 **Faithful 3D rendering (v0.8.0)** — each scene now ships a dark-background
 render with per-change bounding boxes + labels and a before | after | 3D
 layout, a colored **TSDF mesh** (`scene_mesh.ply`, ≤ 10 MB) and a
 **self-contained interactive viewer** (`viewer.html` — open it in any browser:
-orbit, zoom, toggle video A / B / changes / full scene).
+orbit, zoom, toggle video A / B / changes / unverified / full scene).
 Diagnosis and the `input_mode=pad` experiment:
 [visualization rework](docs/results.md#visualization-rework-steps-05).
+
+**Runtime (measured, not estimated)** — full numbers and clock bases in
+[`docs/timing.md`](docs/timing.md):
+
+| Case | Wall clock | Conditions |
+|---|---|---|
+| One new scene, full pipeline + 3D map | **5–6 min on the node** | 2 A100s, model files warm, 3 concurrent 1-GPU jobs from the same account running; excludes queue wait |
+| Queue wait | 0–1:33 in the measured runs | caused by the queue's **per-user 16-CPU quota**, not by GPUs; 0 s once a slot was free |
+| Semantics re-run (`describe` + `report`), VLM cache warm | **0:33–2:12** | no model load; fresh VLM calls add ~11 s each |
+| Re-render only (composites + Chrome GIF + mesh, no GPU) | **2:09–5:46 per scene** (measured: demo 3:11, scene2 3:24, scene2-geo 2:09, scene3 5:46, scene4 3:21) | login node, Chrome available; scene3's time is dominated by its 31 change candidates (27 unverified composites) and a denser cloud in the Chrome GIF |
+| Model loads | VGGT 8–14 s · Qwen3-VL-32B 26 s (warm) to 2:07 (cold) | measured across runs |
+
+Re-render only, without touching any pipeline stage:
+
+```bash
+python src/visualize.py --config configs/default.yaml \
+    --cache cache/scene4 --out outputs/scene4 --render-only
+```
+
+It reuses the cached reconstruction/diff/VLM outputs, needs no GPU, and stops
+with a list of missing files if anything required is absent — it never
+recomputes a stage.
+
+An earlier claim of "~15 min per scene" was not reproducible from the logs and
+has been corrected in [`docs/results.md`](docs/results.md#timings-wall-clock-this-run).
 
 **Live interactive viewers** (GitHub Pages — enable once, see
 [`docs/hosting.md`](docs/hosting.md)):

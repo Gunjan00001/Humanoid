@@ -457,3 +457,66 @@ Cluster-job note: the `gpu` queue has a **per-user 16-CPU limit**; with the
 user's three ASR jobs + the gpu-session holding all 16, GPU jobs queue. The
 idle gpu-session was stopped to free a slot before each run and restarted by
 the waiters afterwards (five times over this session, documented here).
+
+
+## 2026-10-11 — timing investigation, render-only mode, GIF palette bug (`v0.11.0`)
+
+### Timing: the reported numbers were wrong
+
+A user-visible mismatch ("~12-15 min per scene" reported vs over an hour in
+practice) triggered a full audit of the PBS records and job logs. Findings
+(see [`timing.md`](timing.md) for the tables):
+
+- job 10802 (scene4, full pipeline incl. mesh + GIF) used **5:14 walltime**
+  with a **1:33 queue wait**; the wait was the queue's **per-user 16-CPU
+  quota**, not GPU contention (the queue comment says so; 3 concurrent 1-GPU
+  jobs of the same account were running on an 8-GPU node).
+- **VGGT loads in 8–14 s** (6 logged runs), not the "~3.5 min" the docs
+  claimed; Qwen3-VL-32B loads in 26 s warm (2:07 on the one early cold run);
+  the DINOv2 matcher is **loaded twice per run** (appearance check, then move
+  matching) — measured in the same log.
+- 10 VLM calls in the scene4 run, **11.0 s per call**.
+- The mesh took 4 s inside the GPU-node job but ~89 s on the login node — the
+  cause (page cache vs cores) was not isolated and is marked unverified.
+- The old "~15 min first semantics run" claim is **not reproducible from any
+  log** (the early demo describe run 10715 measured 5:25); corrected in
+  `results.md` + `debugging.md`, and the README now carries a measured
+  runtime table with conditions instead of single numbers.
+- The ~1 h wall clock for scene4 = 5 GPU rounds (first run + 4 fix/regression
+  rounds) + 2 visual rounds (GPU-node fallback GIF, then Chrome on the login
+  node) + analysis time. One prediction is 5:14 on the node.
+
+### Render-only mode
+
+`visualize.py --render-only` reuses the cached reconstruction/diff/VLM
+outputs, needs no GPU, and **stops with a list of missing caches** instead of
+recomputing anything (guard verified: 9 missing files listed, exit 2, no
+output dir created). Measured wall clock per scene: demo 3:11, scene2 3:24,
+scene2-geo 2:09, scene3 5:46, scene4 3:21 — scene3 exceeds the ~5 min
+guideline because its Chrome GIF alone takes 4:44 in that pass (31
+candidates + denser cloud; a GIF-only re-render of the same scene later took
+129 s, so the 4:44 includes machine load variance).
+
+### Presentation pass
+
+- unverified changes are hidden by default in the viewer (new "unverified"
+  toggle) and never labelled; the GIF legend lists only the visible types;
+  single-candidate composites still show an unverified box (cyan, no label)
+- labels get a collision resolver in the viewer (a label that would cover an
+  already-placed one is pushed down)
+- larger splats (viewer RADIUS/150, matplotlib 20) and a taller top row
+  (GIF 1100x820, before/after = 42% of the height; composites 1.25:1.5)
+- stale-screenshot cleanup now references report.json (with the current
+  change list as the fallback when the report is from an older run); audit:
+  0 stale files in all five scenes
+
+### GIF palette bug (found by pixel-checking)
+
+The `replaced` colour rendered as **grey** in the scene3 GIF: a grey-dominated
+scene makes the adaptive 256-colour GIF palette drop/mangle the isolated
+change colours (the viewer rendered magenta exactly — verified with a raw
+Chrome screenshot: 614 magenta pixels). Fix: every frame is quantized
+together with a strip of the key colours (removed/added/moved/replaced/
+unverified/background/label white), so the palette reserves slots for them;
+the strip is cropped off. Verified after the fix: magenta = (242,63,242)
+exactly, 355 px. All five GIFs re-rendered with the fix.

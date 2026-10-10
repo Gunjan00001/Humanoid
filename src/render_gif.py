@@ -40,6 +40,31 @@ LEGEND = [("removed", (242, 51, 51)), ("added", (64, 230, 89)),
           ("moved", (255, 153, 26)), ("replaced", (242, 63, 242)),
           ("unverified", (89, 191, 217))]
 
+# colours the GIF must keep exact: change colours, the dark background and the
+# label white. A grey-dominated scene makes the adaptive 256-colour palette
+# drop/mangle these isolated colours (measured: magenta rendered as grey), so
+# they are quantized together with every frame.
+KEY_COLORS = [c for _, c in LEGEND] + [(16, 20, 24), (242, 242, 242)]
+
+
+def gif_quantize(frame):
+    """Quantize one RGB frame for GIF while keeping the change colours exact.
+
+    A strip of the key colours is attached below the frame before the adaptive
+    quantization, so the palette reserves slots for them; the strip is cropped
+    off afterwards.
+    """
+    from PIL import Image
+
+    w, h = frame.size
+    keys = Image.new("RGB", (w, 8 * len(KEY_COLORS)))
+    for i, color in enumerate(KEY_COLORS):
+        keys.paste(Image.new("RGB", (w, 8), color), (0, 8 * i))
+    combo = Image.new("RGB", (w, h + keys.height))
+    combo.paste(frame, (0, 0))
+    combo.paste(keys, (0, h))
+    return combo.quantize(colors=256).crop((0, 0, w, h))
+
 
 def _legend_strip(width: int, height: int, present: list[str]):
     """Colour legend drawn OUTSIDE the 3D panel (its own strip)."""
@@ -91,7 +116,7 @@ def render_gif(cfg: dict, out_dir: Path, before_file: str | None,
 
     vcfg = cfg["visualize"]
     width, height = int(vcfg.get("gif_width", 1100)), int(vcfg.get("gif_height", 780))
-    panel_h = int(height * 0.36)
+    panel_h = int(height * 0.42)
     legend_h = 22
     top = _top_panel(Path(before_file) if before_file else None,
                      Path(after_file) if after_file else None, width, panel_h)
@@ -99,11 +124,10 @@ def render_gif(cfg: dict, out_dir: Path, before_file: str | None,
     present = ["removed", "added", "moved", "replaced"]
     try:
         rep = json.loads((out_dir / "report.json").read_text())
+        # the GIF shows the verified changes only (unverified are hidden by
+        # default in the viewer), so the legend lists exactly those types
         types = {c["type"] for c in rep.get("changes", [])}
-        if rep.get("unverified_changes"):
-            types.add("unverified")
-        present = [t for t in present if t in types] + \
-                  (["unverified"] if "unverified" in types else [])
+        present = [t for t in present if t in types]
     except Exception:  # noqa: BLE001
         pass
     legend = _legend_strip(width, legend_h, present)
@@ -128,11 +152,11 @@ def render_gif(cfg: dict, out_dir: Path, before_file: str | None,
             frame.paste(top, (0, 0))
             frame.paste(legend, (0, panel_h))
             frame.paste(panel, (0, panel_h + legend_h))
-            gif_frames.append(frame)
+            gif_frames.append(gif_quantize(frame))
 
     gif_path = out_dir / "change.gif"
     gif_frames[0].save(gif_path, save_all=True, append_images=gif_frames[1:],
-                       duration=150, loop=0)
+                       duration=150, loop=0, optimize=False)
     log.info("chrome_gif: wrote %s (%d frames from viewer.html)",
              gif_path, len(gif_frames))
     return gif_path

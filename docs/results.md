@@ -66,14 +66,24 @@ python src/report.py    --config configs/default.yaml
 
 ## Timings (wall clock, this run)
 
-| Stage | Where | Time |
+**Corrected 2026-10-11** — the original estimates in this table were not
+reproducible from the job logs. The measured numbers, with their clock bases
+and conditions, are in [`docs/timing.md`](timing.md); summary for one full
+scene (scene4, job 10802, 2 GPUs):
+
+| Stage | Where | Measured |
 |---|---|---|
-| Frame extraction | login node (CPU) | ~1 min (49 frames kept of 77 sampled) |
-| Reconstruction (VGGT) | 1× A100 | ~3.5 min (model load) + **17.2 s inference** |
-| ICP alignment | login node (CPU) | ~10 s |
-| Tabletop diff | login node (CPU) | ~10 s |
-| Semantics (Qwen3-VL-32B + DINOv2) | 2× A100 | ~15 min first run (model load + 26 VLM calls); re-runs reuse the VLM cache |
-| Visualization + report | login node (CPU) | ~10 s |
+| Frame extraction (60 frames) | GPU-node job (CPU) | 5 s |
+| Reconstruction (VGGT + ICP) | 1× A100 | 48 s (incl. **model load 12.5 s**; 8–14 s across runs) |
+| Tabletop diff | GPU-node job (CPU) | 10 s |
+| Semantics (Qwen3-VL-32B + DINOv2) | 2× A100 | 3:29 for 16 candidates / **10 VLM calls at ~11 s**; VLM load 26 s |
+| Report + viewer + GIF + TSDF mesh | GPU-node job (CPU) | 33 s (matplotlib GIF fallback — no Chrome on the GPU node) |
+| **Whole job** | | **5:14** (queue wait 1:33 before it) |
+| Re-renders on the login node (Chrome GIF + mesh) | login node (CPU) | ~3:30 per scene |
+
+The old "~15 min first semantics run" claim could not be reproduced from any
+log (the early demo describe run 10715 measured 5:25 total); see
+[`timing.md`](timing.md#old-timing-claims-vs-measurements-corrections).
 
 ## Ablations (observed, not benchmarked)
 
