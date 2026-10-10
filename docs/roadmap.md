@@ -8,13 +8,13 @@ Code that exists but has not been validated end-to-end is marked 🔶.
 
 | Phase | Deliverable | Checkpoint | Status |
 |---|---|---|---|
-| 0 | Two videos + `data/ground_truth.md` | Checkpoint 0 | ⬜ waiting on recordings |
+| 0 | Two videos + `data/ground_truth.md` | Checkpoint 0 | ✅ 2026-10-10 (`data/a.mp4`, `data/b.mp4`, 3 documented changes) |
 | 1 | Repo scaffold, `spatialdiff` env (cu126), weights in `~/models`, `configs/default.yaml` | Checkpoint 1: CUDA visible in a GPU job + weights load | ✅ verified 2026-10-10: 8×A100 visible (torch 2.14.1+cu126), VGGT loaded offline from `~/models/VGGT-1B` |
-| 2 | `src/extract_frames.py`, `src/reconstruct.py` (joint VGGT), `src/align.py` | Checkpoint 2: A/B static structure aligns | 🔶 reconstruct verified on real frames (6-frame smoke run, 1.2 s/frame); joint A/B alignment on the demo videos pending |
-| 3 | `src/diff.py` with visibility check | Checkpoint 3: 3 known changes found, few false positives | 🔶 verified on a synthetic reconstruction (2/2 objects, boundary false positives rejected) and on a static real-scene null test (0 changes; all noise candidates rejected by the visibility check); real-data tuning pending |
-| 4 | `src/describe.py` (Qwen3-VL + DINOv2) | Checkpoint 4: every change has type, label, location, sentence | 🔶 written; GPU validation pending |
-| 5 | `src/visualize.py`, `src/report.py`, `run.py` | Checkpoint 5: one command produces all outputs | 🔶 verified end-to-end on the synthetic cache; real-data run pending |
-| 6 | README with real results, ablations, public repo | Definition of done | ⬜ |
+| 2 | `src/extract_frames.py`, `src/reconstruct.py` (joint VGGT), `src/align.py` | Checkpoint 2: A/B static structure aligns | ✅ 49-frame joint reconstruction; ICP static mean NN 15.2 → 10.7 mm; 17 s inference |
+| 3 | `src/diff.py` with visibility check | Checkpoint 3: 3 known changes found, few false positives | ✅ all 3 found; final report has 0 false positives (22 candidates rejected with reasons); required the photometric tabletop mode - see results.md |
+| 4 | `src/describe.py` (Qwen3-VL + DINOv2) | Checkpoint 4: every change has type, label, location, sentence | ✅ 3/3 with labels + sentences; VLM verification rejects lighting artefacts |
+| 5 | `src/visualize.py`, `src/report.py`, `run.py` | Checkpoint 5: one command produces all outputs | ✅ `run.py` produces scene.ply, change.gif, screenshots, report.json/md |
+| 6 | README with real results, ablations, public repo | Definition of done | 🔶 README + results.md filled with the real run; repo public check pending |
 
 ## Infrastructure already done
 

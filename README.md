@@ -6,16 +6,36 @@ shared 3D reconstruction, detects which objects were **moved**, **added**, or
 
 Part of the **Spatial AI & Navigation Challenge**.
 
-> **Status: work in progress — no results yet.** The plan and checkpoints live in
-> [`AGENT_PLAN.md`](AGENT_PLAN.md). This README follows its §9 requirements and is
-> filled in with **real outputs** as phases complete.
+> **Status: first successful end-to-end run (2026-10-10).** The three planned
+> changes in the demo scene were detected and described. Full numbers, timings
+> and honest limitations: [`docs/results.md`](docs/results.md). The plan and
+> checkpoints live in [`AGENT_PLAN.md`](AGENT_PLAN.md).
 
 ## Results
 
-_No results yet._ A result GIF, screenshots, and the example `report.json` /
-`report.md` will be linked here after the first successful end-to-end run on the
-demo scene. Nothing in this repository will be fabricated; every number comes
-from a real run.
+On the demo scene (two 8–12 s phone recordings of a table; ground truth: comb
+**removed**, pen **added**, AC remote **moved and flipped**), the pipeline
+detected and described all three changes with **no false positives** in the
+final report:
+
+| # | Ground truth | Detected | Description (Qwen3-VL) | Confidence |
+|---|---|---|---|---|
+| 1 | comb removed | `removed` | "The comb was removed from the table." | 0.87 |
+| 2 | pen added | `added` | "A blue pen and a white device were added to the surface." | 0.38 |
+| 3 | remote moved + flipped | `replaced` | "The remote control was replaced with a different one." | 0.84 |
+
+- Visualization: `outputs/change.gif` (rotating colored cloud — red = removed,
+  green = added, magenta = replaced) and one framed screenshot per change in
+  `outputs/changes/`.
+- Reports: `outputs/report.json`, `outputs/report.md`.
+- The change detector proposed 26 candidates; 22 were rejected with documented
+  reasons (`cache/semantics/rejected.json`) — mostly lighting/blur differences
+  on static objects. Nothing was silently dropped.
+
+Known limitations of this run (details in [`docs/results.md`](docs/results.md)):
+the remote's in-place flip is reported as `replaced` rather than `moved`; the
+pen's label includes the neighbouring timer; one-video-only areas can only
+produce *unverified* candidates.
 
 ## Pipeline
 
@@ -91,14 +111,21 @@ pending (see [`docs/roadmap.md`](docs/roadmap.md)). Cluster templates live in
 
 ## Limitations and failure cases
 
-Expected items, to be validated and quantified on real runs (see
-[`docs/results.md`](docs/results.md)):
+Observed on the demo scene (quantified in [`docs/results.md`](docs/results.md)):
 
-- false positives from reflective surfaces, thin objects, or lighting changes;
-- small objects missed or merged into larger clusters;
-- weak visual matches can split a moved object into one removal + one addition;
-- textureless walls reduce reconstruction quality;
-- scale ambiguity between runs if alignment is imperfect.
+- objects thinner than VGGT's patch scale (~1.4 cm here) are **absent from the
+  depth maps** — geometric diffing cannot see them; the photometric tabletop
+  mode is required;
+- static objects whose appearance differs between recordings (blur, exposure,
+  viewing angle) generate candidate fragments that the VLM and structural
+  filters must reject;
+- a replacement at the same spot (comb → pen) is geometrically
+  indistinguishable from "nothing changed"; appearance comparison is what
+  separates them;
+- areas one video never observed (portrait crop, occlusion) can only yield
+  *unverified* candidates, reported separately and never counted as changes;
+- reflective surfaces, textureless walls and scale ambiguity remain expected
+  failure modes on other scenes (not all reproduced here).
 
 ## Documentation
 
