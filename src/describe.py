@@ -92,6 +92,22 @@ PROMPT_MOVE = (
     '"sentence": "<one sentence describing the move, e.g. the blue mug moved '
     'from the desk to the floor>"}'
 )
+PROMPT_REPLACE = (
+    "These two crops show the same spot in a small indoor scene at two times. "
+    "The object visible in the FIRST image was replaced by a different object "
+    "in the SECOND image.\n"
+    'Answer with JSON only, no other text: {"label": "<the new object, 2-4 words>", '
+    '"sentence": "<one sentence naming BOTH objects, e.g. the apple was replaced '
+    'by a cup>"}'
+)
+PROMPT_REMOVED = (
+    "These two crops show the same spot in a small indoor scene at two times. "
+    "An object is visible in the FIRST image and gone in the SECOND; the space "
+    "is empty now.\n"
+    'Answer with JSON only, no other text: {"label": "<the removed object, 2-4 words>", '
+    '"sentence": "<one sentence naming the object and its removal, e.g. the chair '
+    'was removed from the room>"}'
+)
 
 
 # ---------------------------------------------------------------------------
@@ -125,11 +141,18 @@ def best_crop_for_cluster(cid: int, points: np.ndarray, tag: str, recon: dict, c
         own_frames = [own_frames[i] for i in sorted(set(sel.tolist()))]
 
     views = []
+    occ_tol = float(scfg.get("crop_occlusion_tol", 0.15))
     for i in own_frames:
         uv, z = project_points(points, recon["extrinsic"][i], recon["intrinsic"][i])
         observed, in_bounds = sample_depth(recon["depth"][i], uv)
         conf_ok = sample_depth(recon["depth_conf"][i], uv)[0] >= conf_q
-        visible = in_bounds & conf_ok & (np.abs(z - observed) <= 0.05)
+        # crop-framing visibility: the region is IN VIEW and NOT occluded by a
+        # surface much closer to the camera.  NOTE: this is deliberately not
+        # the "object is there" test (|z-depth| small) - in the other video a
+        # removed object is *gone*, so its points sit in front of the
+        # background; the old test made those frames look empty and the crop
+        # landed on neighbouring objects (scene3's "chair replaced" misreads).
+        visible = in_bounds & conf_ok & (z <= observed + occ_tol)
         views.append({"frame_index": i, "n_visible": int(visible.sum()),
                       "visible": visible, "uv": uv})
     if not views:
@@ -140,7 +163,10 @@ def best_crop_for_cluster(cid: int, points: np.ndarray, tag: str, recon: dict, c
                     cid, tag, suffix, n_max)
         return None
     if ref_frame is not None:
-        enough = [v for v in views if v["n_visible"] >= max(5, 0.25 * n_max)]
+        # prefer frames where MOST of the cluster is in view; among those the
+        # pose-closest to the own view. A frame where only a few points are in
+        # view puts the crop on whatever happens to be there.
+        enough = [v for v in views if v["n_visible"] >= max(5, 0.5 * n_max)]
         best = min(enough, key=lambda v: _pose_score(recon, ref_frame, v["frame_index"])) \
             if enough else max(views, key=lambda v: v["n_visible"])
     else:
@@ -562,6 +588,84 @@ def main() -> int:
             uncertain_kept.append(c)
     log.info("VLM verification: %d confirmed, %d rejected, %d unverified kept",
              len(confirmed), len(rejected), len(uncertain_kept))
+
+    # ---- 3a) type correction with geometric evidence ---------------------
+    # The photometric mask alone cannot separate "removed" from "replaced":
+    # the other video's crop may show a NEIGHBOURING object (chair #2 behind
+    # the removed chair) or the space may be occupied by a different object
+    # (cup where the apple was). The pipeline's own design principle resolves
+    # it: a *removed* object's space is seen EMPTY by the other video, while a
+    # *replaced* object's space is OCCUPIED (by something at a similar depth).
+    # We run the geometric empty-space test on the cluster's points and correct
+    # the type; corrected clusters get a fresh sentence from the VLM.
+    def _empty_fraction(c: dict) -> float:
+        from src.diff import visibility_check
+        pts = cluster_points.get(c["id"])
+        if pts is None or not len(pts):
+            return float("nan")
+        own = c["source_tag"] if c["source_tag"] in ("a", "b") else "a"
+        other = [i for i, t in enumerate(recon["tags"]) if t != own]
+        frac, _ = visibility_check(pts, other, recon, cfg)
+        return frac
+
+    def _background_words(s) -> bool:
+        words = {w for w in re.sub(r"[^a-z0-9 ]", " ", str(s or "").lower()).split()
+                 if w and w not in _STOPWORDS}
+        background = {"floor", "ground", "wall", "background", "room", "nothing",
+                      "empty", "air", "space", "scene"}
+        return not words or words <= background
+
+    reclassified: list[dict] = []
+    if not args.skip_vlm:
+        keep_frac = float(cfg["semantics"].get("reclassify_empty_fraction", 0.30))
+        occ_frac = float(cfg["semantics"].get("reclassify_occupied_fraction", 0.15))
+        for c in confirmed:
+            if c["type"] not in ("removed", "replaced"):
+                continue
+            frac = _empty_fraction(c)
+            if not np.isfinite(frac):
+                continue
+            v = vlm_cache.get(str(c["id"]), {})
+            if c["type"] == "replaced" and frac >= keep_frac:
+                c["type"] = "removed"
+                c["reclassified_from"] = "replaced"
+                c["empty_fraction"] = round(frac, 3)
+                reclassified.append(c)
+                log.info("reclassify %s: replaced -> removed (space seen empty %.0f%%)",
+                         c["id"], 100 * frac)
+            elif (c["type"] == "removed" and frac <= occ_frac
+                    and not _background_words(v.get("second"))):
+                c["type"] = "replaced"
+                c["reclassified_from"] = "removed"
+                c["empty_fraction"] = round(frac, 3)
+                reclassified.append(c)
+                log.info("reclassify %s: removed -> replaced (space occupied %.0f%%, "
+                         "other view names %r)", c["id"], 100 * frac, v.get("second"))
+
+    # fresh sentences for corrected types (the old ones describe the wrong
+    # event, e.g. "the black bowl was replaced by a black chair" for a removal)
+    if reclassified and vlm_model is not None:
+        from PIL import Image
+        for c in reclassified:
+            cid = str(c["id"])
+            ci = crops.get(cid, {})
+            if "crop" not in ci or "crop_other" not in ci:
+                continue
+            own_tag = ci.get("tag", "a")
+            first, second = ((ci["crop"], ci["crop_other"]) if own_tag == "a"
+                             else (ci["crop_other"], ci["crop"]))
+            prompt = (PROMPT_REPLACE if c["type"] == "replaced" else PROMPT_REMOVED)
+            reply = vlm_answer(vlm_model, vlm_processor,
+                               [Image.open(first).convert("RGB"),
+                                Image.open(second).convert("RGB")], prompt)
+            parsed = parse_json_reply(reply)
+            vlm_cache[cid]["label"] = parsed.get("label") or vlm_cache[cid].get("label")
+            vlm_cache[cid]["description"] = (parsed.get("sentence")
+                                             or parsed.get("description")
+                                             or vlm_cache[cid].get("description"))
+            vlm_cache[cid]["reclassified_from"] = c["reclassified_from"]
+            log.info("reclassified %s sentence: %s", cid, vlm_cache[cid]["description"])
+            write_json(vlm_path, vlm_cache)
 
     # ---- 3b) structural post-filters --------------------------------------
     # (_reject is defined above, before the confirmation filter)
