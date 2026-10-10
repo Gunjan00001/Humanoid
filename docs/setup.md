@@ -25,16 +25,18 @@ report locally.
 
 ## Cluster environment
 
-Python 3.10, PyTorch built for **CUDA 12.6 (`cu126`)** — verified working on the
-525 driver. `scripts/setup_env.sh` does all of this in one go (idempotent):
-it installs torch/torchvision from the cu126 index, the pipeline dependencies
-from `requirements.txt`, and VGGT from its official repository.
+Two conda envs, both created by `scripts/setup_env.sh` (idempotent):
+
+| Env | Python | Purpose |
+|---|---|---|
+| `spatialdiff` | 3.10 | the pipeline: torch cu126, VGGT, Open3D, transformers, … |
+| `spatialdiff-ma` | 3.10 | **isolated** MapAnything backend (its dependency pins conflict with the main env); `src/reconstruct.py` launches it as a subprocess |
 
 ```bash
-bash scripts/setup_env.sh
+bash scripts/setup_env.sh        # creates/updates both envs
 ```
 
-Manual equivalent:
+Manual equivalent for the main env:
 
 ```bash
 conda create -n spatialdiff python=3.10 -y

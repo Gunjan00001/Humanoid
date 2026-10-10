@@ -59,13 +59,20 @@ Stage-by-stage detail: [`docs/pipeline.md`](docs/pipeline.md).
 
 | Role | Primary | Fallback |
 |---|---|---|
-| 3D reconstruction (poses, depth, point cloud) | VGGT | MASt3R → COLMAP/hloc |
+| 3D reconstruction (poses, depth, point cloud) | VGGT | MapAnything → MASt3R → COLMAP/hloc |
 | Labels and descriptions | Qwen3-VL-32B-Instruct | Qwen3-VL-8B, Gemma (vision) |
 | Cross-scene object matching ("moved") | DINOv2 | SigLIP 2 |
 | Object masks (stretch goal) | SAM 2 | DBSCAN clusters only |
 
-Model licenses — **verified 2026-10-10**: Qwen3-VL, DINOv2, SigLIP 2, SAM 2 are
-Apache-2.0; **VGGT is CC-BY-NC-4.0 (non-commercial)**; MASt3R's repo is gated.
+Two reconstruction backends are implemented and write the same artifact
+contract, so the rest of the pipeline is backend-agnostic
+(`reconstruction.backend: vggt | mapanything`). The measured comparison
+(alignment, metric scale, thin-object visibility, end-to-end results) is in
+[`docs/results.md`](docs/results.md#backend-comparison-vggt-vs-mapanything).
+
+Model licenses — **verified 2026-10-10**: Qwen3-VL, DINOv2, SigLIP 2, SAM 2 and
+the MapAnything checkpoint we use are Apache-2.0; **VGGT is CC-BY-NC-4.0
+(non-commercial)**; MASt3R's repo is gated.
 See [`docs/models.md`](docs/models.md) for IDs, commits, and the checklist.
 
 ## Setup
