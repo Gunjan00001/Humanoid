@@ -24,7 +24,7 @@ frames:
   jpeg_quality: 92
 
 reconstruction:
-  backend: vggt              # vggt | mast3r | colmap
+  backend: vggt              # vggt | mapanything | mast3r | colmap
   use_icp_refinement: true   # run src/align.py after reconstruction (the demo
                              # scene needed it: static mean NN 15mm -> 11mm)
   device: cuda
@@ -32,9 +32,20 @@ reconstruction:
   conf_percentile: 50.0      # keep points with confidence >= this percentile
   icp_max_correspondence: 0.05
   icp_iterations: 30
+  # MapAnything backend: runs as a subprocess in an isolated conda env because
+  # its dependency pins conflict with the main env (see docs/models.md and
+  # scripts/run_mapanything.py)
+  mapanything:
+    env_python: ~/miniconda3/envs/spatialdiff-ma/bin/python
+    memory_efficient_inference: true
+    minibatch_size: null     # null = dynamic; set 1 for smallest GPU memory
+    use_amp: true
+    amp_dtype: bf16
+    apply_confidence_mask: false
 
 models:
   vggt: facebook/VGGT-1B
+  mapanything: facebook/map-anything-apache   # Apache-2.0 checkpoint (docs/models.md)
   vlm_primary: Qwen/Qwen3-VL-32B-Instruct
   vlm_fallback: Qwen/Qwen3-VL-8B-Instruct
   matcher: facebook/dinov2-large
