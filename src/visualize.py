@@ -176,10 +176,9 @@ def draw_3d(ax, bg_pts, bg_rgb, change_pts, focus, radius, azimuth, elev,
 
     for c in change_pts:
         p, ch = c["points"], c["change"]
-        if not len(p):
-            continue
-        ax.scatter(p[:, 0], p[:, 1], p[:, 2], s=splat_sizes(p, splat * 1.6),
-                   c=c["colors"], linewidths=0, depthshade=False)
+        if len(p):
+            ax.scatter(p[:, 0], p[:, 1], p[:, 2], s=splat_sizes(p, splat * 1.6),
+                       c=c["colors"], linewidths=0, depthshade=False)
         if not c["verified"]:
             continue
         # bounding box wireframe
@@ -193,6 +192,14 @@ def draw_3d(ax, bg_pts, bg_rgb, change_pts, focus, radius, azimuth, elev,
         for e in edges:
             a, b = corners[e[0]], corners[e[1]]
             ax.plot([a[0], b[0]], [a[1], b[1]], [a[2], b[2]], c=color, lw=1.2, alpha=0.9)
+        if ch["type"] == "moved" and ch.get("from") and ch.get("to"):
+            # show the destination of a moved object
+            fr = np.asarray(ch["from"], dtype=float)
+            to = np.asarray(ch["to"], dtype=float)
+            ax.plot([fr[0], to[0]], [fr[1], to[1]], [fr[2], to[2]], c=color,
+                    lw=1.6, ls="--", alpha=0.95)
+            ax.scatter([to[0]], [to[1]], [to[2]], s=splat * 2.2, c=[color],
+                       marker="o", linewidths=0, depthshade=False)
         if show_labels:
             label = f"{ch['id']}: {ch['type']} - {ch.get('label') or '?'}"
             ax.text(lo[0], lo[1], hi[2] + 0.02 * max(radius, 0.3), label,

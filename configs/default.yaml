@@ -99,7 +99,14 @@ diff:
 semantics:
   vlm: primary               # primary | fallback
   matcher: dinov2
-  match_similarity_threshold: 0.75
+  composite_match_distance: 0.15  # a replaced claim whose two sides each match
+                             # an independent confirmed change within this
+                             # distance is a composite, not a replacement
+  match_similarity_threshold: 0.65  # DINOv2 crop similarity for a move pair;
+                             # calibrated: the same apple seen from two angles
+                             # scores 0.70, different objects (comb vs pen)
+                             # score 0.13. The VLM move question is the final
+                             # arbiter for pairs in the 0.65-0.75 band.
   match_min_distance: 0.10   # a "moved" pair must have moved at least this far
   same_appearance_threshold: 0.80  # before/after crops more similar than this
                              # are the same appearance -> not a change
