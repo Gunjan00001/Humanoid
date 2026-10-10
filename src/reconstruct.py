@@ -125,16 +125,21 @@ def run_vggt(frames: list[dict], cfg: dict, limit_per_video: int | None = None) 
     log.info("model loaded in %.1fs", time.perf_counter() - t0)
 
     paths = [f["path"] for f in frames]
-    images = load_and_preprocess_images(paths).to(device)  # [S,3,H,W] float32
+    # input_mode: "crop" (VGGT default: width->518, height centre-cropped;
+    # portrait frames lose ~44% of their area) or "pad" (whole frame, white
+    # padding to square). See docs/pipeline.md and the Step-0 diagnosis in
+    # docs/results.md.
+    input_mode = str(rcfg.get("input_mode", "crop"))
+    images = load_and_preprocess_images(paths, mode=input_mode).to(device)  # [S,3,H,W]
     s, _, h, w = images.shape
-    log.info("%d frames preprocessed to %dx%d", s, h, w)
+    log.info("%d frames preprocessed to %dx%d (input_mode=%s)", s, h, w, input_mode)
 
     # verify our transform model matches the loaded tensor shape
     transforms = []
     for f in frames:
         with Image.open(f["path"]) as im:
             orig_w, orig_h = im.size
-        tr = model_to_original_transform(orig_w, orig_h)
+        tr = model_to_original_transform(orig_w, orig_h, mode=input_mode)
         if (tr["model_h"], tr["model_w"]) != (h, w):
             log.warning("preprocessing transform mismatch for %s: %s vs loaded %dx%d",
                         f["file"], (tr["model_h"], tr["model_w"]), h, w)
@@ -158,6 +163,20 @@ def run_vggt(frames: list[dict], cfg: dict, limit_per_video: int | None = None) 
     intrinsic = intrinsic.squeeze(0).float().cpu().numpy()          # [S,3,3]
     depth = depth.squeeze(0).squeeze(-1).float().cpu().numpy()      # [S,H,W]
     depth_conf = depth_conf.squeeze(0).float().cpu().numpy()        # [S,H,W]
+
+    # pad mode: the white border is not scene content - zero the confidence
+    # there so padding can never become points (the diff filters on confidence)
+    if input_mode == "pad":
+        for i, tr in enumerate(transforms):
+            ph, pw = tr.get("pad_h", h), tr.get("pad_w", w)
+            pt, pl = tr["crop_top"], tr["crop_left"]
+            depth_conf[i][:pt, :] = 0
+            depth_conf[i][pt + ph:, :] = 0
+            depth_conf[i][:, :pl] = 0
+            depth_conf[i][:, pl + pw:] = 0
+        log.info("pad mode: confidence zeroed outside the %dx%d content area",
+                 tr.get("pad_w"), tr.get("pad_h"))
+
     # note: this helper squeezes the channel dim itself -> pass [S,H,W,1]
     world_points = unproject_depth_map_to_point_map(depth[..., None], extrinsic, intrinsic)
 
@@ -173,6 +192,7 @@ def run_vggt(frames: list[dict], cfg: dict, limit_per_video: int | None = None) 
         "transforms": transforms,
         "backend": "vggt",
         "model": model_ref,
+        "input_mode": input_mode,
         "device": str(torch.cuda.get_device_name(device)),
         "dtype": str(dtype).replace("torch.", ""),
         "inference_seconds": round(infer_s, 1),
@@ -314,6 +334,7 @@ def main() -> int:
         "config_hash": cfg["_config_hash"],
         "backend": result["backend"],
         "model": result["model"],
+        "input_mode": result.get("input_mode"),
         "device": result["device"],
         "dtype": result["dtype"],
         "num_frames": len(frames),
