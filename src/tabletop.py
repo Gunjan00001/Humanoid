@@ -164,9 +164,9 @@ def _cells_to_points(cell_ij: np.ndarray, cloud_codes: np.ndarray, points: np.nd
     return pts
 
 
-def detect(recon: dict[str, Any], cfg: dict[str, Any]) -> list[dict]:
-    """Run the tabletop photometric diff. Returns kept clusters (pipeline format)."""
-    from src.geometry import tagged_points, voxel_downsample
+def _prepare(recon: dict[str, Any], cfg: dict[str, Any]):
+    """Shared preprocessing for detect() and static_object_mask()."""
+    from src.geometry import tagged_points
 
     tcfg = cfg["diff"]["tabletop"]
     cell = float(tcfg["cell_size"])
@@ -176,26 +176,49 @@ def detect(recon: dict[str, Any], cfg: dict[str, Any]) -> list[dict]:
     a_mask, b_mask = tags == "a", tags == "b"
     A, CA = pts[a_mask], rgb[a_mask]
     B, CB = pts[b_mask], rgb[b_mask]
-    log.info("tabletop: A=%d B=%d points (conf p%s)", len(A), len(B), conf_q)
 
     coef_a, coef_b = fit_dominant_plane(A), fit_dominant_plane(B)
-    log.info("planes: A=%s B=%s", np.round(coef_a, 4).tolist(), np.round(coef_b, 4).tolist())
-
     bounds = grid_bounds(np.concatenate([A, B]), coef_a, cell)
     HA, CMA, NA, codesA = cell_maps(A, CA, coef_a, cell, bounds)
     HB, CMB, NB, codesB = cell_maps(B, CB, coef_b, cell, bounds)
-    log.info("grid %s x %s cells (%.0fmm), observed A=%d B=%d",
-             HA.shape[0], HA.shape[1], cell * 1000, int((NA > 0).sum()), int((NB > 0).sum()))
 
     min_pts = int(tcfg["min_cell_points"])
     obsA = NA >= min_pts
     obsB = NB >= min_pts
-    obs = obsA & obsB
     fieldA = fit_color_field(CMA, obsA)
     fieldB = fit_color_field(CMB, obsB)
     objA = objectness(CMA, fieldA)
     objB = objectness(CMB, fieldB)
     ratio = ratio_distance(CMA, CMB, fieldA, fieldB)
+    return (A, CA, B, CB, HA, CMA, NA, codesA, HB, CMB, NB, codesB,
+            objA, objB, ratio, bounds, cell)
+
+
+def static_object_mask(recon: dict[str, Any], cfg: dict[str, Any]):
+    """Cells where BOTH videos show an object (objA > T and objB > T).
+
+    These are locations of objects that exist in both recordings (timer,
+    highlighter, ...). Candidate fragments adjacent to them are edges/lighting
+    differences of a static object, not changes; describe.py suppresses those.
+    Returns (mask, bounds, cell_size).
+    """
+    (_, _, _, _, _, _, _, _, _, _, _, _, objA, objB, _, bounds, cell) = _prepare(recon, cfg)
+    T = float(cfg["diff"]["tabletop"]["objectness_threshold"])
+    return (objA > T) & (objB > T), bounds, cell
+
+
+def detect(recon: dict[str, Any], cfg: dict[str, Any]) -> list[dict]:
+    """Run the tabletop photometric diff. Returns kept clusters (pipeline format)."""
+    (A, CA, B, CB, HA, CMA, NA, codesA, HB, CMB, NB, codesB,
+     objA, objB, ratio, bounds, cell) = _prepare(recon, cfg)
+    tcfg = cfg["diff"]["tabletop"]
+    log.info("tabletop: A=%d B=%d points | grid %d x %d cells (%.0fmm)",
+             len(A), len(B), HA.shape[0], HA.shape[1], cell * 1000)
+
+    min_pts = int(tcfg["min_cell_points"])
+    obsA = NA >= min_pts
+    obsB = NB >= min_pts
+    obs = obsA & obsB
 
     T_obj = float(tcfg["objectness_threshold"])
     D = float(tcfg["objectness_margin"])
