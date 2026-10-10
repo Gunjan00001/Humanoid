@@ -1,0 +1,30 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# --- caches / large artifacts ---
+cache/
+outputs/*
+!outputs/report.json
+!outputs/report.md
+models/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.safetensors
+*.ply
+
+# --- data: keep small samples, ignore large recordings ---
+data/*.mp4
+data/*.mov
+!data/sample_*.mp4
+
+# --- editors / OS ---
+.vscode/
+.idea/
+.DS_Store
