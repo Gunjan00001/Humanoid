@@ -104,6 +104,16 @@ def main() -> int:
 
     import torch
     from PIL import Image
+    # NOTE: MapAnything's hydra configs are not part of the pip package. For
+    # external model keys the source checkout must shadow the installed
+    # package BEFORE the first `mapanything` import (module resolution caches
+    # the first import), so the path insert happens here, before the import.
+    model_key = args.model_key or "mapanything"
+    if model_key != "mapanything":
+        tp = ROOT / "third_party" / "map-anything"
+        if tp.exists():
+            sys.path.insert(0, str(tp))
+            log.info("using MapAnything source checkout at %s (hydra configs)", tp)
     from mapanything.models import MapAnything
     from mapanything.utils.image import load_images
 
@@ -133,14 +143,8 @@ def main() -> int:
     else:
         # stretch goal: any model in MapAnything's unified interface (da3,
         # vggt, pi3, ...) - see docs/models.md. Outputs use the same unified
-        # format, so the conversion below is unchanged.
-        # Its hydra configs are NOT part of the pip package, so a source
-        # checkout must shadow the installed package (scripts/setup_env.sh
-        # clones it into third_party/).
-        tp = ROOT / "third_party" / "map-anything"
-        if tp.exists():
-            sys.path.insert(0, str(tp))
-            log.info("using MapAnything source checkout at %s (hydra configs)", tp)
+        # format, so the conversion below is unchanged. The source checkout
+        # was already prepended to sys.path above (before the first import).
         from mapanything.models import init_model_from_config
         log.info("loading external model '%s' via init_model_from_config onto %s",
                  model_key, torch.cuda.get_device_name(device))
