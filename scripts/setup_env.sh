@@ -98,6 +98,25 @@ if [ ! -d "$REPO_ROOT/third_party/map-anything/configs" ]; then
         "$REPO_ROOT/third_party/map-anything"
 fi
 
+# Local model config: the default DA3 checkpoint (GIANT-1.1) is CC-BY-NC-4.0;
+# DA3-LARGE-1.1 is Apache-2.0, so the stack stays commercially usable when
+# this key is used (docs/models.md).
+if [ -d "$REPO_ROOT/third_party/map-anything/configs/model" ]; then
+    cat > "$REPO_ROOT/third_party/map-anything/configs/model/da3_apache.yaml" <<'YAML'
+defaults:
+  - default
+  - task: images_only
+model_str: "da3"
+model_config:
+  name: "da3"
+  hf_model_name: "depth-anything/DA3-LARGE-1.1"
+  geometric_input_config: ${model.task}
+data_norm_type: "dinov2"
+pretrained: null
+torch_hub_force_reload: False
+YAML
+fi
+
 echo "==> env '$ENV_NAME' ready."
 echo "    act with:  conda activate $ENV_NAME  (then: export PATH=\"\$CONDA_PREFIX/bin:\$PATH\")"
 echo "==> env '$MA_ENV_NAME' ready (MapAnything backend worker)."
