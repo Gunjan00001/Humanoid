@@ -369,3 +369,13 @@ Observed on the demo scene (quantified in [`docs/results.md`](docs/results.md)):
 ## License
 
 MIT, see [`LICENSE`](LICENSE). Model checkpoints keep their own licenses.
+
+## Independent benchmark (SceneDiff)
+
+Beyond the development scenes, the pipeline is checked on the SceneDiff
+benchmark, which is external and never used for tuning. Details and results are
+in docs/evaluation.md.
+
+- Yuqun Wu et al. SceneDiff benchmark and evaluator (MIT).
+  https://github.com/yuqunw/scene_diff, https://huggingface.co/datasets/yuqun/SceneDiff
+- HD-Epic, the source of the kitchen subset. https://hd-epic.github.io/

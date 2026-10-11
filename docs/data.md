@@ -73,3 +73,16 @@ Notes:            # lighting, anything unusual
 - [ ] `data/ground_truth.md` filled with exactly three changes
 - [ ] Both videos show the same area with good overlap
 - [ ] Files are small enough for the repository (or handled via LFS/release)
+
+## SceneDiff (independent evaluation slice)
+
+The SceneDiff benchmark is a separate, external dataset used as an independent
+check in docs/evaluation.md. It is not part of the development scenes.
+
+- Dataset: yuqun/SceneDiff, MIT license (per the Hugging Face card).
+  https://huggingface.co/datasets/yuqun/SceneDiff
+- Code and evaluator: yuqunw/scene_diff, MIT license.
+  https://github.com/yuqunw/scene_diff
+- Paper: https://arxiv.org/abs/2512.16908
+- HD-Epic, the source of the kitchen subset, has its own terms:
+  https://hd-epic.github.io/
