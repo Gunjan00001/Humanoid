@@ -729,3 +729,15 @@ the automatic mode choice contributed; no held-out output was changed.
   enable); every published `viewer.html` is **plain git, none LFS** (so Pages
   will serve them); `environment.yml` **unverified** (see setup.md).
 - **Tagged `v1.0.0`** and pushed.
+
+## 2026-10-11 — GitHub Pages enabled; viewers live
+
+- The owner enabled Pages (**Settings → Pages: Deploy from a branch, `main` /
+  `/` root**). Verified **all 7 viewer URLs return HTTP 200** (demo, scene2,
+  scene2_geo, scene3, scene4, scene5, scene6) with the real HTML bytes.
+- A self-enabling Actions workflow (`actions/configure-pages` `enablement: true`)
+  was tried and **reverted**: the default `GITHUB_TOKEN` cannot create the Pages
+  site (needs repo-admin), so a token or the browser UI is genuinely required.
+  There is **no workflow file**; branch deploys re-publish on each push to `main`.
+- README viewer list now includes scene5 + scene6; `docs/hosting.md` marked
+  **ENABLED**.
