@@ -138,3 +138,22 @@ here as unverified.
 - `nvidia-smi` / per-GPU utilization at job start (no snapshot captured).
 - The wall-clock time before the first submission (when the scene4 videos
   arrived) — not recorded in any log I can read.
+
+## Reproducibility runs (2026-10-11)
+
+Twelve `detect.py --force` runs (scene2 working point, scene4, scene5, scene6 —
+3× each; fresh caches; 2 CPUs + 2 GPUs per job; 3 workers). Per-run wall clock
+(submit → summary), which includes queue waits on the busy shared queue:
+
+| scene | run 1 | run 2 | run 3 |
+|---|---|---|---|
+| scene4 | 7:02 | 9:41 | 7:22 |
+| scene5 | 33:04* | 13:02 | 22:43* |
+| scene6 | 11:42 | 11:22 | 11:02 |
+| scene2 (working point) | 26:23* | 5:21 | (n/a) |
+
+\* queued behind the per-user 16-CPU quota / other users' jobs; the node-side
+stage time was ~5–12 min. scene6's three runs (~11–12 min) were faster than the
+**cold held-out run (18:53)** because the model files were warm. Counts and
+types were identical across all three runs of each scene (see
+[`results.md`](results.md#reproducibility-frozen-pipeline-3x-per-scene)).

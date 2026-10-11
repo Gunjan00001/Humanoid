@@ -708,3 +708,24 @@ the automatic mode choice contributed; no held-out output was changed.
   `change.gif` and the checking sheet were re-rendered from the cached results;
   `report.json` and every detection number are unchanged. (Chrome was present on
   the login node for the re-render, so the GIF is Chrome-rendered this time.)
+
+## 2026-10-11 — Step 3 reproducibility (12 runs) + Step 4 closeout → v1.0.0
+
+- **Ran the frozen pipeline 3x per scene** (`detect.py --force`, fresh caches,
+  isolated gitignored dirs, 2 CPUs + 2 GPUs per job, 3 workers). Scenes: scene2
+  (working point), scene4, scene5, scene6 = 12 runs, all rc=0.
+- **Finding — scene2 cannot run at defaults** (`0/3`): its shipped clips are
+  3.8 s / 7.3 s, so `extract_frames` keeps 1 sharp frame (< min 8) and aborts.
+  It was re-run at its documented working point (`--method geometric
+  --blur_threshold 25`) instead.
+- **Result: deterministic in this set** — all three runs per scene produced
+  **identical entry counts and identical type/label lists** (min = typical =
+  max): scene2wp **5/5/5**, scene4 **3/3/3**, scene5 **7/7/7**, scene6 **2/2/2**.
+  scene6's three fresh runs reproduced the committed held-out result exactly.
+  No explicit seeds; empirical, not guaranteed. No GT change was found
+  intermittently. Tables in `docs/results.md` + README; per-run wall clock in
+  `docs/timing.md`. Harness: `scripts/repro_scenes.sh`, `scripts/repro_summary.py`.
+- **Step 4 closeout:** GitHub Pages URLs return **404** (not enabled; user will
+  enable); every published `viewer.html` is **plain git, none LFS** (so Pages
+  will serve them); `environment.yml` **unverified** (see setup.md).
+- **Tagged `v1.0.0`** and pushed.

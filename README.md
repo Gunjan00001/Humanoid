@@ -51,6 +51,13 @@ once** with the frozen code and default settings — pre-registered scoring rule
 per-change tables and failure analyses are in
 [`docs/heldout.md`](docs/heldout.md).
 
+**Reproducibility (3x per scene, frozen code, fresh caches):** deterministic in
+this set — scene4 **3/3** and scene6 (2 entries) reproduced **identically**
+every run; scene5 gave 7 entries each; scene2 runs only at its documented
+working point (5 entries each) — **at defaults it cannot run** (its shipped
+clips are 3.8 s / 7.3 s, too few sharp frames). Full table:
+[`docs/results.md`](docs/results.md).
+
 ## Known limitations
 
 - mixed orientation / resolution between the two recordings weakens the
