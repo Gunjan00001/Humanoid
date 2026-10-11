@@ -45,7 +45,14 @@ export PATH="$CONDA_PREFIX/bin:$PATH"        # see the PATH gotcha in troublesho
 pip install torch torchvision torchaudio \
     --index-url https://download.pytorch.org/whl/cu126
 pip install -r requirements.txt
+pip install "vggt @ git+https://github.com/facebookresearch/vggt.git"   # VGGT (needs internet on this node)
 ```
+
+VGGT installs from its GitHub repository (package name `vggt`); it is not on
+PyPI. Run that line on the login node, which has internet. After it, a clean env
+passes `python -c "import vggt, torch"` and `python detect.py --help`. The model
+weights are downloaded separately (see Model weights below) and are what remain
+unverified if you do not download them.
 
 ### `environment.yml` — status: **unverified** (cannot be built as-is)
 

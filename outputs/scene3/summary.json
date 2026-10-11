@@ -8,37 +8,37 @@
       "id": 1,
       "type": "replaced",
       "label": "black chair",
-      "sentence": "In video B, the red object was replaced by a black chair.",
+      "sentence": "The red object was replaced by a black chair",
       "confidence": 0.56,
       "possibly": false,
-      "sentence_source": "vlm"
+      "sentence_source": "report"
     },
     {
       "id": 2,
       "type": "removed",
       "label": "red apple",
-      "sentence": "In video B, the red apple was removed from the table.",
+      "sentence": "The red apple was removed from the table",
       "confidence": 1.0,
       "possibly": false,
-      "sentence_source": "vlm"
+      "sentence_source": "report"
     },
     {
       "id": 3,
       "type": "removed",
       "label": "green and yellow object",
-      "sentence": "In video B, the green and yellow object was removed from the scene.",
+      "sentence": "The green and yellow object was removed from the scene",
       "confidence": 0.98,
       "possibly": false,
-      "sentence_source": "vlm"
+      "sentence_source": "report"
     },
     {
       "id": 4,
       "type": "removed",
       "label": "black trash can",
-      "sentence": "In video B, the black trash can was removed from the corner.",
+      "sentence": "The black trash can was removed from the corner",
       "confidence": 0.57,
       "possibly": false,
-      "sentence_source": "vlm"
+      "sentence_source": "report"
     }
   ],
   "n_unverified": 27,
@@ -53,6 +53,6 @@
     "change.gif",
     "report.json"
   ],
-  "generated": "2026-10-11T00:14:26Z",
-  "text": "Compared a.mp4 and b.mp4. I found 4 change(s):\n1. Replaced - black chair: In video B, the red object was replaced by a black chair.\n2. Removed - red apple: In video B, the red apple was removed from the table.\n3. Removed - green and yellow object: In video B, the green and yellow object was removed from the scene.\n4. Removed - black trash can: In video B, the black trash can was removed from the corner.\n\nNotes: 27 unverified candidate(s) were seen in one video only; they are listed in report.json but not counted as changes. Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.\nFiles: viewer.html, change.gif, report.json"
+  "generated": "2026-10-11T16:12:33Z",
+  "text": "Compared a.mp4 and b.mp4. I found 4 change(s):\n1. Replaced: black chair. The red object was replaced by a black chair\n2. Removed: red apple. The red apple was removed from the table\n3. Removed: green and yellow object. The green and yellow object was removed from the scene\n4. Removed: black trash can. The black trash can was removed from the corner\n\nNotes: 27 unverified candidate(s) were seen in one video only; they are listed in report.json but not counted as changes. Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.\nFiles: viewer.html, change.gif, report.json"
 }
