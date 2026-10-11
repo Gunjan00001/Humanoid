@@ -126,3 +126,10 @@ Next steps and the exact commands:
 - Evaluator cloned to third_party/scene_diff.
 - Next: evaluator smoke test (perfect/empty prediction on 3 val pairs), 10 per-pair
   facts, compute estimate, then C2.
+
+### 2026-10-11 23:25 IST, held-out restore fix (v1.0.3)
+- The v1.0.1 summary regeneration had changed the held-out scene5/scene6 summary
+  text. Restored those six files to v1.0.0 and made tests/test_summary.py accept
+  both summary line formats. main = e4aed51, tag v1.0.3. git diff v1.0.0 main for
+  outputs/scene5 and outputs/scene6 is now empty. Merged main into exp/accuracy.
+- Status of tracks: A done (v1.0.1/2/3), B done (negative), C C1 partial.
