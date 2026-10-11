@@ -184,3 +184,13 @@ Next steps and the exact commands:
   but the evaluator will not touch them until the sanity check passes).
 - Next: wait for 11027, run the validation sanity check, freeze, evaluate val,
   then evaluate test once, then Track D and the final report.
+
+### 2026-10-12 00:00 IST, C4/C5 job 11033 running (slow)
+- Bug fixed: only 10 val pairs were extracted; the driver ran 20. Extracted all 30
+  pairs, documented in docs/evaluation.md, re-submitted as job 11033. No test score
+  was produced before the fix.
+- 11033: 8/20 val predictions done, running slowly (the 32B CPU-offloaded on the
+  busy node; the gym pair already has 68 VLM verifications and is still going).
+- Next: when 11033 finishes, sanity-check the val predictions (valid pkl, H/W
+  match, non-degenerate scores, 3 overlay looks), freeze (v1.0.0 config + digests),
+  evaluate the val slice, then evaluate the test slice once, then Track D.
