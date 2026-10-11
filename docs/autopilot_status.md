@@ -107,3 +107,13 @@ Next steps and the exact commands:
 - Next: when the install finishes, run the SAM 2 probe on scene6 (cup) and scene5
   (clock); when the zip finishes, extract splits and the selected pairs and run the
   evaluator smoke test.
+
+### 2026-10-11 22:55 IST, Track B done (negative), Track C download done
+- SAM 2 installed (env spatialdiff-sam, facebookresearch/sam2, Apache-2.0, SAM 2.1
+  base-plus, 323,606,802 bytes) and recorded in docs/models.md.
+- Probe (job 11017) on scene6 cup and scene5 clock: SAM 2 masks the crops, but
+  DINOv2 similarity is 0.190 and 0.219, below the 0.65 gate. Probe FAILS, so
+  objmatch2 is not built. Written to docs/negative_results.md and docs/accuracy.md.
+- SceneDiff zip downloaded (12 GB) to data/external/scenediff/ (gitignored).
+- Next: extract splits and the selected pairs, run the evaluator smoke test, then
+  complete the C1 gates.
