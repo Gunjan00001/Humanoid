@@ -232,7 +232,14 @@ def load_vlm(cfg: dict):
     except ImportError:  # older transformers
         from transformers import Qwen3VLForConditionalGeneration as ModelCls  # type: ignore
     dtype = getattr(torch, cfg["gpu"]["dtype"])
-    model = ModelCls.from_pretrained(ref, dtype=dtype, device_map="auto", low_cpu_mem_usage=True)
+    kwargs = {"dtype": dtype, "device_map": "auto", "low_cpu_mem_usage": True}
+    mm = cfg["semantics"].get("vlm_max_memory")
+    if mm:
+        # explicit per-GPU sharding for a shared node (accuracy sprint): keys are
+        # the VISIBLE device indices, values e.g. "38GiB". Never quantizes.
+        kwargs["max_memory"] = {int(k): v for k, v in mm.items()}
+        log.info("VLM max_memory=%s", kwargs["max_memory"])
+    model = ModelCls.from_pretrained(ref, **kwargs)
     model.eval()
     processor = AutoProcessor.from_pretrained(ref)
     log.info("VLM ready on %s", getattr(model, "hf_device_map", "?"))
