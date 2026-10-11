@@ -12,7 +12,7 @@ source "$HOME/miniconda3/etc/profile.d/conda.sh"
 conda activate spatialdiff
 export PATH="$CONDA_PREFIX/bin:$PATH"
 
-python -u scripts/worker.py --phase D
+python -u scripts/worker.py --experiments baseline d_softveto d_coverage d_both e_objmatch f_merge d_both_ef
 rc=$?
 echo "WORKER_DONE rc=$rc"
 exit $rc

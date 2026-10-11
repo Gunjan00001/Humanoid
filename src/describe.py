@@ -665,18 +665,39 @@ def main() -> int:
             scfg = cfg["semantics"]
             by_id = {c["id"]: c for c in matchable}
             pairs = []
-            for i, ri in enumerate(ids):
-                if by_id[ri]["type"] != "removed":
-                    continue
-                for j, aj in enumerate(ids):
-                    if by_id[aj]["type"] != "added":
+            if cfg["diff"].get("objmatch", False):
+                # E: global (Hungarian) object-level matching - assign each
+                # removed crop to at most one added crop by DINOv2 similarity;
+                # accept pairs displaced beyond a GLOBAL distance threshold.
+                from scipy.optimize import linear_sum_assignment
+                rem_idx = [i for i, c in enumerate(matchable) if c["type"] == "removed"]
+                add_idx = [i for i, c in enumerate(matchable) if c["type"] == "added"]
+                if rem_idx and add_idx:
+                    S = emb[rem_idx] @ emb[add_idx].T
+                    rows, cols = linear_sum_assignment(-S)
+                    thr = float(scfg.get("objmatch_min_sim", 0.55))
+                    for a, b in zip(rows, cols):
+                        i, j = rem_idx[a], add_idx[b]
+                        sim = float(S[a, b])
+                        dist = float(np.linalg.norm(np.asarray(matchable[i]["centroid"])
+                                                    - np.asarray(matchable[j]["centroid"])))
+                        if sim >= thr and dist >= float(scfg["match_min_distance"]):
+                            pairs.append({"removed_id": matchable[i]["id"],
+                                          "added_id": matchable[j]["id"],
+                                          "similarity": round(sim, 4), "distance": round(dist, 4)})
+            else:
+                for i, ri in enumerate(ids):
+                    if by_id[ri]["type"] != "removed":
                         continue
-                    sim = float(np.dot(emb[i], emb[j]))
-                    dist = float(np.linalg.norm(
-                        np.asarray(by_id[ri]["centroid"]) - np.asarray(by_id[aj]["centroid"])))
-                    if sim >= float(scfg["match_similarity_threshold"]) and dist >= float(scfg["match_min_distance"]):
-                        pairs.append({"removed_id": ri, "added_id": aj,
-                                      "similarity": round(sim, 4), "distance": round(dist, 4)})
+                    for j, aj in enumerate(ids):
+                        if by_id[aj]["type"] != "added":
+                            continue
+                        sim = float(np.dot(emb[i], emb[j]))
+                        dist = float(np.linalg.norm(
+                            np.asarray(by_id[ri]["centroid"]) - np.asarray(by_id[aj]["centroid"])))
+                        if sim >= float(scfg["match_similarity_threshold"]) and dist >= float(scfg["match_min_distance"]):
+                            pairs.append({"removed_id": ri, "added_id": aj,
+                                          "similarity": round(sim, 4), "distance": round(dist, 4)})
             # similarity first; within a 0.05 band prefer the cluster with
             # more evidence (scene4's apple had a clean 102-cell destination
             # and a cluttered 52-cell fragment, scored 0.704 vs 0.732)
@@ -998,7 +1019,11 @@ def main() -> int:
             lo = vlm_cache.get(str(other["id"]), {}).get("label")
             same_name = _objects_overlap(li, lo)
             adjacent = _bbox_close(c, other, pad=0.06)   # bbox within 6cm
-            if (same_name or adjacent) and _dist(c, other) < 0.25:
+            frag = bool(cfg["semantics"].get("fragment_merge", False))
+            frag_r = float(cfg["semantics"].get("fragment_merge_radius", 0.35))
+            limit = frag_r if frag else 0.25
+            if (same_name or adjacent or (frag and _dist(c, other) < frag_r)) \
+                    and _dist(c, other) < limit:
                 group.append(other)
                 merged_flags.add(other["id"])
         if len(group) > 1:
