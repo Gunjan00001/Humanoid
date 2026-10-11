@@ -117,3 +117,12 @@ Next steps and the exact commands:
 - SceneDiff zip downloaded (12 GB) to data/external/scenediff/ (gitignored).
 - Next: extract splits and the selected pairs, run the evaluator smoke test, then
   complete the C1 gates.
+
+### 2026-10-11 23:10 IST, Track C C1 progress
+- Zip downloaded (12 GB). Extracted splits and 10 val varied pairs. Verified the
+  real structure and frame convention; recorded in docs/evaluation.md. Key
+  discrepancies: raw videos are .MOV, no metadata.json, pair names are real, zip
+  needs UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE.
+- Evaluator cloned to third_party/scene_diff.
+- Next: evaluator smoke test (perfect/empty prediction on 3 val pairs), 10 per-pair
+  facts, compute estimate, then C2.

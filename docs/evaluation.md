@@ -87,3 +87,38 @@ obj/im AP, obj/sc AP without and with the change-type requirement.
   by change type, annotated frames, size).
 - Compute estimate for 20 val and 10 test pairs, reduced to fit 12 GPU hours if
   needed.
+
+## C1 verified facts (2026-10-11)
+
+Discrepancies from the code README, checked from the archive itself:
+
+- The zip is `scenediff_benchmark.zip` (11,919,571,401 bytes). unzip refuses it
+  with "overlapped components (possible zip bomb)"; extract with
+  `UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE`.
+- Pairs live at `scenediff_benchmark/data/<pair>/` with real names (for example
+  `airhockeytable_1_airhockeytable_2`), not `sequence_pair_N`.
+- Files per pair: `original_video1.MOV` and `original_video2.MOV` (or `.mov`),
+  the raw videos to use; `video1.mp4` and `video2.mp4` (annotation overlays,
+  never use); `segments.pkl` (GT); `inference_data.pkl`; `review_meta.json`.
+  There is no `metadata.json`. The raw videos are `.MOV`, not `.mp4`.
+- Splits: val varied 50, val kitchen 55, test varied 150, test kitchen 100.
+
+`segments.pkl` (loaded with the spatialdiff env):
+
+- `scene_type` (string), `light_change` (bool), `comments`.
+- `objects`: list of `{label, in_video1, in_video2, video1_frame_idx,
+  video1_status, video2_frame_idx, video2_status, original_obj_idx,
+  deformability}`. The change type follows the two flags: in both videos means
+  moved or unchanged, in video1 only means removed, in video2 only means added.
+- `video1_objects` and `video2_objects`: `{object_id: {frame_id: {size, counts}}}`
+  where `counts` is a pycocotools RLE.
+
+Frame convention: `frame_id` is the integer video frame index. The GT provides
+masks only on the annotated frames, so the adapter must project the changed
+object into the annotated frames (and possibly interpolate poses for frames that
+were not reconstructed).
+
+Evaluator code cloned to `third_party/scene_diff` (scripts/evaluate_multiview.py).
+
+Still pending from C1: the evaluator smoke test (perfect and empty prediction),
+the 10 per-pair facts, and the compute estimate.
