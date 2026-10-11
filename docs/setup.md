@@ -84,6 +84,13 @@ walltime, 5 concurrent jobs. Large models load straight onto the GPU with
 PBS does not pin GPUs on this cluster — check `nvidia-smi` and optionally pin
 an idle GPU in the job (`export CUDA_VISIBLE_DEVICES=3` after the `unset`).
 
+## Where to clone
+
+Clone into your **shared home directory** (or any shared filesystem path). A
+clone under `/tmp` is node-local: `detect.py` on the login node would submit a
+PBS job that runs on a different machine and cannot see the files (detect.py
+warns about this; `--local` on a GPU node is the alternative).
+
 ## Data and Git LFS
 
 The six small development clips (< 5 MB each) and `data/scene5/b.mp4` (a
