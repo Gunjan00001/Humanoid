@@ -80,6 +80,18 @@ node; the hour is five GPU rounds (the first run plus four semantic-fix /
 regression rounds) plus two visual rounds plus the analysis between them —
 not one long run.
 
+## v0.12 one-command runs (`detect.py`)
+
+| run | queue wait | job runtime | total wall clock | notes |
+|---|---|---|---|---|
+| **scene5 held-out** (job 10824, cold) | 0 s | **7:07** | 7:22 | extract 0:03, reconstruct 0:23, align 0:24, diff 0:33, describe 3:54, report+visualize+summary ~1:45 |
+| scene5 post-hoc tabletop (job 10829, cold) | 1 s | 6:33 | 6:41 | one variable changed (`--method tabletop`) |
+| **4 development-scene regressions** (job 10830, `--force` with warm VLM caches) | 0 s | **10:25** | — | per scene: demo 2:27, scene2 2:16, scene3 2:20, scene4 3:12 (re-extract/reconstruct/diff re-ran; the cached VLM answers skipped the model load) |
+
+The cold/warm split is the dominant factor: a cold scene pays the VLM load
+(~26 s) and the fresh verifications (~11 s per candidate); a warm re-run of a
+whole scene is 2-3 min even with `--force`.
+
 ## Warm re-runs (VLM cache warm)
 
 - `describe` + `report` only: **0:33** (10804), **1:04** (10806, includes two

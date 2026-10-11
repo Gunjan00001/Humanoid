@@ -520,3 +520,81 @@ together with a strip of the key colours (removed/added/moved/replaced/
 unverified/background/label white), so the palette reserves slots for them;
 the strip is cropped off. Verified after the fix: magenta = (242,63,242)
 exactly, 355 px. All five GIFs re-rendered with the fix.
+
+
+## 2026-10-11/12 — v0.12: one-command run, NL summaries, held-out scene5
+
+### Step 0-2 (built before any scene5 execution)
+
+- `docs/heldout.md` froze commit `e8c77d9` + sha256 of the 7 detection files
+  and pre-registered the scoring rule **before** any new code was written.
+- `detect.py`: input validation (decode/stream/duration/resolution/
+  orientation, LFS-pointer detection), automatic diff-mode choice from the
+  measured dominant-plane coverage, GPU-node detection, automatic PBS
+  submission + polling from the login node, cache reuse, `--local/--no-wait/
+  --render-only/--force/--out/--cache`, pass-through of the development
+  scenes' documented working-point overrides, failure reporting with the
+  failing stage.
+- `src/summary.py`: report-only natural-language summaries. One Qwen3-VL
+  phrasing call; sentences are validated word-by-word (label + type actions +
+  non-object words) with a deterministic template fallback; "Possibly ..."
+  below confidence 0.40; notes state the unverified count, the naming caveat
+  and the development-scene tuning.
+- The VLM phrasing initially failed validation for three fixable reasons
+  (found by logging the raw reply): "video 1/2" references (no such numbering
+  exists), the tokens "1"/"2", and missing action words ("absent", "present",
+  "compared"). Fixed in the summary prompt/validator only.
+
+### Step 3 — the held-out run (once) and the user's overlay review
+
+Run: `detect.py --a data/scene5/a.mp4 --b data/scene5/b.mp4 --name scene5`
+(auto mode -> `geometric`, dominant plane 11%; queue wait 0 s, job 7:07,
+total 7:22). Result: 5 confirmed entries, no `moved`; the chair's removal
+fragmented into three "leg" labels; two added entries. The user reviewed the
+checking sheet: tiles 1-3 = the chair (type right, labels wrong), tile 4 =
+**floor light reflection** (false positive), tile 5 = **not a real addition**
+(the bottle is in both videos; the clock's new position misread) -> the clock
+move is **missed**. Confirmed score: **found 1/2 (type only), labels 0/2,
+missed 1, extras >= 2**.
+
+### Post-hoc diagnostic (labelled, not part of the held-out result)
+
+Scene5 re-run once with `--mode tabletop` forced (job 10829, 6:40): 4 entries,
+both false additions gone, the chair named correctly in one entry ("black
+chair"), the clock move **still missed**. This suggests - not proves - that
+the automatic mode choice contributed; no held-out output was changed.
+
+### Fixes after the review (summary/validation only)
+
+- `detect.py`: an A/B orientation mismatch now prints a loud
+  `[WARN] ORIENTATION MISMATCH` with the recommendation to record both videos
+  in the same orientation (landscape preferred); the resolution mismatch
+  warning is equally loud. Validation message only.
+- `src/summary.py`: the validator no longer accepts the report's free-text
+  description as a vocabulary source - that is how "leaving only the cracked
+  surface" (a visual embellishment from the crop, not grounded in the
+  detection) passed. Vocabulary is now the label + the type's action words +
+  non-object words (+ common function words, which the object-description
+  stopword list did not cover: "was"/"from" blocked valid sentences).
+- `tests/test_summary.py`: synthetic + committed-output invariants (every
+  report change appears exactly once, nothing extra, notes caveats).
+
+### Step 4 results (regressions, tests, re-encode, clone)
+
+- `detect.py --force` re-runs: **demo, scene3, scene4 identical** to the
+  committed reports (types, labels, unverified counts); **scene2 differs**
+  (1 -> 2 entries: the committed coconut-mislabeled-"apple" plus a new
+  "removed coconut" with 562 empty-space points; 10 -> 9 unverified). Cause:
+  recomputed reconstruction + geometric diff (run-to-run variability, frozen
+  code unchanged). Documented in results.md and the README.
+- `tests/test_summary.py` added (synthetic + committed-output invariants);
+  `tests/test_ma_contract.py` still passes.
+- `data/scene5/b.mp4` re-encoded (libx264 crf 26, same 480x860@30fps, 4.6 MB,
+  original 6.9 MB LFS oid `1be79cea00` kept in history) so plain clones read
+  it. A post-hoc check shows detection runs on it (9:04, exit 0) but the auto
+  mode flips to `tabletop` and the result differs (7 entries; chair better
+  named, clock move still missed) - documented, held-out outputs unchanged.
+- Fresh-clone test: `git clone` + the README quick start ran from a clean
+  directory (the first attempt failed on the GPU node because git-lfs is not
+  installed there; re-run on the login node where git-lfs works, with the
+  clone's `detect.py` submitting its own PBS job).

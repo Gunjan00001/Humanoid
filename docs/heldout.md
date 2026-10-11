@@ -43,8 +43,26 @@ detection, not for labelling). Extra entries (confirmed changes not in the
 ground truth) are counted separately. Unverified candidates are listed but not
 counted as changes.
 
-**Status: pending user confirmation** — the per-change overlays are collected
-in `outputs/scene5/checking_sheet.png` / `checking_sheet.md` for review.
+**Status: CONFIRMED by the user** (review of
+`outputs/scene5/checking_sheet.png`). Final scoring with this rule:
+
+| | result |
+|---|---|
+| ground-truth changes found | **1/2 — type only** (the chair's removal is detected as `removed`, fragmented into 3 entries; the clock's move is missed) |
+| labels correct | **0/2** (the fragments are named "wooden leg" / "chair leg" / "table leg") |
+| missed | **1** (the clock's move) |
+| extras | **≥ 2** (entries 4 and 5; entry 3 is a chair fragment that cannot be attributed cleanly) |
+
+The user's overlay review, tile by tile:
+
+- **tiles 1-3** (removed): the chair's area. Type `removed` correct, but
+  fragmented into three entries; the labels are wrong.
+- **tile 4** (added "small round object"): **false positive — a floor light
+  reflection in video B**. Verified against the frames: the B-side crop shows
+  the bright reflective floor patch; counted as an extra.
+- **tile 5** (added "bottle and clock"): **not a real addition** — the bottle
+  is present in both videos; the clock's *new position* was reported as
+  "added". The clock move counts as **missed**.
 
 ## Result (scene5, run once — the single held-out execution)
 
@@ -129,13 +147,19 @@ source per change.)
 
 1. **The two recordings differ in orientation** (A landscape 860x480, B
    portrait 480x860) and length (26.8 s vs 42.5 s). The runner warned about
-   this before submitting. A joint reconstruction across differently oriented
-   recordings is harder; the clock/chair region is reconstructed from two very
-   different viewpoints.
+   this before submitting. This is **likely** a contributing cause: a joint
+   reconstruction across differently oriented recordings sees the clock/chair
+   region from two very different viewpoints, which **likely** weakens both
+   the cluster geometry and the VLM crops. Not proven.
 2. **The auto mode chose `geometric`** (dominant plane 11% of confident
    points). The geometric mode's known weakness - coverage-difference
    artifacts (documented on scene2) - is visible here: 58 candidates, 48
    denied by the VLM, 3 suppressed, 10 confirmed, 5 surviving the filters.
+   The **11% plane coverage is likely the second contributing cause**: it both
+   selected the geometric mode and indicates that this scene's confident
+   points are spread over floor/walls/objects rather than one dominant
+   surface, which is exactly the regime where the geometric mode produces
+   fragments. Not proven; see the post-hoc diagnostic below.
 3. **The chair's removal is fragmented**: three separate clusters (wooden
    leg / chair leg / table leg) instead of one "chair" removal. The VLM
    labelled the fragments by their local appearance (legs), not by the object
@@ -151,6 +175,62 @@ source per change.)
 **No tuning, no re-run, no prompt or threshold change was made for scene5.**
 Any future fix must be labelled "post-hoc, not part of the held-out result"
 and reported on scene5 separately.
+
+### POST-HOC DIAGNOSTIC (not part of the held-out result)
+
+Clearly labelled: this run is **not** the held-out result and was executed
+after the held-out run, with one variable changed (`--mode tabletop` forced).
+Everything else (frozen code, default thresholds, same videos) is identical.
+
+```
+python detect.py --a data/scene5/a.mp4 --b data/scene5/b.mp4 \
+    --name scene5_tabletop_posthoc --method tabletop
+```
+
+Outcome (job 10829, 6:40, queue wait 0 s):
+
+| | held-out (auto -> geometric) | post-hoc (tabletop forced) |
+|---|---|---|
+| confirmed changes | 5 | 4 |
+| removed entries | 3 ("wooden leg", "chair leg", "table leg") | 3 ("wooden chair leg", **"black chair"**, "cracked shelf") |
+| replaced entries | 0 | 1 ("wooden table leg") |
+| added entries | 2 ("small round object", "bottle and clock") | 0 |
+| `moved` entries | 0 | 0 |
+| clock move | missed | **still missed** |
+| chair named correctly | no | **yes, in one entry** |
+
+**Does it change the outcome? Partially.** The tabletop mode removes both
+false additions (the floor reflection and the clock/bottle misread) and names
+the chair correctly in one entry, but the clock's move is still missed and the
+removal is still fragmented (3-4 entries, including a "cracked shelf" that is
+likely an extra). This **suggests** (does not prove) that the automatic mode
+choice contributed to the held-out result; it does not fix the missed move.
+
+The held-out outputs remain exactly as produced; this diagnostic is committed
+separately in `outputs/scene5_tabletop_posthoc/`.
+
+### POST-HOC: detection on the shipped re-encoded b.mp4 (not the held-out result)
+
+`data/scene5/b.mp4` was later re-encoded (libx264 crf 26, same 480x860@30fps,
+4.6 MB) so a plain clone can read it. Detection **runs** on it (exit 0, 9:04)
+but the result differs from the held-out one, because the reconstruction from
+the re-encoded pixels changes:
+
+| | held-out (original b.mp4) | re-encode check |
+|---|---|---|
+| auto mode | geometric (plane 11%) | **tabletop** (the coverage crossed 50%) |
+| entries | 5 (3 removed, 2 added) | 7 (6 removed, 1 added) |
+| chair naming | no entry says "chair" | "chair", "chair backrest", 3x "chair leg" |
+| clock move | missed | still missed |
+| extras | 2 | >= 1 ("small brown object", "stacked bowls") |
+
+This is recorded so nobody mistakes a clone's scene5 run for the held-out
+result: the held-out outputs were produced from the **original** b.mp4 and are
+committed unchanged in `outputs/scene5/`; the re-encode check is committed
+separately in `outputs/scene5_reencode_check/`. It also shows that the
+automatic mode choice is sensitive to the exact input encoding (an honest,
+unproven-likely observation: the lossy re-encode shifts the confident-point
+distribution across the 50% threshold).
 
 ### Checking sheet
 

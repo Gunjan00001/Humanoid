@@ -5,8 +5,8 @@
     "backend": "vggt",
     "model": "/home/jiit_992401210050/models/VGGT-1B",
     "diff_method": "tabletop",
-    "created": "2026-10-10T21:42:46Z",
-    "config_hash": "2514ba94c2d8",
+    "created": "2026-10-11T00:11:08Z",
+    "config_hash": "a93e2d60be34",
     "num_frames": 24,
     "semantics": "vlm-verified",
     "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
@@ -18,76 +18,116 @@
       "label": "apple",
       "description": "The apple was removed from the table.",
       "centroid": [
-        0.0642,
-        -0.2472,
-        1.0519
+        -0.09,
+        -0.331,
+        1.0816
       ],
       "bbox": [
-        -0.1229,
-        -0.3689,
-        0.9487,
-        0.2485,
-        0.005,
-        1.166
+        -0.3804,
+        -0.4968,
+        1.002,
+        0.1447,
+        -0.1967,
+        1.2568
       ],
       "from": [
-        0.0642,
-        -0.2472,
-        1.0519
+        -0.09,
+        -0.331,
+        1.0816
       ],
       "to": null,
-      "confidence": 0.86,
+      "confidence": 0.75,
       "cluster_ids": [
         1
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00072.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00040.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 19,
+            "file": "b/frame_00120.jpg",
+            "n_valid": 5896,
+            "n_empty": 5896
+          },
+          {
+            "frame": 20,
+            "file": "b/frame_00152.jpg",
+            "n_valid": 5896,
+            "n_empty": 5896
+          },
+          {
+            "frame": 21,
+            "file": "b/frame_00160.jpg",
+            "n_valid": 5896,
+            "n_empty": 5896
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "type": "removed",
+      "label": "coconut",
+      "description": "The coconut was removed from the table.",
+      "centroid": [
+        0.1539,
+        -0.0449,
+        0.947
+      ],
+      "bbox": [
+        0.0768,
+        -0.072,
+        0.9019,
+        0.2103,
+        0.0238,
+        0.9814
+      ],
+      "from": [
+        0.1539,
+        -0.0449,
+        0.947
+      ],
+      "to": null,
+      "confidence": 0.75,
+      "cluster_ids": [
+        2
       ],
       "evidence": {
         "frames_a": [
           "a/frame_00000.jpg"
         ],
         "frames_b": [
-          "b/frame_00032.jpg"
+          "b/frame_00088.jpg"
         ],
-        "confirmed_empty_in": []
+        "confirmed_empty_in": [
+          {
+            "frame": 11,
+            "file": "b/frame_00000.jpg",
+            "n_valid": 562,
+            "n_empty": 562
+          },
+          {
+            "frame": 12,
+            "file": "b/frame_00008.jpg",
+            "n_valid": 562,
+            "n_empty": 562
+          },
+          {
+            "frame": 13,
+            "file": "b/frame_00016.jpg",
+            "n_valid": 562,
+            "n_empty": 562
+          }
+        ]
       }
     }
   ],
   "unverified_changes": [
-    {
-      "id": 2,
-      "type": "added",
-      "label": "concrete floor",
-      "description": "a gray concrete floor meeting a white wall baseboard.",
-      "centroid": [
-        -0.4817,
-        -0.0348,
-        0.884
-      ],
-      "bbox": [
-        -0.5396,
-        -0.365,
-        0.6221,
-        -0.3354,
-        0.3699,
-        1.1328
-      ],
-      "from": null,
-      "to": [
-        -0.4817,
-        -0.0348,
-        0.884
-      ],
-      "confidence": 0.3,
-      "cluster_ids": [
-        5
-      ],
-      "evidence": {
-        "frames_a": [],
-        "frames_b": [
-          "b/frame_00032.jpg"
-        ],
-        "confirmed_empty_in": []
-      }
-    },
     {
       "id": 3,
       "type": "added",
@@ -117,51 +157,17 @@
         6
       ],
       "evidence": {
-        "frames_a": [],
+        "frames_a": [
+          "a/frame_00088.jpg"
+        ],
         "frames_b": [
-          "b/frame_00120.jpg"
+          "b/frame_00000.jpg"
         ],
         "confirmed_empty_in": []
       }
     },
     {
       "id": 4,
-      "type": "added",
-      "label": "small metallic object",
-      "description": "a shiny, circular object with a reflective surface, possibly a coin or small metal piece, lying on a dark, textured surface.",
-      "centroid": [
-        -0.3463,
-        -0.191,
-        1.0359
-      ],
-      "bbox": [
-        -0.365,
-        -0.2048,
-        1.0137,
-        -0.3301,
-        -0.1802,
-        1.0537
-      ],
-      "from": null,
-      "to": [
-        -0.3463,
-        -0.191,
-        1.0359
-      ],
-      "confidence": 0.04,
-      "cluster_ids": [
-        7
-      ],
-      "evidence": {
-        "frames_a": [],
-        "frames_b": [
-          "b/frame_00040.jpg"
-        ],
-        "confirmed_empty_in": []
-      }
-    },
-    {
-      "id": 5,
       "type": "added",
       "label": "white wall",
       "description": "a plain, light-colored wall surface with subtle texture and minor imperfections.",
@@ -189,15 +195,17 @@
         8
       ],
       "evidence": {
-        "frames_a": [],
+        "frames_a": [
+          "a/frame_00088.jpg"
+        ],
         "frames_b": [
-          "b/frame_00016.jpg"
+          "b/frame_00000.jpg"
         ],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 6,
+      "id": 5,
       "type": "added",
       "label": "wooden beam",
       "description": "a diagonal wooden beam against a light-colored wall.",
@@ -226,14 +234,12 @@
       ],
       "evidence": {
         "frames_a": [],
-        "frames_b": [
-          "b/frame_00160.jpg"
-        ],
+        "frames_b": [],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 7,
+      "id": 6,
       "type": "added",
       "label": "wooden frame",
       "description": "a diagonal wooden frame or trim against a light-colored wall.",
@@ -262,14 +268,12 @@
       ],
       "evidence": {
         "frames_a": [],
-        "frames_b": [
-          "b/frame_00176.jpg"
-        ],
+        "frames_b": [],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 8,
+      "id": 7,
       "type": "added",
       "label": "floor corner",
       "description": "a close-up of a floor corner with a dark baseboard and light-colored flooring.",
@@ -298,14 +302,12 @@
       ],
       "evidence": {
         "frames_a": [],
-        "frames_b": [
-          "b/frame_00168.jpg"
-        ],
+        "frames_b": [],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 9,
+      "id": 8,
       "type": "added",
       "label": "metal ball",
       "description": "a small, shiny metallic ball resting on a dark surface near a wooden edge.",
@@ -334,14 +336,12 @@
       ],
       "evidence": {
         "frames_a": [],
-        "frames_b": [
-          "b/frame_00152.jpg"
-        ],
+        "frames_b": [],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 10,
+      "id": 9,
       "type": "added",
       "label": "wooden beam",
       "description": "a diagonal wooden beam against a light-colored wall, possibly part of a ceiling or frame.",
@@ -370,14 +370,12 @@
       ],
       "evidence": {
         "frames_a": [],
-        "frames_b": [
-          "b/frame_00160.jpg"
-        ],
+        "frames_b": [],
         "confirmed_empty_in": []
       }
     },
     {
-      "id": 11,
+      "id": 10,
       "type": "added",
       "label": "wooden beam",
       "description": "a vertical wooden beam with visible grain and a rough texture, partially framing the edge of the image.",
@@ -406,10 +404,65 @@
       ],
       "evidence": {
         "frames_a": [],
-        "frames_b": [
-          "b/frame_00008.jpg"
-        ],
+        "frames_b": [],
         "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 11,
+      "type": "added",
+      "label": "crumpled paper",
+      "description": "a small, crumpled piece of white paper lying on a dark floor near a white wall or baseboard.",
+      "centroid": [
+        -0.0136,
+        0.0115,
+        0.8992
+      ],
+      "bbox": [
+        -0.0442,
+        -0.0212,
+        0.8828,
+        0.0181,
+        0.0478,
+        0.938
+      ],
+      "from": null,
+      "to": [
+        -0.0136,
+        0.0115,
+        0.8992
+      ],
+      "confidence": 0.07,
+      "cluster_ids": [
+        6
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00088.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 0,
+            "file": "a/frame_00000.jpg",
+            "n_valid": 67,
+            "n_empty": 67
+          },
+          {
+            "frame": 1,
+            "file": "a/frame_00008.jpg",
+            "n_valid": 67,
+            "n_empty": 67
+          },
+          {
+            "frame": 2,
+            "file": "a/frame_00016.jpg",
+            "n_valid": 67,
+            "n_empty": 67
+          }
+        ]
       }
     }
   ]

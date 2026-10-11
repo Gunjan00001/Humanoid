@@ -1,0 +1,58 @@
+{
+  "name": "scene5_tabletop_posthoc",
+  "video_a": "/home/jiit_992401210050/Desktop/Humanoid/data/scene5/a.mp4",
+  "video_b": "/home/jiit_992401210050/Desktop/Humanoid/data/scene5/b.mp4",
+  "n_changes": 4,
+  "changes": [
+    {
+      "id": 1,
+      "type": "replaced",
+      "label": "wooden table leg",
+      "sentence": "The wooden table leg changed between the two videos.",
+      "confidence": 0.56,
+      "possibly": false,
+      "sentence_source": "template"
+    },
+    {
+      "id": 2,
+      "type": "removed",
+      "label": "wooden chair leg",
+      "sentence": "In video B, the wooden chair leg is removed from the scene.",
+      "confidence": 0.5,
+      "possibly": false,
+      "sentence_source": "vlm"
+    },
+    {
+      "id": 3,
+      "type": "removed",
+      "label": "black chair",
+      "sentence": "In video B, the black chair is removed from the room.",
+      "confidence": 0.47,
+      "possibly": false,
+      "sentence_source": "vlm"
+    },
+    {
+      "id": 4,
+      "type": "removed",
+      "label": "cracked shelf",
+      "sentence": "In video B, the cracked shelf is removed from the room.",
+      "confidence": 0.84,
+      "possibly": false,
+      "sentence_source": "vlm"
+    }
+  ],
+  "n_unverified": 9,
+  "notes": [
+    "9 unverified candidate(s) were seen in one video only; they are listed in report.json but not counted as changes.",
+    "Object names come from a vision-language model and can be wrong.",
+    "Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4).",
+    "No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated."
+  ],
+  "files": [
+    "viewer.html",
+    "change.gif",
+    "report.json"
+  ],
+  "generated": "2026-10-11T00:06:09Z",
+  "text": "Compared a.mp4 and b.mp4. I found 4 change(s):\n1. Replaced - wooden table leg: The wooden table leg changed between the two videos.\n2. Removed - wooden chair leg: In video B, the wooden chair leg is removed from the scene.\n3. Removed - black chair: In video B, the black chair is removed from the room.\n4. Removed - cracked shelf: In video B, the cracked shelf is removed from the room.\n\nNotes: 9 unverified candidate(s) were seen in one video only; they are listed in report.json but not counted as changes. Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.\nFiles: viewer.html, change.gif, report.json"
+}

@@ -17,4 +17,7 @@ data/scene2/a.mp4  -filter -diff -merge -text
 data/scene2/b.mp4  -filter -diff -merge -text
 data/scene3/a.mp4  -filter -diff -merge -text
 data/scene3/b.mp4  -filter -diff -merge -text
+# scene5/b.mp4 is a re-encode (4.6 MB, same 480x860@30fps) of the original
+# 6.9 MB LFS recording (oid 1be79cea00); the original stays in the LFS history
+data/scene5/b.mp4  -filter -diff -merge -text
 data/scene5/a.mp4  -filter -diff -merge -text

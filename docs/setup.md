@@ -84,6 +84,22 @@ walltime, 5 concurrent jobs. Large models load straight onto the GPU with
 PBS does not pin GPUs on this cluster — check `nvidia-smi` and optionally pin
 an idle GPU in the job (`export CUDA_VISIBLE_DEVICES=3` after the `unset`).
 
+## Data and Git LFS
+
+The six small development clips (< 5 MB each) and `data/scene5/b.mp4` (a
+4.6 MB re-encode of the original 6.9 MB recording) are plain git files, so a
+plain clone can read every video. The **originals** of the re-encoded files
+and the TSDF meshes stay in Git LFS: if a file appears as a small text pointer
+(`version https://git-lfs...`), run
+
+```bash
+git lfs pull          # or: git lfs install && git lfs pull
+```
+
+The scene5 held-out result was produced from the **original** b.mp4 (LFS oid
+`1be79cea00`, 6,957,385 bytes); the shipped re-encode keeps the same
+resolution (480x860) and fps (30) and is only for clone-ability.
+
 ## Model weights
 
 Compute nodes may have **no internet**. Download everything on the login node

@@ -1,0 +1,416 @@
+{
+  "meta": {
+    "video_a": "/home/jiit_992401210050/Desktop/Humanoid/data/scene5/a.mp4",
+    "video_b": "/home/jiit_992401210050/Desktop/Humanoid/data/scene5/b.mp4",
+    "backend": "vggt",
+    "model": "/home/jiit_992401210050/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-11T00:25:10Z",
+    "config_hash": "a93e2d60be34",
+    "num_frames": 60,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "chair",
+      "description": "The chair was removed from the scene.",
+      "centroid": [
+        -0.1762,
+        -0.1296,
+        1.078
+      ],
+      "bbox": [
+        -0.8408,
+        -0.6001,
+        0.5449,
+        0.646,
+        0.6011,
+        1.5557
+      ],
+      "from": [
+        -0.1762,
+        -0.1296,
+        1.078
+      ],
+      "to": null,
+      "confidence": 0.75,
+      "cluster_ids": [
+        1
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_01270.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 30,
+            "file": "b/frame_00000.jpg",
+            "n_valid": 84627,
+            "n_empty": 34699
+          },
+          {
+            "frame": 42,
+            "file": "b/frame_00580.jpg",
+            "n_valid": 88453,
+            "n_empty": 28361
+          },
+          {
+            "frame": 31,
+            "file": "b/frame_00030.jpg",
+            "n_valid": 74011,
+            "n_empty": 23111
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "type": "removed",
+      "label": "chair leg",
+      "description": "The chair leg was removed from the scene.",
+      "centroid": [
+        -0.0313,
+        0.1668,
+        1.1732
+      ],
+      "bbox": [
+        -0.077,
+        0.1028,
+        1.0645,
+        0.0083,
+        0.2369,
+        1.2598
+      ],
+      "from": [
+        -0.0313,
+        0.1668,
+        1.1732
+      ],
+      "to": null,
+      "confidence": 0.75,
+      "cluster_ids": [
+        8
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_01270.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 30,
+            "file": "b/frame_00000.jpg",
+            "n_valid": 601,
+            "n_empty": 601
+          },
+          {
+            "frame": 31,
+            "file": "b/frame_00030.jpg",
+            "n_valid": 601,
+            "n_empty": 601
+          },
+          {
+            "frame": 42,
+            "file": "b/frame_00580.jpg",
+            "n_valid": 601,
+            "n_empty": 601
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "type": "removed",
+      "label": "chair leg",
+      "description": "The chair leg and seat were removed from the scene.",
+      "centroid": [
+        0.0022,
+        0.304,
+        0.9214
+      ],
+      "bbox": [
+        -0.0696,
+        0.2603,
+        0.8872,
+        0.0342,
+        0.3264,
+        0.9536
+      ],
+      "from": [
+        0.0022,
+        0.304,
+        0.9214
+      ],
+      "to": null,
+      "confidence": 0.44,
+      "cluster_ids": [
+        9
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_01270.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 30,
+            "file": "b/frame_00000.jpg",
+            "n_valid": 96,
+            "n_empty": 96
+          },
+          {
+            "frame": 31,
+            "file": "b/frame_00030.jpg",
+            "n_valid": 96,
+            "n_empty": 96
+          },
+          {
+            "frame": 36,
+            "file": "b/frame_00260.jpg",
+            "n_valid": 96,
+            "n_empty": 96
+          }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "type": "removed",
+      "label": "chair leg",
+      "description": "The chair leg and black object were removed from the scene.",
+      "centroid": [
+        0.2729,
+        0.3633,
+        0.8072
+      ],
+      "bbox": [
+        0.1819,
+        0.1801,
+        0.7759,
+        0.3376,
+        0.4092,
+        0.8286
+      ],
+      "from": [
+        0.2729,
+        0.3633,
+        0.8072
+      ],
+      "to": null,
+      "confidence": 0.5,
+      "cluster_ids": [
+        19
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_01240.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 36,
+            "file": "b/frame_00260.jpg",
+            "n_valid": 197,
+            "n_empty": 197
+          },
+          {
+            "frame": 37,
+            "file": "b/frame_00290.jpg",
+            "n_valid": 197,
+            "n_empty": 197
+          },
+          {
+            "frame": 43,
+            "file": "b/frame_00630.jpg",
+            "n_valid": 197,
+            "n_empty": 197
+          }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "type": "removed",
+      "label": "chair backrest",
+      "description": "The metal chair backrest was removed, leaving only the wooden table leg visible.",
+      "centroid": [
+        0.3116,
+        0.0066,
+        1.0308
+      ],
+      "bbox": [
+        0.2871,
+        -0.0011,
+        1.0088,
+        0.3379,
+        0.0152,
+        1.0566
+      ],
+      "from": [
+        0.3116,
+        0.0066,
+        1.0308
+      ],
+      "to": null,
+      "confidence": 0.34,
+      "cluster_ids": [
+        24
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00410.jpg"
+        ],
+        "frames_b": [
+          "b/frame_01140.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 55,
+            "file": "b/frame_01140.jpg",
+            "n_valid": 54,
+            "n_empty": 54
+          },
+          {
+            "frame": 56,
+            "file": "b/frame_01170.jpg",
+            "n_valid": 54,
+            "n_empty": 54
+          },
+          {
+            "frame": 57,
+            "file": "b/frame_01200.jpg",
+            "n_valid": 54,
+            "n_empty": 54
+          }
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "type": "removed",
+      "label": "stacked bowls",
+      "description": "The stacked metal bowls were removed from the table.",
+      "centroid": [
+        0.3056,
+        0.2,
+        0.8935
+      ],
+      "bbox": [
+        0.2864,
+        0.1752,
+        0.8794,
+        0.3206,
+        0.2223,
+        0.9062
+      ],
+      "from": [
+        0.3056,
+        0.2,
+        0.8935
+      ],
+      "to": null,
+      "confidence": 0.34,
+      "cluster_ids": [
+        25
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_01270.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 41,
+            "file": "b/frame_00530.jpg",
+            "n_valid": 52,
+            "n_empty": 52
+          },
+          {
+            "frame": 42,
+            "file": "b/frame_00580.jpg",
+            "n_valid": 52,
+            "n_empty": 52
+          },
+          {
+            "frame": 56,
+            "file": "b/frame_01170.jpg",
+            "n_valid": 52,
+            "n_empty": 52
+          }
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "type": "added",
+      "label": "small brown object",
+      "description": "A small brown object appeared on the surface in the second image.",
+      "centroid": [
+        0.0251,
+        -0.252,
+        1.0833
+      ],
+      "bbox": [
+        -0.0374,
+        -0.281,
+        1.0488,
+        0.0613,
+        -0.2102,
+        1.1055
+      ],
+      "from": null,
+      "to": [
+        0.0251,
+        -0.252,
+        1.0833
+      ],
+      "confidence": 0.5,
+      "cluster_ids": [
+        34
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00800.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00200.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 0,
+            "file": "a/frame_00000.jpg",
+            "n_valid": 40,
+            "n_empty": 40
+          },
+          {
+            "frame": 1,
+            "file": "a/frame_00030.jpg",
+            "n_valid": 40,
+            "n_empty": 40
+          },
+          {
+            "frame": 2,
+            "file": "a/frame_00050.jpg",
+            "n_valid": 40,
+            "n_empty": 40
+          }
+        ]
+      }
+    }
+  ],
+  "unverified_changes": []
+}
