@@ -311,6 +311,8 @@ Observed on the demo scene (quantified in [`docs/results.md`](docs/results.md)):
 
 | File | Contents |
 |---|---|
+| [`docs/handoff.md`](docs/handoff.md) | **Next-agent brief: state, next steps, environment, pitfalls** |
+| [`docs/heldout.md`](docs/heldout.md) | Held-out protocol + scene5's honest result and post-hoc runs |
 | [`AGENT_PLAN.md`](AGENT_PLAN.md) | Plan, phases, checkpoints (source of truth) |
 | [`docs/pipeline.md`](docs/pipeline.md) | Stage-by-stage pipeline and inputs/outputs |
 | [`docs/verification.md`](docs/verification.md) | Every verification rule with the demo's real numbers |
@@ -321,7 +323,9 @@ Observed on the demo scene (quantified in [`docs/results.md`](docs/results.md)):
 | [`docs/architecture.md`](docs/architecture.md) | Repo layout, modules, config reference |
 | [`docs/results.md`](docs/results.md) | Real results of the first end-to-end run |
 | [`docs/troubleshooting.md`](docs/troubleshooting.md) | Cluster and model failure modes |
-| [`docs/roadmap.md`](docs/roadmap.md) | Phase status checklist |
+| [`docs/roadmap.md`](docs/roadmap.md) | Phase status checklist + per-version history |
+| [`docs/timing.md`](docs/timing.md) | Measured runtimes (queue vs job, cold vs warm) |
+| [`docs/hosting.md`](docs/hosting.md) | GitHub Pages for the interactive viewers |
 | [`gpu.md`](gpu.md) | Cluster / GPU access reference |
 | [`rules.md`](rules.md) | Working rules for agents |
 

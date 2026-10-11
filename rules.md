@@ -111,7 +111,11 @@ Rules for exceptions:
 - Clean up after yourself: `qdel` jobs you no longer need (`gpu-session stop`),
   and remove scratch files you created.
 - Respect the PBS limits (`gpu` queue: 5 running jobs/user, max 16 CPUs,
-  max 64 GB, 24 h walltime).
+  max 64 GB, 24 h walltime). The **per-user 16-CPU quota is usually the real
+  bottleneck**, not the GPUs: check `qstat -f <id> | grep comment` for the
+  reason a job is queued. The persistent `gpu-session` holds 4 CPUs; the
+  established pattern is to stop the idle session to free a slot, run, and
+  restart it afterwards (`~/bin/gpu-session stop|start`).
 
 ## 7. Development log
 
@@ -123,7 +127,19 @@ Rules for exceptions:
   integration chain) must stay discoverable.
 - Keep entries short; reference commits/tags when useful.
 
-## 8. Reporting
+## 8. Held-out scenes and post-hoc changes
+
+- A **held-out scene** is run **exactly once**, cold, with the frozen detection
+  code and default settings; its protocol (frozen commit + file digests, the
+  pre-registered scoring rule) lives in [`docs/heldout.md`](docs/heldout.md).
+- **No fix may touch the frozen detection files for that scene's result.**
+- Any later change that would affect it is **post-hoc**: label it
+  *"post-hoc, not part of the held-out result"*, keep its outputs in a
+  separate directory, and report it separately.
+- New scenes meant for evaluation must not be used for tuning first; record
+  them as `data-v*` and follow the held-out protocol.
+
+## 9. Reporting
 
 - When a task requires touching anything outside this folder, **say so and get
   confirmation first**.

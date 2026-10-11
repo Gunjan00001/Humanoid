@@ -214,6 +214,21 @@ Persistent session confirmed on `the GPU node`; `nvidia-smi` lists 8 × A100-SXM
 
 ---
 
+## 8b. Verified in practice (v0.12, all measured)
+
+- **git-lfs is installed on the login node only.** Clones must live on the
+  **shared home filesystem** — a clone under `/tmp` is node-local and the PBS
+  job (another machine) cannot see it. `detect.py` warns about `/tmp`.
+- **PBS buffers `-o` job logs**: they appear only at job end (or in chunks);
+  live progress lines during a run can only show state + elapsed.
+- **Clock offset**: the compute node's log timestamps are exactly **3:30:00
+  behind** the login node's clock (verified: job 10802 `stime` 02:39:35 ↔ its
+  first log activity 23:09:35). Use it when comparing logs to `qstat`.
+- **The per-user 16-CPU quota queues jobs even when GPUs are free**; the
+  `gpu-session` (4 CPUs) is the lever — stop it, run, restart it.
+- Model loads measured (warm local files): VGGT 8–14 s, Qwen3-VL-32B 26 s
+  (2:07 on a cold/network-FS run). Full numbers: `docs/timing.md`.
+
 ## 9. Troubleshooting
 
 | Symptom | Cause | Fix |
