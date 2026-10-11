@@ -1,0 +1,40 @@
+{
+  "name": "scene2",
+  "video_a": "/home/user/Desktop/Humanoid/data/scene2/a.mp4",
+  "video_b": "/home/user/Desktop/Humanoid/data/scene2/b.mp4",
+  "n_changes": 2,
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "apple",
+      "sentence": "The apple is absent in video B.",
+      "confidence": 0.75,
+      "possibly": false,
+      "sentence_source": "vlm"
+    },
+    {
+      "id": 2,
+      "type": "removed",
+      "label": "coconut",
+      "sentence": "The coconut is absent in video B.",
+      "confidence": 0.75,
+      "possibly": false,
+      "sentence_source": "vlm"
+    }
+  ],
+  "n_unverified": 9,
+  "notes": [
+    "9 unverified candidate(s) were seen in one video only; they are listed in report.json but not counted as changes.",
+    "Object names come from a vision-language model and can be wrong.",
+    "Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4).",
+    "No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated."
+  ],
+  "files": [
+    "viewer.html",
+    "change.gif",
+    "report.json"
+  ],
+  "generated": "2026-10-11T00:12:05Z",
+  "text": "Compared a.mp4 and b.mp4. I found 2 change(s):\n1. Removed - apple: The apple is absent in video B.\n2. Removed - coconut: The coconut is absent in video B.\n\nNotes: 9 unverified candidate(s) were seen in one video only; they are listed in report.json but not counted as changes. Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.\nFiles: viewer.html, change.gif, report.json"
+}

@@ -1,0 +1,496 @@
+{
+  "meta": {
+    "video_a": "/home/user/Desktop/Humanoid/data/scene5/a.mp4",
+    "video_b": "/home/user/Desktop/Humanoid/data/scene5/b.mp4",
+    "backend": "vggt",
+    "model": "/home/user/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-11T00:04:38Z",
+    "config_hash": "a93e2d60be34",
+    "num_frames": 60,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "replaced",
+      "label": "wooden table leg",
+      "description": "A close-up of a wooden table leg with a visible crack in the tiled floor beneath it.",
+      "centroid": [
+        -0.2917,
+        -0.2431,
+        1.1308
+      ],
+      "bbox": [
+        -0.3049,
+        -0.2598,
+        0.9868,
+        -0.2852,
+        -0.2202,
+        1.1553
+      ],
+      "from": [
+        -0.2917,
+        -0.2431,
+        1.1308
+      ],
+      "to": [
+        -0.2917,
+        -0.2433,
+        1.1107
+      ],
+      "confidence": 0.56,
+      "cluster_ids": [
+        19
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 2,
+      "type": "removed",
+      "label": "wooden chair leg",
+      "description": "the wooden chair leg was removed from the scene",
+      "centroid": [
+        -0.2325,
+        -0.1342,
+        0.9565
+      ],
+      "bbox": [
+        -0.25,
+        -0.1449,
+        0.9116,
+        -0.2201,
+        -0.1201,
+        0.9858
+      ],
+      "from": [
+        -0.2325,
+        -0.1342,
+        0.9565
+      ],
+      "to": null,
+      "confidence": 0.5,
+      "cluster_ids": [
+        20
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_01070.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 3,
+      "type": "removed",
+      "label": "black chair",
+      "description": "the black chair was removed from the room",
+      "centroid": [
+        -0.028,
+        0.0287,
+        1.1015
+      ],
+      "bbox": [
+        -0.0446,
+        0.015,
+        0.9688,
+        -0.0108,
+        0.0426,
+        1.1328
+      ],
+      "from": [
+        -0.028,
+        0.0287,
+        1.1015
+      ],
+      "to": null,
+      "confidence": 0.47,
+      "cluster_ids": [
+        21
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_01270.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 4,
+      "type": "removed",
+      "label": "cracked shelf",
+      "description": "the cracked shelf was removed from the room",
+      "centroid": [
+        0.0548,
+        -0.2997,
+        1.1007
+      ],
+      "bbox": [
+        0.0052,
+        -0.345,
+        1.0361,
+        0.1495,
+        -0.2551,
+        1.1387
+      ],
+      "from": [
+        0.0548,
+        -0.2997,
+        1.1007
+      ],
+      "to": null,
+      "confidence": 0.84,
+      "cluster_ids": [
+        22
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_01040.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    }
+  ],
+  "unverified_changes": [
+    {
+      "id": 5,
+      "type": "removed",
+      "label": "chair back",
+      "description": "dark wooden chair back with horizontal slats, partially visible next to a blue curtain.",
+      "centroid": [
+        -0.6013,
+        -0.3548,
+        1.1767
+      ],
+      "bbox": [
+        -0.6396,
+        -0.365,
+        0.9341,
+        -0.5601,
+        -0.3403,
+        1.2383
+      ],
+      "from": [
+        -0.6013,
+        -0.3548,
+        1.1767
+      ],
+      "to": null,
+      "confidence": 0.07,
+      "cluster_ids": [
+        26
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00330.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 6,
+      "type": "removed",
+      "label": "door frame",
+      "description": "a dark wooden door frame with a light-colored baseboard and tiled floor visible at the bottom.",
+      "centroid": [
+        -0.6082,
+        -0.3202,
+        1.1787
+      ],
+      "bbox": [
+        -0.6396,
+        -0.3398,
+        0.9619,
+        -0.5854,
+        -0.3054,
+        1.2324
+      ],
+      "from": [
+        -0.6082,
+        -0.3202,
+        1.1787
+      ],
+      "to": null,
+      "confidence": 0.05,
+      "cluster_ids": [
+        27
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 7,
+      "type": "removed",
+      "label": "marble floor",
+      "description": "a white floor with black veining resembling marble or a similar stone pattern.",
+      "centroid": [
+        -0.4438,
+        0.3365,
+        0.8995
+      ],
+      "bbox": [
+        -0.5493,
+        0.26,
+        0.7891,
+        -0.4001,
+        0.4099,
+        1.1143
+      ],
+      "from": [
+        -0.4438,
+        0.3365,
+        0.8995
+      ],
+      "to": null,
+      "confidence": 0.3,
+      "cluster_ids": [
+        28
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00030.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 8,
+      "type": "removed",
+      "label": "cracked ceiling",
+      "description": "a white ceiling with multiple dark cracks spreading across its surface.",
+      "centroid": [
+        -0.4286,
+        0.1886,
+        1.1016
+      ],
+      "bbox": [
+        -0.48,
+        0.16,
+        1.0049,
+        -0.3904,
+        0.2,
+        1.1338
+      ],
+      "from": [
+        -0.4286,
+        0.1886,
+        1.1016
+      ],
+      "to": null,
+      "confidence": 0.16,
+      "cluster_ids": [
+        29
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 9,
+      "type": "removed",
+      "label": "cracked tile",
+      "description": "a white tile with a visible crack near the baseboard.",
+      "centroid": [
+        0.5044,
+        0.2804,
+        1.0192
+      ],
+      "bbox": [
+        0.4851,
+        0.2515,
+        0.8325,
+        0.5195,
+        0.2949,
+        1.0566
+      ],
+      "from": [
+        0.5044,
+        0.2804,
+        1.0192
+      ],
+      "to": null,
+      "confidence": 0.07,
+      "cluster_ids": [
+        33
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 10,
+      "type": "removed",
+      "label": "door frame",
+      "description": "a wooden door frame with a white door and a metal handle, set against a tiled floor.",
+      "centroid": [
+        0.5429,
+        -0.1544,
+        1.021
+      ],
+      "bbox": [
+        0.4951,
+        -0.2898,
+        0.8091,
+        0.5591,
+        -0.035,
+        1.1387
+      ],
+      "from": [
+        0.5429,
+        -0.1544,
+        1.021
+      ],
+      "to": null,
+      "confidence": 0.3,
+      "cluster_ids": [
+        34
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 11,
+      "type": "removed",
+      "label": "cracked tile floor",
+      "description": "a white tiled floor with visible cracks running across the surface near a dark baseboard.",
+      "centroid": [
+        0.5223,
+        0.4003,
+        0.7892
+      ],
+      "bbox": [
+        0.4902,
+        0.3801,
+        0.7295,
+        0.5425,
+        0.4099,
+        0.8472
+      ],
+      "from": [
+        0.5223,
+        0.4003,
+        0.7892
+      ],
+      "to": null,
+      "confidence": 0.07,
+      "cluster_ids": [
+        35
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00640.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 12,
+      "type": "removed",
+      "label": "wooden door",
+      "description": "a close-up of a brown wooden door with vertical grain texture, partially visible next to a white cabinet.",
+      "centroid": [
+        0.5674,
+        -0.2669,
+        1.0461
+      ],
+      "bbox": [
+        0.5503,
+        -0.2849,
+        0.9443,
+        0.5747,
+        -0.2251,
+        1.0928
+      ],
+      "from": [
+        0.5674,
+        -0.2669,
+        1.0461
+      ],
+      "to": null,
+      "confidence": 0.07,
+      "cluster_ids": [
+        36
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 13,
+      "type": "added",
+      "label": "wooden cabinet door",
+      "description": "a dark brown wooden cabinet door with a metallic handle, partially visible next to a white cabinet.",
+      "centroid": [
+        0.5036,
+        -0.0235,
+        0.9886
+      ],
+      "bbox": [
+        0.4902,
+        -0.0497,
+        0.8052,
+        0.5146,
+        0.005,
+        1.0996
+      ],
+      "from": null,
+      "to": [
+        0.5036,
+        -0.0235,
+        0.9886
+      ],
+      "confidence": 0.06,
+      "cluster_ids": [
+        45
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [
+          "b/frame_01040.jpg"
+        ],
+        "confirmed_empty_in": []
+      }
+    }
+  ]
+}

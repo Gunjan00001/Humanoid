@@ -231,6 +231,20 @@ exact knobs so the choices are reproducible.
 | scene3 | chair removed, apple→cup | `tabletop` | `--min_change_score 85` | 2/2 objects, **types now correct** (chair `removed`, apple→cup `replaced` - v0.9.0) | 2 extra entries + unreliable naming (see the correctness pass below) |
 | scene4 | apple moved, scissor removed, bottle added | `tabletop` | none (defaults) | **3/3** (`moved` apple, `removed` scissors, `added` bottle - v0.10.0) | **0** |
 
+### Reproducibility note (v0.12 re-run)
+
+A full `detect.py --force` re-run (v0.12, same code, same working points)
+reproduced the committed reports **exactly for demo, scene3 and scene4**
+(types, labels and unverified counts identical) but **not for scene2**: the
+committed report has 1 entry ("removed apple", the coconut mislabeled), the
+re-run has 2 ("removed apple" at a different position + "removed coconut" with
+562 points of empty-space evidence) and 9 instead of 10 unverified candidates.
+The detection files were not changed; the difference comes from recomputing
+the reconstruction and the geometric diff (bf16 VGGT + threshold-sensitive
+visibility clusters), i.e. run-to-run variability, not a code change. The
+re-run's version names the ground-truth object correctly, so it is arguably
+better - but it is not the committed state.
+
 ### scene2 — why the mode matters
 
 The two recordings differ strongly in lighting/angle, and video B covers part

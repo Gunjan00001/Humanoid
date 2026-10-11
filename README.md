@@ -11,6 +11,31 @@ Part of the **Spatial AI & Navigation Challenge**.
 > and honest limitations: [`docs/results.md`](docs/results.md). The plan and
 > checkpoints live in [`AGENT_PLAN.md`](AGENT_PLAN.md).
 
+## Quick start
+
+```bash
+git clone git@github.com:Gunjan00001/Humanoid.git && cd Humanoid
+conda create -n spatialdiff python=3.10 -y && conda activate spatialdiff
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
+pip install -r requirements.txt          # model weights: docs/setup.md
+python detect.py --a data/a.mp4 --b data/b.mp4 --name demo
+```
+
+`detect.py` validates both videos and runs the whole pipeline (on a login node
+it submits and polls the PBS gpu job itself), writing `outputs/demo/`:
+`report.md`, `summary.*`, `change.gif`, `viewer.html`, `scene_mesh.ply`.
+A real run printed:
+
+```text
+Compared a.mp4 and b.mp4. I found 3 change(s):
+1. Removed - comb: The comb was removed from the table in video B.
+2. Added - pen and device: Possibly a blue pen and a white device were added to the surface in video B.
+3. Replaced - remote control: The remote control was replaced with a different one in video B.
+
+Notes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.
+Files: viewer.html, change.gif, report.json
+```
+
 ## Results
 
 On the demo scene (two 8–12 s phone recordings of a table; ground truth: comb
@@ -68,7 +93,7 @@ runs use the same pipeline; full details in
 | Scene | Ground truth | Detected | False positives | Mode / tuning |
 |---|---|---|---|---|
 | **demo** (`data/`) | comb removed, pen added, remote moved+flipped | **3/3** | **0** | `tabletop` (default) |
-| **scene2** (`data/scene2/`) | coconut removed | **1/1** (coconut ✓) | 4 extra entries | `geometric` (big object; lighting-immune) + `--blur_threshold 25` |
+| **scene2** (`data/scene2/`) | coconut removed | **1/1** (coconut ✓) — the committed report; a full v0.12 re-run produces 2 entries (coconut correctly named + the apple false positive), see the reproducibility note | 4 extra entries | `geometric` (big object; lighting-immune) + `--blur_threshold 25` |
 | **scene3** (`data/scene3/`) | chair removed, apple→cup | **2/2** objects, types now correct (chair `removed`, apple→cup `replaced` — v0.9.0) | 2 extra entries + unreliable naming (see results.md) | `tabletop` + `--min_change_score 85` |
 | **scene4** (`data/scene4/`) | apple moved, scissor removed, bottle added | **3/3** (`moved` apple ✓, `removed` scissors ✓, `added` bottle ✓) | **0 extra entries** | `tabletop` (default) |
 
@@ -113,6 +138,40 @@ layout, a colored **TSDF mesh** (`scene_mesh.ply`, ≤ 10 MB) and a
 orbit, zoom, toggle video A / B / changes / unverified / full scene).
 Diagnosis and the `input_mode=pad` experiment:
 [visualization rework](docs/results.md#visualization-rework-steps-05).
+
+### Held-out result (scene5, v0.12)
+
+Scene5 (`data/scene5/`: clock moved, chair removed; never used for tuning) was
+run **exactly once** with the frozen code and default settings
+(`python detect.py --a data/scene5/a.mp4 --b data/scene5/b.mp4 --name scene5`).
+Honest result, confirmed by overlay review:
+
+| GT change | detected | correct? | confidence |
+|---|---|---|---|
+| clock **moved** | — (no `moved` entry) | **missed** | — |
+| chair **removed** | `removed`, 3 fragments (labels "wooden leg" / "chair leg" / "table leg") | **type only**; labels wrong | 0.74 / 0.29 / 0.45 |
+
+**Scoring (pre-registered rule): found 1/2 (type only) · labels 0/2 · missed
+1 · extras ≥ 2.** The runner flagged a mixed-orientation recording (A
+landscape 860x480, B portrait 480x860) and the auto mode chose `geometric`
+(dominant plane 11% of confident points); both are *likely* contributors (not
+proven). The verbatim summary, runtimes, the failure analysis, a post-hoc
+tabletop diagnostic and the checking sheet are in
+[`docs/heldout.md`](docs/heldout.md).
+
+### Known limitations
+
+- **mixed orientation / resolution between the two recordings** — detect.py
+  warns loudly and recommends recording both videos in the same orientation
+  (landscape preferred); scene5's A/B mismatch likely weakened the
+  reconstruction and the crops;
+- **floor reflections and lighting** produce candidate fragments — scene5's
+  "small round object" was a floor reflection in video B;
+- **large objects fragment** — scene5's chair removal was reported as three
+  separate "leg" entries instead of one chair;
+- **object names are unreliable** (VLM-generated): scene5's chair fragments,
+  scene3's "black trash can" for the chair, scene4's scissor sentence before
+  the summary-stage fix.
 
 **Runtime (measured, not estimated)** — full numbers and clock bases in
 [`docs/timing.md`](docs/timing.md):
@@ -198,8 +257,10 @@ hides all GPUs). Per-job limits: 16 CPUs, 64 GB RAM, 24 h, 5 jobs.
 python run.py --video_a data/a.mp4 --video_b data/b.mp4 --out outputs/
 ```
 
-The one-command pipeline is implemented (`run.py` → `src/*`, orchestrator +
-7 stages). Every stage also runs alone and reads/writes only the cache:
+`detect.py` is the one-command runner (validation, automatic diff-mode
+choice, GPU/PBS handling, natural-language summary); `run.py` remains the
+low-level orchestrator. Every stage also runs alone and reads/writes only the
+cache:
 
 ```bash
 python src/extract_frames.py --config configs/default.yaml
@@ -210,9 +271,11 @@ python src/visualize.py      --config configs/default.yaml
 python src/report.py         --config configs/default.yaml
 ```
 
-Status: validated on synthetic smoke data; the run on the demo recordings is
-pending (see [`docs/roadmap.md`](docs/roadmap.md)). Cluster templates live in
-`scripts/`.
+Status: end-to-end on five recordings; the demo, scene3 and scene4 reports
+reproduce identically under a full `detect.py --force` re-run, scene2 does not
+(see [`docs/heldout.md`](docs/heldout.md) for the held-out protocol and
+[`docs/devlog.md`](docs/devlog.md) for the reproducibility note). Cluster
+templates live in `scripts/`.
 
 ## Design decisions
 

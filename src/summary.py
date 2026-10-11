@@ -6,11 +6,13 @@ Reads `outputs/<name>/report.json` and writes `summary.md`, `summary.txt` and
 `summary.json`. Sentences come only from report.json fields:
 
 - each change's sentence is phrased by Qwen3-VL in ONE call when a GPU is
-  available; every returned sentence is validated against that change's own
-  report fields plus the type's action vocabulary. A sentence is rejected when
-  it names an object/count/action outside the report, describes a different
-  change type (e.g. "replaced" for a removal - the scene4 scissors sentence),
-  or states a direction without saying which video it refers to;
+  available; every returned sentence is validated against that change's label,
+  the type's own action vocabulary and a non-object word list. A sentence is
+  rejected when it uses any other word (objects, counts, or visual
+  embellishments like "leaving only the cracked surface" - found in the scene5
+  held-out review), describes a different change type (e.g. "replaced" for a
+  removal - the scene4 scissors sentence), or states a direction without
+  saying which video it refers to;
 - on rejection (or without a GPU) a deterministic template is used.
 
 This stage never changes detection: it only phrases what the report contains.
@@ -68,6 +70,15 @@ GENERIC = {"video", "before", "after", "scene", "table", "room", "image",
            "tabletop", "surface", "top", "side", "background",
            "direction", "seen", "crops"}
 POSSIBLY_BELOW = 0.40     # report confidence below this -> "possibly ..."
+# common function words the object-description stopword list does not cover
+FUNCTION = {
+    "was", "were", "is", "are", "be", "been", "being", "has", "have", "had",
+    "do", "does", "did", "will", "would", "can", "could", "may", "might",
+    "from", "to", "by", "at", "for", "as", "than", "into", "upon", "over",
+    "under", "not", "it", "its", "this", "that", "these", "those", "which",
+    "who", "what", "when", "where", "while", "with", "without", "within",
+    "during", "along", "toward", "towards", "against", "about", "also",
+}
 # words a rephrasing may add without naming a new object: motion/change verbs,
 # positions, scene words, degree words. Object nouns are NOT here - they must
 # come from the report's own label/description fields.
@@ -88,7 +99,7 @@ NON_OBJECT = {
     "still", "now", "then", "again", "before", "after", "during", "while",
     "when", "where", "longer", "only", "just", "also", "very", "much",
     "more", "less", "direction", "seen", "crops", "1", "2", "compared",
-    "present", "a", "b",
+    "present", "a", "b", "floor", "ground", "wall",
 }
 VIDEO_REF = re.compile(r"video [ab]|before|after", re.I)
 
@@ -112,10 +123,14 @@ def validate_sentence(sentence: str, change: dict) -> bool:
         return False                                  # wrong or missing action
     if any(bad in low for bad in FORBIDDEN_ACTIONS.get(change["type"], ())):
         return False                                  # another type's action
+    # Vocabulary = the change's LABEL + the type's own action words +
+    # non-object words. The report's free-text description is deliberately NOT
+    # a vocabulary source: it carries visual embellishments from the VLM
+    # ("leaving only the cracked surface in video B") that are grounded in the
+    # crop, not in the detection. (Found by the scene5 held-out review.)
     allowed: set[str] = set()
-    for field in ("label", "description"):
-        allowed |= _significant(change.get(field))
-    allowed |= set(actions) | GENERIC | NON_OBJECT
+    allowed |= _significant(change.get("label"))
+    allowed |= set(actions) | GENERIC | NON_OBJECT | FUNCTION
     allowed |= {_singular(w) for w in allowed}
     words = _significant(sentence)
     extra = {w for w in words if w not in allowed and _singular(w) not in allowed}

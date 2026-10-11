@@ -1,0 +1,84 @@
+{
+  "name": "scene5_reencode_check",
+  "video_a": "/home/user/Desktop/Humanoid/data/scene5/a.mp4",
+  "video_b": "/home/user/Desktop/Humanoid/data/scene5/b.mp4",
+  "n_changes": 7,
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "chair",
+      "sentence": "The chair was removed from the scene.",
+      "confidence": 0.75,
+      "possibly": false,
+      "sentence_source": "report"
+    },
+    {
+      "id": 2,
+      "type": "removed",
+      "label": "chair leg",
+      "sentence": "The chair leg was removed from the scene.",
+      "confidence": 0.75,
+      "possibly": false,
+      "sentence_source": "report"
+    },
+    {
+      "id": 3,
+      "type": "removed",
+      "label": "chair leg",
+      "sentence": "The chair leg was removed.",
+      "confidence": 0.44,
+      "possibly": false,
+      "sentence_source": "template"
+    },
+    {
+      "id": 4,
+      "type": "removed",
+      "label": "chair leg",
+      "sentence": "The chair leg and black object were removed from the scene.",
+      "confidence": 0.5,
+      "possibly": false,
+      "sentence_source": "report"
+    },
+    {
+      "id": 5,
+      "type": "removed",
+      "label": "chair backrest",
+      "sentence": "Possibly the chair backrest was removed.",
+      "confidence": 0.34,
+      "possibly": true,
+      "sentence_source": "template"
+    },
+    {
+      "id": 6,
+      "type": "removed",
+      "label": "stacked bowls",
+      "sentence": "Possibly the stacked bowls were removed.",
+      "confidence": 0.34,
+      "possibly": true,
+      "sentence_source": "template"
+    },
+    {
+      "id": 7,
+      "type": "added",
+      "label": "small brown object",
+      "sentence": "A small brown object appeared on the surface in the second image.",
+      "confidence": 0.5,
+      "possibly": false,
+      "sentence_source": "report"
+    }
+  ],
+  "n_unverified": 0,
+  "notes": [
+    "Object names come from a vision-language model and can be wrong.",
+    "Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4).",
+    "No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated."
+  ],
+  "files": [
+    "viewer.html",
+    "change.gif",
+    "report.json"
+  ],
+  "generated": "2026-10-11T00:27:23Z",
+  "text": "Compared a.mp4 and b.mp4. I found 7 change(s):\n1. Removed - chair: The chair was removed from the scene.\n2. Removed - chair leg: The chair leg was removed from the scene.\n3. Removed - chair leg: The chair leg was removed.\n4. Removed - chair leg: The chair leg and black object were removed from the scene.\n5. Removed - chair backrest: Possibly the chair backrest was removed.\n6. Removed - stacked bowls: Possibly the stacked bowls were removed.\n7. Added - small brown object: A small brown object appeared on the surface in the second image.\n\nNotes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.\nFiles: viewer.html, change.gif, report.json"
+}

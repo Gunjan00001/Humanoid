@@ -82,14 +82,17 @@ def validate_video(path: Path, role: str) -> dict:
 
 
 def check_pair(info_a: dict, info_b: dict) -> None:
+    ori = lambda i: "landscape" if i["w"] >= i["h"] else "portrait"
     if (info_a["w"], info_a["h"]) != (info_b["w"], info_b["h"]):
-        print(f"[warn ] A/B resolutions differ (A {info_a['w']}x{info_a['h']}, "
-              f"B {info_b['w']}x{info_b['h']}) - frames are used at their own "
-              f"size; check that the crops look aligned", flush=True)
-    ori = lambda i: "portrait" if i["h"] > i["w"] else "landscape"
+        print(f"[WARN ] A/B RESOLUTION MISMATCH: A {info_a['w']}x{info_a['h']}, "
+              f"B {info_b['w']}x{info_b['h']} - frames are used at their own "
+              f"size; check that the crops look aligned.", flush=True)
     if ori(info_a) != ori(info_b):
-        print(f"[warn ] A is {ori(info_a)}, B is {ori(info_b)} - unusual for "
-              f"the same space", flush=True)
+        print(f"[WARN ] A/B ORIENTATION MISMATCH: A is {ori(info_a)} "
+              f"({info_a['w']}x{info_a['h']}), B is {ori(info_b)} "
+              f"({info_b['w']}x{info_b['h']}).", flush=True)
+        print(f"        Recommendation: record both videos in the same "
+              f"orientation (landscape preferred).", flush=True)
 
 
 # --- GPU / PBS --------------------------------------------------------------
@@ -107,6 +110,8 @@ def on_gpu_node() -> bool:
 
 
 def build_pbs_script(args, name: str, a: Path, b: Path) -> Path:
+    # a fresh clone has no logs/ directory (it is git-ignored) - create it
+    (ROOT / "logs").mkdir(parents=True, exist_ok=True)
     log = ROOT / "logs" / f"pbs_detect_{name}.log"
     script = ROOT / "logs" / f"job_detect_{name}.pbs"
     passthrough = []
@@ -123,6 +128,10 @@ def build_pbs_script(args, name: str, a: Path, b: Path) -> Path:
         passthrough.append("--force")
     if args.debug:
         passthrough.append("--debug")
+    if args.out_dir:
+        passthrough += ["--out", args.out_dir]
+    if args.cache_dir:
+        passthrough += ["--cache", args.cache_dir]
     py = '"$HOME/miniconda3/envs/spatialdiff/bin/python"'
     script.write_text(f"""#!/bin/bash
 #PBS -N detect_{name}
@@ -309,6 +318,10 @@ def main() -> int:
     parser.add_argument("--b", dest="b", default=None, help="after video")
     parser.add_argument("--name", default=None,
                         help="output/cache name (default: the videos' folder name)")
+    parser.add_argument("--out", dest="out_dir", default=None,
+                        help="override the output directory (default outputs/<name>)")
+    parser.add_argument("--cache", dest="cache_dir", default=None,
+                        help="override the cache directory (default cache/<name>)")
     parser.add_argument("--config", default="configs/default.yaml")
     parser.add_argument("--local", action="store_true",
                         help="run here even if this is not a GPU node")
@@ -347,8 +360,10 @@ def main() -> int:
     cfg = load_config(args.config)
     cfg["paths"]["video_a"] = str(a)
     cfg["paths"]["video_b"] = str(b)
-    cfg["paths"]["cache_dir"] = str(ROOT / "cache" / name)
-    cfg["paths"]["out_dir"] = str(ROOT / "outputs" / name)
+    cfg["paths"]["cache_dir"] = str(Path(args.cache_dir).resolve()) if args.cache_dir \
+        else str(ROOT / "cache" / name)
+    cfg["paths"]["out_dir"] = str(Path(args.out_dir).resolve()) if args.out_dir \
+        else str(ROOT / "outputs" / name)
 
     print(f"detect: A={a.name} B={b.name} name={name}", flush=True)
     info_a = validate_video(a, "video A")

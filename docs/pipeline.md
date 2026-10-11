@@ -24,7 +24,9 @@ Video B ─┘            shared frame       A / B tags └─> diff + visibilit
 | 5 | Semantics | `src/describe.py` | **GPU (1–2×)** | clusters, frames, poses | `cache/semantics/crops/`, `vlm.json`, `embeddings.npz`, `matches.json` |
 | 6 | Visualization | `src/visualize.py` | CPU | tagged cloud, clusters, matches | `outputs/scene.ply`, `outputs/changes/*.png`, `outputs/change.gif` |
 | 7 | Report | `src/report.py` | CPU | everything above | `outputs/report.json`, `outputs/report.md` |
-| — | Orchestrator | `run.py` | driver | config + videos | all of the above |
+| 8 | Natural-language summary | `src/summary.py` | CPU (GPU for one Qwen3-VL phrasing call) | `report.json` | `outputs/summary.md/txt/json` |
+| — | One-command runner | `detect.py` | driver (submits a PBS gpu job from the login node) | two videos | all of the above under `outputs/<name>/` |
+| — | Low-level orchestrator | `run.py` | driver | config + videos | all of the above |
 
 ## Stage detail
 
@@ -115,6 +117,37 @@ depth maps*, their z equals the table's):
 - `outputs/report.json`: one entry per change (type, label, description,
   3D centroid, bounding box, confidence).
 - `outputs/report.md`: human-readable summary.
+
+## Diff-mode choice (`detect.py --mode auto`, the default)
+
+`detect.py` measures the **dominant plane coverage** of the confident points
+(after reconstruction, before the diff): it fits the dominant plane
+(`src.tabletop.fit_dominant_plane`) and counts points within 2 cm of it. If
+the coverage is >= 50% the `tabletop` (photometric) diff is used, otherwise
+`geometric` (visibility-based); the choice and the measured coverage are
+printed. No per-scene tuning is applied; `--method tabletop|geometric`
+overrides the choice (the development scenes' documented working points use
+this - scene2 geometric + `--blur_threshold 25`, scene3 tabletop +
+`--min_change_score 85`).
+
+## Natural-language summary (`src/summary.py`)
+
+Reads `report.json` only. One Qwen3-VL phrasing call rephrases the confirmed
+changes; every sentence is validated against the change's **label**, the
+**type's own action vocabulary** and a non-object word list. Sentences that
+name other objects, use another type's action ("replaced" for a removal),
+state a direction without naming a video, or carry visual embellishments
+("leaving only the cracked surface") are rejected and replaced by a
+deterministic template. Low-confidence entries (< 0.40) are phrased
+"Possibly ...". The notes always state the unverified count, that names can be
+wrong and that thresholds were tuned on the development scenes.
+
+## Held-out protocol
+
+`docs/heldout.md` records the frozen commit + file digests, the pre-registered
+scoring rule and the single held-out scene5 run (plus a clearly-labelled
+post-hoc tabletop diagnostic). Detection files are frozen: no fix may be
+applied to them for a held-out scene.
 
 ## Caching strategy
 
