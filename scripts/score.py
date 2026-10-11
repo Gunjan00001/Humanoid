@@ -1,39 +1,40 @@
 #!/usr/bin/env python3
-"""Score a report.json against a ground_truth.json (Phase A).
+"""Score a report.json against ground_truth.json (+ optional human matches.json).
 
-Matching (transparent, no guessing):
-  1. STRONG match  - report entry type == GT type AND the report label contains
-     one of the GT synonyms  -> GT found, named correctly.
-  2. WEAK  match   - report entry type == GT type but no synonym; assigned only
-     when exactly one unassigned GT of that type and one unassigned report entry
-     of that type remain -> GT found, name WRONG.
-  3. Anything left -> extras (report entries) / missed (GT changes).
+Metrics (per the sprint definitions):
+  1. recall(type)        - share of GT changes with >=1 entry of the CORRECT TYPE
+  2. recall(localized)   - share of GT changes with >=1 entry on the RIGHT OBJECT
+                           (any type/name)
+  3. move recall (strict)- share of GT 'moved' changes with an entry typed 'moved'
+  4. name accuracy       - correctly-named entries / localized entries
+                           (a part name e.g. "chair leg" is NOT correct)
+  5. fragments by location - entries resolved to the same GT beyond the first
+  6. precision breakdown  - correct / type-wrong / fragment / extra counts over
+                           all report entries
 
-Metrics per scene + overall: change recall (type), named recall, move recall,
-extras (precision), fragments, name accuracy. Every ambiguous case is listed.
+If data/<scene>/matches.json exists it is AUTHORITATIVE (human-resolved):
+each entry is {entry_id, gt_id|null, type_ok, name_ok, fragment, evidence}.
+Otherwise a transparent name-based auto-match is used (for new/unscored scenes).
 
 Usage:
-  python scripts/score.py                 # all dev scenes
-  python scripts/score.py --scene scene6
-  python scripts/score.py --report R --gt G
+  python scripts/score.py [--scene NAME] [--report R --gt G] [--json OUT]
 """
 from __future__ import annotations
 
 import argparse
 import json
 import re
-import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
 SCENES = {
-    "demo":   ("data/ground_truth.json",          "outputs/report.json"),
-    "scene2": ("data/scene2/ground_truth.json",   "outputs/scene2/report.json"),
-    "scene3": ("data/scene3/ground_truth.json",   "outputs/scene3/report.json"),
-    "scene4": ("data/scene4/ground_truth.json",   "outputs/scene4/report.json"),
-    "scene5": ("data/scene5/ground_truth.json",   "outputs/scene5/report.json"),
-    "scene6": ("data/scene6/ground_truth.json",   "outputs/scene6/report.json"),
+    "demo":   ("data/ground_truth.json",        "data/matches.json",        "outputs/report.json"),
+    "scene2": ("data/scene2/ground_truth.json", "data/scene2/matches.json", "outputs/scene2/report.json"),
+    "scene3": ("data/scene3/ground_truth.json", "data/scene3/matches.json", "outputs/scene3/report.json"),
+    "scene4": ("data/scene4/ground_truth.json", "data/scene4/matches.json", "outputs/scene4/report.json"),
+    "scene5": ("data/scene5/ground_truth.json", "data/scene5/matches.json", "outputs/scene5/report.json"),
+    "scene6": ("data/scene6/ground_truth.json", "data/scene6/matches.json", "outputs/scene6/report.json"),
 }
 
 
@@ -46,141 +47,187 @@ def name_hit(label: str, synonyms) -> bool:
     return any(f" {norm(s)} " in nl for s in synonyms)
 
 
-def score_scene(scene: str, gt_path: Path, report_path: Path) -> dict:
-    gt = json.loads(gt_path.read_text())
-    gts = [dict(g, _i=i, _entries=[]) for i, g in enumerate(gt["changes"])]
-    if not report_path.exists():
-        return {"scene": scene, "error": f"missing report {report_path}"}
-    rep = json.loads(report_path.read_text())
-    reps = [dict(r, _assigned=None) for r in rep.get("changes", [])]
-    ambiguous = []
-
-    # 1. strong matches (greedy, in report order)
+def auto_resolve(gts: list, reps: list) -> list:
+    """Transparent fallback when no human matches.json exists."""
+    resolved = []
+    assigned = {r["id"]: None for r in reps}
+    first = {}
+    # strong
     for r in reps:
         hits = [g for g in gts if g["type"] == r["type"]
                 and name_hit(r.get("label", ""), g["synonyms"])]
         if len(hits) == 1:
-            g = hits[0]
-            r["_assigned"] = g["_i"]
-            g["_entries"].append((r["id"], r.get("label", ""), "named"))
-        elif len(hits) > 1:
-            ambiguous.append({"scene": scene, "entry": r["id"], "label": r.get("label"),
-                              "issue": "matches multiple GT synonyms",
-                              "gt": [h["object"] for h in hits]})
-
-    # name matches a GT object but the TYPE differs -> ambiguous, do not guess
-    for r in reps:
-        if r["_assigned"] is not None:
-            continue
-        nm = [g for g in gts if name_hit(r.get("label", ""), g["synonyms"])]
-        if nm:
-            ambiguous.append({"scene": scene, "entry": r["id"], "label": r.get("label"),
-                              "issue": f"label names GT object but type '{r['type']}' "
-                                       f"!= GT type(s) {[g['type'] for g in nm]}"})
-
-    # 2. weak matches (only when unique both sides)
+            assigned[r["id"]] = hits[0]["id"]
+    # weak (unique both sides)
     for g in gts:
-        if g["_entries"]:
+        if any(assigned[r["id"]] == g["id"] for r in reps):
             continue
-        cand = [r for r in reps if r["_assigned"] is None and r["type"] == g["type"]]
+        cand = [r for r in reps if assigned[r["id"]] is None and r["type"] == g["type"]]
         if len(cand) == 1:
-            r = cand[0]
-            r["_assigned"] = g["_i"]
-            g["_entries"].append((r["id"], r.get("label", ""), "type-only"))
-            ambiguous.append({"scene": scene, "entry": r["id"], "label": r.get("label"),
-                              "issue": f"type-only match to GT '{g['object']}' "
-                                       f"(name not matched)"})
+            assigned[cand[0]["id"]] = g["id"]
+    gt_by_id = {g["id"]: g for g in gts}
+    for r in reps:
+        gid = assigned[r["id"]]
+        if gid is None:
+            resolved.append({"entry_id": r["id"], "gt_id": None, "kind": "extra",
+                             "evidence": "auto: no GT match"})
+            continue
+        g = gt_by_id[gid]
+        type_ok = r["type"] == g["type"]
+        name_ok = name_hit(r.get("label", ""), g["synonyms"])
+        frag = gid in first
+        first.setdefault(gid, r["id"])
+        resolved.append({"entry_id": r["id"], "gt_id": gid, "type_ok": type_ok,
+                         "name_ok": name_ok, "fragment": frag,
+                         "evidence": "auto name-based match"})
+    return resolved
 
-    extras = [r for r in reps if r["_assigned"] is None]
-    n_gt = len(gts)
-    found = [g for g in gts if g["_entries"]]
-    named = [g for g in gts if any(e[2] == "named" for e in g["_entries"])]
-    moves = [g for g in gts if g["type"] == "moved"]
-    moves_found = [g for g in moves if g["_entries"]]
-    fragments = sum(max(0, len(g["_entries"]) - 1) for g in gts)
-    assigned_reps = len(reps) - len(extras)
+
+def score_scene(scene, gt_path, match_path, report_path) -> dict:
+    gt = json.loads(gt_path.read_text())
+    gts = gt["changes"]
+    if not report_path.exists():
+        return {"scene": scene, "error": f"missing report {report_path}"}
+    reps = json.loads(report_path.read_text()).get("changes", [])
+    rep_by_id = {r["id"]: r for r in reps}
+    if match_path and match_path.exists():
+        resolved = json.loads(match_path.read_text())["entries"]
+        source = "human-resolved"
+    else:
+        resolved = auto_resolve(gts, reps)
+        source = "auto"
+
+    localized = [e for e in resolved if e.get("gt_id") is not None]
+    correct = [e for e in resolved if e.get("gt_id") is not None and e.get("type_ok") and not e.get("fragment")]
+    type_wrong = [e for e in resolved if e.get("gt_id") is not None and not e.get("type_ok") and not e.get("fragment")]
+    frag_entries = [e for e in resolved if e.get("fragment")]
+    extras = [e for e in resolved if e.get("gt_id") is None]
+    named = [e for e in localized if e.get("name_ok")]
+
+    gt_found_type = {e["gt_id"] for e in resolved if e.get("gt_id") is not None and e.get("type_ok")}
+    gt_found_loc = {e["gt_id"] for e in localized}
+    moved = [g for g in gts if g["type"] == "moved"]
+    moved_found = {e["gt_id"] for e in resolved
+                   if e.get("gt_id") is not None and e.get("type_ok")
+                   and gt_by_id_type(gts, e["gt_id"]) == "moved"}
+
+    n_gt, n_rep = len(gts), len(reps)
     return {
-        "scene": scene,
-        "n_gt": n_gt, "n_report": len(reps),
-        "found": len(found), "named_found": len(named),
-        "recall_type": len(found) / n_gt if n_gt else None,
-        "recall_named": len(named) / n_gt if n_gt else None,
-        "move_total": len(moves), "move_found": len(moves_found),
-        "move_recall": (len(moves_found) / len(moves)) if moves else None,
-        "extras": len(extras),
-        "precision": (assigned_reps / len(reps)) if reps else None,
-        "fragments": fragments,
-        "name_accuracy": (len(named) / len(found)) if found else None,
+        "scene": scene, "source": source, "n_gt": n_gt, "n_report": n_rep,
+        "recall_type": len(gt_found_type) / n_gt if n_gt else None,
+        "recall_localized": len(gt_found_loc) / n_gt if n_gt else None,
+        "move_total": len(moved), "move_found": len(moved_found),
+        "move_recall": (len(moved_found) / len(moved)) if moved else None,
+        "name_accuracy": (len(named) / len(localized)) if localized else None,
+        "localized_entries": len(localized), "named_entries": len(named),
+        "fragments": len(frag_entries),
+        "precision": {"correct": len(correct), "type_wrong": len(type_wrong),
+                      "fragment": len(frag_entries), "extra": len(extras),
+                      "total": n_rep},
+        "extras_list": [{"id": e["entry_id"],
+                         "type": rep_by_id.get(e["entry_id"], {}).get("type"),
+                         "label": rep_by_id.get(e["entry_id"], {}).get("label"),
+                         "evidence": e.get("evidence")} for e in extras],
         "per_gt": [{"id": g["id"], "type": g["type"], "object": g["object"],
-                    "found": bool(g["_entries"]),
-                    "named": any(e[2] == "named" for e in g["_entries"]),
-                    "entries": [{"id": e[0], "label": e[1], "how": e[2]} for e in g["_entries"]]}
+                    "found_type": g["id"] in gt_found_type,
+                    "localized": g["id"] in gt_found_loc,
+                    "entries": [e["entry_id"] for e in localized if e["gt_id"] == g["id"]]}
                    for g in gts],
-        "extras_list": [{"id": r["id"], "type": r["type"], "label": r.get("label")} for r in extras],
-        "ambiguous": ambiguous,
+        "resolved": resolved,
     }
+
+
+def gt_by_id_type(gts, gid):
+    return next((g["type"] for g in gts if g["id"] == gid), None)
+
+
+def fmt(v):
+    return "   n/a" if v is None else f"{100*v:5.0f}%"
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--scene", choices=list(SCENES), default=None)
+    ap.add_argument("--scene", choices=list(SCENES))
     ap.add_argument("--report")
     ap.add_argument("--gt")
-    ap.add_argument("--json", help="write full results JSON here")
+    ap.add_argument("--matches")
+    ap.add_argument("--json")
     args = ap.parse_args()
 
     if args.report and args.gt:
-        items = [("adhoc", Path(args.gt), Path(args.report))]
+        items = [("adhoc", Path(args.gt), Path(args.matches) if args.matches else None,
+                  Path(args.report))]
     elif args.scene:
-        gt, rp = SCENES[args.scene]
-        items = [(args.scene, ROOT / gt, ROOT / rp)]
+        gt, mm, rp = SCENES[args.scene]
+        items = [(args.scene, ROOT / gt, ROOT / mm, ROOT / rp)]
     else:
-        items = [(s, ROOT / gt, ROOT / rp) for s, (gt, rp) in SCENES.items()]
+        items = [(s, ROOT / gt, ROOT / mm, ROOT / rp) for s, (gt, mm, rp) in SCENES.items()]
 
-    results = [score_scene(s, gt, rp) for s, gt, rp in items]
+    results = [score_scene(s, gt, mm, rp) for s, gt, mm, rp in items]
 
-    hdr = f"{'scene':<8} {'GT':>3} {'rep':>3} {'found':>5} {'named':>5} {'recall':>7} {'named':>7} {'move':>6} {'extra':>5} {'frag':>4} {'name%':>6}"
+    hdr = (f"{'scene':<8} {'GT':>3} {'rep':>3} {'recall(t)':>9} {'recall(loc)':>11} "
+           f"{'move(strict)':>12} {'name%':>6} {'frag':>4} "
+           f"{'correct':>7} {'typeW':>5} {'frag':>4} {'extra':>5}")
     print(hdr)
     print("-" * len(hdr))
     for r in results:
         if "error" in r:
             print(f"{r['scene']:<8} ERROR {r['error']}")
             continue
-        fmt = lambda v: "  n/a" if v is None else f"{100*v:5.0f}%"
-        move = f"{r['move_found']}/{r['move_total']}" if r["move_total"] else "  -"
-        print(f"{r['scene']:<8} {r['n_gt']:>3} {r['n_report']:>3} {r['found']:>5} "
-              f"{r['named_found']:>5} {fmt(r['recall_type']):>7} {fmt(r['recall_named']):>7} "
-              f"{move:>6} {r['extras']:>5} {r['fragments']:>4} {fmt(r['name_accuracy']):>6}")
+        mv = f"{r['move_found']}/{r['move_total']}" if r["move_total"] else "-"
+        p = r["precision"]
+        print(f"{r['scene']:<8} {r['n_gt']:>3} {r['n_report']:>3} "
+              f"{fmt(r['recall_type']):>9} {fmt(r['recall_localized']):>11} "
+              f"{fmt(r['move_recall']):>12} {fmt(r['name_accuracy']):>6} {r['fragments']:>4} "
+              f"{p['correct']:>7} {p['type_wrong']:>5} {p['fragment']:>4} {p['extra']:>5}")
 
     ok = [r for r in results if "error" not in r]
     if ok:
-        tot_gt = sum(r["n_gt"] for r in ok)
-        tot_found = sum(r["found"] for r in ok)
-        tot_named = sum(r["named_found"] for r in ok)
-        tot_rep = sum(r["n_report"] for r in ok)
-        tot_extra = sum(r["extras"] for r in ok)
-        tot_move = sum(r["move_total"] for r in ok)
-        tot_move_found = sum(r["move_found"] for r in ok)
+        tg = sum(r["n_gt"] for r in ok)
+        def share(key, numkey):
+            n = sum(len({e["gt_id"] for e in r["resolved"] if e.get("gt_id") is not None and e.get(key)})
+                    for r in ok)
+            return n
+        rt = sum(len({e["gt_id"] for e in r["resolved"] if e.get("gt_id") is not None and e.get("type_ok")}) for r in ok)
+        rl = sum(len({e["gt_id"] for e in r["resolved"] if e.get("gt_id") is not None}) for r in ok)
+        loc_e = sum(r["localized_entries"] for r in ok)
+        named_e = sum(r["named_entries"] for r in ok)
+        mv_t = sum(r["move_total"] for r in ok)
+        mv_f = sum(r["move_found"] for r in ok)
+        pc = sum(r["precision"]["correct"] for r in ok)
+        pw = sum(r["precision"]["type_wrong"] for r in ok)
+        pf = sum(r["precision"]["fragment"] for r in ok)
+        pe = sum(r["precision"]["extra"] for r in ok)
         print("-" * len(hdr))
-        print(f"{'OVERALL':<8} {tot_gt:>3} {tot_rep:>3} {tot_found:>5} {tot_named:>5} "
-              f"{100*tot_found/tot_gt:5.0f}% {100*tot_named/tot_gt:5.0f}% "
-              f"{tot_move_found}/{tot_move} {tot_extra:>4} "
-              f"{(tot_named/tot_found if tot_found else 0):5.0%}")
+        print(f"{'OVERALL':<8} {tg:>3} {pe+pc+pw+pf:>3} {100*rt/tg:8.0f}% {100*rl/tg:10.0f}% "
+              f"{100*mv_f/mv_t if mv_t else 0:11.0f}% {100*named_e/loc_e:5.0f}% "
+              f"{pf:>4} {pc:>7} {pw:>5} {pf:>4} {pe:>5}")
+        print(f"\nlocalized entries {loc_e}, named {named_e}; "
+              f"precision correct {pc}/{pc+pw+pf+pe}, type-wrong {pw}, fragment {pf}, extra {pe}")
 
-    print("\n=== ambiguous / unmatched (resolve by hand, do not guess) ===")
-    any_amb = False
+    print("\n=== missed GT changes (no entry) ===")
     for r in ok:
-        for a in r["ambiguous"]:
-            any_amb = True
-            print(f"  [{a['scene']}] entry {a['entry']} ('{a['label']}') - {a['issue']}")
-    if not any_amb:
-        print("  (none)")
-    print("\n=== extras (report entries matching no GT change) ===")
+        miss = [g for g in r["per_gt"] if not g["localized"]]
+        if miss:
+            print(f"  [{r['scene']}] " + "; ".join(f"#{g['id']} {g['type']} {g['object']}" for g in miss))
+    print("=== GT found by type but NOT named ===")
+    for r in ok:
+        for g in r["per_gt"]:
+            if g["found_type"]:
+                es = [e for e in r["resolved"] if e.get("gt_id") == g["id"] and e.get("type_ok")]
+                if es and not any(e.get("name_ok") for e in es):
+                    print(f"  [{r['scene']}] #{g['id']} {g['object']} (entries {g['entries']})")
+    print("=== extras ===")
     for r in ok:
         if r["extras_list"]:
-            print(f"  [{r['scene']}] " + "; ".join(f"{e['id']}:{e['type']}:{e['label']}"
-                                                    for e in r["extras_list"]))
+            print(f"  [{r['scene']}] " + "; ".join(
+                f"{e['id']}:{e['type']}:{e['label']}" for e in r["extras_list"]))
+    print("\n=== fragments (entries beyond the first per GT) ===")
+    for r in ok:
+        for g in r["per_gt"]:
+            if len(g["entries"]) > 1:
+                print(f"  [{r['scene']}] GT#{g['id']} {g['object']}: entries {g['entries']}")
 
     if args.json:
         Path(args.json).write_text(json.dumps(results, indent=2))

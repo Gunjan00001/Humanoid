@@ -1,0 +1,9 @@
+{
+  "scene": "scene2",
+  "resolution": "human-resolved (user, 2026-10-11)",
+  "entries": [
+    {"entry_id": 1, "gt_id": null, "kind": "extra", "evidence": "removed 'apple' - the coconut cluster mislabelled; not the GT object"},
+    {"entry_id": 2, "gt_id": 1, "type_ok": true, "name_ok": true, "fragment": false,
+     "evidence": "removed coconut = GT1 coconut removed"}
+  ]
+}
