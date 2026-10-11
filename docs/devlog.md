@@ -664,3 +664,25 @@ the automatic mode choice contributed; no held-out output was changed.
   Also: `change.gif` used the **matplotlib fallback** (no Chrome on the GPU
   node), matching prior node runs.
 - checking sheet built: `outputs/scene6/checking_sheet.{png,md}` (2 tiles).
+
+## 2026-10-11 — Submission audit: privacy, hygiene, README top
+
+- **Privacy (Step 4.1)**: the cluster username `/home/user/...`
+  appeared in 28 committed files (report/summary JSON+MD, gpu.md, rules.md,
+  AGENT_PLAN.md). Replaced with repo-relative paths (outputs) and `$HOME/...`
+  (docs); `src/report.py` now writes repo-relative video paths and `~/models/`
+  (report.py is not a frozen file). All committed JSON re-validated. **No git
+  history rewrite** — the string still exists in history (flagged).
+  **No secrets**: the "secret/token/key" scans matched only false positives
+  (`tokenizers`, `asttokens`; "BEArer" inside viewer.html's encoded point
+  cloud).
+- **Hygiene (Step 4.2)**: `.opencode/` (11) and `graphify-out/` (16) removed
+  from tracking + gitignored; `.commandcode/` gitignored. Licenses already
+  fully documented in `docs/models.md` (VGGT CC-BY-NC-4.0; Qwen3-VL, DINOv2,
+  MapAnything/DA3 Apache-2.0) and summarized in the README — nothing to add.
+- **README top (Step 4.5)**: pinned a 3-line summary, the one-command quick
+  start, a verbatim real scene6 summary, a results table split into
+  development (tuned) vs held-out (scene5, scene6), Known limitations, a link
+  to `docs/heldout.md`, and a `DEMO_VIDEO_URL` placeholder.
+- **GitHub Pages (Step 4.4)**: checked with `curl` — the five viewer URLs
+  return **HTTP 404**; Pages is not serving (owner action to enable).

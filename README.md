@@ -1,15 +1,12 @@
 # 3D Scene Change Detection
 
-System that takes two phone recordings of the same small indoor space, builds a
-shared 3D reconstruction, detects which objects were **moved**, **added**, or
-**removed**, and describes each change in natural language.
+Give it two phone recordings of the same small indoor space; it builds one
+shared 3D reconstruction and reports which objects were **moved**, **added** or
+**removed**, each with a semantic label and a natural-language sentence.
+Part of the **Spatial AI & Navigation Challenge**; one command runs the whole
+pipeline (a PBS GPU job on the cluster).
 
-Part of the **Spatial AI & Navigation Challenge**.
-
-> **Status: first successful end-to-end run (2026-10-10).** The three planned
-> changes in the demo scene were detected and described. Full numbers, timings
-> and honest limitations: [`docs/results.md`](docs/results.md). The plan and
-> checkpoints live in [`AGENT_PLAN.md`](AGENT_PLAN.md).
+<!-- DEMO_VIDEO_URL (owner: paste the demo video link here) -->
 
 ## Quick start
 
@@ -24,17 +21,47 @@ python detect.py --a data/a.mp4 --b data/b.mp4 --name demo
 `detect.py` validates both videos and runs the whole pipeline (on a login node
 it submits and polls the PBS gpu job itself), writing `outputs/demo/`:
 `report.md`, `summary.*`, `change.gif`, `viewer.html`, `scene_mesh.ply`.
-A real run printed:
+
+Verbatim summary from the held-out **scene6** run (real output, unused for
+tuning):
 
 ```text
-Compared a.mp4 and b.mp4. I found 3 change(s):
-1. Removed - comb: The comb was removed from the table in video B.
-2. Added - pen and device: Possibly a blue pen and a white device were added to the surface in video B.
-3. Replaced - remote control: The remote control was replaced with a different one in video B.
+Compared a.mp4 and b.mp4. I found 2 change(s):
+1. Removed - remote control: The remote control was removed from the table.
+2. Added - electrical outlet: Possibly an electrical outlet was added to the wall.
 
 Notes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.
 Files: viewer.html, change.gif, report.json
 ```
+
+## Results at a glance
+
+| set | scene | ground truth | detected | mode / notes |
+|---|---|---|---|---|
+| development (tuned) | demo | comb removed, pen added, remote moved+flipped | **3/3**, 0 extra | `tabletop` |
+| development (tuned) | scene2 | coconut removed | **1/1**, 4 extra | `geometric`, per-scene tuning |
+| development (tuned) | scene3 | chair removed, apple→cup | **2/2**, 2 extra | `tabletop`, per-scene tuning |
+| development (tuned) | scene4 | apple moved, scissor removed, bottle added | **3/3**, 0 extra | `tabletop` |
+| **held-out** | scene5 | clock moved, chair removed | **1/2 (type only)**, ≥2 extra | run once, defaults |
+| **held-out** | scene6 | cup moved, remote removed, apple added | **1/3** (remote removed), 1 extra | run once, defaults |
+
+The development scenes were used to tune thresholds, so their numbers are fit,
+not a benchmark. The held-out scenes (scene5, scene6) were each run **exactly
+once** with the frozen code and default settings — pre-registered scoring rule,
+per-change tables and failure analyses are in
+[`docs/heldout.md`](docs/heldout.md).
+
+## Known limitations
+
+- mixed orientation / resolution between the two recordings weakens the
+  reconstruction and the crops (scene5);
+- large objects fragment (scene5's chair); thin objects can be missed;
+- a move is only counted when reported as `moved` (scene5's clock and scene6's
+  cup were both missed);
+- object names come from a VLM and can be wrong;
+- the automatic diff-mode choice is sensitive to the exact input encoding.
+
+Full, honest numbers for every scene: [`docs/results.md`](docs/results.md).
 
 ## Results
 
