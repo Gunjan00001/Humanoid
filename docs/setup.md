@@ -150,6 +150,20 @@ It writes `~/models/<Model-Name>/` (resumable; rerun any time). The pipeline
 resolves `models.*` config entries against `paths.model_dir` first, so it loads
 from disk offline. Exact IDs/licenses: [`models.md`](models.md).
 
+The pipeline needs three model families. Sizes are approximate; the download
+script is the source of truth for the exact total (about 88 GB).
+
+| model | folder under `~/models/` | approximate size | license |
+|---|---|---|---|
+| VGGT-1B | `VGGT-1B` | a few GB | **CC BY-NC 4.0** (non commercial) |
+| Qwen3-VL-32B-Instruct | `Qwen3-VL-32B-Instruct` | about 64 GB (bf16) | Apache-2.0 |
+| Qwen3-VL-8B-Instruct | `Qwen3-VL-8B-Instruct` | about 16 GB | Apache-2.0 |
+| dinov2-large | `dinov2-large` | about 1.2 GB | Apache-2.0 |
+
+VGGT is the primary reconstruction model and is non commercial; the challenge
+submission is fine, but commercial use would need a permissive backend. Qwen3-VL
+is the label and sentence model, DINOv2 is the cross crop matcher.
+
 ## Laptop environment (CPU stages)
 
 ```bash
