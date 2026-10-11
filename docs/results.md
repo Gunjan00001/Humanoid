@@ -245,6 +245,30 @@ visibility clusters), i.e. run-to-run variability, not a code change. The
 re-run's version names the ground-truth object correctly, so it is arguably
 better - but it is not the committed state.
 
+### Reproducibility (frozen pipeline, 3x per scene)
+
+Run 2026-10-11: `detect.py --force` **3x per scene** into isolated, gitignored
+directories (fresh caches each time; 2 CPUs/job). Scenes: scene2 (defaults and
+its documented working point), scene4, scene5, scene6.
+
+| Scene | settings | runs OK | entries min / typical / max | GT found every run? |
+|---|---|---|---|---|
+| scene2 | **defaults** | **0/3** | — | n/a — `extract_frames` aborts (clips are 3.8 s / 7.3 s; only 1 sharp frame < min 8) |
+| scene2 | `--method geometric --blur_threshold 25` (its working point) | 3/3 | **5 / 5 / 5** | coconut removed: **yes** (3/3, label correct); 4 extras every run |
+| scene4 | defaults | 3/3 | **3 / 3 / 3** | moved apple, removed scissors, added bottle: **3/3 every run**; 0 extras |
+| scene5 | defaults | 3/3 | **7 / 7 / 7** | chair removed **every run** (fragmented, ~5 entries); clock move **missed every run**; extras ≥2 |
+| scene6 | defaults | 3/3 | **2 / 2 / 2** | remote removed **every run**; cup move + apple add **missed every run**; 1 extra |
+
+**Reading:** within this set the pipeline behaved **deterministically** — all
+three runs per scene produced identical entry counts *and* identical
+type/label lists (min = typical = max), and every ground-truth change was either
+found every time or never (never intermittent). No random seeds are set
+explicitly; the determinism is empirical for these clips, not guaranteed. The
+one hard failure is **scene2 at defaults**, which cannot run at all (too few
+sharp frames) — the same reason scene2 ships with a documented working point.
+scene6's three fresh runs reproduced the committed held-out result exactly
+(same 2 entries, same types/labels).
+
 ### Held-out scenes (never used for tuning)
 
 Split out from the development scenes above: each was run **exactly once** with
