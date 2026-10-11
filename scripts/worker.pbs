@@ -1,0 +1,18 @@
+#!/bin/bash
+#PBS -N acc_worker
+#PBS -q gpu
+#PBS -l select=1:ncpus=4:mem=60gb:ngpus=2
+#PBS -l walltime=06:00:00
+#PBS -j oe
+#PBS -o /home/user/Desktop/Humanoid/logs/acc_worker.log
+
+cd /home/user/Desktop/Humanoid || exit 1
+unset CUDA_VISIBLE_DEVICES          # PBS sets it empty (hides all GPUs)
+source "$HOME/miniconda3/etc/profile.d/conda.sh"
+conda activate spatialdiff
+export PATH="$CONDA_PREFIX/bin:$PATH"
+
+python -u scripts/worker.py --phase D
+rc=$?
+echo "WORKER_DONE rc=$rc"
+exit $rc
