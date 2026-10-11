@@ -237,3 +237,88 @@ distribution across the 50% threshold).
 `outputs/scene5/checking_sheet.png` (5 numbered tiles: before | after crops +
 the 3D box per detection) and `checking_sheet.md` (the same as an index).
 Please confirm the overlays against the ground truth.
+
+---
+
+# Held-out test — scene6
+
+## FROZEN (Step 0, recorded before the run)
+
+Scene6 results must be produced by exactly this code. The detection-relevant
+files are pinned (identical byte content verified across all three candidates):
+
+- task-stated frozen commit: **`93bf47d`**
+- `v0.12.0` tag actually resolves to: **`f0042c90e4b10c33b26491028dbfe38fa8f4a5f5`**
+- `HEAD` at run time: `f96d3b0` — `git diff 93bf47d HEAD` on the files below is **empty**
+- file digests (sha256, first 16 hex) — **identical to the scene5 freeze**:
+
+| file | sha256 (16) |
+|---|---|
+| `src/diff.py` | `72f10984090e44d0` |
+| `src/tabletop.py` | `d227110953138229` |
+| `src/geometry.py` | `f44767f014c55d5b` |
+| `src/describe.py` | `ac00b9382d074679` |
+| `src/align.py` | `b7400d42938e979e` |
+| `src/reconstruct.py` | `db9147329a3c047d` |
+| `configs/default.yaml` | `f05d5cb6323bad40` |
+
+Verification at the end of the task: `git diff 93bf47d -- src/diff.py
+src/tabletop.py src/geometry.py src/describe.py src/align.py
+src/reconstruct.py configs/default.yaml detect.py` must be empty.
+
+## Data (Step 0, re-encoded before the run)
+
+Originals are LFS recordings; they were re-encoded so a plain clone can read
+them. **Detection on the re-encoded files is what ships and what is scored.**
+(Scene5 lesson: re-encoding can move the auto-mode decision; recorded here as an
+honest caveat, not as a reason to re-run.)
+
+| file | original (LFS oid) | re-encoded size | sha256 (re-encoded) |
+|---|---|---|---|
+| `data/scene6/a.mp4` | 9,090,092 B (`baf3f76f3475…`) | 3,424,287 B | `8c22c960edfc5376c43b5e0de346d1e70add6548a13d624f932cfc548c68482b` |
+| `data/scene6/b.mp4` | 8,050,457 B (`cf1d265b48a9…`) | 2,826,327 B | `e669a365fe646ab9b72466524da8db0c1844d44eaefa35700fac5b7c18e928fb` |
+
+Re-encode = libx264 (crf 29, medium), same 860x480@30fps (b measured 29.83 fps
+originally, 30.0 after), no audio, `+faststart`. Originals preserved in LFS at
+`data/scene6/original/` (and in the data-v0.5 history).
+
+Validation (correct `detect.py` validation code, no submission) printed **no
+warnings**: `[check] A 860x480 30.0fps 55.5s | B 860x480 30.0fps 49.1s`. No
+resolution or orientation mismatch.
+
+## Scoring rule (pre-registered, written before the run)
+
+Ground truth (`data/scene6/ground_truth.md`): the **cup moved**, the **remote
+was removed**, the **apple was added**; nothing else changed. This scene was
+never used for tuning (no thresholds, prompts or defaults were derived from it).
+
+A ground-truth change counts as **FOUND** only if all three hold:
+
+1. **Type matches** — `moved` for the cup, `removed` for the remote,
+   `added` for the apple.
+2. **The evidence overlay shows the right object** — the per-change composite
+   (`changes/change_XXX.png`) and the 3D box must sit on the cup / remote /
+   apple, respectively.
+3. **The label names it correctly** — the report's label for the entry must
+   name the cup / remote / apple.
+
+A move counts as FOUND only if it is reported as `moved` (an `added` + `removed`
+pair at different positions does **not** count as a found move). Label
+correctness is reported **separately** from detection (an entry can detect the
+right change but name it wrongly; that counts as found for detection, not for
+labelling). Extra entries (confirmed changes not in the ground truth) and
+fragments are counted separately. Unverified candidates are listed but not
+counted as changes.
+
+**Status: pending the single held-out run and the user's overlay confirmation.**
+
+## Result (scene6, run once — the single held-out execution)
+
+Command (exactly once, frozen code, default settings, no overrides):
+
+```
+python detect.py --a data/scene6/a.mp4 --b data/scene6/b.mp4 --name scene6
+```
+
+*(per-change table, printed summary, runtime and failure analysis are filled in
+after the user's overlay confirmation.)*

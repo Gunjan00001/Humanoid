@@ -21,3 +21,8 @@ data/scene3/b.mp4  -filter -diff -merge -text
 # 6.9 MB LFS recording (oid 1be79cea00); the original stays in the LFS history
 data/scene5/b.mp4  -filter -diff -merge -text
 data/scene5/a.mp4  -filter -diff -merge -text
+# scene6: re-encodes (3.3 MB + 2.7 MB, same 860x480@30fps) of the original
+# LFS recordings (a oid baf3f76f34, b oid cf1d265b48); the originals are
+# preserved in LFS under data/scene6/original/ (and the data-v0.5 history)
+data/scene6/a.mp4  -filter -diff -merge -text
+data/scene6/b.mp4  -filter -diff -merge -text

@@ -598,3 +598,42 @@ the automatic mode choice contributed; no held-out output was changed.
   directory (the first attempt failed on the GPU node because git-lfs is not
   installed there; re-run on the login node where git-lfs works, with the
   clone's `detect.py` submitting its own PBS job).
+
+## 2026-10-11 — Agent-handover access verification
+
+- **GPU access: verified live.** One-shot probe via `gpu-run -n 1 -g 1`
+  (job 10863, interactive, exited cleanly): `the GPU node` shows all 8
+  A100-SXM4-80GB; `torch 2.14.1+cu126`, `cuda_available True`,
+  `device_count 8`, matmul OK. Note the env torch is now **2.14.1+cu126**
+  (newer than the 2.11.0 recorded in `gpu.md`), still on the working cu126 line.
+  Temp probe script `scripts/_gpu_probe.sh` was created and removed.
+- **GitHub access: verified live.** `git ls-remote origin HEAD` over SSH works
+  (`f96d3b0…`); local `main` == `origin/main`.
+- **Finding: the persistent `gpu-session` is stale.** `~/.gpu-session/jobid`
+  still points at job **10831**, but that job is gone from the queue (a
+  different job, `otheruser-jobs-s*`, now occupies the account's CPUs), so `ready`/`out`
+  still say `KERNEL_READY` while no server is actually running — a `gpu-send`
+  would write `cmd.py` and wait forever. Fix when needed: `gpu-session start
+  && gpu-session wait` (holds 4 CPUs and 1 A100 for 12 h; stop the idle session
+  first per the 16-CPU quota pattern).
+
+## 2026-10-11 — Held-out scene6: Step 0 (data + freeze) and pre-registration
+
+- **Frozen code confirmed.** `git diff 93bf47d HEAD` (and vs the working tree)
+  is **empty** for `src/{diff,tabletop,geometry,describe,align,reconstruct}.py`,
+  `configs/default.yaml`, `detect.py`. The 7 digest prefixes are identical to
+  the scene5 freeze (`72f10984`, `d2271109`, `f44767f0`, `ac00b938`, `b7400d42`,
+  `db914732`, `f05d5cb6`). Noted honestly in `heldout.md`: the task named the
+  frozen commit as `93bf47d`, but tag `v0.12.0` resolves to `f0042c9`; the
+  detection code is byte-identical across both and HEAD, so the pin holds.
+- **scene6 data re-encoded.** Originals (a 9,090,092 B oid `baf3f76f34`; b
+  8,050,457 B oid `cf1d265b48`) copied to `data/scene6/original/` (LFS) and
+  re-encoded with the env's bundled ffmpeg 7.0.2 (imageio_ffmpeg; no system
+  ffmpeg on the login node) at crf 29: a 3,424,287 B, b 2,826,327 B, both
+  < 5 MB, same 860x480@30fps, no audio, `+faststart`. `.gitattributes` marks
+  `data/scene6/{a,b}.mp4` as plain git (scene5 pattern).
+- **Validation only (no submission)** on the re-encodes printed **no warnings**:
+  `[check] A 860x480 30.0fps 55.5s | B 860x480 30.0fps 49.1s`.
+- **Pre-registered** the scene6 scoring rule + freeze + data provenance in
+  `docs/heldout.md` **before** the run (GT: cup moved, remote removed, apple
+  added; FOUND = type + overlay + label; a move only counts as `moved`).
