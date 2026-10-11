@@ -92,3 +92,18 @@ Next steps and the exact commands:
   gates (evaluator smoke test, frame convention, 10-pair facts, compute estimate)
   pending.
 - Track B: not started.
+
+### 2026-10-11 22:10 IST, Step 1 done, Step 2 and 3 started
+- Step 1 (v1.0.2): README quick start links the weights (docs/setup.md); setup.md
+  lists VGGT (CC BY-NC 4.0), Qwen3-VL-32B/8B and DINOv2 with sizes, licenses and
+  folders; README top keeps the dev/held-out split table, limitations, heldout link
+  and the DEMO_VIDEO_URL placeholder; all seven README viewer URLs are plain git
+  (no LFS). Tests pass, fresh clone OK. main = a854181, tag v1.0.2 = b869f28.
+- Step 2 (Track B): SAM 2 install running in logs/install_sam2.sh (env
+  spatialdiff-sam, torch cu126, facebookresearch/sam2, checkpoint
+  facebook/sam2.1-hiera-base-plus into ~/models/).
+- Step 3 (Track C): SceneDiff zip downloading to data/external/scenediff/
+  (gitignored).
+- Next: when the install finishes, run the SAM 2 probe on scene6 (cup) and scene5
+  (clock); when the zip finishes, extract splits and the selected pairs and run the
+  evaluator smoke test.
