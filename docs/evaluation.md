@@ -169,3 +169,26 @@ Measured earlier: one new scene (two clips, about 30 frames each) costs about 6
 minutes on the node (reconstruct about 2 to 3 min, describe about 2 to 4 min).
 The 30 pairs (20 validation + 10 test) are therefore about 3 to 4 GPU hours,
 well under the 12 GPU hour cap, so the validation slice is not reduced.
+
+## Evaluator internals (from third_party/scene_diff/scripts/evaluate_multiview.py)
+
+- Change type: `in_video1 and in_video2` gives label 1 (moved); in exactly one
+  video gives label 0 (added or removed). The change-type reward is therefore
+  moved versus non-moved.
+- Frames scored: a GT frame is scored when `frame_index % resample_rate == 0`
+  (resample_rate default 30); the scored id is `frame_index // resample_rate`.
+- GT masks are pycocotools RLE, decoded and resized to `(H, W)` with nearest
+  neighbour, then thresholded at 0.5 (lines 825 to 857).
+- Scenes without a `pred_dir/<pair>/object_masks.pkl` are dropped from the run
+  (lines 1340 to 1348), so a 3 pair smoke test is possible.
+- Splits are read from `data/scenediff_benchmark/splits/...` relative to the
+  working directory; `--gt_dir` and `--video_dir` default to
+  `data/scenediff_benchmark/data`.
+
+## C1 still open
+
+The evaluator smoke test (a perfect prediction from GT scores near the maximum,
+an empty prediction scores zero) is not yet run: it needs a small builder that
+writes `object_masks.pkl` from `segments.pkl` in the exact prediction format and
+the correct `(H, W)`. pycocotools is now installed. This is the last C1 gate
+before C2.

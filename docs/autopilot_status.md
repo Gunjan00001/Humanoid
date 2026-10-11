@@ -133,3 +133,11 @@ Next steps and the exact commands:
   both summary line formats. main = e4aed51, tag v1.0.3. git diff v1.0.0 main for
   outputs/scene5 and outputs/scene6 is now empty. Merged main into exp/accuracy.
 - Status of tracks: A done (v1.0.1/2/3), B done (negative), C C1 partial.
+
+### 2026-10-11 23:45 IST, Track B closed, C1 nearly done
+- Track B closed as a real negative result (controls positive 0.704/0.914,
+  negative 0.285/0.085, targets below the gate). objmatch2 not built.
+- C1: per-pair facts, adapter notes and compute estimate (3 to 4 GPU hours,
+  under the cap) recorded in docs/evaluation.md. Evaluator internals documented.
+- pycocotools installed.
+- Next: build the perfect-prediction smoke test, then C2 (pre-register the slice).
