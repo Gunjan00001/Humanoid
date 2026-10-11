@@ -1,0 +1,66 @@
+{
+  "name": "scene2_geo",
+  "video_a": "data/scene2/a.mp4",
+  "video_b": "data/scene2/b.mp4",
+  "n_changes": 5,
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "coconut",
+      "sentence": "The coconut was removed from the table.",
+      "confidence": 0.75,
+      "possibly": false,
+      "sentence_source": "report"
+    },
+    {
+      "id": 2,
+      "type": "removed",
+      "label": "apple",
+      "sentence": "The apple was removed from the table.",
+      "confidence": 0.75,
+      "possibly": false,
+      "sentence_source": "report"
+    },
+    {
+      "id": 3,
+      "type": "added",
+      "label": "round object",
+      "sentence": "The round object appeared.",
+      "confidence": 0.45,
+      "possibly": false,
+      "sentence_source": "template"
+    },
+    {
+      "id": 4,
+      "type": "added",
+      "label": "apple",
+      "sentence": "Possibly an apple appeared in the second image.",
+      "confidence": 0.36,
+      "possibly": true,
+      "sentence_source": "report"
+    },
+    {
+      "id": 5,
+      "type": "added",
+      "label": "apple",
+      "sentence": "The apple appeared.",
+      "confidence": 0.75,
+      "possibly": false,
+      "sentence_source": "template"
+    }
+  ],
+  "n_unverified": 0,
+  "notes": [
+    "Object names come from a vision-language model and can be wrong.",
+    "Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4).",
+    "No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated."
+  ],
+  "files": [
+    "viewer.html",
+    "change.gif",
+    "report.json"
+  ],
+  "generated": "2026-10-11T16:06:41Z",
+  "text": "Compared a.mp4 and b.mp4. I found 5 change(s):\n1. Removed: coconut. The coconut was removed from the table.\n2. Removed: apple. The apple was removed from the table.\n3. Added: round object. The round object appeared.\n4. Added: apple. Possibly an apple appeared in the second image.\n5. Added: apple. The apple appeared.\n\nNotes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.\nFiles: viewer.html, change.gif, report.json"
+}
