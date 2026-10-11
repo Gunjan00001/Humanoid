@@ -1,6 +1,6 @@
 # Rules for Agents Working in This Folder
 
-**Scope:** `/home/user/Desktop/Humanoid` (referred to below as
+**Scope:** `$HOME/Desktop/Humanoid` (referred to below as
 "this folder" / the workspace).
 
 These rules apply to **every AI agent** operating here — including the agent that
@@ -10,7 +10,7 @@ wrote this file. By working in this folder you agree to follow them.
 
 ## 1. Stay inside this folder
 
-- Treat `/home/user/Desktop/Humanoid` as your **working directory and
+- Treat `$HOME/Desktop/Humanoid` as your **working directory and
   boundary**.
 - **Do not** read, create, modify, move, or delete files **outside** this folder
   unless the user explicitly asks for that specific action.

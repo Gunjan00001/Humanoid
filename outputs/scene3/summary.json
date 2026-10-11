@@ -1,7 +1,7 @@
 {
   "name": "scene3",
-  "video_a": "/home/user/Desktop/Humanoid/data/scene3/a.mp4",
-  "video_b": "/home/user/Desktop/Humanoid/data/scene3/b.mp4",
+  "video_a": "data/scene3/a.mp4",
+  "video_b": "data/scene3/b.mp4",
   "n_changes": 4,
   "changes": [
     {

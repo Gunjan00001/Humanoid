@@ -14,7 +14,7 @@
 ## 0. Critical rules (read first)
 
 1. **Use GPU nodes for all large-model work.** Never run VGGT, MASt3R, Qwen3-VL, SAM 2, or DINOv2 on the login node. Submit a PBS job to the `gpu` queue (or an interactive GPU session with `qsub -I`). The login node is only for editing files, git, light CPU scripts, and downloading model weights.
-2. **Read `/home/user/Desktop/Humanoid/gpu.md` first** for the exact PBS syntax and cluster details. If it conflicts with this file, `gpu.md` wins for cluster commands.
+2. **Read `$HOME/Desktop/Humanoid/gpu.md` first** for the exact PBS syntax and cluster details. If it conflicts with this file, `gpu.md` wins for cluster commands.
 3. **Cache everything expensive** (reconstruction outputs, embeddings, VLM answers) to disk so that later stages can be re-run without the GPU.
 4. **One working stage at a time.** Finish and verify each checkpoint before starting the next phase.
 5. **Keep every model name, path, and threshold in `configs/default.yaml`**, never hard-coded.
