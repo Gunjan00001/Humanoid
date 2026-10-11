@@ -536,15 +536,29 @@ def main() -> int:
                                  for k in ("label", "first", "second")}}
         log.debug("  reject %s (%s): %s", cid, c["type"], reason)
 
+    soft_veto = bool(cfg["semantics"].get("soft_veto", False))
+    _min_pts = float(cfg["semantics"].get("soft_veto_min_points", 60))
+
+    def _strong_geometry(c: dict) -> bool:
+        n = float(c.get("n_points") or c.get("n_cells") or 0)
+        return n >= _min_pts
+
     confirmed = []
     single_view: list[dict] = []
+    soft_kept: list[dict] = []
     for c in clusters:
         cid = str(c["id"])
         v = vlm_cache.get(cid, {})
         if args.skip_vlm:
             confirmed.append(c)
         elif v.get("changed") is False:
-            _reject(c, "VLM denied the change (same object visible in both videos)")
+            if soft_veto and _strong_geometry(c):
+                c = dict(c); c["soft_veto"] = True
+                soft_kept.append(c)
+                log.info("soft veto -> keep denied %s as 'possibly' (n=%s)",
+                         cid, c.get("n_points") or c.get("n_cells"))
+            else:
+                _reject(c, "VLM denied the change (same object visible in both videos)")
         elif v.get("changed") is None and v.get("first") is None and v.get("second") is None:
             # the two-view verification could not run (the other video's crop
             # was unavailable): a label-only answer must NOT count as a
@@ -597,7 +611,7 @@ def main() -> int:
                    and c2["bbox_min"][i] - pad <= c1["bbox_max"][i] for i in range(3))
 
     uncertain_kept = []
-    for c in list(uncertain) + single_view:
+    for c in list(uncertain) + single_view + soft_kept:
         cid = str(c["id"])
         dup = next((cc["id"] for cc in confirmed if _bbox_close(c, cc)), None)
         if dup is not None:
@@ -827,6 +841,23 @@ def main() -> int:
         else:
             kept.append(c)
     confirmed = kept
+
+    # D: coverage-aware "added" - require the other video's depth to have
+    # observed the space empty before reporting an addition (targets additions
+    # on features present in both videos: a wall outlet, a floor reflection).
+    if bool(cfg["semantics"].get("coverage_added", False)):
+        cov_kept = []
+        cov_min = float(cfg["diff"].get("visibility_min_fraction", 0.15))
+        for c in confirmed:
+            if c["type"] == "added" and c["id"] not in moved_ids:
+                frac = _empty_fraction(c)
+                if not (np.isfinite(frac) and frac >= cov_min):
+                    _reject(c, f"coverage: the other video did not observe the space "
+                               f"empty (empty fraction {frac:.2f} < {cov_min})")
+                    continue
+            cov_kept.append(c)
+        confirmed = cov_kept
+        log.info("coverage_added: %d kept", len(confirmed))
 
     # fragments of objects that exist in BOTH videos (timer, highlighter) are
     # edge/lighting differences, not changes

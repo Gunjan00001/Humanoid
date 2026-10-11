@@ -77,6 +77,7 @@ diff:
   visibility_check: true     # occlusion-aware classification
   visibility_tol: 0.006      # depth tolerance when testing "seen empty"
   visibility_min_fraction: 0.15  # fraction of cluster points that must be seen empty
+  objmatch: false            # Phase E: object-level move matching (fusion; see docs/accuracy.md)
 
   # tabletop (photometric) parameters:
   tabletop:
@@ -99,6 +100,15 @@ diff:
 semantics:
   vlm: primary               # primary | fallback
   matcher: dinov2
+  # --- accuracy-sprint flags (default OFF unless noted; see docs/accuracy.md) ---
+  match_before_filter: true  # E0: move matching already runs before the structural
+                             # post-filters (v1.0.0 behaviour; flag makes it explicit)
+  soft_veto: false           # D: keep a VLM-denied candidate that has strong
+                             # geometric evidence as "possibly" (low confidence)
+  coverage_added: false      # D: require the other video's depth to have observed the
+                             # space empty before reporting an "added" change
+  soft_veto_min_points: 60   # D: geometry threshold for the soft veto
+  soft_veto_min_empty: 0.5   # D: empty-space fraction that counts as strong geometry
   composite_match_distance: 0.15  # a replaced claim whose two sides each match
                              # an independent confirmed change within this
                              # distance is a composite, not a replacement
