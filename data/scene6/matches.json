@@ -1,0 +1,10 @@
+{
+  "scene": "scene6",
+  "resolution": "human-resolved (user, 2026-10-11)",
+  "entries": [
+    {"entry_id": 1, "gt_id": 2, "type_ok": true, "name_ok": true, "fragment": false,
+     "evidence": "removed remote control = GT2 remote removed"},
+    {"entry_id": 2, "gt_id": null, "kind": "extra",
+     "evidence": "added 'electrical outlet' - wall outlet exists in both videos (false positive). Apple MISSED."}
+  ]
+}

@@ -2,7 +2,7 @@
 
 Goal: improve **change recall, move recall, precision (fewer extras) and object
 naming**. Rules in force: `rules.md`, `gpu.md`, real numbers only. Work happens
-**only on this branch**; `main` and tag `v1.0.0` are untouched, and the committed
+**only on this branch**; `main` and tag `v1.0.0` are untouched and the committed
 held-out outputs of scene5/scene6 stay as the v1.0.0 historical result. On this
 branch demo and scene2–6 are **all development scenes**. One global
 `configs/default.yaml`; no per-scene overrides, no hard-coded object names, no
@@ -13,94 +13,131 @@ scene-specific thresholds. New behaviour ships behind a config flag, default
 
 ## Phase A — scorer + baseline (no pipeline changes)
 
-### Ground truth
+### Ground truth & human resolutions
 
-`data/<scene>/ground_truth.json` written for demo, scene2…scene6 from the
-existing `ground_truth.md`, each change listed as `{id, type, object, synonyms}`.
-(demo `type`s: moved/removed/added; scene3 has a `replaced`.)
+`data/<scene>/ground_truth.json` (type, object, accepted synonyms) for demo +
+scene2…6. Every report entry has been **human-resolved** in
+`data/<scene>/matches.json` (`resolution: "human-resolved"`, entry id → GT id,
+`type_ok` / `name_ok` / `fragment`, plus evidence). `scripts/score.py` reads a
+matches.json as authoritative when present (otherwise a transparent name-based
+auto-match is used, for future sealed scenes).
 
-### Scorer — `scripts/score.py`
+### Human resolutions (authoritative, user 2026-10-11)
 
-Matching is transparent; nothing is guessed:
+| scene | entry | label | resolved to | verdict |
+|---|---|---|---|---|
+| demo | 3 | remote control (`replaced`) | GT1 (moved AC remote) | right object + name, **wrong type** |
+| scene2 | 1 | apple (`removed`) | — | **extra** (the coconut cluster mislabelled) |
+| scene3 | 1 | black chair (`replaced`) | GT2 (apple→cup) | **type correct, label wrong** |
+| scene3 | 2 | red apple (`removed`) | GT2 | **fragment/duplicate** of GT2 (not a type match, not an extra) |
+| scene3 | 3 | green and yellow object (`removed`) | — | **extra** (coconut-like object stays on the table) |
+| scene3 | 4 | black trash can (`removed`) | GT1 (chair removed) | **type correct, label wrong** |
+| scene5 | 1,2,3 | wooden leg / chair leg / table leg | GT2 (chair removed) | **fragments**, part names → **wrong** |
+| scene5 | 4 | small round object (`added`) | — | **extra** (floor reflection in video B) |
+| scene5 | 5 | bottle and clock (`added`) | GT1 (moved clock) | **wrong type** (`added` ≠ `moved`); `bottle` is a false object name |
+| scene6 | 2 | electrical outlet (`added`) | — | **extra** (wall outlet present in both videos); **apple missed** |
 
-1. **STRONG** — report-entry type == GT type **and** the report label contains a
-   GT synonym → GT *found, named correctly*.
-2. **WEAK** — report-entry type == GT type but no synonym, assigned **only** when
-   exactly one unassigned GT and one unassigned report entry of that type remain
-   → GT *found, name wrong*.
-3. Left-overs → **extras** (report) / **missed** (GT).
+### Metric definitions (authoritative)
 
-Metrics: change recall (by type), named recall (type+name), move recall, extras
-(precision), fragments (entries per GT), name accuracy (named / found). Every
-ambiguous case is listed for human resolution.
+1. **recall(type)** — share of GT changes with ≥1 entry of the **correct type**.
+2. **recall(localized)** — share of GT changes with ≥1 entry **on the right object**,
+   regardless of type/name.
+3. **move recall (strict)** — share of GT `moved` changes reported with type `moved`.
+4. **name accuracy** — correctly-named entries / localized entries; a **part name**
+   ("chair leg") is **not** correct.
+5. **fragments (by location)** — entries resolved to the same GT **beyond the first**.
+6. **precision breakdown** — every entry classified **correct / type-wrong /
+   fragment / extra** (`correct` = resolved with the right type; naming is metric 4).
 
-### Baseline (v1.0.0 reports)
+### Baseline (v1.0.0 reports), human-resolved
 
-| scene | GT | report | found (type) | named | recall (type) | recall (named) | move | extras | frag | name acc |
-|---|---|---|---|---|---|---|---|---|---|---|
-| demo | 3 | 3 | 2 | 2 | 67% | 67% | 0/1 | 1 | 0 | 100% |
-| scene2 | 1 | 2 | 1 | 1 | 100% | 100% | – | 1 | 0 | 100% |
-| scene3 | 2 | 4 | 1 | 0 | 50% | 0% | – | 3 | 0 | 0% |
-| scene4 | 3 | 3 | 3 | 3 | 100% | 100% | 1/1 | 0 | 0 | 100% |
-| scene5 | 2 | 5 | 1 | 1 | 50% | 50% | 0/1 | 4 | 0 | 100% |
-| scene6 | 3 | 2 | 2 | 1 | 67% | 33% | 0/1 | 0 | 0 | 50% |
-| **overall** | **14** | **19** | **10** | **8** | **71%** | **57%** | **1/4** | **9** | **0** | **80%** |
+| scene | GT | rep | recall(type) | recall(loc) | move(strict) | name% | frag | correct | type-w | frag | extra |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| demo | 3 | 3 | 67% | 100% | 0% | 100% | 0 | 2 | 1 | 0 | 0 |
+| scene2 | 1 | 2 | 100% | 100% | – | 100% | 0 | 1 | 0 | 0 | 1 |
+| scene3 | 2 | 4 | 100% | 100% | – | 33% | 1 | 2 | 0 | 1 | 1 |
+| scene4 | 3 | 3 | 100% | 100% | 100% | 100% | 0 | 3 | 0 | 0 | 0 |
+| scene5 | 2 | 5 | 50% | 100% | 0% | 0% | 2 | 1 | 1 | 2 | 1 |
+| scene6 | 3 | 2 | 33% | 33% | 0% | 100% | 0 | 1 | 0 | 0 | 1 |
+| **overall** | **14** | **19** | **71%** | **86%** | **25% (1/4)** | **60%** | **3** | **10** | **2** | **3** | **4** |
 
-Raw reports scored (`outputs/*/report.json`): demo `1:removed:comb`
-`2:added:pen and device` `3:replaced:remote control` · scene2 `1:removed:apple`
-`2:removed:coconut` · scene3 `1:replaced:black chair` `2:removed:red apple`
-`3:removed:green and yellow object` `4:removed:black trash can` · scene4
-`1:moved:apple` `2:removed:scissors` `3:added:plastic bottle` · scene5
-`1:removed:wooden leg` `2:removed:chair leg` `3:removed:table leg`
-`4:added:small round object` `5:added:bottle and clock` · scene6
-`1:removed:remote control` `2:added:electrical outlet`.
+- **Missed GT changes:** scene6 `#1 cup`, scene6 `#3 apple` (nothing else).
+- **Found by type but not named:** scene3 chair (#1), scene3 apple (#2), scene5 chair (#2).
+- **Extras (4):** scene2 `apple`; scene3 `green and yellow object`; scene5 `small round object`; scene6 `electrical outlet`.
+- **Fragments:** scene3 GT#2 apple (entries 1,2); scene5 GT#2 chair (entries 1,2,3).
 
-### Per-scene GT resolution
+### Reading
 
-- **demo** — comb ✓named, pen ✓named; **AC remote missed** (reported as
-  `replaced`, not `moved`).
-- **scene2** — coconut ✓named; the extra `removed:apple` is the coconut's cluster
-  duplicated/mislabelled.
-- **scene3** — **chair missed** (`replaced:black chair` / `removed:black trash
-  can` name it oddly); apple→cup only weakly matched (name wrong).
-- **scene4** — all three ✓named, 0 extras.
-- **scene5** — chair ✓named (one entry); **clock missed** (only as `added:bottle
-  and clock`); 4 extras.
-- **scene6** — remote ✓named; **cup missed**; apple only **weakly** matched by the
-  false-positive `electrical outlet`.
-
-### Ambiguous matches — please resolve (not guessed)
-
-| scene | entry | label | issue |
-|---|---|---|---|
-| demo | 3 | remote control | label names GT "AC remote" but type `replaced` ≠ GT `moved` |
-| scene3 | 1 | black chair | names GT "chair" but type `replaced` ≠ GT `removed`; also weak-matched to GT "apple" |
-| scene3 | 2 | red apple | names GT "apple" but type `removed` ≠ GT `replaced` |
-| scene5 | 5 | bottle and clock | names GT "clock" but type `added` ≠ GT `moved` |
-| scene6 | 2 | electrical outlet | weak-matched to GT "apple" (name not matched) — your scene6 overlay says the outlet is a **false positive** and the apple is **missed** |
-
-### Extras (report entries matching no GT change)
-
-- demo: `3 replaced remote control`
-- scene2: `1 removed apple`
-- scene3: `2 removed red apple`, `3 removed green and yellow object`, `4 removed black trash can`
-- scene5: `1 removed wooden leg`, `3 removed table leg`, `4 added small round object`, `5 added bottle and clock`
-
-### Metric limitations (honest)
-
-- Matching is **name-based**, so **fragments are under-counted**: scene5's chair
-  removal is 3 `removed` entries (`wooden leg`/`chair leg`/`table leg`) but only
-  `chair leg` name-matches, so the other two land in *extras* and `frag` reads 0.
-  A location/evidence-based fragment count would catch this (Phase B/F).
-- WEAK matches (scene3 apple, scene6 apple) are **provisional** — they count a
-  same-type entry as "found, name wrong" and are all listed above for your call.
-  If you rule the scene6 outlet a plain extra, scene6 recall(named) is 1/3 and
-  extras 1.
+The baseline is strong on **localized recall (86%)** and decent on **recall by
+type (71%)**, but weak where it matters most: **move recall 25%** (only scene4's
+apple), **name accuracy 60%**, **4 extras** and **3 fragments**. The two
+completely-missed changes (scene6 cup, apple) and the type/naming failures are
+Phase B's targets.
 
 ---
 
-## CHECKPOINT — Phase A
+## Phase B — failure attribution
 
-Baseline table is above. **Please resolve the 5 ambiguous matches** (in
-particular scene6 entry 2: extra, or a mis-named apple?). I have not proceeded
-to Phase B.
+Every missed GT change and every extra, attributed to the stage that lost/created
+it, from `logs/pbs_*.log`, `cache/<scene>/semantics/{vlm,confirmed,rejected,matches}.json`
+(evidence in the table). demo's semantics live at `cache/semantics/`.
+
+### Per-case attribution
+
+| id | scene | case | stage | evidence |
+|---|---|---|---|---|
+| M1 | scene6 | **cup `moved` — missed** (move) | move-match (arrival lost upstream) | `matches.json` empty (0 pairs); arrivals `#16` "white cup" & `#21` "bottle and cup" were **VLM-confirmed** but rejected by the *structural post-filter* — "inside an object present in both videos (78% / 100% of its points) - lighting/blur artefact" |
+| M2 | scene6 | **apple `added` — missed** | VLM denied | candidate `#28` "blue cup and red apple" → VLM `changed=False` (denied); `#19` "plastic bottle" also denied |
+| E1 | scene2 | extra `removed apple` | VLM false-positive | cluster `#1` VLM "apple" `changed=True` (apple is unchanged; spurious removal next to the coconut) |
+| E2 | scene3 | extra `removed green and yellow object` | VLM false-positive | cluster `#27` VLM `changed=True` (the coconut stays on the table) |
+| E3 | scene5 | extra `added small round object` | VLM false-positive / coverage artefact | cluster `#38` VLM `changed=True` — the "floor reflection in video B" you flagged |
+| E4 | scene6 | extra `added electrical outlet` | VLM false-positive / coverage artefact | cluster `#20` VLM `changed=True` — wall outlet present in both videos |
+| T1 | demo | GT `moved` remote → typed `replaced` | move-match + type logic | `matches.json` empty; cluster `#18` "remote control" `changed=True`; the departure `#2` "remote control" was also rejected by the post-filter ("inside object present in both videos, 100%") |
+| T2 | scene5 | GT `moved` clock → typed `added` | move-match | `matches.json` empty; cluster `#44` "bottle and clock" `changed=True` (clock's new position read as an addition) |
+| F1 | scene5 | chair removal **fragmented** (3 entries, part names) | clustering (no merge) + VLM naming | clusters `#6` "wooden leg", `#16` "chair leg", `#18` "table leg" all confirmed `removed` |
+| F2 | scene3 | apple→cup **duplicated** | clustering (no merge) | cluster `#5` "black chair" (replaced) + cluster `#26` "red apple" (removed) both resolve to GT2 |
+| N1 | scene3 | chair named `black trash can` | VLM naming | cluster `#28` VLM "black trash can" |
+| N2 | scene3 | apple named `black chair` | VLM naming | cluster `#5` VLM "black chair" |
+| N3 | scene5 | clock named `bottle and clock` | VLM naming | cluster `#44` (`bottle` false object) |
+
+### Ranked causes (by count)
+
+1. **VLM false-positive confirmation — 4** (all extras: scene2 apple, scene3
+   green/yellow object, scene5 floor reflection, scene6 wall outlet). The VLM
+   confirmed `changed=True` on regions that did not change; nothing downstream
+   caught them.
+2. **VLM naming errors — 6 localized entries** (scene3 `black trash can`/`black
+   chair`; scene5 `wooden leg`/`chair leg`/`table leg`/`bottle and clock`).
+   Part names and wrong objects.
+3. **Move matcher produced 0 pairs — 3 GT moves** (demo remote, scene5 clock,
+   scene6 cup). Sub-causes: arrival dropped by the structural post-filter
+   (scene6 cup), appearance-change-at-same-spot typed as `replaced` (demo
+   remote), no arrival cluster at all (scene5 clock).
+4. **Clustering fragmentation — 2 GT, 3 redundant entries** (scene5 chair ×3;
+   scene3 apple ×2). No fragment merge by 3D adjacency.
+5. **VLM denial of a genuine change — 1** (scene6 apple, candidate `#28`).
+6. **Coverage/reflection artefacts — 3 of the extras** (scene5 reflection,
+   scene6 wall outlet, scene2 unchanged object): additions/removals accepted
+   where the other video's depth did not establish the change.
+
+### Which lever (Phases C–F) targets which cause
+
+| cause | lever |
+|---|---|
+| 1 VLM false-positive verify (4) | **Phase D** coverage-aware `added`; **Phase C** stronger verify model/prompt |
+| 2 VLM naming (6) | **Phase C** VLM bake-off; **Phase F** name the merged object from multi-view |
+| 3 move match 0 pairs (3) | **Phase E** object-level matching (`objmatch`) |
+| 4 fragmentation (2 GT) | **Phase F** 3D adjacency merge |
+| 5 VLM denial of a real change (1) | **Phase D** soft veto ("possibly"/low-confidence) |
+| 6 coverage/reflection (3) | **Phase D** coverage-aware `added` |
+
+---
+
+## CHECKPOINT — Phase B
+
+Ranked causes above. By evidence the highest-value levers are **Phase E
+(objmatch — 3 GT moves)** and **Phase D (soft veto + coverage-aware added — 5
+of the 6 causes touch VLM verify/coverage)**; **Phase F** addresses the 2
+fragmented GT and naming; **Phase C** addresses naming + verify quality.
+Which should I take first?
+
