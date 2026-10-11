@@ -5,12 +5,12 @@ three.js pinned from cdnjs, no build step, no server code). The simplest way to
 make them publicly reachable is **GitHub Pages served from the repository
 root** — the files are already committed, so no copying or CI is needed.
 
-## Enable once (repository owner)
+## Status: **ENABLED** (2026-10-11)
 
-1. Open the repository on GitHub → **Settings → Pages**.
-2. Under *Build and deployment* choose **Deploy from a branch**.
-3. Branch: **`main`**, folder: **`/` (root)** → **Save**.
-4. The site is live after ~1 minute (the first build may take a few).
+Build and deployment: **Deploy from a branch** — branch **`main`**, folder
+**`/` (root)**. Configured by the repository owner in **Settings → Pages**; any
+push to `main` re-deploys automatically and **there is no workflow file**.
+Verified live: every URL in the table below returns HTTP 200.
 
 > If the settings require a `gh` CLI instead of the web UI:
 > ```bash
@@ -30,6 +30,7 @@ root** — the files are already committed, so no copying or CI is needed.
 | scene4 | https://gunjan00001.github.io/Humanoid/outputs/scene4/viewer.html |
 | scene5 (held-out) | https://gunjan00001.github.io/Humanoid/outputs/scene5/viewer.html |
 | scene5 post-hoc (tabletop) | https://gunjan00001.github.io/Humanoid/outputs/scene5_tabletop_posthoc/viewer.html |
+| scene6 (held-out) | https://gunjan00001.github.io/Humanoid/outputs/scene6/viewer.html |
 
 ## Notes
 

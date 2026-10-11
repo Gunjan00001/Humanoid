@@ -232,13 +232,15 @@ recomputes a stage.
 An earlier claim of "~15 min per scene" was not reproducible from the logs and
 has been corrected in [`docs/results.md`](docs/results.md#timings-wall-clock-this-run).
 
-**Live interactive viewers** (GitHub Pages — enable once, see
+**Live interactive viewers** (GitHub Pages — live; see
 [`docs/hosting.md`](docs/hosting.md)):
 [demo](https://gunjan00001.github.io/Humanoid/outputs/viewer.html) ·
 [scene2](https://gunjan00001.github.io/Humanoid/outputs/scene2/viewer.html) ·
 [scene2 geometric](https://gunjan00001.github.io/Humanoid/outputs/scene2_geo/viewer.html) ·
 [scene3](https://gunjan00001.github.io/Humanoid/outputs/scene3/viewer.html) ·
-[scene4](https://gunjan00001.github.io/Humanoid/outputs/scene4/viewer.html)
+[scene4](https://gunjan00001.github.io/Humanoid/outputs/scene4/viewer.html) ·
+[scene5 (held-out)](https://gunjan00001.github.io/Humanoid/outputs/scene5/viewer.html) ·
+[scene6 (held-out)](https://gunjan00001.github.io/Humanoid/outputs/scene6/viewer.html)
 
 ## Pipeline
 
