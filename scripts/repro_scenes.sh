@@ -5,7 +5,7 @@
 # Each detect.py run submits its own PBS gpu job and polls it.
 set -uo pipefail
 cd "$(dirname "$0")/.."
-PY=/home/jiit_992401210050/miniconda3/envs/spatialdiff/bin/python
+PY=$HOME/miniconda3/envs/spatialdiff/bin/python
 
 for scene in "$@"; do
   for run in 1 2 3; do

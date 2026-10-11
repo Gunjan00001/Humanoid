@@ -2,8 +2,8 @@
 
 ```
 Compared a.mp4 and b.mp4. I found 2 change(s):
-1. Removed - remote control: The remote control was removed from the table.
-2. Added - electrical outlet: Possibly an electrical outlet was added to the wall.
+1. Removed: remote control. The remote control was removed from the table.
+2. Added: electrical outlet. Possibly an electrical outlet was added to the wall.
 
 Notes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.
 Files: viewer.html, change.gif, report.json

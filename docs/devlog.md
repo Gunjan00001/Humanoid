@@ -667,7 +667,7 @@ the automatic mode choice contributed; no held-out output was changed.
 
 ## 2026-10-11 — Submission audit: privacy, hygiene, README top
 
-- **Privacy (Step 4.1)**: the cluster username `/home/jiit_992401210050/...`
+- **Privacy (Step 4.1)**: the cluster username `$HOME/...`
   appeared in 28 committed files (report/summary JSON+MD, gpu.md, rules.md,
   AGENT_PLAN.md). Replaced with repo-relative paths (outputs) and `$HOME/...`
   (docs); `src/report.py` now writes repo-relative video paths and `~/models/`

@@ -11,10 +11,11 @@ pipeline (a PBS GPU job on the cluster).
 ## Quick start
 
 ```bash
-git clone git@github.com:Gunjan00001/Humanoid.git && cd Humanoid
+git clone https://github.com/Gunjan00001/Humanoid.git && cd Humanoid
 conda create -n spatialdiff python=3.10 -y && conda activate spatialdiff
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
-pip install -r requirements.txt          # model weights: docs/setup.md
+pip install -r requirements.txt
+pip install "vggt @ git+https://github.com/facebookresearch/vggt.git"
 python detect.py --a data/a.mp4 --b data/b.mp4 --name demo
 ```
 
