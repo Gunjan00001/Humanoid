@@ -3,11 +3,11 @@
 Each scene ships a self-contained `outputs/<scene>/viewer.html` (≤ 5 MB,
 three.js pinned from cdnjs, no build step, no server code). The simplest way to
 make them publicly reachable is **GitHub Pages served from the repository
-root** — the files are already committed, so no copying or CI is needed.
+root**, the files are already committed, so no copying or CI is needed.
 
 ## Status: **ENABLED** (2026-10-11)
 
-Build and deployment: **Deploy from a branch** — branch **`main`**, folder
+Build and deployment: **Deploy from a branch**, branch **`main`**, folder
 **`/` (root)**. Configured by the repository owner in **Settings → Pages**; any
 push to `main` re-deploys automatically and **there is no workflow file**.
 Verified live: every URL in the table below returns HTTP 200.

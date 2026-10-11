@@ -1,6 +1,6 @@
 # Results
 
-> **Status: first successful end-to-end run — 2026-10-10.** The demo scene
+> **Status: first successful end-to-end run, 2026-10-10.** The demo scene
 > (`data/a.mp4`, `data/b.mp4`, ground truth: comb removed, pen added, AC remote
 > moved/flipped) was processed with the full pipeline. All numbers below come
 > from that run; nothing is estimated.
@@ -15,7 +15,7 @@
 
 All three planned changes were found; **no false positives in the final report**
 (the change detector proposed 26 candidates, 22 were rejected with documented
-reasons in `cache/semantics/rejected.json` — mostly lighting/blur differences on
+reasons in `cache/semantics/rejected.json`, mostly lighting/blur differences on
 static objects, see limitations).
 
 Notes:
@@ -29,13 +29,13 @@ Notes:
 
 ## Outputs of the run
 
-- `outputs/change.gif` — rotating view of the colored cloud
+- `outputs/change.gif`, rotating view of the colored cloud
   (red = removed, green = added, orange = moved, magenta = replaced).
-- `outputs/changes/change_00{1,2,3}.png` — one framed screenshot per change
+- `outputs/changes/change_00{1,2,3}.png`, one framed screenshot per change
   with its sentence.
-- `outputs/scene.ply` — the colored point cloud (red/green/magenta changes on a
+- `outputs/scene.ply`, the colored point cloud (red/green/magenta changes on a
   dimmed background).
-- `outputs/report.json` / `outputs/report.md` — the machine- and
+- `outputs/report.json` / `outputs/report.md`, the machine- and
   human-readable reports.
 
 `report.md` (excerpt):
@@ -66,7 +66,7 @@ python src/report.py    --config configs/default.yaml
 
 ## Timings (wall clock, this run)
 
-**Corrected 2026-10-11** — the original estimates in this table were not
+**Corrected 2026-10-11**, the original estimates in this table were not
 reproducible from the job logs. The measured numbers, with their clock bases
 and conditions, are in [`docs/timing.md`](timing.md); summary for one full
 scene (scene4, job 10802, 2 GPUs):
@@ -77,7 +77,7 @@ scene (scene4, job 10802, 2 GPUs):
 | Reconstruction (VGGT + ICP) | 1× A100 | 48 s (incl. **model load 12.5 s**; 8–14 s across runs) |
 | Tabletop diff | GPU-node job (CPU) | 10 s |
 | Semantics (Qwen3-VL-32B + DINOv2) | 2× A100 | 3:29 for 16 candidates / **10 VLM calls at ~11 s**; VLM load 26 s |
-| Report + viewer + GIF + TSDF mesh | GPU-node job (CPU) | 33 s (matplotlib GIF fallback — no Chrome on the GPU node) |
+| Report + viewer + GIF + TSDF mesh | GPU-node job (CPU) | 33 s (matplotlib GIF fallback, no Chrome on the GPU node) |
 | **Whole job** | | **5:14** (queue wait 1:33 before it) |
 | Re-renders on the login node (Chrome GIF + mesh) | login node (CPU) | ~3:30 per scene |
 
@@ -88,7 +88,7 @@ log (the early demo describe run 10715 measured 5:25 total); see
 ## Ablations (observed, not benchmarked)
 
 - **Geometric diff alone fails on this scene**: the comb and pen are 1 cm
-  thick, below VGGT's patch scale — they are *absent from the depth maps*
+  thick, below VGGT's patch scale, they are *absent from the depth maps*
   (their z equals the table's). The plan-skeleton thresholds (2 cm voxels /
   5 cm distance) found nothing; even retuned (6 mm / 12 mm) the thin objects
   stayed invisible. The photometric tabletop mode (`diff.method: tabletop`)
@@ -143,7 +143,7 @@ Height of each backend's own detected clusters above a *local* table plane
 | DA3-LARGE | cluster at (0.03, −0.15) | **+10.2 / +19.9 mm (resolved)** |
 | DA3-LARGE | cluster at (0.18, −0.03) | −1.8 / **+19.6 mm** |
 
-DA3's depth shows the strongest object response of the three - a median of
+DA3's depth shows the strongest object response of the three, a median of
 +10.2 mm is exactly a 1 cm object; VGGT's geometry cannot see them at all.
 
 ### Metric scale
@@ -151,7 +151,7 @@ DA3's depth shows the strongest object response of the three - a median of
 - MapAnything applies metric scaling (factor ≈ 0.847 on this scene); its world
   frame is room-scale (z ∈ [0, 2.3 m]).
 - Measured comb length: **VGGT 160.5 mm / MapAnything 161.3 mm / DA3 161.3 mm**
-  (0.5 % agreement; plausibility-consistent with a ~16 cm pocket comb - not
+  (0.5 % agreement; plausibility-consistent with a ~16 cm pocket comb, not
   independently verified with a ruler, stated as such).
 
 ### End-to-end results (ground truth: comb removed, pen added, remote moved+flipped)
@@ -229,7 +229,7 @@ exact knobs so the choices are reproducible.
 | scene2 | coconut removed | `geometric` | `--blur_threshold 25` | **1/1** (coconut, 5896 pts seen empty) | 4 (coverage artifacts) |
 | scene2 | coconut removed | `tabletop` | `--objectness_margin 80` | 0/1 (missed) | 1 (apple, false positive) + 11 unverified |
 | scene3 | chair removed, apple→cup | `tabletop` | `--min_change_score 85` | 2/2 objects, **types now correct** (chair `removed`, apple→cup `replaced` - v0.9.0) | 2 extra entries + unreliable naming (see the correctness pass below) |
-| scene4 | apple moved, scissor removed, bottle added | `tabletop` | none (defaults) | **3/3** (`moved` apple, `removed` scissors, `added` bottle - v0.10.0) | **0** |
+| scene4 | apple moved, scissor removed, bottle added | `tabletop` | none (defaults) | **3/3** (`moved` apple, `removed` scissors, `added` bottle, v0.10.0) | **0** |
 
 ### Reproducibility note (v0.12 re-run)
 
@@ -243,7 +243,7 @@ The detection files were not changed; the difference comes from recomputing
 the reconstruction and the geometric diff (bf16 VGGT + threshold-sensitive
 visibility clusters), i.e. run-to-run variability, not a code change. The
 re-run's version names the ground-truth object correctly, so it is arguably
-better - but it is not the committed state.
+better, but it is not the committed state.
 
 ### Reproducibility (frozen pipeline, 3x per scene)
 
@@ -253,19 +253,19 @@ its documented working point), scene4, scene5, scene6.
 
 | Scene | settings | runs OK | entries min / typical / max | GT found every run? |
 |---|---|---|---|---|
-| scene2 | **defaults** | **0/3** | — | n/a — `extract_frames` aborts (clips are 3.8 s / 7.3 s; only 1 sharp frame < min 8) |
+| scene2 | **defaults** | **0/3** |, | n/a, `extract_frames` aborts (clips are 3.8 s / 7.3 s; only 1 sharp frame < min 8) |
 | scene2 | `--method geometric --blur_threshold 25` (its working point) | 3/3 | **5 / 5 / 5** | coconut removed: **yes** (3/3, label correct); 4 extras every run |
 | scene4 | defaults | 3/3 | **3 / 3 / 3** | moved apple, removed scissors, added bottle: **3/3 every run**; 0 extras |
 | scene5 | defaults | 3/3 | **7 / 7 / 7** | chair removed **every run** (fragmented, ~5 entries); clock move **missed every run**; extras ≥2 |
 | scene6 | defaults | 3/3 | **2 / 2 / 2** | remote removed **every run**; cup move + apple add **missed every run**; 1 extra |
 
-**Reading:** within this set the pipeline behaved **deterministically** — all
+**Reading:** within this set the pipeline behaved **deterministically**, all
 three runs per scene produced identical entry counts *and* identical
 type/label lists (min = typical = max), and every ground-truth change was either
 found every time or never (never intermittent). No random seeds are set
 explicitly; the determinism is empirical for these clips, not guaranteed. The
 one hard failure is **scene2 at defaults**, which cannot run at all (too few
-sharp frames) — the same reason scene2 ships with a documented working point.
+sharp frames), the same reason scene2 ships with a documented working point.
 scene6's three fresh runs reproduced the committed held-out result exactly
 (same 2 entries, same types/labels).
 
@@ -278,7 +278,7 @@ threshold or prompt.
 
 | Scene | Ground truth | Detected (types) | Labels correct | Missed | Extras |
 |---|---|---|---|---|---|
-| scene5 | clock moved, chair removed | **1/2 — type only** (chair `removed`, fragmented into 3) | 0/2 | 1 (clock move) | ≥2 |
+| scene5 | clock moved, chair removed | **1/2, type only** (chair `removed`, fragmented into 3) | 0/2 | 1 (clock move) | ≥2 |
 | scene6 | cup moved, remote removed, apple added | **1/3** (remote `removed`) | 1/1 | 2 (cup move, apple add) | 1 (electrical outlet, false positive) |
 
 scene6 (job 10864, 2026-10-11): auto mode `geometric` (dominant plane 6%),
@@ -290,9 +290,9 @@ overlay review and failure analysis:
 
 **Honest reading:** the held-out scenes are much weaker than the tuned
 development scenes (scene5 1/2 type-only, scene6 1/3). The development numbers
-are *fit*, not a benchmark - the gap is the point.
+are *fit*, not a benchmark, the gap is the point.
 
-### scene2 — why the mode matters
+### scene2, why the mode matters
 
 The two recordings differ strongly in lighting/angle, and video B covers part
 of the room that A never sees. Consequences, all measured:
@@ -302,24 +302,24 @@ of the room that A never sees. Consequences, all measured:
   the surviving cluster sits at the apple's area (a false positive: the apple
   is present in both videos; the VLM's B-side crop missed it). The coconut is
   not reported in this mode.
-- **`geometric`** (3D): the coconut is a ~15 cm object — clearly present in
-  VGGT's depth — and the diff finds it as a 5896-point "removed" cluster; the
+- **`geometric`** (3D): the coconut is a ~15 cm object, clearly present in
+  VGGT's depth, and the diff finds it as a 5896-point "removed" cluster; the
   visibility check confirms it ("5896 points seen empty" in video B). This is
   the mode's intended strength: it is immune to the lighting difference. Its
   4 extra entries are coverage-difference artifacts (regions only B saw), the
   known weakness the plan predicted for one-sided coverage.
 
-### scene3 — clean after one threshold
+### scene3, clean after one threshold
 
 With `--min_change_score 85` the pipeline reports exactly the two ground-truth
 changes and no false positives. Notes: the chair's removal is typed `replaced`
 (the VLM's before/after crops see the chair's absence as a change of state),
 and the apple→cup replacement is labeled generically ("tabletop objects
-removed") — both are type/label nuances, not detection misses.
+removed"), both are type/label nuances, not detection misses.
 
 ### scene4
 
-`data/scene4/` (46 s portrait videos, blur p50 137-163 - the default blur
+`data/scene4/` (46 s portrait videos, blur p50 137-163, the default blur
 threshold works): before = cup, scissor, apple; after = the apple moved to the
 scissor's spot, the scissor removed, and a bottle placed where the apple was.
 **Result: exactly the three ground-truth changes, default mode, no tuning:**
@@ -354,7 +354,7 @@ The scene exposed four structural issues in `describe.py`, all fixed (v0.10.0):
    "scissors replaced by an apple").
 
 Regression after the changes (re-run + table diff against the committed
-outputs): **demo 3/3 with 0 extras - identical**; **scene2 and scene3
+outputs): **demo 3/3 with 0 extras, identical**; **scene2 and scene3
 identical**. The demo regression initially failed (a highlighter fragment
 became a 4th change because the empty-space skip of the both-present
 suppression was too broad); the skip now requires that the VLM did not name
@@ -394,7 +394,7 @@ diagnosis** (`tests/diagnose_projection.py`, numbers before any change):
 
 - The **reconstruction is faithful**: reprojecting the fused cloud into the
   first camera reproduces the table and every object with true colours, with
-  100% of the frame covered by points. **The problem was the rendering** —
+  100% of the frame covered by points. **The problem was the rendering** , 
   `static_dim 0.35` (dark cloud), 1-pixel markers, and whole-scene framing
   (the table became a sliver inside a room-sized 3D box).
 - Model-input coverage: the demo and scene2 are **portrait** (480×85x) and
@@ -407,15 +407,15 @@ What changed (all structural, detection untouched by default):
 |---|---|---|
 | 1 | `reconstruction.input_mode: crop \| pad` (default `crop`) | pad-mode padding masked from confidence; see the comparison below |
 | 2 | `visualize.conf_percentile` 5 / `voxel_size` 8 mm / `static_dim` 0.8 | display cloud separate from the detection cutoff, true colours |
-| 3 | `src/mesh.py` — colored TSDF mesh | `scene_mesh.ply`, 85–115k triangles, 3.5–4.4 MB (≤ 10 MB) per scene |
+| 3 | `src/mesh.py`, colored TSDF mesh | `scene_mesh.ply`, 85–115k triangles, 3.5–4.4 MB (≤ 10 MB) per scene |
 | 4 | `src/visualize.py` rewritten | dark background, distance-sized splats, framing on the changed region, bbox + label + legend per change, unverified dim cyan, **before \| after \| 3D** composites and GIF layout |
-| 5 | `src/viewer.py` — self-contained HTML | `viewer.html` 1.7 MB (three.js r128 pinned from cdnjs, inline orbit controls, quantized embedded cloud, A/B/change toggles, labels); validated by screenshotting it in headless Chrome |
+| 5 | `src/viewer.py`, self-contained HTML | `viewer.html` 1.7 MB (three.js r128 pinned from cdnjs, inline orbit controls, quantized embedded cloud, A/B/change toggles, labels); validated by screenshotting it in headless Chrome |
 
-### Step 6 — regression and the `input_mode=pad` experiment
+### Step 6, regression and the `input_mode=pad` experiment
 
-- **Regression (crop, the default): unchanged** — demo 3/3 changes, 0 false
+- **Regression (crop, the default): unchanged**, demo 3/3 changes, 0 false
   positives after the rework (`logs/pbs_demo_reg.log`).
-- **`input_mode=pad` on the portrait demo: worse, with evidence** — 5 entries
+- **`input_mode=pad` on the portrait demo: worse, with evidence**, 5 entries
   vs the crop baseline's 3: the pen is **missed**, and three extra entries
   appear ("brown object corner" at the frame edge, "marker replaced" +
   "white object added" at the highlighter's area, vague labels). Reason: pad
@@ -457,7 +457,7 @@ a cheap draw range. A matplotlib fallback remains for machines without Chrome.
 
 [`docs/hosting.md`](hosting.md) documents the one-time enablement
 (Settings → Pages → `main` / root) and lists the live URLs; the README links
-them. No workflow file is needed - the viewers are committed static files.
+them. No workflow file is needed, the viewers are committed static files.
 
 ### Stale screenshots (step 5)
 
@@ -482,7 +482,7 @@ Two structural changes to `describe.py`:
 
 Results after the pass (see the per-scene table above for the full picture):
 
-- **demo: 3/3, 0 extra - unchanged** (verified after the rework; the
+- **demo: 3/3, 0 extra, unchanged** (verified after the rework; the
   reclassified timer/highlighter fragments were removed by the post-filters).
 - **scene3** (with its tuned floor 85): **4 entries vs 2 ground-truth
   changes** - the chair is now correctly **`removed`** (was `replaced`; the
@@ -498,7 +498,7 @@ Results after the pass (see the per-scene table above for the full picture):
   occluded by the *remaining chair*, so the VLM's replacement sentence can
   name the wrong object; the chair's own label came out as "black trash can".
   The **types are correct** (geometric evidence), the **naming is not
-  reliable** on this scene - a recording-angle limitation, not a rule failure.
+  reliable** on this scene, a recording-angle limitation, not a rule failure.
 - **scene3's extra entries**: the apple region appears twice (as the
   `replaced` apple→cup entry and as a `removed` "red apple" entry); the
   deduplication rules (bbox overlap, mutual cancellation) do not catch this
@@ -514,7 +514,7 @@ Results after the pass (see the per-scene table above for the full picture):
   and the structural filters, but a few survived intermediate stages before
   the final rules (`rejected.json` documents each one).
 - The pipeline cannot distinguish a *replacement at the same spot* from a
-  state change of the same object purely geometrically — the pen was placed
+  state change of the same object purely geometrically, the pen was placed
   where the comb had been; the detection worked because the pen lies within
   video A's observed area and its appearance differs strongly.
 - Areas one video never observed (portrait crop, occlusion) can only yield

@@ -19,7 +19,7 @@ modes most likely to hit this project.
 | Job queues although GPUs are free | the queue's **per-user 16-CPU quota** is full | `qstat -f <id> | grep comment`; stop the idle `gpu-session` to free 4 CPUs, restart it after |
 | `git-lfs: command not found` on the compute node | git-lfs is login-node only | clone on the login node / shared FS, never `/tmp` (node-local) |
 | PBS `-o` log stays empty during the run | PBS spools job output until the end | rely on `qstat` state; the log arrives at completion |
-| A job "succeeded" (exit 0) but did nothing | a trailing `echo` masked the real exit code | propagate it (`exit $rc`) — `detect.py` does |
+| A job "succeeded" (exit 0) but did nothing | a trailing `echo` masked the real exit code | propagate it (`exit $rc`), `detect.py` does |
 | `FileNotFoundError: logs/job_detect_*.pbs` | a fresh clone has no `logs/` (git-ignored) | `detect.py` creates it on demand |
 
 ## Model / pipeline
@@ -43,4 +43,4 @@ modes most likely to hit this project.
 1. Reproduce on the smallest input (2–3 frames) in an interactive GPU session.
 2. Confirm the stage's cached artifact exists and is sane before the next stage.
 3. Only then scale back up to 20–30 frames.
-4. Keep thresholds in `configs/default.yaml` — never patch them inside scripts.
+4. Keep thresholds in `configs/default.yaml`, never patch them inside scripts.

@@ -11,7 +11,7 @@ Code that exists but has not been validated end-to-end is marked 🔶.
 | 0 | Two videos + `data/ground_truth.md` | Checkpoint 0 | ✅ 2026-10-10 (`data/a.mp4`, `data/b.mp4`, 3 documented changes) |
 | 1 | Repo scaffold, `spatialdiff` env (cu126), weights in `~/models`, `configs/default.yaml` | Checkpoint 1: CUDA visible in a GPU job + weights load | ✅ verified 2026-10-10: 8×A100 visible (torch 2.14.1+cu126), VGGT loaded offline from `~/models/VGGT-1B` |
 | 2 | `src/extract_frames.py`, `src/reconstruct.py` (joint VGGT), `src/align.py` | Checkpoint 2: A/B static structure aligns | ✅ 49-frame joint reconstruction; ICP static mean NN 15.2 → 10.7 mm; 17 s inference |
-| 3 | `src/diff.py` with visibility check | Checkpoint 3: 3 known changes found, few false positives | ✅ all 3 found; final report has 0 false positives (22 candidates rejected with reasons); required the photometric tabletop mode - see results.md |
+| 3 | `src/diff.py` with visibility check | Checkpoint 3: 3 known changes found, few false positives | ✅ all 3 found; final report has 0 false positives (22 candidates rejected with reasons); required the photometric tabletop mode, see results.md |
 | 4 | `src/describe.py` (Qwen3-VL + DINOv2) | Checkpoint 4: every change has type, label, location, sentence | ✅ 3/3 with labels + sentences; VLM verification rejects lighting artefacts |
 | 5 | `src/visualize.py`, `src/report.py`, `run.py` | Checkpoint 5: one command produces all outputs | ✅ `run.py` produces scene.ply, change.gif, screenshots, report.json/md |
 | 6 | README with real results, ablations, public repo | Definition of done | ✅ 2026-10-11: README + results.md with real numbers, three-way backend comparison, repo public, fresh-clone verified (LFS + CPU stage) |
@@ -41,7 +41,7 @@ thin-object response. Neither replaces the default; both are selectable.
 - [x] Model weights download script; licenses verified (`docs/models.md`)
 - [x] Synthetic smoke tests for the CPU stages (`tests/`, never claimed as results)
 
-## After Phase 6 — what shipped since (all verified, all tagged)
+## After Phase 6, what shipped since (all verified, all tagged)
 
 | Version | What |
 |---|---|
@@ -59,11 +59,11 @@ See **[`docs/handoff.md`](handoff.md)** for the full brief. In short:
 
 1. **Enable GitHub Pages** (owner action) so the committed viewers go live.
 2. **scene5 post-hoc work** (the missed clock move; the auto-mode encoding
-   sensitivity; orientation normalization) — all labelled post-hoc, never
+   sensitivity; orientation normalization), all labelled post-hoc, never
    touching the held-out result.
 3. **scene2 reproducibility** (geometric-diff run-to-run spread).
 4. **scene6 is available** (`data-v0.5`: cup moved, remote removed, apple
-   added; both videos landscape 860x480) and has never been run — record a new
+   added; both videos landscape 860x480) and has never been run, record a new
    freeze, run it once as the next held-out scene (protocol in
    `docs/heldout.md`), then re-encode its videos for clone-ability.
 5. Optional: Qwen3-VL-8B vs 32B ablation, MASt3R/COLMAP backends.

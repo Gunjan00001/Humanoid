@@ -16,7 +16,7 @@ Video B ─┘            shared frame       A / B tags └─> diff + visibilit
 
 | # | Stage | Script | Runs on | Reads | Writes (cache/output) |
 |---|---|---|---|---|---|
-| 0 | Inputs | — | — | `data/a.mp4`, `data/b.mp4`, `data/ground_truth.md` | — |
+| 0 | Inputs |, |, | `data/a.mp4`, `data/b.mp4`, `data/ground_truth.md` |, |
 | 1 | Frame extraction | `src/extract_frames.py` | CPU (any) | videos | `cache/frames/<a\|b>/frame_*.jpg`, `cache/frames/index.json` |
 | 2 | Joint reconstruction | `src/reconstruct.py` | **GPU (1×)** | all frames (both videos) | `cache/reconstruction/` (poses, depth, tagged point cloud) |
 | 3 | Alignment (optional) | `src/align.py` | CPU | reconstruction | `cache/reconstruction/aligned/…` |
@@ -25,8 +25,8 @@ Video B ─┘            shared frame       A / B tags └─> diff + visibilit
 | 6 | Visualization | `src/visualize.py` | CPU | tagged cloud, clusters, matches | `outputs/scene.ply`, `outputs/changes/*.png`, `outputs/change.gif` |
 | 7 | Report | `src/report.py` | CPU | everything above | `outputs/report.json`, `outputs/report.md` |
 | 8 | Natural-language summary | `src/summary.py` | CPU (GPU for one Qwen3-VL phrasing call) | `report.json` | `outputs/summary.md/txt/json` |
-| — | One-command runner | `detect.py` | driver (submits a PBS gpu job from the login node) | two videos | all of the above under `outputs/<name>/` |
-| — | Low-level orchestrator | `run.py` | driver | config + videos | all of the above |
+|, | One-command runner | `detect.py` | driver (submits a PBS gpu job from the login node) | two videos | all of the above under `outputs/<name>/` |
+|, | Low-level orchestrator | `run.py` | driver | config + videos | all of the above |
 
 ## Stage detail
 
@@ -49,7 +49,7 @@ Video B ─┘            shared frame       A / B tags └─> diff + visibilit
 - Both backends write the **same artifact contract**
   (`cache/reconstruction/{cameras,dense,colors}.npz` + `meta.json`), so every
   downstream stage works unchanged. MapAnything runs in an isolated conda env
-  (`spatialdiff-ma`) as a subprocess - see `scripts/run_mapanything.py` and
+  (`spatialdiff-ma`) as a subprocess, see `scripts/run_mapanything.py` and
   `src/ma_contract.py`.
 - Fallback order: `vggt` / `mapanything` → `mast3r` → `colmap`.
 - If GPU memory is tight: fewer frames or lower resolution first; chunking
@@ -65,13 +65,13 @@ Two modes, selected by `diff.method`:
 1. Voxel-downsample both clouds (size from config).
 2. Nearest-neighbour distance both directions (A→B, B→A); threshold candidates.
 3. Statistical outlier removal, then DBSCAN into object-sized clusters.
-4. **Visibility check** — project each cluster into the other video's cameras
+4. **Visibility check**, project each cluster into the other video's cameras
    using cached poses+depth. Mark *removed* only if the other video observed the
    space as empty. Discard occluded/unseen clusters.
 5. Classify: only in B → **added**; only in A → **removed**.
 
 **`tabletop`** (photometric; needed when objects are thinner than VGGT's patch
-scale — on the demo scene the 1 cm-thick comb and pen are *absent from the
+scale, on the demo scene the 1 cm-thick comb and pen are *absent from the
 depth maps*, their z equals the table's):
 1. Fit the dominant plane of each cloud; rasterise both into 5 mm cells
    (height, mean colour, point count).
@@ -102,7 +102,7 @@ depth maps*, their z equals the table's):
 
 ### 6. Visualization
 - Display cloud with its own settings (`visualize.conf_percentile` lower than
-  the detection cutoff, `voxel_size`, `static_dim 0.8` — true colours).
+  the detection cutoff, `voxel_size`, `static_dim 0.8`, true colours).
 - PLY coloring: **red = removed, green = added, orange = moved, magenta =
   replaced**, background in true (slightly dimmed) colours.
 - Per-change PNGs: **before frame | after frame | 3D view** with a bounding
@@ -127,7 +127,7 @@ the coverage is >= 50% the `tabletop` (photometric) diff is used, otherwise
 `geometric` (visibility-based); the choice and the measured coverage are
 printed. No per-scene tuning is applied; `--method tabletop|geometric`
 overrides the choice (the development scenes' documented working points use
-this - scene2 geometric + `--blur_threshold 25`, scene3 tabletop +
+this, scene2 geometric + `--blur_threshold 25`, scene3 tabletop +
 `--min_change_score 85`).
 
 ## Natural-language summary (`src/summary.py`)

@@ -2,7 +2,7 @@
 
 The pipeline is designed to be debugged from its **caches**: every stage reads
 only cached artifacts and writes only new ones, so you can inspect, re-run and
-compare stages independently — on CPU, without GPUs, without the videos.
+compare stages independently, on CPU, without GPUs, without the videos.
 
 Two tools make this easy:
 
@@ -48,7 +48,7 @@ stage if it has not run yet.
   reused**; delete `cache/semantics/` to force fresh VLM calls (do this when
   you change the crops or the prompts).
 - Changing `diff.tabletop.*` thresholds only needs `diff --force` (describe
-  will then re-verify the new candidate set — cached verdicts for surviving
+  will then re-verify the new candidate set, cached verdicts for surviving
   clusters are reused).
 - Changing `semantics.verify_crop_margin` changes the crops, so delete
   `cache/semantics/` before re-running describe.
@@ -109,14 +109,14 @@ recomputed from `cache/diff/points.npz` (labels) and the reconstruction.
 | a "moved" object is split into removed+added | `matches.json` empty; `embeddings.npz` | lower `semantics.match_similarity_threshold` (0.75 → 0.65) or `match_min_distance` |
 | a "replaced" claim is wrong | `--debug` prints the replaced pixel-difference | `semantics.replaced_min_pixel_diff` controls the gate |
 
-Every rejection is recorded with a reason in `cache/semantics/rejected.json` —
+Every rejection is recorded with a reason in `cache/semantics/rejected.json` , 
 start there when a change is missing; the reason tells you which rule fired.
 
 ### Report / visualization
 
 | Symptom | Fix |
 |---|---|
-| change list wrong | inspect `cache/semantics/confirmed.json` — the report is a projection of it |
+| change list wrong | inspect `cache/semantics/confirmed.json`, the report is a projection of it |
 | confidence looks odd | the heuristic is documented in `docs/results.md` and `geometry.build_change_list` |
 | screenshots too dark/small | `visualize.background_voxel`, `visualize.static_dim`, `visualize.gif_frames` |
 
@@ -124,7 +124,7 @@ start there when a change is missing; the reason tells you which rule fired.
 
 - Everything GPU-related must run inside a GPU allocation: `gpu-run '<cmd>'`
   (one-shot) or the persistent `gpu-session` (see `gpu.md`).
-- `CUDA_VISIBLE_DEVICES` is set to an empty string inside PBS jobs — the
+- `CUDA_VISIBLE_DEVICES` is set to an empty string inside PBS jobs, the
   stages handle it: `common.pin_idle_gpus()` picks the idlest GPUs before CUDA
   initialises and logs what it pinned.
 - Model loading: measured 8–14 s for VGGT and 26 s for Qwen3-VL-32B with
