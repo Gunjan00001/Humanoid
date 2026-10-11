@@ -61,3 +61,15 @@ The positive control (a correct match) scores high and the negative control
 (different objects) scores low, so the 0.65 gate is not miscalibrated. The targets
 stay low, and the clock's CLS is below the negative control. Track B is closed as
 a real negative result. objmatch2 was not built.
+
+### Limits of the Track B result
+
+The controls are thin: one positive and one negative only. On patch similarity
+the two targets fell in the middle zone, between the negative control (0.085) and
+the positive control (0.914): cup 0.374, clock 0.460. So the result means the cup
+and clock candidates **did not match under this descriptor and this gate**, not
+that they cannot be matched. A different crop choice (a different departure or
+arrival cluster), a different descriptor, or a different gate could change it.
+The clock is the more worrying case: its CLS similarity (0.174) is below the
+negative control, which suggests the candidate pair is not the same object. Track
+B is closed here and is not reopened.
