@@ -3,6 +3,27 @@
 Progress log for the automated run described in AUTOPILOT.md. Updated after every
 step: timestamp, track, step, result, next step.
 
+## Resume here (2026-10-11 22:20 IST)
+
+Track A is done. Track C preflight is partial. Track B has not started.
+
+Next steps and the exact commands:
+
+1. Track B, SAM 2 install (2 hour time box), branch exp/accuracy:
+   - `conda create -n spatialdiff-sam python=3.10 -y`
+   - `~/miniconda3/envs/spatialdiff-sam/bin/pip install torch --index-url https://download.pytorch.org/whl/cu126`
+   - `git clone https://github.com/facebookresearch/sam2` then `pip install -e .`
+   - download the SAM 2.1 base-plus checkpoint to ~/models/ on the login node,
+     verify license and size, record in docs/models.md
+   - run the probe on scene6 (cup) and scene5 (clock): automatic masks in both
+     videos, and does the DINOv2 similarity of the paired crops clear the match
+     gate. Write numbers to docs/accuracy.md. Pass gate: segmented in both videos
+     and matched in at least 2 of the 3 targets.
+2. Track C C1 remaining gates: evaluator smoke test on 3 val pairs, the frame
+   convention, ten per-pair facts, compute estimate. Needs the 11.9 GB zip under
+   data/external/scenediff/ (gitignored).
+3. Then C2 (pre-register the slice), C3 to C5, and Track D.
+
 ## State at start (2026-10-11 21:41 IST)
 
 - main is at commit 485d33f (tag v1.0.0 = 5e5185d, plus three docs and CI commits:
