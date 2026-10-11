@@ -279,6 +279,10 @@ def run_stage(stage: str, args, cfg: dict, mode: str, a: Path, b: Path) -> int:
         print(f"        likely cause: see the lines above; per-decision numbers "
               f"with --debug. Fix and re-run: the caches of finished stages are "
               f"reused.", flush=True)
+        if stage == "extract_frames":
+            print("        if too few sharp frames survived, re-run with "
+                  "--blur_threshold 25 and --method geometric "
+                  "(the scene2 working point).", flush=True)
         return proc.returncode
     print(f"[ok   ] {stage} ({fmt(dt)})", flush=True)
     return 0

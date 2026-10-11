@@ -11,10 +11,11 @@ pipeline (a PBS GPU job on the cluster).
 ## Quick start
 
 ```bash
-git clone git@github.com:Gunjan00001/Humanoid.git && cd Humanoid
+git clone https://github.com/Gunjan00001/Humanoid.git && cd Humanoid
 conda create -n spatialdiff python=3.10 -y && conda activate spatialdiff
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
-pip install -r requirements.txt          # model weights: docs/setup.md
+pip install -r requirements.txt
+pip install "vggt @ git+https://github.com/facebookresearch/vggt.git"
 python detect.py --a data/a.mp4 --b data/b.mp4 --name demo
 ```
 
@@ -47,14 +48,14 @@ Files: viewer.html, change.gif, report.json
 
 The development scenes were used to tune thresholds, so their numbers are fit,
 not a benchmark. The held-out scenes (scene5, scene6) were each run **exactly
-once** with the frozen code and default settings — pre-registered scoring rule,
+once** with the frozen code and default settings, pre-registered scoring rule,
 per-change tables and failure analyses are in
 [`docs/heldout.md`](docs/heldout.md).
 
 **Reproducibility (3x per scene, frozen code, fresh caches):** deterministic in
-this set — scene4 **3/3** and scene6 (2 entries) reproduced **identically**
+this set, scene4 **3/3** and scene6 (2 entries) reproduced **identically**
 every run; scene5 gave 7 entries each; scene2 runs only at its documented
-working point (5 entries each) — **at defaults it cannot run** (its shipped
+working point (5 entries each), **at defaults it cannot run** (its shipped
 clips are 3.8 s / 7.3 s, too few sharp frames). Full table:
 [`docs/results.md`](docs/results.md).
 
@@ -85,12 +86,12 @@ final report:
 | 2 | pen added | `added` | "A blue pen and a white device were added to the surface." | 0.38 |
 | 3 | remote moved + flipped | `replaced` | "The remote control was replaced with a different one." | 0.84 |
 
-- Visualization: `outputs/change.gif` (rotating colored cloud — red = removed,
+- Visualization: `outputs/change.gif` (rotating colored cloud, red = removed,
   green = added, magenta = replaced) and one framed screenshot per change in
   `outputs/changes/`.
 - Reports: `outputs/report.json`, `outputs/report.md`.
 - The change detector proposed 26 candidates; 22 were rejected with documented
-  reasons (`cache/semantics/rejected.json`) — mostly lighting/blur differences
+  reasons (`cache/semantics/rejected.json`), mostly lighting/blur differences
   on static objects. Nothing was silently dropped.
 
 Known limitations of this run (details in [`docs/results.md`](docs/results.md)):
@@ -127,32 +128,32 @@ runs use the same pipeline; full details in
 | Scene | Ground truth | Detected | False positives | Mode / tuning |
 |---|---|---|---|---|
 | **demo** (`data/`) | comb removed, pen added, remote moved+flipped | **3/3** | **0** | `tabletop` (default) |
-| **scene2** (`data/scene2/`) | coconut removed | **1/1** (coconut ✓) — the committed report; a full v0.12 re-run produces 2 entries (coconut correctly named + the apple false positive), see the reproducibility note | 4 extra entries | `geometric` (big object; lighting-immune) + `--blur_threshold 25` |
-| **scene3** (`data/scene3/`) | chair removed, apple→cup | **2/2** objects, types now correct (chair `removed`, apple→cup `replaced` — v0.9.0) | 2 extra entries + unreliable naming (see results.md) | `tabletop` + `--min_change_score 85` |
+| **scene2** (`data/scene2/`) | coconut removed | **1/1** (coconut ✓), the committed report; a full v0.12 re-run produces 2 entries (coconut correctly named + the apple false positive), see the reproducibility note | 4 extra entries | `geometric` (big object; lighting-immune) + `--blur_threshold 25` |
+| **scene3** (`data/scene3/`) | chair removed, apple→cup | **2/2** objects, types now correct (chair `removed`, apple→cup `replaced`, v0.9.0) | 2 extra entries + unreliable naming (see results.md) | `tabletop` + `--min_change_score 85` |
 | **scene4** (`data/scene4/`) | apple moved, scissor removed, bottle added | **3/3** (`moved` apple ✓, `removed` scissors ✓, `added` bottle ✓) | **0 extra entries** | `tabletop` (default) |
 
-**scene2** — coconut removed (`geometric` mode; the visibility check confirmed
+**scene2**, coconut removed (`geometric` mode; the visibility check confirmed
 it with 5896 points seen empty). The `tabletop` mode misses it because video
 B's lighting differs strongly; the geometric mode adds 4 coverage-difference
 entries (its known weakness with limited A coverage).
 
 ![scene2 result](outputs/scene2_geo/change.gif)
 
-**scene3** — both changes found: the chair is now correctly typed `removed`
+**scene3**, both changes found: the chair is now correctly typed `removed`
 (empty-space evidence 22%) and the apple→cup region `replaced` (occupied 2%);
 2 extra entries and an unreliable replacement sentence remain (video B's crop
-of the table is partly occluded by the remaining chair) — see
+of the table is partly occluded by the remaining chair), see
 [the correctness pass](docs/results.md#presentation--correctness-pass-v090).
 
 ![scene3 result](outputs/scene3/change.gif)
 
-**scene4** — all three ground-truth changes, no tuning and no extras: the
+**scene4**, all three ground-truth changes, no tuning and no extras: the
 apple is reported as **`moved`** (from → to shown in the report and drawn as a
 dashed line in the 3D view), the scissors as **`removed`**, and the bottle as
 **`added`** at the apple's old spot. This scene drove the v0.10.0 semantics
 work: move matching now runs before the structural filters, objects arriving
 at a moved object's origin are reported, and "replaced" claims whose two sides
-are independently confirmed changes are dropped as composites — see
+are independently confirmed changes are dropped as composites, see
 [scene4 in results](docs/results.md#scene4).
 
 ![scene4 result](outputs/scene4/change.gif)
@@ -162,13 +163,13 @@ found overall (demo 3/3, scene2 1/1, scene3 2/2, scene4 3/3). The demo and
 scene4 reach their totals with 0 extra entries using the default mode; scene2
 and scene3 each needed a short per-scene tuning pass and both carry documented
 extra entries. That is the expected behaviour of a scene-tuned photometric
-pipeline — and because the thresholds were tuned on these same recordings, the
+pipeline, and because the thresholds were tuned on these same recordings, the
 9/9 should not be read as a held-out benchmark result.
 
-**Faithful 3D rendering (v0.8.0)** — each scene now ships a dark-background
+**Faithful 3D rendering (v0.8.0)**, each scene now ships a dark-background
 render with per-change bounding boxes + labels and a before | after | 3D
 layout, a colored **TSDF mesh** (`scene_mesh.ply`, ≤ 10 MB) and a
-**self-contained interactive viewer** (`viewer.html` — open it in any browser:
+**self-contained interactive viewer** (`viewer.html`, open it in any browser:
 orbit, zoom, toggle video A / B / changes / unverified / full scene).
 Diagnosis and the `input_mode=pad` experiment:
 [visualization rework](docs/results.md#visualization-rework-steps-05).
@@ -182,7 +183,7 @@ Honest result, confirmed by overlay review:
 
 | GT change | detected | correct? | confidence |
 |---|---|---|---|
-| clock **moved** | — (no `moved` entry) | **missed** | — |
+| clock **moved** |, (no `moved` entry) | **missed** |, |
 | chair **removed** | `removed`, 3 fragments (labels "wooden leg" / "chair leg" / "table leg") | **type only**; labels wrong | 0.74 / 0.29 / 0.45 |
 
 **Scoring (pre-registered rule): found 1/2 (type only) · labels 0/2 · missed
@@ -195,19 +196,19 @@ tabletop diagnostic and the checking sheet are in
 
 ### Known limitations
 
-- **mixed orientation / resolution between the two recordings** — detect.py
+- **mixed orientation / resolution between the two recordings**, detect.py
   warns loudly and recommends recording both videos in the same orientation
   (landscape preferred); scene5's A/B mismatch likely weakened the
   reconstruction and the crops;
-- **floor reflections and lighting** produce candidate fragments — scene5's
+- **floor reflections and lighting** produce candidate fragments, scene5's
   "small round object" was a floor reflection in video B;
-- **large objects fragment** — scene5's chair removal was reported as three
+- **large objects fragment**, scene5's chair removal was reported as three
   separate "leg" entries instead of one chair;
 - **object names are unreliable** (VLM-generated): scene5's chair fragments,
   scene3's "black trash can" for the chair, scene4's scissor sentence before
   the summary-stage fix.
 
-**Runtime (measured, not estimated)** — full numbers and clock bases in
+**Runtime (measured, not estimated)**, full numbers and clock bases in
 [`docs/timing.md`](docs/timing.md):
 
 | Case | Wall clock | Conditions |
@@ -226,13 +227,13 @@ python src/visualize.py --config configs/default.yaml \
 ```
 
 It reuses the cached reconstruction/diff/VLM outputs, needs no GPU, and stops
-with a list of missing files if anything required is absent — it never
+with a list of missing files if anything required is absent, it never
 recomputes a stage.
 
 An earlier claim of "~15 min per scene" was not reproducible from the logs and
 has been corrected in [`docs/results.md`](docs/results.md#timings-wall-clock-this-run).
 
-**Live interactive viewers** (GitHub Pages — live; see
+**Live interactive viewers** (GitHub Pages, live; see
 [`docs/hosting.md`](docs/hosting.md)):
 [demo](https://gunjan00001.github.io/Humanoid/outputs/viewer.html) ·
 [scene2](https://gunjan00001.github.io/Humanoid/outputs/scene2/viewer.html) ·
@@ -273,7 +274,7 @@ contract, so the rest of the pipeline is backend-agnostic
 (alignment, metric scale, thin-object visibility, end-to-end results) is in
 [`docs/results.md`](docs/results.md#backend-comparison-vggt-vs-mapanything).
 
-Model licenses — **verified 2026-10-10**: Qwen3-VL, DINOv2, SigLIP 2, SAM 2 and
+Model licenses, **verified 2026-10-10**: Qwen3-VL, DINOv2, SigLIP 2, SAM 2 and
 the MapAnything checkpoint we use are Apache-2.0; **VGGT is CC-BY-NC-4.0
 (non-commercial)**; MASt3R's repo is gated.
 See [`docs/models.md`](docs/models.md) for IDs, commits, and the checklist.
@@ -315,13 +316,13 @@ templates live in `scripts/`.
 
 ## Design decisions
 
-1. **Joint reconstruction** — both videos are reconstructed in a single VGGT
+1. **Joint reconstruction**, both videos are reconstructed in a single VGGT
    run so every frame lands in one coordinate frame, avoiding fragile
    cross-run registration.
-2. **Occlusion-aware diff** — a region counts as *removed* only if the other
+2. **Occlusion-aware diff**, a region counts as *removed* only if the other
    video actually observed that space and saw it empty (visibility check using
    cached poses and depth). This suppresses false positives from occlusion.
-3. **DINOv2 move matching** — a removal and an addition with similar crop
+3. **DINOv2 move matching**, a removal and an addition with similar crop
    embeddings but different 3D positions are reported as one *moved* object
    instead of two separate changes.
 
@@ -330,7 +331,7 @@ templates live in `scripts/`.
 Observed on the demo scene (quantified in [`docs/results.md`](docs/results.md)):
 
 - objects thinner than VGGT's patch scale (~1.4 cm here) are **absent from the
-  depth maps** — geometric diffing cannot see them; the photometric tabletop
+  depth maps**, geometric diffing cannot see them; the photometric tabletop
   mode is required;
 - static objects whose appearance differs between recordings (blur, exposure,
   viewing angle) generate candidate fragments that the VLM and structural
@@ -367,4 +368,4 @@ Observed on the demo scene (quantified in [`docs/results.md`](docs/results.md)):
 
 ## License
 
-MIT — see [`LICENSE`](LICENSE). Model checkpoints keep their own licenses.
+MIT, see [`LICENSE`](LICENSE). Model checkpoints keep their own licenses.

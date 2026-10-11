@@ -1,7 +1,7 @@
 # Setup
 
 Two environments are possible: the **GPU cluster** (all heavy stages) and a
-**laptop** (CPU-only stages). The laptop is optional — every stage can run on the
+**laptop** (CPU-only stages). The laptop is optional, every stage can run on the
 cluster.
 
 Read [`../gpu.md`](../gpu.md) for the verified cluster reference (queues, CUDA,
@@ -45,9 +45,16 @@ export PATH="$CONDA_PREFIX/bin:$PATH"        # see the PATH gotcha in troublesho
 pip install torch torchvision torchaudio \
     --index-url https://download.pytorch.org/whl/cu126
 pip install -r requirements.txt
+pip install "vggt @ git+https://github.com/facebookresearch/vggt.git"   # VGGT (needs internet on this node)
 ```
 
-### `environment.yml` — status: **unverified** (cannot be built as-is)
+VGGT installs from its GitHub repository (package name `vggt`); it is not on
+PyPI. Run that line on the login node, which has internet. After it, a clean env
+passes `python -c "import vggt, torch"` and `python detect.py --help`. The model
+weights are downloaded separately (see Model weights below) and are what remain
+unverified if you do not download them.
+
+### `environment.yml`, status: **unverified** (cannot be built as-is)
 
 `environment.yml` is a *machine export* (`conda env export`), not the canonical
 install path (that is `scripts/setup_env.sh` / the manual block above). An
@@ -55,7 +62,7 @@ attempt to build it clean on 2026-10-11 with
 `conda env create -f environment.yml -p .venv` **failed**:
 
 - `vggt==0.0.1` is **not on PyPI** (it is installed from the git repo
-  `facebookresearch/vggt`, per §"Installing VGGT" below) —
+  `facebookresearch/vggt`, per §"Installing VGGT" below) , 
   `ERROR: Could not find a version that satisfies the requirement vggt==0.0.1`;
 - `torch==2.14.1+cu126` exists only on the PyTorch index
   (`https://download.pytorch.org/whl/cu126`), not on default PyPI;
@@ -67,7 +74,7 @@ attempt to build it clean on 2026-10-11 with
 In the existing `spatialdiff` env the CLI and stack do work: `python detect.py
 --help` exits 0 and `numpy, scipy, sklearn, cv2, open3d, torch, torchvision,
 transformers, accelerate, yaml, matplotlib, PIL, huggingface_hub, safetensors`
-all import. **The model stages were not re-run in a clean env — unverified
+all import. **The model stages were not re-run in a clean env, unverified
 (weights not downloaded).**
 
 The scripts never rely on `conda activate` alone: this cluster's sessions can
@@ -77,7 +84,7 @@ absolute path, and PBS jobs re-prepend `$CONDA_PREFIX/bin` after activating.
 
 ### Verify CUDA inside a GPU job
 
-Never verify on the login node — it has no GPUs and PBS hides them in jobs until
+Never verify on the login node, it has no GPUs and PBS hides them in jobs until
 `CUDA_VISIBLE_DEVICES` is unset.
 
 ```bash
@@ -104,7 +111,7 @@ Submit from the repo root: `qsub scripts/job_full.pbs`.
 Requests available to you (per `gpu.md`): up to 16 CPUs, 64 GB RAM, 24 h
 walltime, 5 concurrent jobs. Large models load straight onto the GPU with
 `device_map="auto"` and `low_cpu_mem_usage=True` to stay under the RAM cap.
-PBS does not pin GPUs on this cluster — check `nvidia-smi` and optionally pin
+PBS does not pin GPUs on this cluster, check `nvidia-smi` and optionally pin
 an idle GPU in the job (`export CUDA_VISIBLE_DEVICES=3` after the `unset`).
 
 ## Where to clone
@@ -156,6 +163,6 @@ cluster run instead.
 
 ## Configuration
 
-Every model name, path, and threshold lives in `configs/default.yaml` — never
+Every model name, path, and threshold lives in `configs/default.yaml`, never
 hard-code values in scripts. See
 [`architecture.md`](architecture.md#config-reference).

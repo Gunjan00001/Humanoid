@@ -5,7 +5,7 @@ different times, plus a documented ground truth.
 
 ## Recording guide (from `AGENT_PLAN.md` §6, Phase 0)
 
-1. Pick a small area — desk, shelf, room corner.
+1. Pick a small area, desk, shelf, room corner.
 2. Record **Video A** (30–60 s).
 3. Make exactly three clear changes:
    - move one object,
@@ -40,7 +40,7 @@ for `data/sample_*.mp4`. Use Git LFS or a release asset for the real recordings.
 ### Additional scenes
 
 Optional extra scenes (robustness runs) live in their own subfolder with the same
-three files. They are not picked up automatically — point the pipeline at them
+three files. They are not picked up automatically, point the pipeline at them
 with `--video_a data/sceneN/a.mp4 --video_b data/sceneN/b.mp4`.
 
 ```
@@ -53,7 +53,7 @@ data/sceneN/
 ## `ground_truth.md` template
 
 ```markdown
-# Ground truth — demo scene
+# Ground truth: demo scene
 
 Scene:            # e.g. "desk in room 214"
 Recorded:         # date/time of A and B

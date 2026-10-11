@@ -61,6 +61,6 @@
     "change.gif",
     "report.json"
   ],
-  "generated": "2026-10-11T16:06:41Z",
+  "generated": "2026-10-11T16:12:33Z",
   "text": "Compared a.mp4 and b.mp4. I found 5 change(s):\n1. Removed: wooden leg. The wooden leg was removed from the table surface.\n2. Removed: chair leg. Possibly the chair leg and black object were removed from the scene.\n3. Removed: table leg. The table leg was removed.\n4. Added: small round object. Possibly a small round object appeared on the floor in the second image.\n5. Added: bottle and clock. Possibly the bottle and clock appeared.\n\nNotes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.\nFiles: viewer.html, change.gif, report.json"
 }

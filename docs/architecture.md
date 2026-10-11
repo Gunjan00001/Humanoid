@@ -69,7 +69,7 @@ Planned layout from [`../AGENT_PLAN.md`](../AGENT_PLAN.md) §4; the root maps to
 ## Config reference
 
 `configs/default.yaml` is the single source of truth for every model name,
-path and threshold — scripts never hard-code values. Sections:
+path and threshold, scripts never hard-code values. Sections:
 
 | Section | Contains |
 |---|---|
@@ -83,7 +83,7 @@ path and threshold — scripts never hard-code values. Sections:
 | `visualize` | background voxel/dimming, GIF frames |
 | `gpu` | VLM GPU count, dtype, torch CUDA tag |
 
-Values are starting points and get tuned against the demo scene — **in the
+Values are starting points and get tuned against the demo scene, **in the
 config, not in code**.
 
 ## Caches and outputs

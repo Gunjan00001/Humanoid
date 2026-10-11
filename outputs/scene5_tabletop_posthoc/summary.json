@@ -53,6 +53,6 @@
     "change.gif",
     "report.json"
   ],
-  "generated": "2026-10-11T16:06:41Z",
+  "generated": "2026-10-11T16:12:33Z",
   "text": "Compared a.mp4 and b.mp4. I found 4 change(s):\n1. Replaced: wooden table leg. The wooden table leg changed between the two videos.\n2. Removed: wooden chair leg. The wooden chair leg was removed from the scene\n3. Removed: black chair. The black chair was removed from the room\n4. Removed: cracked shelf. The cracked shelf was removed from the room\n\nNotes: 9 unverified candidate(s) were seen in one video only; they are listed in report.json but not counted as changes. Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.\nFiles: viewer.html, change.gif, report.json"
 }
