@@ -54,6 +54,17 @@ BG_COLOR = "#101418"
 LABEL_COLOR = "#f2f2f2"
 
 
+def ab_evidence(ci: dict):
+    """(before_file, after_file) for a crop entry: video A is "before", video B
+    is "after". crops.json stores `frame` for the change's *own* video (its
+    `tag`) and `frame_other` for the opposite one, so an `added` change (tag b)
+    carries `frame` in B - selecting by tag keeps before/after unswapped."""
+    f, fo = ci.get("frame"), ci.get("frame_other")
+    if ci.get("tag") == "b" or (f is not None and str(f).startswith("b/")):
+        return fo, f
+    return f, fo
+
+
 def write_ply(path: Path, points: np.ndarray, colors: np.ndarray) -> None:
     """Minimal binary little-endian PLY writer (points + uchar rgb)."""
     arr = np.empty(len(points), dtype=[("x", "<f4"), ("y", "<f4"), ("z", "<f4"),
@@ -382,8 +393,9 @@ def main() -> int:
     for c in change_pts:
         ch = c["change"]
         ci = crops.get(str(ch["cluster_ids"][0]), {})
-        before = load_evidence_frame(cfg, ci.get("frame"))
-        after = load_evidence_frame(cfg, ci.get("frame_other"))
+        before_file, after_file = ab_evidence(ci)
+        before = load_evidence_frame(cfg, before_file)
+        after = load_evidence_frame(cfg, after_file)
         # two rows: [before | after] on top (larger), a large 3D panel below
         fig = plt.figure(figsize=(12, 11), dpi=110, facecolor=BG_COLOR)
         gs = fig.add_gridspec(2, 2, height_ratios=[1.25, 1.5],
@@ -460,7 +472,7 @@ def main() -> int:
     headline = next((c for c in change_pts if c["verified"]),
                     change_pts[0] if change_pts else None)
     ci = crops.get(str(headline["change"]["cluster_ids"][0]), {}) if headline else {}
-    before_file, after_file = ci.get("frame"), ci.get("frame_other")
+    before_file, after_file = ab_evidence(ci)
 
     def _abs(file):
         return str(repo_path(cfg["paths"]["cache_dir"]) / "frames" / file) if file else None

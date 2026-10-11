@@ -245,6 +245,29 @@ visibility clusters), i.e. run-to-run variability, not a code change. The
 re-run's version names the ground-truth object correctly, so it is arguably
 better - but it is not the committed state.
 
+### Held-out scenes (never used for tuning)
+
+Split out from the development scenes above: each was run **exactly once** with
+the frozen detection code and default settings, and scored with a
+pre-registered rule ([`heldout.md`](heldout.md)). Neither was used to tune any
+threshold or prompt.
+
+| Scene | Ground truth | Detected (types) | Labels correct | Missed | Extras |
+|---|---|---|---|---|---|
+| scene5 | clock moved, chair removed | **1/2 — type only** (chair `removed`, fragmented into 3) | 0/2 | 1 (clock move) | ≥2 |
+| scene6 | cup moved, remote removed, apple added | **1/3** (remote `removed`) | 1/1 | 2 (cup move, apple add) | 1 (electrical outlet, false positive) |
+
+scene6 (job 10864, 2026-10-11): auto mode `geometric` (dominant plane 6%),
+job runtime 18:53 (describe 15:53 of it). The cup move was missed
+(`move matches: 0`; its two VLM-confirmed arrival candidates were dropped by the
+structural post-filter) and the apple add was denied by the VLM. Full table,
+overlay review and failure analysis:
+[`heldout.md`](heldout.md).
+
+**Honest reading:** the held-out scenes are much weaker than the tuned
+development scenes (scene5 1/2 type-only, scene6 1/3). The development numbers
+are *fit*, not a benchmark - the gap is the point.
+
 ### scene2 — why the mode matters
 
 The two recordings differ strongly in lighting/angle, and video B covers part

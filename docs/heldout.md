@@ -310,7 +310,9 @@ labelling). Extra entries (confirmed changes not in the ground truth) and
 fragments are counted separately. Unverified candidates are listed but not
 counted as changes.
 
-**Status: pending the single held-out run and the user's overlay confirmation.**
+**Status: CONFIRMED by the user** (overlay review of
+`outputs/scene6/checking_sheet.png`; tile 1's 3D box position was **not**
+verified by the user).
 
 ## Result (scene6, run once — the single held-out execution)
 
@@ -320,5 +322,99 @@ Command (exactly once, frozen code, default settings, no overrides):
 python detect.py --a data/scene6/a.mp4 --b data/scene6/b.mp4 --name scene6
 ```
 
-*(per-change table, printed summary, runtime and failure analysis are filled in
-after the user's overlay confirmation.)*
+### Per-change table
+
+| GT change | detected type | detected label | type correct? | label correct? | confidence |
+|---|---|---|---|---|---|
+| cup **moved** | *(no `moved` entry; `move matches: 0`)* | — | **no — missed** | — | — |
+| remote **removed** | `removed` | "remote control" | **yes** | **yes** | 0.50 |
+| apple **added** | *(no `added` entry for the apple)* | — | **no — missed** | — | — |
+
+Overlay review (user, authoritative):
+
+- **tile 1** (`removed` "remote control"): the before/after frames confirm the
+  remote is on the table in A and absent in B — type and label correct.
+  **3D box position not verified by the user.**
+- **tile 2** (`added` "electrical outlet"): **FALSE POSITIVE** — the outlet is
+  on the wall in both videos.
+
+### Scoring (pre-registered rule)
+
+| | result |
+|---|---|
+| ground-truth changes found | **1/3** (the remote's removal) |
+| labels correct | **1/1** (of the found changes) |
+| missed | **2** (cup move, apple add) |
+| extras | **1** (electrical outlet) |
+| fragments | 0 |
+
+### Confirmed entries and extras
+
+| # | type | label | confidence | assessment |
+|---|---|---|---|---|
+| 1 | removed | remote control | 0.50 | **ground truth found** |
+| 2 | added | electrical outlet | 0.33 | **extra / false positive** |
+
+No `moved` and no `replaced` entries. Unverified candidates kept: **0**.
+
+### Printed natural-language summary (verbatim)
+
+```
+Compared a.mp4 and b.mp4. I found 2 change(s):
+1. Removed - remote control: The remote control was removed from the table.
+2. Added - electrical outlet: Possibly an electrical outlet was added to the wall.
+
+Notes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.
+Files: viewer.html, change.gif, report.json
+```
+
+(The Qwen3-VL phrasing call failed with CUDA OOM after `describe` had loaded the
+32B model, so the sentences are `src/summary.py`'s deterministic templates;
+`summary.json` records the sentence source.)
+
+### Runtime (measured)
+
+| measure | value |
+|---|---|
+| queue wait (qtime -> stime) | **0 s** (15:28:25 -> 15:28:26) |
+| job runtime (`resources_used.walltime`) | **18:53** |
+| stages (job log) | extract 0:05 · reconstruct 0:52 · align 0:42 · diff 0:25 · **describe 15:53** (35 VLM verifications) · report 0:00 · visualize 0:21 · summary 0:25 |
+| auto diff-mode | **geometric** (dominant plane 6% of confident points, < 50%) |
+
+### Failure analysis (written after the run)
+
+1. **Cup move missed — the move matcher found no pair.** `cache/scene6/semantics/matches.json`
+   is empty (`move matches: 0 (0 arrivals)`). The cup's *arrival* was seen: two
+   `added` candidates were VLM-confirmed (`16` "white cup", `21` "bottle and
+   cup"), but the **structural post-filter dropped both** ("inside an object
+   present in both videos", 78% / 100% of their points), so no arrival survived
+   to pair with a departure. **Likely** contributor: the auto mode chose
+   `geometric` (plane coverage 6%), whose coverage-difference artifacts produce
+   exactly these fragments — 28 of the 32 rejects are VLM-denied fragments
+   ("table leg", "wooden edge", …). Not proven.
+2. **Apple add missed — a candidate existed, the VLM denied it.** Candidate `28`
+   ("blue cup and red apple") was built; the VLM compared "plastic bottle with
+   purple cap" vs "plastic bottle with purple cap, blue cup, red apple" and
+   overrode it to `changed=False` (a VLM false negative). Candidate `19`
+   ("plastic bottle") was likewise VLM-denied. So the apple was dropped at the
+   **VLM confirmation stage**, not at coverage/filters.
+3. **The one extra (electrical outlet)** is a wall feature present in both
+   videos; the VLM confirmed candidate `20` ("electrical outlet") as an
+   addition. It is a false positive under the user's overlay review.
+4. **`describe` dominated the runtime** (15:53 of 18:53) — 35 Qwen3-VL-32B
+   verifications, each a full VLM call.
+
+**No tuning, no re-run and no prompt/threshold change was made for scene6.** The
+only post-run change is a **visualization bug fix** (below), which does not
+touch detection.
+
+### POST-HOC: visualization bug fix (not part of the held-out detection result)
+
+The user observed that tile 2's "before" crop showed video-B content. Root
+cause: `crops.json` stores `frame` for the change's *own* video (its `tag`) and
+`frame_other` for the opposite one, but `src/visualize.py` hard-coded
+`before=frame, after=frame_other` — for an `added` change (`tag: b`) that swaps
+the panels. Fixed in `src/visualize.py` (select before/after by tag) —
+**visualization only; detection untouched**. `outputs/scene6/changes/*.png` and
+the checking sheet were re-rendered from the cached results; `report.json` and
+every detection number are unchanged.
