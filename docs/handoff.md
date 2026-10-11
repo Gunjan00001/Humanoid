@@ -119,15 +119,39 @@ change it, and document a stability expectation per mode.
 composites in `outputs/scene3/changes/` are heavy — consider rendering
 unverified composites only on request.
 
-### 4.5 Optional / stretch
+### 4.5 scene6 is already here — the next held-out run (`data-v0.5`)
+
+`data/scene6/` was added while this handoff was being written and **has never
+been run**. Ground truth (`data/scene6/ground_truth.md`): **cup moved, remote
+removed, apple added** (all three change types in one scene). Properties
+(measured): both videos **landscape 860x480 @ ~30 fps**, 55.5 s / 49.1 s —
+the orientation lesson from scene5 was applied. Both are **> 5 MB and stored
+in Git LFS** (9.1 / 8.1 MB), so a plain clone cannot read them.
+
+To run it as a held-out scene, follow the protocol (§6) exactly:
+
+1. **Record a new freeze** at the commit you start from: append to
+   `docs/heldout.md` the commit hash + sha256 of the 7 detection files
+   (`src/diff.py`, `tabletop.py`, `geometry.py`, `describe.py`, `align.py`,
+   `reconstruct.py`, `configs/default.yaml`) — the v0.12 files are unchanged
+   since the scene5 freeze, but freeze *your* starting point.
+2. Run **exactly once**, cold, defaults, no overrides:
+   `python detect.py --a data/scene6/a.mp4 --b data/scene6/b.mp4 --name scene6`
+3. Commit the outputs as produced, build the checking sheet, write the
+   per-change table + extras + unverified + the verbatim summary + a failure
+   analysis, and have the user confirm the overlays.
+4. Only **after** the held-out run: consider re-encoding both videos to
+   < 5 MB (libx264 crf 26 keeps 860x480@30) so plain clones can read them —
+   the scene5 measurement showed a re-encode **changes** the reconstruction
+   and the auto-mode choice, so it must never replace the held-out inputs.
+   (Alternative: document `git lfs pull` for scene6.)
+
+### 4.6 Optional / stretch
 - Qwen3-VL-8B vs 32B ablation (~15–20 min GPU) — does the smaller model keep
   the demo's 3/3?
 - MASt3R backend (HF repo gated for this account) or COLMAP (unimplemented).
-- A **new held-out scene** (scene6): record two videos in the **same
-  orientation (landscape preferred)**, same length, sharp; then follow the
-  pre-registered protocol in `docs/heldout.md`.
 
-### 4.6 Housekeeping
+### 4.7 Housekeeping
 - `cache/` holds every reconstruction (several GB). Re-runs depend on it —
   keep it unless you are sure.
 - After code changes: `graphify update .` and append to `docs/devlog.md`.
