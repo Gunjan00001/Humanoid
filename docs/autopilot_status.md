@@ -154,3 +154,11 @@ Next steps and the exact commands:
   annotated GT frames, and write object_masks.pkl in the object-first format with
   resampled frame ids. Dry run on 3 val pairs (logs/eval_pred_* has the format
   example). Then C4 (20 val pairs) and C5 (10 test pairs, once).
+
+### 2026-10-12 00:25 IST, Track C C3 in progress
+- Wrote src/eval_scenediff.py (projects each report change into the GT annotated
+  frames, writes object_masks.pkl object-first with resampled ids) and
+  scripts/run_scenediff.sh (runs detect.py per pair, then the adapter).
+- Dry run on 3 val pairs launched (gpu-run, 2 GPUs). Slow: the node was busy so
+  the 32B sharded with CPU offload, which makes the describe stage very slow.
+- Next: finish the dry run, then C4 (20 val pairs) and C5 (10 test pairs once).
