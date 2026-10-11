@@ -121,8 +121,12 @@ def choose_32b():
 
 def prepare(exp, scene):
     d = ROOT / "cache" / "sprint" / exp / scene
-    d.mkdir(parents=True, exist_ok=True)
     src = SCENE_CACHE[scene]
+    # purge a stale REAL cache dir left by an earlier full-pipeline attempt, so
+    # the symlinks below are (re)created and describe reads the scene's cache
+    if d.exists() and (d / "reconstruction").exists() and not (d / "reconstruction").is_symlink():
+        shutil.rmtree(d)
+    d.mkdir(parents=True, exist_ok=True)
     for part in ("reconstruction", "diff", "frames", "aligned"):
         link, target = d / part, src / part
         if target.exists() and not link.exists():
