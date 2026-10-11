@@ -172,3 +172,15 @@ Next steps and the exact commands:
 - Next: when 11027 finishes, run the evaluator on the val slice, freeze the
   config (v1.0.0 default, nothing accepted), then run the test evaluator once and
   write the failure analysis.
+
+### 2026-10-12 01:00 IST, test-eval rule recorded; 11027 running
+- Rule recorded in docs/evaluation.md: no evaluator run on the test predictions
+  until the validation sanity check passes (valid pkl per pair, H/W match,
+  scores not degenerate, 3 overlay spot checks). If an adapter bug is found, fix
+  as a pure bug fix, document it, re-run both slices, and report the test slice
+  as run twice with no test score seen before the fix. If it passes, freeze,
+  record digests, then run the test slice once.
+- Job 11027 running (val pairs producing predictions; test predictions are built
+  but the evaluator will not touch them until the sanity check passes).
+- Next: wait for 11027, run the validation sanity check, freeze, evaluate val,
+  then evaluate test once, then Track D and the final report.
