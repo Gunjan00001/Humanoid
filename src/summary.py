@@ -262,8 +262,8 @@ def build_summary(cfg: dict, use_vlm: bool = True) -> dict:
                 f"{len(entries)} change(s):")
         lines = [head]
         for i, e in enumerate(entries, 1):
-            lines.append(f"{i}. {str(e['type']).capitalize()} - "
-                         f"{e['label']}: {e['sentence']}")
+            lines.append(f"{i}. {str(e['type']).capitalize()}: "
+                         f"{e['label']}. {e['sentence']}")
     else:
         lines = [f"Compared {video_a} and {video_b}. No changes found."]
     lines.append("")

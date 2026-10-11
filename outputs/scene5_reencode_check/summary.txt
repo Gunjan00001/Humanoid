@@ -1,11 +1,11 @@
 Compared a.mp4 and b.mp4. I found 7 change(s):
-1. Removed - chair: The chair was removed from the scene.
-2. Removed - chair leg: The chair leg was removed from the scene.
-3. Removed - chair leg: The chair leg was removed.
-4. Removed - chair leg: The chair leg and black object were removed from the scene.
-5. Removed - chair backrest: Possibly the chair backrest was removed.
-6. Removed - stacked bowls: Possibly the stacked bowls were removed.
-7. Added - small brown object: A small brown object appeared on the surface in the second image.
+1. Removed: chair. The chair was removed from the scene.
+2. Removed: chair leg. The chair leg was removed from the scene.
+3. Removed: chair leg. The chair leg was removed.
+4. Removed: chair leg. The chair leg and black object were removed from the scene.
+5. Removed: chair backrest. Possibly the chair backrest was removed.
+6. Removed: stacked bowls. Possibly the stacked bowls were removed.
+7. Added: small brown object. A small brown object appeared on the surface in the second image.
 
 Notes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.
 Files: viewer.html, change.gif, report.json

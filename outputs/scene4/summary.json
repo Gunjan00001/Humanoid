@@ -8,19 +8,19 @@
       "id": 1,
       "type": "moved",
       "label": "apple",
-      "sentence": "In video B, the apple is slightly to the right and upward compared to video A.",
+      "sentence": "The apple moved slightly to the right and upward (direction as seen in the before/after crops).",
       "confidence": 0.76,
       "possibly": false,
-      "sentence_source": "vlm"
+      "sentence_source": "report"
     },
     {
       "id": 2,
       "type": "removed",
       "label": "scissors",
-      "sentence": "The scissors present in video A are absent in video B.",
+      "sentence": "The scissors were removed.",
       "confidence": 0.6,
       "possibly": false,
-      "sentence_source": "vlm"
+      "sentence_source": "template"
     },
     {
       "id": 3,
@@ -44,6 +44,6 @@
     "change.gif",
     "report.json"
   ],
-  "generated": "2026-10-11T00:17:39Z",
-  "text": "Compared a.mp4 and b.mp4. I found 3 change(s):\n1. Moved - apple: In video B, the apple is slightly to the right and upward compared to video A.\n2. Removed - scissors: The scissors present in video A are absent in video B.\n3. Added - plastic bottle: The plastic bottle appeared.\n\nNotes: 7 unverified candidate(s) were seen in one video only; they are listed in report.json but not counted as changes. Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.\nFiles: viewer.html, change.gif, report.json"
+  "generated": "2026-10-11T16:06:41Z",
+  "text": "Compared a.mp4 and b.mp4. I found 3 change(s):\n1. Moved: apple. The apple moved slightly to the right and upward (direction as seen in the before/after crops).\n2. Removed: scissors. The scissors were removed.\n3. Added: plastic bottle. The plastic bottle appeared.\n\nNotes: 7 unverified candidate(s) were seen in one video only; they are listed in report.json but not counted as changes. Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.\nFiles: viewer.html, change.gif, report.json"
 }

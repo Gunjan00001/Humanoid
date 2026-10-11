@@ -2,10 +2,10 @@
 
 ```
 Compared a.mp4 and b.mp4. I found 4 change(s):
-1. Replaced - wooden table leg: The wooden table leg changed between the two videos.
-2. Removed - wooden chair leg: In video B, the wooden chair leg is removed from the scene.
-3. Removed - black chair: In video B, the black chair is removed from the room.
-4. Removed - cracked shelf: In video B, the cracked shelf is removed from the room.
+1. Replaced: wooden table leg. The wooden table leg changed between the two videos.
+2. Removed: wooden chair leg. The wooden chair leg was removed from the scene
+3. Removed: black chair. The black chair was removed from the room
+4. Removed: cracked shelf. The cracked shelf was removed from the room
 
 Notes: 9 unverified candidate(s) were seen in one video only; they are listed in report.json but not counted as changes. Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.
 Files: viewer.html, change.gif, report.json
