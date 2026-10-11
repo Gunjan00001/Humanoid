@@ -93,3 +93,17 @@ same artifact contract (see `scripts/run_mapanything.py` and
 - **DINOv2**, robust self-supervised crop embeddings for deciding that two
   detections are the *same* object moved, not two different changes.
 - **SAM 2**, optional: tightens cluster masks so crops are cleaner.
+
+## Accuracy sprint addition: SAM 2 (Track B)
+
+Installed to test object first move matching. Separate conda env `spatialdiff-sam`.
+
+| item | value |
+|---|---|
+| code | facebookresearch/sam2, commit 2b90b9f (git clone third_party/sam2) |
+| checkpoint | facebook/sam2.1-hiera-base-plus, `sam2.1_hiera_base_plus.pt` |
+| size | 323,606,802 bytes (about 324 MB); folder 618 MB |
+| license | Apache-2.0 (plus `LICENSE_cctorch`, BSD 3-Clause) |
+| location | ~/models/sam2.1-hiera-base-plus |
+
+Grounding DINO was skipped on purpose.
