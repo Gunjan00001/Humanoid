@@ -60,3 +60,14 @@ step: timestamp, track, step, result, next step.
   then merge main into exp/accuracy.
 
 
+
+### 2026-10-11 22:20 IST, Track A done, Track C preflight partial
+- Track A: merged docs/humanize into main, tagged v1.0.1 (98904ed), pushed, tag
+  verified on the remote. Merged main into exp/accuracy (summary JSON conflicts
+  resolved by taking main's version).
+- Track C C1: all sources reachable; real zip is scenediff_benchmark.zip
+  (11,919,571,401 bytes); prediction format, metrics and evaluator usage recorded
+  in docs/evaluation.md; citations added to README and docs/data.md. Remaining C1
+  gates (evaluator smoke test, frame convention, 10-pair facts, compute estimate)
+  pending.
+- Track B: not started.
