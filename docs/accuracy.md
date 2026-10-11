@@ -1,4 +1,4 @@
-# Accuracy sprint — branch `exp/accuracy`
+# Accuracy sprint, branch `exp/accuracy`
 
 Goal: improve **change recall, move recall, precision (fewer extras) and object
 naming**. Rules in force: `rules.md`, `gpu.md`, real numbers only. Work happens
@@ -11,7 +11,7 @@ scene-specific thresholds. New behaviour ships behind a config flag, default
 
 ---
 
-## Phase A — scorer + baseline (no pipeline changes)
+## Phase A, scorer + baseline (no pipeline changes)
 
 ### Ground truth & human resolutions
 
@@ -27,26 +27,26 @@ auto-match is used, for future sealed scenes).
 | scene | entry | label | resolved to | verdict |
 |---|---|---|---|---|
 | demo | 3 | remote control (`replaced`) | GT1 (moved AC remote) | right object + name, **wrong type** |
-| scene2 | 1 | apple (`removed`) | — | **extra** (the coconut cluster mislabelled) |
+| scene2 | 1 | apple (`removed`) |, | **extra** (the coconut cluster mislabelled) |
 | scene3 | 1 | black chair (`replaced`) | GT2 (apple→cup) | **type correct, label wrong** |
 | scene3 | 2 | red apple (`removed`) | GT2 | **fragment/duplicate** of GT2 (not a type match, not an extra) |
-| scene3 | 3 | green and yellow object (`removed`) | — | **extra** (coconut-like object stays on the table) |
+| scene3 | 3 | green and yellow object (`removed`) |, | **extra** (coconut-like object stays on the table) |
 | scene3 | 4 | black trash can (`removed`) | GT1 (chair removed) | **type correct, label wrong** |
 | scene5 | 1,2,3 | wooden leg / chair leg / table leg | GT2 (chair removed) | **fragments**, part names → **wrong** |
-| scene5 | 4 | small round object (`added`) | — | **extra** (floor reflection in video B) |
+| scene5 | 4 | small round object (`added`) |, | **extra** (floor reflection in video B) |
 | scene5 | 5 | bottle and clock (`added`) | GT1 (moved clock) | **wrong type** (`added` ≠ `moved`); `bottle` is a false object name |
-| scene6 | 2 | electrical outlet (`added`) | — | **extra** (wall outlet present in both videos); **apple missed** |
+| scene6 | 2 | electrical outlet (`added`) |, | **extra** (wall outlet present in both videos); **apple missed** |
 
 ### Metric definitions (authoritative)
 
-1. **recall(type)** — share of GT changes with ≥1 entry of the **correct type**.
-2. **recall(localized)** — share of GT changes with ≥1 entry **on the right object**,
+1. **recall(type)**, share of GT changes with ≥1 entry of the **correct type**.
+2. **recall(localized)**, share of GT changes with ≥1 entry **on the right object**,
    regardless of type/name.
-3. **move recall (strict)** — share of GT `moved` changes reported with type `moved`.
-4. **name accuracy** — correctly-named entries / localized entries; a **part name**
+3. **move recall (strict)**, share of GT `moved` changes reported with type `moved`.
+4. **name accuracy**, correctly-named entries / localized entries; a **part name**
    ("chair leg") is **not** correct.
-5. **fragments (by location)** — entries resolved to the same GT **beyond the first**.
-6. **precision breakdown** — every entry classified **correct / type-wrong /
+5. **fragments (by location)**, entries resolved to the same GT **beyond the first**.
+6. **precision breakdown**, every entry classified **correct / type-wrong /
    fragment / extra** (`correct` = resolved with the right type; naming is metric 4).
 
 ### Baseline (v1.0.0 reports), human-resolved
@@ -76,7 +76,7 @@ Phase B's targets.
 
 ---
 
-## Phase B — failure attribution
+## Phase B, failure attribution
 
 Every missed GT change and every extra, attributed to the stage that lost/created
 it, from `logs/pbs_*.log`, `cache/<scene>/semantics/{vlm,confirmed,rejected,matches}.json`
@@ -86,12 +86,12 @@ it, from `logs/pbs_*.log`, `cache/<scene>/semantics/{vlm,confirmed,rejected,matc
 
 | id | scene | case | stage | evidence |
 |---|---|---|---|---|
-| M1 | scene6 | **cup `moved` — missed** (move) | move-match (arrival lost upstream) | `matches.json` empty (0 pairs); arrivals `#16` "white cup" & `#21` "bottle and cup" were **VLM-confirmed** but rejected by the *structural post-filter* — "inside an object present in both videos (78% / 100% of its points) - lighting/blur artefact" |
-| M2 | scene6 | **apple `added` — missed** | VLM denied | candidate `#28` "blue cup and red apple" → VLM `changed=False` (denied); `#19` "plastic bottle" also denied |
+| M1 | scene6 | **cup `moved`, missed** (move) | move-match (arrival lost upstream) | `matches.json` empty (0 pairs); arrivals `#16` "white cup" & `#21` "bottle and cup" were **VLM-confirmed** but rejected by the *structural post-filter*, "inside an object present in both videos (78% / 100% of its points) - lighting/blur artefact" |
+| M2 | scene6 | **apple `added`, missed** | VLM denied | candidate `#28` "blue cup and red apple" → VLM `changed=False` (denied); `#19` "plastic bottle" also denied |
 | E1 | scene2 | extra `removed apple` | VLM false-positive | cluster `#1` VLM "apple" `changed=True` (apple is unchanged; spurious removal next to the coconut) |
 | E2 | scene3 | extra `removed green and yellow object` | VLM false-positive | cluster `#27` VLM `changed=True` (the coconut stays on the table) |
-| E3 | scene5 | extra `added small round object` | VLM false-positive / coverage artefact | cluster `#38` VLM `changed=True` — the "floor reflection in video B" you flagged |
-| E4 | scene6 | extra `added electrical outlet` | VLM false-positive / coverage artefact | cluster `#20` VLM `changed=True` — wall outlet present in both videos |
+| E3 | scene5 | extra `added small round object` | VLM false-positive / coverage artefact | cluster `#38` VLM `changed=True`, the "floor reflection in video B" you flagged |
+| E4 | scene6 | extra `added electrical outlet` | VLM false-positive / coverage artefact | cluster `#20` VLM `changed=True`, wall outlet present in both videos |
 | T1 | demo | GT `moved` remote → typed `replaced` | move-match + type logic | `matches.json` empty; cluster `#18` "remote control" `changed=True`; the departure `#2` "remote control" was also rejected by the post-filter ("inside object present in both videos, 100%") |
 | T2 | scene5 | GT `moved` clock → typed `added` | move-match | `matches.json` empty; cluster `#44` "bottle and clock" `changed=True` (clock's new position read as an addition) |
 | F1 | scene5 | chair removal **fragmented** (3 entries, part names) | clustering (no merge) + VLM naming | clusters `#6` "wooden leg", `#16` "chair leg", `#18` "table leg" all confirmed `removed` |
@@ -102,21 +102,21 @@ it, from `logs/pbs_*.log`, `cache/<scene>/semantics/{vlm,confirmed,rejected,matc
 
 ### Ranked causes (by count)
 
-1. **VLM false-positive confirmation — 4** (all extras: scene2 apple, scene3
+1. **VLM false-positive confirmation, 4** (all extras: scene2 apple, scene3
    green/yellow object, scene5 floor reflection, scene6 wall outlet). The VLM
    confirmed `changed=True` on regions that did not change; nothing downstream
    caught them.
-2. **VLM naming errors — 6 localized entries** (scene3 `black trash can`/`black
+2. **VLM naming errors, 6 localized entries** (scene3 `black trash can`/`black
    chair`; scene5 `wooden leg`/`chair leg`/`table leg`/`bottle and clock`).
    Part names and wrong objects.
-3. **Move matcher produced 0 pairs — 3 GT moves** (demo remote, scene5 clock,
+3. **Move matcher produced 0 pairs, 3 GT moves** (demo remote, scene5 clock,
    scene6 cup). Sub-causes: arrival dropped by the structural post-filter
    (scene6 cup), appearance-change-at-same-spot typed as `replaced` (demo
    remote), no arrival cluster at all (scene5 clock).
-4. **Clustering fragmentation — 2 GT, 3 redundant entries** (scene5 chair ×3;
+4. **Clustering fragmentation, 2 GT, 3 redundant entries** (scene5 chair ×3;
    scene3 apple ×2). No fragment merge by 3D adjacency.
-5. **VLM denial of a genuine change — 1** (scene6 apple, candidate `#28`).
-6. **Coverage/reflection artefacts — 3 of the extras** (scene5 reflection,
+5. **VLM denial of a genuine change, 1** (scene6 apple, candidate `#28`).
+6. **Coverage/reflection artefacts, 3 of the extras** (scene5 reflection,
    scene6 wall outlet, scene2 unchanged object): additions/removals accepted
    where the other video's depth did not establish the change.
 
@@ -133,10 +133,10 @@ it, from `logs/pbs_*.log`, `cache/<scene>/semantics/{vlm,confirmed,rejected,matc
 
 ---
 
-## CHECKPOINT — Phase B
+## CHECKPOINT, Phase B
 
 Ranked causes above. By evidence the highest-value levers are **Phase E
-(objmatch — 3 GT moves)** and **Phase D (soft veto + coverage-aware added — 5
+(objmatch, 3 GT moves)** and **Phase D (soft veto + coverage-aware added, 5
 of the 6 causes touch VLM verify/coverage)**; **Phase F** addresses the 2
 fragmented GT and naming; **Phase C** addresses naming + verify quality.
 Which should I take first?
