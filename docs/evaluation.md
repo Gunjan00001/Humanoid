@@ -239,3 +239,15 @@ slices. The report states that the test slice was run twice because of the bug
 fix, with no test score seen before the fix. If the sanity check passes, freeze,
 record the digests, then evaluate the test slice once. No threshold or config
 changes after that.
+
+## Adapter / driver bug fix (2026-10-12, before any test score was seen)
+
+What changed and why: the first full run (job 11027) failed for most pairs. Only
+10 validation pairs had been extracted from the zip, but the driver looped over
+all 20 validation pairs. For each unextracted pair the two original videos were
+missing, so `detect.py` exited with "give two videos" and the adapter then failed
+with a missing `reconstruction/meta.json`. Fix: extract all 20 validation and 10
+test pairs before running the driver. No threshold, prompt or flag changed and no
+adapter logic changed. The test slice was not evaluated before this fix (no test
+score was produced), so both slices are re-run from scratch and the test slice is
+still run once for scoring.
