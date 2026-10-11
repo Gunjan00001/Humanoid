@@ -109,6 +109,9 @@ semantics:
                              # space empty before reporting an "added" change
   soft_veto_min_points: 60   # D: geometry threshold for the soft veto
   soft_veto_min_empty: 0.5   # D: empty-space fraction that counts as strong geometry
+  objmatch_min_sim: 0.55     # E: Hungarian object-match minimum DINOv2 similarity
+  fragment_merge: false      # F: merge same-type fragments by a global 3D radius
+  fragment_merge_radius: 0.35  # F: metres (global; no scene-specific values)
   composite_match_distance: 0.15  # a replaced claim whose two sides each match
                              # an independent confirmed change within this
                              # distance is a composite, not a replacement

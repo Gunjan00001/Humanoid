@@ -1,26 +1,25 @@
 #!/usr/bin/env python3
 """Semantics-only experiment worker (branch exp/accuracy). Runs on a GPU node.
 
-Queue of (config-diff, scene) SEMANTICS-ONLY experiments from each scene's
-cached reconstruction/diff/VLM (no VGGT, no re-extraction). Isolated cache per
-experiment: reconstruction/diff/frames SYMLINKED, semantics/vlm.json + crops
-copied in - so post-filter experiments reuse every cached VLM answer (no 32B).
+Runs a queue of (config-diff, scene) SEMANTICS-ONLY experiments from each
+scene's cached reconstruction/diff (no VGGT, no re-extraction), **in-process**,
+so Qwen3-VL-32B and DINOv2 are loaded ONCE and reused across the whole queue
+(the subprocess-per-experiment design reloaded the 32B for every scene that
+needs a move/reclassify sentence). Isolated cache per experiment:
+reconstruction/diff/frames symlinked, semantics/vlm.json + crops copied in, so
+cached VLM answers are reused too.
 
-GPU strategy (configurable, no fixed indices):
-  * rank ALL GPUs by free memory (nvidia-smi);
-  * small-model experiments (DINOv2 / cached-VLM post-filters): 1 GPU >= SMALL_GB;
-  * 32B experiments (need fresh VLM answers): shard Qwen3-VL-32B bf16 across the
-    2-4 GPUs with the most free memory via device_map="auto" + explicit
-    max_memory (each >= BIG_GB, total >= BIG_TOTAL_GB); no per-GPU 70GB demand.
-  * PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-  * OOM / busy: free, re-rank, retry with backoff (up to TRIES over ~1 h), then
-    keep waiting rather than exit. Chosen GPUs + free memory logged.
-Small-model work never shares a GPU with the 32B worker. No quantization.
-Resumable; deletes nothing shared.
+GPU strategy (no fixed indices): rank all GPUs by free memory; shard
+Qwen3-VL-32B bf16 across the 2-4 GPUs with the most free memory via
+device_map="auto" + explicit max_memory (each >= BIG_GB, total >= BIG_TOTAL_GB);
+small models (DINOv2) on the same visible set. PYTORCH_CUDA_ALLOC_CONF=
+expandable_segments:True. OOM/busy -> re-rank + backoff, never exit. No
+quantization. Resumable. Deletes nothing shared.
 """
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import os
 import shutil
@@ -33,10 +32,10 @@ import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
 PY = sys.executable
+sys.path.insert(0, str(ROOT))
 SPRINT = ROOT / "logs" / "sprint"
 (SPRINT / "configs").mkdir(parents=True, exist_ok=True)
 
-SMALL_GB = 25.0
 BIG_GB = 40.0
 BIG_TOTAL_GB = 80.0
 
@@ -46,19 +45,21 @@ GT = {s: SCENE_DIR[s] / "ground_truth.json" for s in SCENES}
 MATCHES = {s: SCENE_DIR[s] / "matches.json" for s in SCENES}
 SCENE_CACHE = {s: (ROOT / "cache" if s == "demo" else ROOT / "cache" / s) for s in SCENES}
 
-# experiment name -> (dotted overrides, needs_fresh_vlm)
 EXPERIMENTS = {
-    "baseline":    ({}, False),
-    "d_softveto":  ({"semantics.soft_veto": True}, False),
-    "d_coverage":  ({"semantics.coverage_added": True}, False),
-    "d_both":      ({"semantics.soft_veto": True, "semantics.coverage_added": True}, False),
-    "e_objmatch":  ({"diff.objmatch": True}, False),
-    "d_both_e":    ({"semantics.soft_veto": True, "semantics.coverage_added": True,
-                     "diff.objmatch": True}, False),
+    "baseline":   {"semantics.match_before_filter": True},
+    "d_softveto": {"semantics.soft_veto": True},
+    "d_coverage": {"semantics.coverage_added": True},
+    "d_both":     {"semantics.soft_veto": True, "semantics.coverage_added": True},
+    "e_objmatch": {"diff.objmatch": True},
+    "f_merge":    {"semantics.fragment_merge": True},
+    "d_both_ef":  {"semantics.soft_veto": True, "semantics.coverage_added": True,
+                   "diff.objmatch": True, "semantics.fragment_merge": True},
 }
 PHASES = {
     "D": ["baseline", "d_softveto", "d_coverage", "d_both"],
-    "E": ["baseline", "e_objmatch", "d_both_e"],
+    "E": ["baseline", "e_objmatch", "d_both_ef"],
+    "F": ["baseline", "f_merge"],
+    "EF": ["baseline", "e_objmatch", "f_merge", "d_both_ef"],
 }
 
 
@@ -74,7 +75,7 @@ def apply_overrides(cfg, dotted):
 
 def exp_config(name, max_memory=None) -> Path:
     cfg = yaml.safe_load((ROOT / "configs" / "default.yaml").read_text())
-    apply_overrides(cfg, EXPERIMENTS[name][0])
+    apply_overrides(cfg, EXPERIMENTS[name])
     if max_memory:
         cfg["semantics"]["vlm_max_memory"] = max_memory
     p = SPRINT / "configs" / f"{name}.yaml"
@@ -89,24 +90,15 @@ def gpu_free():
                              capture_output=True, text=True, timeout=20).stdout
     except Exception:
         return []
-    rows = []
-    for line in out.strip().splitlines():
-        i, tot, used = (int(x) for x in line.split(","))
-        rows.append((i, (tot - used) / 1024.0))
+    rows = [(int(i), (int(t) - int(u)) / 1024.0) for i, t, u in
+            (ln.split(",") for ln in out.strip().splitlines())]
     return sorted(rows, key=lambda r: -r[1])
 
 
-def log_gpu(msg: str):
+def log_gpu(msg):
     with (SPRINT / "gpu.log").open("a") as fh:
         fh.write(f"{time.strftime('%F %T')} {msg}\n")
     print(f"[worker] {msg}", flush=True)
-
-
-def choose_small():
-    for i, free in gpu_free():
-        if free >= SMALL_GB:
-            return [i], {0: f"{int(free) - 2}GiB"}
-    return None, None
 
 
 def choose_32b():
@@ -114,16 +106,13 @@ def choose_32b():
     for k in range(len(cand), 1, -1):
         top = cand[:k]
         if sum(f for _, f in top) >= BIG_TOTAL_GB:
-            vmax = {vi: f"{int(f) - 2}GiB" for vi, (_, f) in enumerate(top)}
-            return [i for i, _ in top], vmax
+            return [i for i, _ in top], {vi: f"{int(f) - 2}GiB" for vi, (_, f) in enumerate(top)}
     return None, None
 
 
 def prepare(exp, scene):
     d = ROOT / "cache" / "sprint" / exp / scene
     src = SCENE_CACHE[scene]
-    # purge a stale REAL cache dir left by an earlier full-pipeline attempt, so
-    # the symlinks below are (re)created and describe reads the scene's cache
     if d.exists() and (d / "reconstruction").exists() and not (d / "reconstruction").is_symlink():
         shutil.rmtree(d)
     d.mkdir(parents=True, exist_ok=True)
@@ -141,22 +130,9 @@ def prepare(exp, scene):
     return d
 
 
-def run_stage(script, cfg, cache, out):
-    return subprocess.run([PY, "-u", str(ROOT / "src" / script), "--config", str(cfg),
-                           "--cache", str(cache), "--out", str(out), "--force"],
-                          cwd=ROOT).returncode
-
-
-def oom_tail(log: Path) -> bool:
-    try:
-        return "OutOfMemory" in log.read_text(errors="replace")[-3000:]
-    except Exception:
-        return False
-
-
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--phase", choices=list(PHASES), default="D")
+    ap.add_argument("--phase", choices=list(PHASES), default="EF")
     ap.add_argument("--experiments", nargs="*")
     ap.add_argument("--scenes", nargs="*", default=SCENES)
     ap.add_argument("--tries", type=int, default=6)
@@ -169,49 +145,78 @@ def main():
     os.environ.pop("CUDA_VISIBLE_DEVICES", None)
 
     exps = args.experiments or PHASES[args.phase]
-    needs_vlm = any(EXPERIMENTS[e][1] for e in exps)
     todo = [(e, s) for e in exps for s in args.scenes
             if not (ROOT / "outputs" / "sprint" / e / s / "report.json").exists()]
 
-    once_ok = False
+    D = importlib.import_module("src.describe")
+    Rm = importlib.import_module("src.report")
+
+    _vlm = {"m": None}
+    _matcher = {"m": None}
+    real_load_vlm, real_load_matcher = D.load_vlm, D.load_matcher
+
+    def cached_vlm(cfg):
+        if _vlm["m"] is None:
+            _vlm["m"] = real_load_vlm(cfg)
+            log_gpu("32B VLM loaded once")
+        return _vlm["m"]
+
+    def cached_matcher(cfg):
+        if _matcher["m"] is None:
+            _matcher["m"] = real_load_matcher(cfg)
+            log_gpu("DINOv2 matcher loaded once")
+        return _matcher["m"]
+
+    D.load_vlm, D.load_matcher = cached_vlm, cached_matcher
+
     for attempt in range(1, args.tries + 1):
-        free = gpu_free()
-        log_gpu(f"attempt {attempt}: free GB = {free}")
-        gpus, vmax = choose_32b() if needs_vlm else choose_small()
+        gpus, vmax = choose_32b()
         if gpus is None:
             wait = min(120 * attempt, 600)
-            log_gpu(f"no suitable GPUs (need {'2-4 big' if needs_vlm else '1 small'}); "
-                    f"waiting {wait}s")
+            log_gpu(f"free={gpu_free()}; need 2-4 GPUs >=40GB (sum>=80). wait {wait}s")
             time.sleep(wait)
             continue
         os.environ["CUDA_VISIBLE_DEVICES"] = ",".join(str(i) for i in gpus)
-        log_gpu(f"pinned GPUs {gpus} vmax={vmax}")
-        cfg = {e: exp_config(e, vmax if EXPERIMENTS[e][1] else None) for e in exps}
-        failed = 0
+        log_gpu(f"attempt {attempt}: pinned GPUs {gpus} max_memory={vmax}")
+        cfgs = {e: exp_config(e, vmax) for e in exps}
+        failed = False
         for i, (e, s) in enumerate(todo, 1):
-            if (ROOT / "outputs" / "sprint" / e / s / "report.json").exists():
+            out = ROOT / "outputs" / "sprint" / e / s
+            if (out / "report.json").exists():
                 continue
             cache = prepare(e, s)
-            log = SPRINT / f"{e}__{s}.log"
-            rc = run_stage("describe.py", cfg[e], cache, ROOT / "outputs" / "sprint" / e / s)
-            if rc == 0:
-                run_stage("report.py", cfg[e], cache, ROOT / "outputs" / "sprint" / e / s)
-                st = "ok" if (ROOT / "outputs" / "sprint" / e / s / "report.json").exists() else "no-report"
-            else:
-                st = "oom" if oom_tail(log) else "fail"
-                failed += 1
+            argv = ["describe.py", "--config", str(cfgs[e]), "--cache", str(cache),
+                    "--out", str(out), "--force"]
+            old, sys.argv = sys.argv, argv
+            try:
+                rc = D.main()
+                if rc == 0:
+                    Rm.main()
+                st = "ok" if (out / "report.json").exists() else "no-report"
+            except Exception as exc:  # noqa: BLE001
+                st = f"error:{type(exc).__name__}"
+                if "OutOfMemory" in str(exc):
+                    failed = True
+            finally:
+                sys.argv = old
             log_gpu(f"[{i}/{len(todo)}] {e}/{s}: {st}")
             (SPRINT / "heartbeat.json").write_text(json.dumps(
                 {"phase": args.phase, "todo": len(todo), "done": i, "last": f"{e}/{s}:{st}",
                  "gpus": gpus, "t": time.time()}, indent=2))
-            if st == "oom":
-                break  # race: re-rank GPUs and restart the loop
-        if failed == 0:
-            once_ok = True
+            if failed:
+                break
+        if not failed:
             break
+        # free the sharded model and retry on a fresh GPU set
+        _vlm["m"] = None
+        import gc
+        gc.collect()
+        try:
+            import torch
+            torch.cuda.empty_cache()
+        except Exception:  # noqa: BLE001
+            pass
         time.sleep(min(120 * attempt, 600))
-    if not once_ok:
-        log_gpu("could not complete under GPU pressure; leaving partial outputs")
 
     print("\n===== SCORES =====", flush=True)
     for e in exps:
