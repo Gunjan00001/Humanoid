@@ -26,3 +26,25 @@ step: timestamp, track, step, result, next step.
 - Result: on docs/humanize, ready for the v1.0.1 doc work.
 - Next: humanize the docs, cherry pick the summary wording change, apply the fixes,
   validate with scripts/check_numbers.py, run tests, tag v1.0.1.
+
+### 2026-10-11 21:50 IST, Track A, fixes and cherry pick
+- Cherry picked the humanized summary format and its tests plus
+  scripts/check_numbers.py (no detection files).
+- README quick start now uses the HTTPS clone URL and adds the VGGT install step;
+  docs/setup.md documents it and what stays unverified.
+- Redacted the cluster username from docs/devlog.md and scripts/repro_scenes.sh.
+  No tracked file contains it now.
+- detect.py prints the working flags when frame extraction finds too few sharp
+  frames.
+- Regenerated every committed summary from the existing report.json (text only).
+- tests/test_summary.py passes. scripts/check_numbers.py reports only expected
+  items: the new status file, the username redaction, and a stale scene2_geo
+  summary that lacked its list numbering. No result number changed.
+- Next: humanize README, docs and devlog prose (large), then fresh clone, tag
+  v1.0.1, push, merge main into exp/accuracy.
+
+### Notes on the other tracks (not started)
+- Track B (objmatch2): blocked, SAM 2 is not installed.
+- Track C (SceneDiff): not started.
+- Track D (freeze and sealed): no change accepted, no data/sealed directory.
+
