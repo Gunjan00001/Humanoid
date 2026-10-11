@@ -10,7 +10,7 @@ compute node (`the GPU node`) writes its logs 3:30:00 behind that clock
 are exact; cross-source absolute times are quoted in one clock and the offset
 is stated.
 
-## One full scene prediction + 3D map — scene4, job 10802
+## One full scene prediction + 3D map, scene4, job 10802
 
 | PBS record | value |
 |---|---|
@@ -35,7 +35,7 @@ idle `gpu-session` (which held 4 CPUs) the job started immediately.
 | semantics (VLM + DINOv2) | 23:10:48 → 23:14:17 | **3:29** | VLM load 26 s + 10 VLM calls at ~11 s |
 | report | → 23:14:20 | 3 s | |
 | viewer.html | → 23:14:40 | 20 s | 1.7 MB |
-| GIF | → 23:14:46 | 6 s | matplotlib fallback — **no Chrome on the GPU node** |
+| GIF | → 23:14:46 | 6 s | matplotlib fallback, **no Chrome on the GPU node** |
 | TSDF mesh | → 23:14:50 | 4 s | 199 131 triangles, 9.1 MB |
 | job end | 23:14:52 | | matches `obittime` exactly |
 
@@ -51,11 +51,11 @@ reclassified clusters), counted from the log. Measured rate: verifications
 | DA3-LARGE (different model) | 39.7 s | `pbs_da3_full.log` |
 | Qwen3-VL-32B | **26 s** (scene4: `loading VLM` → first verification) | `pbs_scene4.log` |
 | Qwen3-VL-32B (early run, cold/network FS) | 2:07 | job 10715, `logs/describe_real.log` |
-| DINOv2-large | ~1 s per load — **loaded twice per run** | two `loading matcher` lines in 10802 (appearance check, then move matching) |
+| DINOv2-large | ~1 s per load, **loaded twice per run** | two `loading matcher` lines in 10802 (appearance check, then move matching) |
 
 ### Contention at job start (what can and cannot be measured)
 
-- **GPU utilization (`nvidia-smi`): not measurable** — no snapshot was
+- **GPU utilization (`nvidia-smi`): not measurable**, no snapshot was
   captured in any log. This number cannot be produced retroactively.
 - From PBS records: 3 concurrent jobs of the same account were running during
   10802, each **1 GPU** (`otheruser-jobs-…`: 02:05→03:30, 02:09→03:10, 02:34→03:07)
@@ -73,11 +73,11 @@ All scene4 jobs (login clock):
 | 10806 | 03:00:31 | 4 s | 1:04 | fix round 2 (2 fresh VLM calls) |
 | 10808 | 03:04:23 | 3 s | 2:12 | scene4 + 3 regression scenes |
 | 10810 | 03:10:58 | 2 s | 2:02 | scene4 + 3 regression scenes (final) |
-| login-node renders | ~03:14 → 03:36 | — | ~22 min | Chrome GIF + mesh re-renders (see below) |
+| login-node renders | ~03:14 → 03:36 |, | ~22 min | Chrome GIF + mesh re-renders (see below) |
 
 **First submission → final visual ≈ 58 min.** One prediction is 5:14 on the
 node; the hour is five GPU rounds (the first run plus four semantic-fix /
-regression rounds) plus two visual rounds plus the analysis between them —
+regression rounds) plus two visual rounds plus the analysis between them , 
 not one long run.
 
 ## v0.12 one-command runs (`detect.py`)
@@ -86,7 +86,7 @@ not one long run.
 |---|---|---|---|---|
 | **scene5 held-out** (job 10824, cold) | 0 s | **7:07** | 7:22 | extract 0:03, reconstruct 0:23, align 0:24, diff 0:33, describe 3:54, report+visualize+summary ~1:45 |
 | scene5 post-hoc tabletop (job 10829, cold) | 1 s | 6:33 | 6:41 | one variable changed (`--method tabletop`) |
-| **4 development-scene regressions** (job 10830, `--force` with warm VLM caches) | 0 s | **10:25** | — | per scene: demo 2:27, scene2 2:16, scene3 2:20, scene4 3:12 (re-extract/reconstruct/diff re-ran; the cached VLM answers skipped the model load) |
+| **4 development-scene regressions** (job 10830, `--force` with warm VLM caches) | 0 s | **10:25** |, | per scene: demo 2:27, scene2 2:16, scene3 2:20, scene4 3:12 (re-extract/reconstruct/diff re-ran; the cached VLM answers skipped the model load) |
 
 The cold/warm split is the dominant factor: a cold scene pays the VLM load
 (~26 s) and the fresh verifications (~11 s per candidate); a warm re-run of a
@@ -95,7 +95,7 @@ whole scene is 2-3 min even with `--force`.
 ## Warm re-runs (VLM cache warm)
 
 - `describe` + `report` only: **0:33** (10804), **1:04** (10806, includes two
-  fresh VLM calls), **2:02–2:12** (10808/10810 — scene4 *plus* the three
+  fresh VLM calls), **2:02–2:12** (10808/10810, scene4 *plus* the three
   regression scenes in the same job).
 - The three regression scenes' describe+report: ~15–25 s each (combined logs).
 
@@ -121,7 +121,7 @@ Per-artifact measurements from earlier runs:
 
 Note: the *same* mesh step took **4 s** inside job 10802 on the GPU node
 (arrays in page cache, 96-core host) versus ~89 s on the shared login node.
-Which factor dominates (page cache vs cores) was **not isolated** — listed
+Which factor dominates (page cache vs cores) was **not isolated**, listed
 here as unverified.
 
 ## Old timing claims vs measurements (corrections)
@@ -137,11 +137,11 @@ here as unverified.
 
 - `nvidia-smi` / per-GPU utilization at job start (no snapshot captured).
 - The wall-clock time before the first submission (when the scene4 videos
-  arrived) — not recorded in any log I can read.
+  arrived), not recorded in any log I can read.
 
 ## Reproducibility runs (2026-10-11)
 
-Twelve `detect.py --force` runs (scene2 working point, scene4, scene5, scene6 —
+Twelve `detect.py --force` runs (scene2 working point, scene4, scene5, scene6 , 
 3× each; fresh caches; 2 CPUs + 2 GPUs per job; 3 workers). Per-run wall clock
 (submit → summary), which includes queue waits on the busy shared queue:
 
