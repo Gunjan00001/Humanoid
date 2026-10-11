@@ -162,3 +162,13 @@ Next steps and the exact commands:
 - Dry run on 3 val pairs launched (gpu-run, 2 GPUs). Slow: the node was busy so
   the 32B sharded with CPU offload, which makes the describe stage very slow.
 - Next: finish the dry run, then C4 (20 val pairs) and C5 (10 test pairs once).
+
+### 2026-10-12 00:45 IST, Track C C3 done, C4/C5 running
+- C3 dry run passed: src/eval_scenediff.py produced object_masks.pkl that the
+  evaluator accepted and scored (low scores, which is expected and not a gate).
+- C4/C5 launched as PBS job 11027 (12 h): runs the 20 val pairs (logs/val20.txt)
+  then the 10 test pairs (logs/test10.txt), predicting to logs/eval_pred_val and
+  logs/eval_pred_test.
+- Next: when 11027 finishes, run the evaluator on the val slice, freeze the
+  config (v1.0.0 default, nothing accepted), then run the test evaluator once and
+  write the failure analysis.
