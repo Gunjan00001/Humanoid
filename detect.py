@@ -146,7 +146,9 @@ source "$HOME/miniconda3/etc/profile.d/conda.sh"
 conda activate spatialdiff
 export PATH="$CONDA_PREFIX/bin:$PATH"
 {py} -u detect.py --local --a "{a}" --b "{b}" --name {name} {' '.join(passthrough)}
+rc=$?
 echo DETECT_JOB_DONE
+exit $rc
 """)
     return script
 
@@ -400,6 +402,11 @@ def main() -> int:
         print(f"[node ] running the stages here ({where})", flush=True)
         return run_local(args, cfg, name, a, b)
 
+    if str(ROOT).startswith("/tmp"):
+        print("[WARN ] this repository is under /tmp, which is node-local: the "
+              "PBS job runs on a different machine and will not see it. Clone "
+              "into your shared home directory (or use --local on a GPU node).",
+              flush=True)
     print("[node ] login node: submitting the model stages to the PBS gpu "
           "queue", flush=True)
     return submit_and_poll(args, name, a, b)
