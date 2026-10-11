@@ -222,3 +222,20 @@ used to resize both GT and prediction masks, so they must be consistent.
 Dependencies added on the login node: pycocotools, faiss-cpu. The evaluator is
 run from the repo root with `data/scenediff_benchmark` symlinked to the extracted
 dataset (gitignored).
+
+## Rule for the validation and test slices
+
+The evaluator is NOT run on the test predictions until the validation results pass
+a sanity check:
+
+1. every validation pair produced a valid `object_masks.pkl`;
+2. H and W match the GT mask size;
+3. scores are not degenerate (not all zero and not constant across pairs);
+4. a manual look at 3 validation pairs' overlays shows masks on the right frames.
+
+If the sanity check finds an adapter bug, fix it as a pure bug fix (no threshold,
+prompt or flag changes), document what changed and why here, and re-run BOTH
+slices. The report states that the test slice was run twice because of the bug
+fix, with no test score seen before the fix. If the sanity check passes, freeze,
+record the digests, then evaluate the test slice once. No threshold or config
+changes after that.
