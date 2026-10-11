@@ -141,3 +141,17 @@ of the 6 causes touch VLM verify/coverage)**; **Phase F** addresses the 2
 fragmented GT and naming; **Phase C** addresses naming + verify quality.
 Which should I take first?
 
+
+## Track B probe result (SAM 2, job 11017)
+
+`scripts/probe_sam2.py` refines the paired crops with a SAM 2.1 base-plus mask and
+compares them with DINOv2 against the 0.65 gate.
+
+| scene | object | paired-crop DINOv2 after SAM 2 mask | pass |
+|---|---|---|---|
+| scene6 | cup | 0.190 | no |
+| scene5 | clock | 0.219 | no |
+
+The probe fails, so objmatch2 is not built (the pass gate needs the object
+segmented and matched in at least 2 of the 3 targets). Segmented in both videos
+was not enough; the crops do not match. See docs/negative_results.md.
