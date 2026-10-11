@@ -106,7 +106,12 @@ def choose_32b():
     for k in range(len(cand), 1, -1):
         top = cand[:k]
         if sum(f for _, f in top) >= BIG_TOTAL_GB:
-            return [i for i, _ in top], {vi: f"{int(f) - 2}GiB" for vi, (_, f) in enumerate(top)}
+            return [i for i, _ in top], {str(vi): f"{int(f) - 2}GiB" for vi, (_, f) in enumerate(top)}
+    # fallback when <2 idle big GPUs: one GPU with device_map="auto" CPU offload
+    # (bf16, NOT quantized) so the queue still progresses on a busy node.
+    if cand:
+        i, f = cand[0]
+        return [i], {"0": f"{int(f) - 4}GiB", "cpu": "64GiB"}
     return None, None
 
 
@@ -195,6 +200,10 @@ def main():
                 st = "ok" if (out / "report.json").exists() else "no-report"
             except Exception as exc:  # noqa: BLE001
                 st = f"error:{type(exc).__name__}"
+                import traceback as _tb
+                with (SPRINT / "errors.log").open("a") as fh:
+                    fh.write(f"\n### {e}/{s}\n")
+                    _tb.print_exc(file=fh)
                 if "OutOfMemory" in str(exc):
                     failed = True
             finally:

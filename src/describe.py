@@ -237,7 +237,7 @@ def load_vlm(cfg: dict):
     if mm:
         # explicit per-GPU sharding for a shared node (accuracy sprint): keys are
         # the VISIBLE device indices, values e.g. "38GiB". Never quantizes.
-        kwargs["max_memory"] = {int(k): v for k, v in mm.items()}
+        kwargs["max_memory"] = {(int(k) if str(k).isdigit() else k): v for k, v in mm.items()}
         log.info("VLM max_memory=%s", kwargs["max_memory"])
     model = ModelCls.from_pretrained(ref, **kwargs)
     model.eval()
