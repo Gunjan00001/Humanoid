@@ -47,6 +47,29 @@ pip install torch torchvision torchaudio \
 pip install -r requirements.txt
 ```
 
+### `environment.yml` — status: **unverified** (cannot be built as-is)
+
+`environment.yml` is a *machine export* (`conda env export`), not the canonical
+install path (that is `scripts/setup_env.sh` / the manual block above). An
+attempt to build it clean on 2026-10-11 with
+`conda env create -f environment.yml -p .venv` **failed**:
+
+- `vggt==0.0.1` is **not on PyPI** (it is installed from the git repo
+  `facebookresearch/vggt`, per §"Installing VGGT" below) —
+  `ERROR: Could not find a version that satisfies the requirement vggt==0.0.1`;
+- `torch==2.14.1+cu126` exists only on the PyTorch index
+  (`https://download.pytorch.org/whl/cu126`), not on default PyPI;
+- several pinned versions require **Python ≥ 3.11/3.12** while the export pins
+  Python `3.10.22`, so pip ignored them (`Ignored the following versions that
+  require a different python version: ...`).
+
+**Verify a clean clone with the canonical path above, not with `environment.yml`.**
+In the existing `spatialdiff` env the CLI and stack do work: `python detect.py
+--help` exits 0 and `numpy, scipy, sklearn, cv2, open3d, torch, torchvision,
+transformers, accelerate, yaml, matplotlib, PIL, huggingface_hub, safetensors`
+all import. **The model stages were not re-run in a clean env — unverified
+(weights not downloaded).**
+
 The scripts never rely on `conda activate` alone: this cluster's sessions can
 carry a PATH where the shared anaconda's python 3.8 wins over the env (see
 [`troubleshooting.md`](troubleshooting.md)). They call the env interpreter by

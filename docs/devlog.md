@@ -686,3 +686,25 @@ the automatic mode choice contributed; no held-out output was changed.
   to `docs/heldout.md`, and a `DEMO_VIDEO_URL` placeholder.
 - **GitHub Pages (Step 4.4)**: checked with `curl` — the five viewer URLs
   return **HTTP 404**; Pages is not serving (owner action to enable).
+
+## 2026-10-11 — Held-out scene6: Step 2 result + visualization fix
+
+- **Step 2 finalized** (user overlay confirmation, authoritative): per-change
+  table, overlay review, scoring and failure analysis written to
+  `docs/heldout.md`. **Scored 1/3 found, labels 1/1, missed 2, extras 1** (the
+  extra is a false-positive "electrical outlet"; tile 1's 3D box position was
+  not verified by the user). `docs/results.md` gained a held-out section split
+  from the tuned development scenes.
+- **Failure analysis** (diagnostic): cup move missed because `move matches: 0`
+  — its two VLM-confirmed arrival candidates (`16` "white cup", `21` "bottle and
+  cup") were dropped by the structural post-filter ("inside an object present in
+  both videos", 78%/100%); the apple add missed because candidate `28` ("blue
+  cup and red apple") was **denied by the VLM** (`changed=False`). `geometric`
+  mode (plane 6%) likely contributed the fragment storm (28 of 32 rejects).
+- **Visualization bug fixed** (viz only, no detection change): `crops.json`
+  stores `frame` for the change's *own* video, so `src/visualize.py` hard-coding
+  `before=frame, after=frame_other` swapped the panels for `added` changes
+  (tag b). New `ab_evidence()` selects by tag. `outputs/scene6/changes/`,
+  `change.gif` and the checking sheet were re-rendered from the cached results;
+  `report.json` and every detection number are unchanged. (Chrome was present on
+  the login node for the re-render, so the GIF is Chrome-rendered this time.)
