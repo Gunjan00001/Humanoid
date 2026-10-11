@@ -122,3 +122,50 @@ Evaluator code cloned to `third_party/scene_diff` (scripts/evaluate_multiview.py
 
 Still pending from C1: the evaluator smoke test (perfect and empty prediction),
 the 10 per-pair facts, and the compute estimate.
+
+## C1 per-pair facts (10 val varied pairs, extracted)
+
+res = raw video resolution, ori = L landscape, objA/objB = annotated objects in
+each video, mv/add/rem = changed objects by type (moved, added, removed).
+
+| pair | res | fps | dur s | ori | objA | objB | mv | add | rem | MB |
+|---|---|---|---|---|---|---|---|---|---|---|
+| airhockeytable_1_airhockeytable_2 | 1920x1080 | 30.0 | 9.2 | L | 1 | 1 | 1 | 0 | 0 | 17.4 |
+| bathroom_11_bathroom_12 | 1920x1080 | 60.0 | 10.2 | L | 2 | 0 | 0 | 0 | 2 | 35.0 |
+| bathroom_1_bathroom_2 | 1920x1080 | 60.0 | 8.9 | L | 4 | 2 | 2 | 0 | 2 | 30.0 |
+| bed_3_bed_4 | 1920x1440 | 30.0 | 4.2 | L | 1 | 2 | 1 | 1 | 0 | 10.9 |
+| bedroom_1_bedroom_2 | 1920x1080 | 30.0 | 12.4 | L | 4 | 3 | 3 | 0 | 1 | 28.2 |
+| bedroom_2_bedroom_3 | 1920x1080 | 30.0 | 13.9 | L | 5 | 6 | 4 | 2 | 1 | 26.8 |
+| bedroom_2_bedroom_4 | 1920x1080 | 30.0 | 13.9 | L | 7 | 7 | 4 | 3 | 3 | 27.0 |
+| bedroom_30_bedroom_31 | 1920x1080 | 30.0 | 3.9 | L | 1 | 1 | 1 | 0 | 0 | 14.0 |
+| bedroom_3_bedroom_5 | 1920x1080 | 30.0 | 11.2 | L | 6 | 2 | 1 | 1 | 5 | 23.0 |
+| bedroom_4_bedroom_5 | 1920x1080 | 30.0 | 11.4 | L | 4 | 0 | 0 | 0 | 4 | 23.2 |
+
+All ten are landscape, 1920x1080 or 1920x1440, 30 or 60 fps, 4 to 14 s. Objects
+per pair range from 1 to 7 per video. Total video bytes for the ten pairs is
+235.5 MB.
+
+## C1 adapter notes
+
+a. Raw videos are `.MOV` or `.mov`. Read them with rotation applied (OpenCV's
+   VideoCapture does this; ffprobe confirms the reported width and height).
+   Verified for the sampled pairs that the decoded resolution equals the GT mask
+   `size` in `segments.pkl` (1920x1080 and 1920x1440 both matched). The adapter
+   asserts `(H, W)` equals the mask `size` per pair. A unit check is added.
+b. Extraction needs `UNZIP_DISABLE_ZIPBOMB_DETECTION=TRUE`.
+c. Change type from `in_video1` and `in_video2`: in both is moved or unchanged,
+   in video1 only is removed, in video2 only is added. Frame ids are integer frame
+   indices of the original video.
+d. The GT annotates only specific frames (`video1_frame_idx`, `video2_frame_idx`
+   and the frames present in `video1_objects`/`video2_objects`). The evaluator
+   scores the annotated frames. How many frames it scores versus how many we can
+   project is still to be measured from the evaluator code; the interpolation
+   policy (project the 3D change into every scored annotated frame, interpolate a
+   pose when that frame was not reconstructed) is decided before the dry run.
+
+## C1 compute estimate
+
+Measured earlier: one new scene (two clips, about 30 frames each) costs about 6
+minutes on the node (reconstruct about 2 to 3 min, describe about 2 to 4 min).
+The 30 pairs (20 validation + 10 test) are therefore about 3 to 4 GPU hours,
+well under the 12 GPU hour cap, so the validation slice is not reduced.
