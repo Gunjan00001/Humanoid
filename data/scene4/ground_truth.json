@@ -1,0 +1,12 @@
+{
+  "scene": "scene4",
+  "source": "data/scene4/ground_truth.md",
+  "changes": [
+    {"id": 1, "type": "moved",   "object": "apple",
+     "synonyms": ["apple", "red apple"]},
+    {"id": 2, "type": "removed", "object": "scissor",
+     "synonyms": ["scissor", "scissors"]},
+    {"id": 3, "type": "added",   "object": "bottle",
+     "synonyms": ["bottle", "water bottle", "plastic bottle"]}
+  ]
+}

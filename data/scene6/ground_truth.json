@@ -1,0 +1,12 @@
+{
+  "scene": "scene6",
+  "source": "data/scene6/ground_truth.md",
+  "changes": [
+    {"id": 1, "type": "moved",   "object": "cup",
+     "synonyms": ["cup", "mug", "glass", "teacup"]},
+    {"id": 2, "type": "removed", "object": "remote",
+     "synonyms": ["remote", "remote control", "remote controller"]},
+    {"id": 3, "type": "added",   "object": "apple",
+     "synonyms": ["apple", "red apple"]}
+  ]
+}
