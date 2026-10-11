@@ -7,12 +7,13 @@ Planned layout from [`../AGENT_PLAN.md`](../AGENT_PLAN.md) §4; the root maps to
 
 | Path | Purpose | Status |
 |---|---|---|
-| `README.md` | Project front page | ✅ (results pending) |
+| `README.md` | Project front page (quick start, results, held-out) | ✅ |
 | `AGENT_PLAN.md` | Plan, phases, checkpoints | ✅ |
 | `LICENSE` | MIT for this repo (models keep their own licenses) | ✅ |
 | `requirements.txt` | pip pins | ✅ |
 | `environment.yml` | conda env export | ⬜ generated after the env is verified |
-| `run.py` | One-command pipeline | ✅ |
+| `detect.py` | One-command runner: validation, auto mode, PBS submit+poll, summary | ✅ v0.12 |
+| `run.py` | Low-level stage orchestrator (no model logic) | ✅ |
 | `configs/default.yaml` | All models, paths, thresholds | ✅ |
 | `src/common.py` | config/CLI/JSON helpers shared by all stages | ✅ |
 | `src/geometry.py` | reconstruction loading, camera math, change list | ✅ |
@@ -21,9 +22,15 @@ Planned layout from [`../AGENT_PLAN.md`](../AGENT_PLAN.md) §4; the root maps to
 | `src/reconstruct.py` | VGGT / MASt3R / COLMAP switch | ✅ VGGT (fallbacks raise) |
 | `src/align.py` | optional ICP refinement | ✅ |
 | `src/diff.py` | voxel diff, DBSCAN, visibility check | ✅ |
-| `src/describe.py` | crops, Qwen3-VL labels, DINOv2 matching | ✅ (GPU validation pending) |
-| `src/visualize.py` | colored PLY, arrows, viewer | ✅ |
+| `src/describe.py` | crops, Qwen3-VL verification, type correction, DINOv2 move matching | ✅ |
+| `src/visualize.py` | display cloud, table-up camera, composites, Chrome GIF, viewer, mesh | ✅ |
+| `src/viewer.py` | self-contained three.js viewer generator | ✅ |
+| `src/render_gif.py` | headless-Chrome GIF from the viewer (+ palette fix) | ✅ |
+| `src/mesh.py` | colored TSDF mesh export (≤ 10 MB) | ✅ |
+| `src/summary.py` | natural-language summary from report.json only | ✅ v0.12 |
 | `src/report.py` | JSON + Markdown report | ✅ |
+| `tests/test_summary.py` | summary invariants (synthetic + committed outputs) | ✅ v0.12 |
+| `scripts/checking_sheet.py` | numbered before/after+3D tiles for review | ✅ v0.12 |
 | `scripts/setup_env.sh` | conda env + pip (cu126) | ✅ |
 | `scripts/download_models.sh` | run on login node | ✅ |
 | `scripts/job_*.pbs` | PBS job templates | ✅ |

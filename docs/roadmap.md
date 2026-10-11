@@ -41,19 +41,36 @@ thin-object response. Neither replaces the default; both are selectable.
 - [x] Model weights download script; licenses verified (`docs/models.md`)
 - [x] Synthetic smoke tests for the CPU stages (`tests/`, never claimed as results)
 
-## Immediate next steps
+## After Phase 6 — what shipped since (all verified, all tagged)
 
-1. **Phase 0 (user)** — record `data/a.mp4`, `data/b.mp4` + `data/ground_truth.md`.
-2. **Phase 2** — run joint reconstruction on the real videos; check A/B alignment
-   (Checkpoint 2), tune `diff.*` thresholds on the real scene (Checkpoint 3).
-3. **Phase 4** — GPU validation of `src/describe.py` on the real clusters.
+| Version | What |
+|---|---|
+| v0.5 / v0.5.1 | MapAnything + Depth Anything 3 backends compared against VGGT (`docs/results.md`) |
+| v0.6.x / v0.7.0 | extra scenes 2 and 3 (`data-v0.2`) end-to-end; per-scene working points documented |
+| v0.8.0 | visualization rework: table-plane-up camera, focused 0.4 m crop, TSDF mesh, self-contained viewer, `input_mode` (crop kept), pad experiment |
+| v0.9.0 | presentation + correctness pass: 2-row layouts, Chrome-rendered GIF from the viewer, occlusion-aware crops, geometric type correction (scene3's chair -> `removed`, apple/cup -> `replaced`) |
+| v0.10.0 | scene4 (`data-v0.3`): move matching before the filters, arrivals at a move's origin, composite-replaced rule -> **3/3, 0 extras** |
+| v0.11.0 | timing audit (`docs/timing.md`), `--render-only`, GIF palette fix, unverified hidden behind a toggle |
+| **v0.12.0** | **`detect.py` one-command runner, natural-language summaries (`src/summary.py`), held-out scene5 run + protocol (`docs/heldout.md`), post-hoc diagnostics, regressions, b.mp4 re-encode, fresh-clone verified** |
 
-Validation evidence so far (2026-10-10, all from real runs; smoke tests are
-explicitly *not* project results):
+## Current next steps
+
+See **[`docs/handoff.md`](handoff.md)** for the full brief. In short:
+
+1. **Enable GitHub Pages** (owner action) so the committed viewers go live.
+2. **scene5 post-hoc work** (the missed clock move; the auto-mode encoding
+   sensitivity; orientation normalization) — all labelled post-hoc, never
+   touching the held-out result.
+3. **scene2 reproducibility** (geometric-diff run-to-run spread).
+4. Optional: Qwen3-VL-8B vs 32B ablation, MASt3R/COLMAP backends, a **new
+   held-out scene6** (same orientation, landscape preferred).
+
+Validation evidence so far (all from real runs; smoke tests are explicitly
+*not* project results):
 - `spatialdiff` env: torch 2.14.1+cu126, CUDA visible in a GPU job, 8×A100.
-- VGGT smoke run on 6 static kitchen frames: 544k confident points, scene bbox
-  ≈ 4.4 × 1.8 × 3.6 m, inference 1.2 s/frame, **0 changes** detected (all
-  noise candidates rejected by the visibility check) - `logs/gpu_smoke.log`.
+- Five scenes run end-to-end; demo 3/3 with 0 extras and scene4 3/3 with 0
+  extras; the held-out scene5 scored 1/2 type-only (honest, documented).
+- `tests/test_summary.py` + `tests/test_ma_contract.py` pass (fast, no GPU).
 
 Note: the docs intentionally contain placeholders rather than invented numbers.
 Fill them only from real runs.

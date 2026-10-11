@@ -16,6 +16,11 @@ modes most likely to hit this project.
 | `ModuleNotFoundError` on a compute node | env not activated / package only on login node | activate the conda env in the job; install into it, not into `base` |
 | `huggingface-cli` can't reach the internet inside a job | compute nodes may have no internet | pre-download on the login node into `~/models/` |
 | GPU shows ~100% / 60 GB used by someone else | shared node, PBS does not pin GPUs | pick an idle GPU (`nvidia-smi`), then `export CUDA_VISIBLE_DEVICES=<id>` (or set `reconstruction.gpu_index`) |
+| Job queues although GPUs are free | the queue's **per-user 16-CPU quota** is full | `qstat -f <id> | grep comment`; stop the idle `gpu-session` to free 4 CPUs, restart it after |
+| `git-lfs: command not found` on the compute node | git-lfs is login-node only | clone on the login node / shared FS, never `/tmp` (node-local) |
+| PBS `-o` log stays empty during the run | PBS spools job output until the end | rely on `qstat` state; the log arrives at completion |
+| A job "succeeded" (exit 0) but did nothing | a trailing `echo` masked the real exit code | propagate it (`exit $rc`) — `detect.py` does |
+| `FileNotFoundError: logs/job_detect_*.pbs` | a fresh clone has no `logs/` (git-ignored) | `detect.py` creates it on demand |
 
 ## Model / pipeline
 
@@ -27,7 +32,9 @@ modes most likely to hit this project.
 | Host RAM exhausted while loading a model | model materialised in RAM first | `low_cpu_mem_usage=True`, load straight to GPU, bf16 |
 | "removed" objects that are actually just occluded | naive diff | keep the visibility check enabled; verify poses/depth cached correctly |
 | Many tiny noisy clusters | voxel/threshold too aggressive | tune `diff.*` in the config (voxel size, DBSCAN eps/min points) |
-| Moved object split into removed + added | weak crop match | lower `match_similarity_threshold`, improve crops (SAM 2 masks) |
+| Moved object split into removed + added | weak crop match, or the origin cluster was filtered out before matching | `match_similarity_threshold` (0.65 calibrated); move matching runs before the filters in v0.10+; a filtered origin still breaks the pair (scene5's clock) |
+| A summary sentence names an object/action not in the report | the VLM phrasing invented it | rejected by `src/summary.py`'s validator -> deterministic template; the report's free-text description is deliberately not a vocabulary source |
+| The auto diff mode flips between runs/encodings | the 50% plane-coverage rule is threshold-sensitive (scene5's re-encode flipped geometric -> tabletop) | pass `--method` explicitly when reproducing a documented working point; the choice + measured coverage are printed |
 | Poor reconstruction of walls | textureless surfaces | add texture/more views; state as a limitation |
 | False changes from lighting | different light between recordings | re-record under similar light; note as a limitation |
 

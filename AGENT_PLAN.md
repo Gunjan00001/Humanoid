@@ -1,5 +1,11 @@
 # AGENT_PLAN.md — 3D Scene Change Detection (Spatial AI & Navigation Challenge)
 
+> **Historical plan — all phases and the Definition of Done are complete
+> (v0.12.0).** If you are taking this project over, read
+> [`docs/handoff.md`](docs/handoff.md) **first** for the current state, the
+> next steps and the environment brief; come back here only for the original
+> phase definitions.
+>
 > This file is the single source of truth for the AI agent building this project.
 > Read it fully before writing any code. Follow the phases in order. Do not skip checkpoints.
 

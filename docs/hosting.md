@@ -28,6 +28,8 @@ root** — the files are already committed, so no copying or CI is needed.
 | scene2 (geometric) | https://gunjan00001.github.io/Humanoid/outputs/scene2_geo/viewer.html |
 | scene3 | https://gunjan00001.github.io/Humanoid/outputs/scene3/viewer.html |
 | scene4 | https://gunjan00001.github.io/Humanoid/outputs/scene4/viewer.html |
+| scene5 (held-out) | https://gunjan00001.github.io/Humanoid/outputs/scene5/viewer.html |
+| scene5 post-hoc (tabletop) | https://gunjan00001.github.io/Humanoid/outputs/scene5_tabletop_posthoc/viewer.html |
 
 ## Notes
 
