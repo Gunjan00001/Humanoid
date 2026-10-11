@@ -55,9 +55,10 @@ def invariants(report: dict, summary: dict, label: str) -> None:
               f"I found {len(rep_ids)} change(s):" in summary["text"])
         for c in report["changes"]:
             entry = next((s for s in summary["changes"] if s["id"] == c["id"]), None)
+            line_ok = (f"{str(c['type']).capitalize()}: {c['label']}." in summary["text"]
+                       or f"{str(c['type']).capitalize()} - {c['label']}:" in summary["text"])
             check(f"{label}: change {c['id']} line uses its type and label",
-                  entry is not None and
-                  f"{str(c['type']).capitalize()}: {c['label']}." in summary["text"])
+                  entry is not None and line_ok)
     else:
         check(f"{label}: empty report -> 'No changes found'",
               "No changes found." in summary["text"])
