@@ -192,3 +192,33 @@ an empty prediction scores zero) is not yet run: it needs a small builder that
 writes `object_masks.pkl` from `segments.pkl` in the exact prediction format and
 the correct `(H, W)`. pycocotools is now installed. This is the last C1 gate
 before C2.
+
+## C1 smoke test PASSED (2026-10-11)
+
+A perfect prediction built from GT scores the maximum and an empty prediction
+scores zero, so the evaluator runs on this cluster.
+
+| prediction | px/im IoU | obj/im AP | obj/sc AP | obj/sc AP (type) | TP | FP | FN |
+|---|---|---|---|---|---|---|---|
+| perfect (from GT) | 1.0000 | 1.0000 | 1.0000 | 1.0000 | 7 | 0 | 0 |
+| empty | 0.0000 | 0.0000 | 0.0000 | 0.0000 | 0 | 0 | 7 |
+
+Correction to the documented prediction format (the code, not the README, is
+right). `extract_detections` iterates `pred_data.items()` and looks for
+`'video_1'` inside each value, so the real format is **object first**:
+
+```python
+{"H": int, "W": int,
+ "<object_id>": {"video_1": {frame_id: {"mask": RLE, "cost": float}},
+                 "video_2": {frame_id: {"mask": RLE, "cost": float}}},
+ ...}
+```
+
+and the frame id is the **resampled** index `raw_frame // resample_rate`
+(resample_rate 30), matching the GT keys. The README's `{H, W, video_1:{...},
+video_2:{...}}` shape does not work. H and W are read from the prediction and
+used to resize both GT and prediction masks, so they must be consistent.
+
+Dependencies added on the login node: pycocotools, faiss-cpu. The evaluator is
+run from the repo root with `data/scenediff_benchmark` symlinked to the extracted
+dataset (gitignored).
