@@ -1,0 +1,14 @@
+#!/bin/bash
+#PBS -N scenediff
+#PBS -q gpu
+#PBS -l select=1:ncpus=4:mem=60gb:ngpus=2
+#PBS -l walltime=12:00:00
+#PBS -j oe
+#PBS -o /home/user/Desktop/Humanoid/logs/job_scenediff.log
+cd /home/user/Desktop/Humanoid || exit 1
+unset CUDA_VISIBLE_DEVICES
+source "$HOME/miniconda3/etc/profile.d/conda.sh"; conda activate spatialdiff
+export PATH="$CONDA_PREFIX/bin:$PATH"
+bash scripts/run_scenediff.sh logs/val20.txt logs/eval_pred_val
+bash scripts/run_scenediff.sh logs/test10.txt logs/eval_pred_test
+echo SCENEDIFF_ALL_DONE
