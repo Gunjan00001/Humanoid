@@ -16,6 +16,7 @@ conda create -n spatialdiff python=3.10 -y && conda activate spatialdiff
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
 pip install -r requirements.txt
 pip install "vggt @ git+https://github.com/facebookresearch/vggt.git"
+# model weights (VGGT, Qwen3-VL-32B, DINOv2): download once, see docs/setup.md
 python detect.py --a data/a.mp4 --b data/b.mp4 --name demo
 ```
 
