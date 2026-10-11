@@ -48,3 +48,15 @@ step: timestamp, track, step, result, next step.
 - Track C (SceneDiff): not started.
 - Track D (freeze and sealed): no change accepted, no data/sealed directory.
 
+### 2026-10-11 22:05 IST, Track A, humanization and release
+- Humanized README.md and every docs/*.md (em dashes and spaced hyphens to plain
+  punctuation) with scripts/humanize.py. No em dashes remain. Numbers identical
+  before and after in every file (checked file by file).
+- Frozen detection digests on this branch match docs/heldout.md exactly (all 7).
+- tests/test_summary.py and tests/test_ma_contract.py pass.
+- Fresh clone from the shared filesystem: LFS videos present, detect.py --help OK,
+  vggt imports.
+- Next: merge docs/humanize into main, tag v1.0.1, push, verify on the remote,
+  then merge main into exp/accuracy.
+
+
