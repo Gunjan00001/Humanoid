@@ -1,7 +1,7 @@
 {
   "name": "scene5_tabletop_posthoc",
-  "video_a": "/home/jiit_992401210050/Desktop/Humanoid/data/scene5/a.mp4",
-  "video_b": "/home/jiit_992401210050/Desktop/Humanoid/data/scene5/b.mp4",
+  "video_a": "data/scene5/a.mp4",
+  "video_b": "data/scene5/b.mp4",
   "n_changes": 4,
   "changes": [
     {

@@ -1,7 +1,7 @@
 {
   "name": "scene2",
-  "video_a": "/home/jiit_992401210050/Desktop/Humanoid/data/scene2/a.mp4",
-  "video_b": "/home/jiit_992401210050/Desktop/Humanoid/data/scene2/b.mp4",
+  "video_a": "data/scene2/a.mp4",
+  "video_b": "data/scene2/b.mp4",
   "n_changes": 2,
   "changes": [
     {

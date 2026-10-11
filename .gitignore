@@ -47,3 +47,8 @@ data/*.mov
 .idea/
 .DS_Store
 third_party/
+
+# --- agent / graph tooling (local only, not part of the deliverable) ---
+.opencode/
+graphify-out/
+.commandcode/

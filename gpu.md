@@ -132,10 +132,10 @@ cat > job.pbs <<'EOF'
 #PBS -l select=1:ncpus=8:ngpus=1
 #PBS -l walltime=12:00:00
 #PBS -j oe
-#PBS -o /home/jiit_992401210050/Desktop/Humanoid/myjob.out
+#PBS -o $HOME/Desktop/Humanoid/myjob.out
 
 unset CUDA_VISIBLE_DEVICES
-cd /home/jiit_992401210050/Desktop/Humanoid
+cd $HOME/Desktop/Humanoid
 python train.py
 EOF
 qsub job.pbs

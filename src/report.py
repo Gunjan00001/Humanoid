@@ -28,6 +28,22 @@ from src.geometry import build_change_list, recon_dir_for  # noqa: E402
 
 log = setup_logging("report")
 
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def _rel(p) -> str | None:
+    """Portable, privacy-safe path: repo-relative when inside the repo, else
+    `~/...` for the shared model dir, else the original string."""
+    if p is None:
+        return None
+    try:
+        return str(Path(p).resolve().relative_to(ROOT))
+    except Exception:  # noqa: BLE001
+        s = str(p)
+        home = str(Path.home())
+        return "~" + s[len(home):] if s.startswith(home + "/") else s
+
+
 CONFIDENCE_NOTE = (
     "confidence is a heuristic in [0,1]: cluster size and change-score "
     "(photometric candidates), DINOv2 crop similarity for moved objects; "
@@ -56,14 +72,14 @@ def main() -> int:
     # frames index records them) over the config defaults - this keeps reports
     # correct when the pipeline runs on a scene via --video_a/--video_b
     frames_index = repo_path(cfg["paths"]["cache_dir"]) / "frames" / "index.json"
-    video_a = str(repo_path(cfg["paths"]["video_a"]))
-    video_b = str(repo_path(cfg["paths"]["video_b"]))
+    video_a = _rel(repo_path(cfg["paths"]["video_a"]))
+    video_b = _rel(repo_path(cfg["paths"]["video_b"]))
     if frames_index.exists():
         from src.common import read_json
         try:
             idx = read_json(frames_index)
-            video_a = idx["videos"]["a"].get("path", video_a)
-            video_b = idx["videos"]["b"].get("path", video_b)
+            video_a = _rel(idx["videos"]["a"].get("path", video_a))
+            video_b = _rel(idx["videos"]["b"].get("path", video_b))
         except Exception:  # noqa: BLE001 - provenance must never break a report
             pass
 
@@ -93,7 +109,7 @@ def main() -> int:
             "video_a": video_a,
             "video_b": video_b,
             "backend": recon_meta.get("backend", cfg["reconstruction"]["backend"]),
-            "model": recon_meta.get("model"),
+            "model": _rel(recon_meta.get("model")),
             "diff_method": cfg["diff"].get("method", "geometric"),
             "created": stamp(),
             "config_hash": cfg["_config_hash"],

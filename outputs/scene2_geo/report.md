@@ -1,8 +1,8 @@
 # Change report
 
-- video A: `/home/jiit_992401210050/Desktop/Humanoid/data/scene2/a.mp4`
-- video B: `/home/jiit_992401210050/Desktop/Humanoid/data/scene2/b.mp4`
-- reconstruction: `vggt` (/home/jiit_992401210050/models/VGGT-1B)
+- video A: `data/scene2/a.mp4`
+- video B: `data/scene2/b.mp4`
+- reconstruction: `vggt` (~/models/VGGT-1B)
 - frames: 24 | semantics: vlm-verified
 - generated: 2026-10-10T18:56:24Z | config `e6e15c30467a`
 

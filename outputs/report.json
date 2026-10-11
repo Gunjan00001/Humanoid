@@ -1,9 +1,9 @@
 {
   "meta": {
-    "video_a": "/home/jiit_992401210050/Desktop/Humanoid/data/a.mp4",
-    "video_b": "/home/jiit_992401210050/Desktop/Humanoid/data/b.mp4",
+    "video_a": "data/a.mp4",
+    "video_b": "data/b.mp4",
     "backend": "vggt",
-    "model": "/home/jiit_992401210050/models/VGGT-1B",
+    "model": "~/models/VGGT-1B",
     "diff_method": "tabletop",
     "created": "2026-10-11T00:08:37Z",
     "config_hash": "a93e2d60be34",
