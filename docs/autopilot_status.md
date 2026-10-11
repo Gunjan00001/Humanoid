@@ -141,3 +141,16 @@ Next steps and the exact commands:
   under the cap) recorded in docs/evaluation.md. Evaluator internals documented.
 - pycocotools installed.
 - Next: build the perfect-prediction smoke test, then C2 (pre-register the slice).
+
+### 2026-10-11 24:10 IST, Track C C1+C2 done
+- C1 complete: evaluator smoke test passes (perfect 1.0000 on all four metrics,
+  empty 0.0000). The real prediction format is object first with resampled frame
+  ids (raw frame // 30), not the README's video-first shape. pycocotools and
+  faiss-cpu installed. Recorded in docs/evaluation.md.
+- C2 complete: data/external/scenediff_slice.json (20 val + 10 test, varied,
+  sorted ids) committed.
+- Next (C3): write src/eval_scenediff.py plus scripts/job_scenediff.pbs. For each
+  pair, run the pipeline on the two original videos, project each change into the
+  annotated GT frames, and write object_masks.pkl in the object-first format with
+  resampled frame ids. Dry run on 3 val pairs (logs/eval_pred_* has the format
+  example). Then C4 (20 val pairs) and C5 (10 test pairs, once).
