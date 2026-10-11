@@ -1,0 +1,131 @@
+{
+  "meta": {
+    "video_a": "/home/user/Desktop/Humanoid/data/scene6/a.mp4",
+    "video_b": "/home/user/Desktop/Humanoid/data/scene6/b.mp4",
+    "backend": "vggt",
+    "model": "/home/user/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-11T10:16:33Z",
+    "config_hash": "a93e2d60be34",
+    "num_frames": 60,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "remote control",
+      "description": "The remote control was removed from the table.",
+      "centroid": [
+        -0.2232,
+        0.0404,
+        0.7208
+      ],
+      "bbox": [
+        -0.2878,
+        -0.0307,
+        0.5713,
+        -0.1494,
+        0.1326,
+        0.8496
+      ],
+      "from": [
+        -0.2232,
+        0.0404,
+        0.7208
+      ],
+      "to": null,
+      "confidence": 0.5,
+      "cluster_ids": [
+        3
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_01430.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 33,
+            "file": "b/frame_00120.jpg",
+            "n_valid": 276,
+            "n_empty": 276
+          },
+          {
+            "frame": 34,
+            "file": "b/frame_00160.jpg",
+            "n_valid": 276,
+            "n_empty": 276
+          },
+          {
+            "frame": 39,
+            "file": "b/frame_00360.jpg",
+            "n_valid": 276,
+            "n_empty": 276
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "type": "added",
+      "label": "electrical outlet",
+      "description": "An electrical outlet was added to the wall.",
+      "centroid": [
+        -0.3209,
+        -0.3386,
+        0.929
+      ],
+      "bbox": [
+        -0.3386,
+        -0.3503,
+        0.918,
+        -0.2988,
+        -0.3225,
+        0.9438
+      ],
+      "from": null,
+      "to": [
+        -0.3209,
+        -0.3386,
+        0.929
+      ],
+      "confidence": 0.33,
+      "cluster_ids": [
+        20
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_01610.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00570.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 0,
+            "file": "a/frame_00000.jpg",
+            "n_valid": 12,
+            "n_empty": 12
+          },
+          {
+            "frame": 28,
+            "file": "a/frame_01610.jpg",
+            "n_valid": 8,
+            "n_empty": 8
+          },
+          {
+            "frame": 29,
+            "file": "a/frame_01660.jpg",
+            "n_valid": 3,
+            "n_empty": 3
+          }
+        ]
+      }
+    }
+  ],
+  "unverified_changes": []
+}

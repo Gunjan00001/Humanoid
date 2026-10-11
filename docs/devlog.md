@@ -637,3 +637,30 @@ the automatic mode choice contributed; no held-out output was changed.
 - **Pre-registered** the scene6 scoring rule + freeze + data provenance in
   `docs/heldout.md` **before** the run (GT: cup moved, remote removed, apple
   added; FOUND = type + overlay + label; a move only counts as `moved`).
+
+## 2026-10-11 — Held-out scene6: the single run (job 10864)
+
+- **Ran exactly once, cold, defaults, no overrides** on the re-encoded videos:
+  `python detect.py --a data/scene6/a.mp4 --b data/scene6/b.mp4 --name scene6`.
+  Exit 0. `outputs/scene6/` committed exactly as produced.
+- **Timing (measured)**: queue wait 0 s (qtime==stime 15:28:25->15:28:26), job
+  runtime 18:53 (PBS walltime), stages (job log): extract 0:05 · reconstruct
+  0:52 · align 0:42 · diff 0:25 · **describe 15:53** (35 VLM verifications of
+  Qwen3-VL-32B) · report 0:00 · visualize 0:21 · summary 0:25.
+- **Auto mode: `geometric`** (dominant plane covers 6% of confident points,
+  < 50% threshold) — **not** tabletop. Honest mismatch recorded: `report.json`
+  meta says `diff_method: tabletop` while the runner printed
+  `[mode ] geometric (auto: ...6%...)`; report.py reports the config default,
+  not the actual auto-chosen mode. The runner's line is authoritative.
+- **Result (held-out, overlay check pending user)**: 2 changes — `removed`
+  remote control (0.50) and `added` electrical outlet (0.33). The **cup move
+  was missed** (`move matches: 0 (0 arrivals)`), and the **apple add was not
+  confirmed** (the only apple-ish candidate, "blue cup and red apple", was
+  rejected by the VLM as unchanged). VLM verification: 7 confirmed / 28
+  rejected / 0 unverified; post-filters + appearance check left 2.
+- **Summary phrasing**: the Qwen3-VL phrasing call failed with CUDA OOM (the
+  describe stage had already loaded Qwen3-VL-32B on 2 GPUs) so `src/summary.py`
+  fell back to its **deterministic templates** (`summary.json` records source).
+  Also: `change.gif` used the **matplotlib fallback** (no Chrome on the GPU
+  node), matching prior node runs.
+- checking sheet built: `outputs/scene6/checking_sheet.{png,md}` (2 tiles).
