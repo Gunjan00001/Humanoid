@@ -1,7 +1,7 @@
 # Development log
 
 Chronological record of every step of this project: what was done, what broke,
-why, and how it was fixed. Written for future developers and agents — read the
+why, and how it was fixed. Written for future developers and agents, read the
 "Failures and fixes" entries before touching the corresponding area; most of
 them cost real debugging time.
 
@@ -11,12 +11,12 @@ useful. GPU jobs should report an estimated remaining time to the user.
 
 ---
 
-## 2026-10-10 — Project start (docs-only repo)
+## 2026-10-10, Project start (docs-only repo)
 
 - Read the plan (`AGENT_PLAN.md`), cluster reference (`gpu.md`), rules.
 - Repo state: documentation only; no code, no data, no envs.
 
-## 2026-10-10 — Phase 1: environment + scaffold (`v0.2`)
+## 2026-10-10, Phase 1: environment + scaffold (`v0.2`)
 
 - Created `spatialdiff` env (Python 3.10, torch cu126) and later
   `spatialdiff-ma` (isolated MapAnything env).
@@ -50,7 +50,7 @@ useful. GPU jobs should report an estimated remaining time to the user.
   squeezes the channel dim itself); we passed `[S,H,W]`.
 - **Fix:** `depth[..., None]`. See `src/reconstruct.py`.
 
-## 2026-10-10 — Phase 2–4: the demo scene (checkpoints 2–4)
+## 2026-10-10, Phase 2–4: the demo scene (checkpoints 2–4)
 
 - `data/a.mp4`, `data/b.mp4` + ground truth arrived (comb removed, pen added,
   AC remote moved+flipped). 49 frames extracted (30 A + 19 B).
@@ -60,7 +60,7 @@ useful. GPU jobs should report an estimated remaining time to the user.
 - **Symptom:** with the plan-skeleton thresholds (2 cm voxels / 5 cm distance)
   the diff reported 0 clusters on a scene with 3 obvious changes.
 - **Reason (the project's central finding):** the comb and pen are ~1 cm thick
-  — **below VGGT's patch scale (~1.4 cm on the surface)**. Their z equals the
+ , **below VGGT's patch scale (~1.4 cm on the surface)**. Their z equals the
   table's: they do not exist in the depth maps. Any threshold that would see
   them is below the reconstruction noise.
 - **Fix:** new photometric tabletop diff (`src/tabletop.py`): appearance
@@ -73,7 +73,7 @@ useful. GPU jobs should report an estimated remaining time to the user.
 - **Symptom:** a clean 15×15 grid of object voxels split into noise with
   `min_samples=50`; borderline behaviour.
 - **Reason:** at 2 cm voxels and eps 0.08, a flat surface has ~49-81 neighbours
-  — exactly at the core-point threshold.
+ , exactly at the core-point threshold.
 - **Fix:** `dbscan_min_points: 30` (documented in the config).
 
 ### Failure: tabletop mode spammed candidates / found nothing (iterations)
@@ -104,7 +104,7 @@ useful. GPU jobs should report an estimated remaining time to the user.
     same view, so the VLM compares like with like;
   - self-consistency override: same object named in both images → a
     removed/added claim is false (descriptive words like colours/blur are
-    ignored — they once rejected the pen);
+    ignored, they once rejected the pen);
   - mutual cancellation: confirmed removed X + added X nearby → both dropped;
   - score floor, replaced pixel gate (a real flip changes pixels strongly:
     remote 91.7 vs timer fragments 56-60), same-appearance similarity;
@@ -115,7 +115,7 @@ useful. GPU jobs should report an estimated remaining time to the user.
 ### Failure: cell-code collision attached wrong points to clusters
 
 - **Symptom:** the pen's cluster had cells at (-0.114, 0.191) but its sample
-  points came from (-0.110, -0.076) — crops showed the wrong region, VLM
+  points came from (-0.110, -0.076), crops showed the wrong region, VLM
   labels were nonsense.
 - **Reason:** `cell_maps` returned raw `(ix, iy)` for ALL points; the flat code
   `ix*ny+iy` **collides for negative indices**, so out-of-grid points matched
@@ -133,17 +133,17 @@ useful. GPU jobs should report an estimated remaining time to the user.
   (`logs/job_*.pbs`). The `Cgroup mem limit exceeded:` line at job end is a
   known benign epilogue artifact (gpu.md).
 
-## 2026-10-10 — Phase 5: first end-to-end results (`v0.3`)
+## 2026-10-10, Phase 5: first end-to-end results (`v0.3`)
 
 - `run.py` produced the colored PLY, GIF, screenshots, `report.json/md`:
   **3/3 changes, 0 false positives**. Docs filled with real numbers.
 
-## 2026-10-10 — Debuggability + docs (`v0.4`)
+## 2026-10-10, Debuggability + docs (`v0.4`)
 
 - `scripts/inspect_cache.py` (read-only cache inspector), `--debug` traces,
   `docs/debugging.md`, `docs/verification.md`, graphify refresh.
 
-## 2026-10-10 — Backend comparison: MapAnything + DA3 (`v0.5`)
+## 2026-10-10, Backend comparison: MapAnything + DA3 (`v0.5`)
 
 ### Failure: MapAnything confidence at the floor for video B
 
@@ -176,19 +176,19 @@ useful. GPU jobs should report an estimated remaining time to the user.
 
 ### Failure: DA3 integration chain (five iterations)
 
-1. **`MissingConfigException`** — MapAnything's hydra `configs/` are not part
+1. **`MissingConfigException`**, MapAnything's hydra `configs/` are not part
    of its pip package → `setup_env.sh` clones the source into `third_party/`
    (gitignored) and the worker prepends it **before the first import**
-   (module resolution caches the first import — this bit twice).
-2. **`'DA3Wrapper' object has no attribute 'infer'`** — external wrappers use
+   (module resolution caches the first import, this bit twice).
+2. **`'DA3Wrapper' object has no attribute 'infer'`**, external wrappers use
    `forward()`, not MapAnything's `infer()`.
-3. **`Input type (CPUBFloat16Type) and weight type (CUDABFloat16Type)`** — the
+3. **`Input type (CPUBFloat16Type) and weight type (CUDABFloat16Type)`**, the
    wrappers do not move views to the device → the worker moves every tensor.
-4. **`prediction misses ['depth_z', 'intrinsics', 'camera_poses']`** — the
+4. **`prediction misses ['depth_z', 'intrinsics', 'camera_poses']`**, the
    wrappers return the RAW unified format (`cam_quats`, `cam_trans`,
    `depth_along_ray`) → run MapAnything's own
    `postprocess_model_outputs_for_inference`.
-5. **`torch has no attribute 'bf16'`** — dtype name mapping
+5. **`torch has no attribute 'bf16'`**, dtype name mapping
    (`bf16 → torch.bfloat16`).
 - **License choice:** the wrapper's default checkpoint (DA3-GIANT-1.1) is
   CC-BY-NC-4.0; `setup_env.sh` generates `configs/model/da3_apache.yaml`
@@ -201,18 +201,18 @@ useful. GPU jobs should report an estimated remaining time to the user.
   thin-object geometry; DA3 is fastest/lightest with the best alignment and the
   strongest thin-object response. Full tables: `docs/results.md`.
 
-## 2026-10-10 — Process updates (`v0.5.1`)
+## 2026-10-10, Process updates (`v0.5.1`)
 
 - Added this devlog; rules updated: tags are now `major.minor.bugs`, and GPU
   work must pick another GPU instead of waiting when one is busy.
 - Next: robustness runs on the extra scenes (`data-v0.2`: scene2, scene3).
 
-## 2026-10-10 — Robustness runs on the extra scenes (`data-v0.2`)
+## 2026-10-10, Robustness runs on the extra scenes (`data-v0.2`)
 
 - Ground truth: scene2 = coconut removed (1 change); scene3 = chair removed +
   apple replaced by a cup (2 changes).
 - Launched both scenes **in parallel** (2× 2-GPU batch jobs) while the user's
-  other agent held other GPUs — GPUs 1 and 7 were idle, so both jobs started
+  other agent held other GPUs, GPUs 1 and 7 were idle, so both jobs started
   immediately (no queue wait), per the updated rules §6. Estimated ~25 min
   wall clock.
 - Logs: `logs/pbs_scene2.log`, `logs/pbs_scene3.log`; results land in
@@ -250,7 +250,7 @@ useful. GPU jobs should report an estimated remaining time to the user.
 
 - After the blur fix: **1 change reported** ("apple removed", conf 0.81) vs the
   ground truth's coconut removal.
-- **Analysis (from the caches):** the verified cluster has 4179 cells — far
+- **Analysis (from the caches):** the verified cluster has 4179 cells, far
   larger than the apple (~80). The coconut's removal **merged with a broad
   table-appearance change** (video B's lighting/angle differs strongly from
   A's) into one candidate region; the VLM labeled it from the crop at its
@@ -267,17 +267,17 @@ useful. GPU jobs should report an estimated remaining time to the user.
 
 - **scene3** (`--min_change_score 85`): the "table leg" false positive (score
   80.7) drops; **2/2 changes, 0 false positives** (chair typed `replaced`,
-  apple→cup labeled generically — type/label nuances, not misses).
+  apple→cup labeled generically, type/label nuances, not misses).
 - **scene2**: the `tabletop` mode keeps producing one apple-area false
   positive even at `--objectness_margin 80` (the apple is present in both
   videos; the VLM's B-side crop missed it, and the apple's B-side objectness
   is below threshold so the static-object suppression cannot fire). The
-  **`geometric` mode finds the coconut cleanly** — a 5896-point removed
-  cluster, visibility-confirmed ("5896 points seen empty") — because a ~15 cm
+  **`geometric` mode finds the coconut cleanly**, a 5896-point removed
+  cluster, visibility-confirmed ("5896 points seen empty"), because a ~15 cm
   object is plainly visible in VGGT's depth and the mode is immune to the
   lighting shift. Its 4 extra entries are coverage-difference artifacts
   (regions only B saw), the weakness the plan predicted.
-- **Lesson:** choose the diff mode per scene — `tabletop` for thin objects
+- **Lesson:** choose the diff mode per scene, `tabletop` for thin objects
   under similar lighting (the demo), `geometric` for big objects and/or large
   lighting shifts (scene2). Both modes share everything downstream.
 
@@ -286,7 +286,7 @@ useful. GPU jobs should report an estimated remaining time to the user.
 1. **Single-view fallback counted as confirmed.** A cluster whose other-video
    crop was unavailable got a label-only answer (`changed=None`) and was kept
    as a *confirmed* change (scene2's "concrete floor" and "crumpled paper").
-   Now downgraded to the unverified list — only a two-view verification
+   Now downgraded to the unverified list, only a two-view verification
    confirms a change. (This also explains why those entries had no
    `first`/`second` fields in `vlm.json`.)
 2. **The VLM loaded even when every answer was cached**, costing ~2 minutes
@@ -295,22 +295,22 @@ useful. GPU jobs should report an estimated remaining time to the user.
 Both fixes are structural (they apply to every scene); the demo-scene results
 are unchanged.
 
-## 2026-10-11 — Visualization rework: faithful 3D display (Steps 0–5)
+## 2026-10-11, Visualization rework: faithful 3D display (Steps 0–5)
 
 **Task:** the `change.gif`s looked like dark slivers, not like the scene.
 
-### Step 0 — diagnosis (numbers before any change)
+### Step 0, diagnosis (numbers before any change)
 
 - `tests/diagnose_projection.py` reprojects the fused cloud into the first
   camera and prints per-view counts + model-input coverage.
-- **Result: the reconstruction is faithful** — the reprojection reproduces the
+- **Result: the reconstruction is faithful**, the reprojection reproduces the
   table and every object with true colours; 100% of the frame is covered by
   points. The problem was the **rendering**: `static_dim 0.35` (dark cloud),
   1-pixel markers, and whole-scene framing (the table became a sliver in a
   room-sized 3D box).
 - Measured: demo/scene2 are portrait 480×85x → VGGT crop mode delivers
   **56.1%** of each frame to the model (top/bottom discarded). **scene3 is
-  landscape 860×480** — the task's portrait premise does not hold there; it
+  landscape 860×480**, the task's portrait premise does not hold there; it
   loses nothing.
 
 ### Steps 1–5 (all structural)
@@ -328,20 +328,20 @@ are unchanged.
 - Self-contained HTML viewer (`src/viewer.py`, three.js r128 pinned from
   cdnjs, inline orbit controls, quantized embedded cloud, toggles, labels):
   1.7 MB per scene. Validated by screenshotting it in **headless Chrome**
-  (SwiftShader) — the change boxes and labels render correctly.
+  (SwiftShader), the change boxes and labels render correctly.
 
-### Step 6 — regression + pad experiment
+### Step 6, regression + pad experiment
 
-- Demo regression (crop default): **3/3 changes, 0 false positives — unchanged**
+- Demo regression (crop default): **3/3 changes, 0 false positives, unchanged**
   (`logs/pbs_demo_reg.log`).
-- `input_mode=pad` on the portrait demo: **worse, with evidence** — 5 entries
+- `input_mode=pad` on the portrait demo: **worse, with evidence**, 5 entries
   vs 3: the pen missed and three extra entries (frame-edge artifact +
   highlighter fragments). Pad renders the content at ~1.76× coarser pixels.
 - **Decision: crop stays the default**; the option remains for scenes whose
   content sits at the frame edges. Full table in
   `docs/results.md#visualization-rework-steps-05`.
 
-## 2026-10-11 — Presentation + correctness pass (`v0.9.0`)
+## 2026-10-11, Presentation + correctness pass (`v0.9.0`)
 
 ### Layout / 3D view / Chrome GIF (steps 1-3)
 
@@ -349,7 +349,7 @@ are unchanged.
   outside the panel); 3D geometry cropped to 0.4 m around the changes; camera
   at 40° elevation with the fitted table-plane normal as up
   (`table_up_rotation`); orbit framed on the changed region.
-- **Bug found**: rotating the two bbox corners is not a rotated AABB — the
+- **Bug found**: rotating the two bbox corners is not a rotated AABB, the
   component-wise min/max swap (negative extents) made the viewer's Box3Helper
   draw giant lines. All eight corners are rotated now.
 - The GIF is rendered from `viewer.html` by headless Chrome
@@ -362,7 +362,7 @@ are unchanged.
 ### GitHub Pages (step 4)
 
 `docs/hosting.md` documents enabling Pages (Settings → Pages → main / root)
-and lists the live URLs; the README links them. No workflow needed — the
+and lists the live URLs; the README links them. No workflow needed, the
 viewers are committed static files. (`gh` CLI is not available on this
 cluster, so enablement is a one-time web-UI step for the repo owner.)
 
@@ -376,7 +376,7 @@ cluster, so enablement is a one-time web-UI step for the repo owner.)
 - **Crop framing is now occlusion-aware** (in-view = not behind the observed
   surface). The old test required the object to be present, so in the other
   video a removed object's frames looked empty and crops landed on
-  neighbouring objects — the root cause of scene3's "chair replaced" and
+  neighbouring objects, the root cause of scene3's "chair replaced" and
   "replaced by a black chair" misreadings.
 - **Geometric type correction** (calibrated on the scenes): comb 0.73 empty
   vs apple/cup 0.01 occupied → `removed`→`replaced`; remote 0.00 occupied vs
@@ -387,18 +387,18 @@ cluster, so enablement is a one-time web-UI step for the repo owner.)
   made that heuristic fire), and reclassified replacements skip the
   photometric pixel gate.
 - **Measured outcome**: scene3's chair is `removed` ✓ and the apple→cup is
-  `replaced` ✓ — but the scene now shows 4 entries (the apple region appears
+  `replaced` ✓, but the scene now shows 4 entries (the apple region appears
   twice; one entry is not in the ground truth) and the naming is unreliable
   because video B's crop of the table is partly occluded by the remaining
   chair. Demo stays 3/3, 0 extra. Documented honestly in
   `docs/results.md#presentation--correctness-pass-v090`.
 
 
-## 2026-10-11 — scene4 (`data-v0.3`) + move/arrival/composite semantics (`v0.10.0`)
+## 2026-10-11, scene4 (`data-v0.3`) + move/arrival/composite semantics (`v0.10.0`)
 
 ### The new data
 
-`data-v0.3` added scene4: 46 s portrait videos (blur p50 137–163 — the default
+`data-v0.3` added scene4: 46 s portrait videos (blur p50 137–163, the default
 blur threshold works), ground truth = apple moved, scissor removed, bottle
 added. Videos are 9 MB each → still LFS (the <5 MB exception covers only the
 six small demo clips).
@@ -411,10 +411,10 @@ apple's arrival dropped, no bottle. Root causes, all measured:
 
 - the **move matcher ran after the structural filters**, and the arrival
   cluster had already been dropped as a duplicate of the replaced fragment;
-- the **mutual cancellation** compared stored labels — the arrival cluster's
+- the **mutual cancellation** compared stored labels, the arrival cluster's
   label read "scissors" (named from its A-side view) and cancelled the genuine
   apple arrival;
-- the apple pair scored **0.704** — just under the 0.75 threshold (different
+- the apple pair scored **0.704**, just under the 0.75 threshold (different
   objects score 0.13);
 - the moved apple landing on the removed scissor's pixels made the tabletop
   mask call the mix "replaced" (a composite of two real changes).
@@ -438,16 +438,16 @@ The demo regression (re-run + table diff against the committed outputs)
 initially produced **4 changes**: a highlighter fragment survived because the
 empty-space skip of the both-present suppression (added for scene3's chair)
 was too broad. The skip now requires that the VLM did not name the same object
-in both views — "highlighter" vs "highlighter" means present in both and is
+in both views, "highlighter" vs "highlighter" means present in both and is
 suppressed again, while the chair's differing descriptions still skip. After
-the fix: demo **3/3, 0 extra — identical to committed**; scene2 and scene3
+the fix: demo **3/3, 0 extra, identical to committed**; scene2 and scene3
 identical.
 
 ### Verified result
 
 **scene4: exactly 3/3** (moved apple with from→to, removed scissors, added
 plastic bottle), default mode, 0 extras; 7 unverified edge candidates listed
-for transparency. GIF/viewer/mesh regenerated (Chrome on the login node —
+for transparency. GIF/viewer/mesh regenerated (Chrome on the login node , 
 Chrome is not installed on the GPU node, so visualize runs there fall back to
 matplotlib). Remaining honest notes: the scissor sentence is inherited from
 the two-view verification ("removed and replaced with an apple") and the move
@@ -459,7 +459,7 @@ idle gpu-session was stopped to free a slot before each run and restarted by
 the waiters afterwards (five times over this session, documented here).
 
 
-## 2026-10-11 — timing investigation, render-only mode, GIF palette bug (`v0.11.0`)
+## 2026-10-11, timing investigation, render-only mode, GIF palette bug (`v0.11.0`)
 
 ### Timing: the reported numbers were wrong
 
@@ -474,9 +474,9 @@ practice) triggered a full audit of the PBS records and job logs. Findings
 - **VGGT loads in 8–14 s** (6 logged runs), not the "~3.5 min" the docs
   claimed; Qwen3-VL-32B loads in 26 s warm (2:07 on the one early cold run);
   the DINOv2 matcher is **loaded twice per run** (appearance check, then move
-  matching) — measured in the same log.
+  matching), measured in the same log.
 - 10 VLM calls in the scene4 run, **11.0 s per call**.
-- The mesh took 4 s inside the GPU-node job but ~89 s on the login node — the
+- The mesh took 4 s inside the GPU-node job but ~89 s on the login node, the
   cause (page cache vs cores) was not isolated and is marked unverified.
 - The old "~15 min first semantics run" claim is **not reproducible from any
   log** (the early demo describe run 10715 measured 5:25); corrected in
@@ -492,7 +492,7 @@ practice) triggered a full audit of the PBS records and job logs. Findings
 outputs, needs no GPU, and **stops with a list of missing caches** instead of
 recomputing anything (guard verified: 9 missing files listed, exit 2, no
 output dir created). Measured wall clock per scene: demo 3:11, scene2 3:24,
-scene2-geo 2:09, scene3 5:46, scene4 3:21 — scene3 exceeds the ~5 min
+scene2-geo 2:09, scene3 5:46, scene4 3:21, scene3 exceeds the ~5 min
 guideline because its Chrome GIF alone takes 4:44 in that pass (31
 candidates + denser cloud; a GIF-only re-render of the same scene later took
 129 s, so the 4:44 includes machine load variance).
@@ -514,7 +514,7 @@ candidates + denser cloud; a GIF-only re-render of the same scene later took
 
 The `replaced` colour rendered as **grey** in the scene3 GIF: a grey-dominated
 scene makes the adaptive 256-colour GIF palette drop/mangle the isolated
-change colours (the viewer rendered magenta exactly — verified with a raw
+change colours (the viewer rendered magenta exactly, verified with a raw
 Chrome screenshot: 614 magenta pixels). Fix: every frame is quantized
 together with a strip of the key colours (removed/added/moved/replaced/
 unverified/background/label white), so the palette reserves slots for them;
@@ -522,7 +522,7 @@ the strip is cropped off. Verified after the fix: magenta = (242,63,242)
 exactly, 355 px. All five GIFs re-rendered with the fix.
 
 
-## 2026-10-11/12 — v0.12: one-command run, NL summaries, held-out scene5
+## 2026-10-11/12, v0.12: one-command run, NL summaries, held-out scene5
 
 ### Step 0-2 (built before any scene5 execution)
 
@@ -545,7 +545,7 @@ exactly, 355 px. All five GIFs re-rendered with the fix.
   exists), the tokens "1"/"2", and missing action words ("absent", "present",
   "compared"). Fixed in the summary prompt/validator only.
 
-### Step 3 — the held-out run (once) and the user's overlay review
+### Step 3, the held-out run (once) and the user's overlay review
 
 Run: `detect.py --a data/scene5/a.mp4 --b data/scene5/b.mp4 --name scene5`
 (auto mode -> `geometric`, dominant plane 11%; queue wait 0 s, job 7:07,
@@ -561,7 +561,7 @@ missed 1, extras >= 2**.
 
 Scene5 re-run once with `--mode tabletop` forced (job 10829, 6:40): 4 entries,
 both false additions gone, the chair named correctly in one entry ("black
-chair"), the clock move **still missed**. This suggests - not proves - that
+chair"), the clock move **still missed**. This suggests, not proves, that
 the automatic mode choice contributed; no held-out output was changed.
 
 ### Fixes after the review (summary/validation only)
@@ -571,7 +571,7 @@ the automatic mode choice contributed; no held-out output was changed.
   in the same orientation (landscape preferred); the resolution mismatch
   warning is equally loud. Validation message only.
 - `src/summary.py`: the validator no longer accepts the report's free-text
-  description as a vocabulary source - that is how "leaving only the cracked
+  description as a vocabulary source, that is how "leaving only the cracked
   surface" (a visual embellishment from the crop, not grounded in the
   detection) passed. Vocabulary is now the label + the type's action words +
   non-object words (+ common function words, which the object-description
@@ -599,7 +599,7 @@ the automatic mode choice contributed; no held-out output was changed.
   installed there; re-run on the login node where git-lfs works, with the
   clone's `detect.py` submitting its own PBS job).
 
-## 2026-10-11 — Agent-handover access verification
+## 2026-10-11, Agent-handover access verification
 
 - **GPU access: verified live.** One-shot probe via `gpu-run -n 1 -g 1`
   (job 10863, interactive, exited cleanly): `jiit-gpu01` shows all 8
@@ -612,12 +612,12 @@ the automatic mode choice contributed; no held-out output was changed.
 - **Finding: the persistent `gpu-session` is stale.** `~/.gpu-session/jobid`
   still points at job **10831**, but that job is gone from the queue (a
   different job, `asr1bit-s*`, now occupies the account's CPUs), so `ready`/`out`
-  still say `KERNEL_READY` while no server is actually running — a `gpu-send`
+  still say `KERNEL_READY` while no server is actually running, a `gpu-send`
   would write `cmd.py` and wait forever. Fix when needed: `gpu-session start
   && gpu-session wait` (holds 4 CPUs and 1 A100 for 12 h; stop the idle session
   first per the 16-CPU quota pattern).
 
-## 2026-10-11 — Held-out scene6: Step 0 (data + freeze) and pre-registration
+## 2026-10-11, Held-out scene6: Step 0 (data + freeze) and pre-registration
 
 - **Frozen code confirmed.** `git diff 93bf47d HEAD` (and vs the working tree)
   is **empty** for `src/{diff,tabletop,geometry,describe,align,reconstruct}.py`,
@@ -638,7 +638,7 @@ the automatic mode choice contributed; no held-out output was changed.
   `docs/heldout.md` **before** the run (GT: cup moved, remote removed, apple
   added; FOUND = type + overlay + label; a move only counts as `moved`).
 
-## 2026-10-11 — Held-out scene6: the single run (job 10864)
+## 2026-10-11, Held-out scene6: the single run (job 10864)
 
 - **Ran exactly once, cold, defaults, no overrides** on the re-encoded videos:
   `python detect.py --a data/scene6/a.mp4 --b data/scene6/b.mp4 --name scene6`.
@@ -648,11 +648,11 @@ the automatic mode choice contributed; no held-out output was changed.
   0:52 · align 0:42 · diff 0:25 · **describe 15:53** (35 VLM verifications of
   Qwen3-VL-32B) · report 0:00 · visualize 0:21 · summary 0:25.
 - **Auto mode: `geometric`** (dominant plane covers 6% of confident points,
-  < 50% threshold) — **not** tabletop. Honest mismatch recorded: `report.json`
+  < 50% threshold), **not** tabletop. Honest mismatch recorded: `report.json`
   meta says `diff_method: tabletop` while the runner printed
   `[mode ] geometric (auto: ...6%...)`; report.py reports the config default,
   not the actual auto-chosen mode. The runner's line is authoritative.
-- **Result (held-out, overlay check pending user)**: 2 changes — `removed`
+- **Result (held-out, overlay check pending user)**: 2 changes, `removed`
   remote control (0.50) and `added` electrical outlet (0.33). The **cup move
   was missed** (`move matches: 0 (0 arrivals)`), and the **apple add was not
   confirmed** (the only apple-ish candidate, "blue cup and red apple", was
@@ -665,29 +665,29 @@ the automatic mode choice contributed; no held-out output was changed.
   node), matching prior node runs.
 - checking sheet built: `outputs/scene6/checking_sheet.{png,md}` (2 tiles).
 
-## 2026-10-11 — Submission audit: privacy, hygiene, README top
+## 2026-10-11, Submission audit: privacy, hygiene, README top
 
 - **Privacy (Step 4.1)**: the cluster username `$HOME/...`
   appeared in 28 committed files (report/summary JSON+MD, gpu.md, rules.md,
   AGENT_PLAN.md). Replaced with repo-relative paths (outputs) and `$HOME/...`
   (docs); `src/report.py` now writes repo-relative video paths and `~/models/`
   (report.py is not a frozen file). All committed JSON re-validated. **No git
-  history rewrite** — the string still exists in history (flagged).
+  history rewrite**, the string still exists in history (flagged).
   **No secrets**: the "secret/token/key" scans matched only false positives
   (`tokenizers`, `asttokens`; "BEArer" inside viewer.html's encoded point
   cloud).
 - **Hygiene (Step 4.2)**: `.opencode/` (11) and `graphify-out/` (16) removed
   from tracking + gitignored; `.commandcode/` gitignored. Licenses already
   fully documented in `docs/models.md` (VGGT CC-BY-NC-4.0; Qwen3-VL, DINOv2,
-  MapAnything/DA3 Apache-2.0) and summarized in the README — nothing to add.
+  MapAnything/DA3 Apache-2.0) and summarized in the README, nothing to add.
 - **README top (Step 4.5)**: pinned a 3-line summary, the one-command quick
   start, a verbatim real scene6 summary, a results table split into
   development (tuned) vs held-out (scene5, scene6), Known limitations, a link
   to `docs/heldout.md`, and a `DEMO_VIDEO_URL` placeholder.
-- **GitHub Pages (Step 4.4)**: checked with `curl` — the five viewer URLs
+- **GitHub Pages (Step 4.4)**: checked with `curl`, the five viewer URLs
   return **HTTP 404**; Pages is not serving (owner action to enable).
 
-## 2026-10-11 — Held-out scene6: Step 2 result + visualization fix
+## 2026-10-11, Held-out scene6: Step 2 result + visualization fix
 
 - **Step 2 finalized** (user overlay confirmation, authoritative): per-change
   table, overlay review, scoring and failure analysis written to
@@ -696,7 +696,7 @@ the automatic mode choice contributed; no held-out output was changed.
   not verified by the user). `docs/results.md` gained a held-out section split
   from the tuned development scenes.
 - **Failure analysis** (diagnostic): cup move missed because `move matches: 0`
-  — its two VLM-confirmed arrival candidates (`16` "white cup", `21` "bottle and
+ , its two VLM-confirmed arrival candidates (`16` "white cup", `21` "bottle and
   cup") were dropped by the structural post-filter ("inside an object present in
   both videos", 78%/100%); the apple add missed because candidate `28` ("blue
   cup and red apple") was **denied by the VLM** (`changed=False`). `geometric`
@@ -709,16 +709,16 @@ the automatic mode choice contributed; no held-out output was changed.
   `report.json` and every detection number are unchanged. (Chrome was present on
   the login node for the re-render, so the GIF is Chrome-rendered this time.)
 
-## 2026-10-11 — Step 3 reproducibility (12 runs) + Step 4 closeout → v1.0.0
+## 2026-10-11, Step 3 reproducibility (12 runs) + Step 4 closeout → v1.0.0
 
 - **Ran the frozen pipeline 3x per scene** (`detect.py --force`, fresh caches,
   isolated gitignored dirs, 2 CPUs + 2 GPUs per job, 3 workers). Scenes: scene2
   (working point), scene4, scene5, scene6 = 12 runs, all rc=0.
-- **Finding — scene2 cannot run at defaults** (`0/3`): its shipped clips are
+- **Finding, scene2 cannot run at defaults** (`0/3`): its shipped clips are
   3.8 s / 7.3 s, so `extract_frames` keeps 1 sharp frame (< min 8) and aborts.
   It was re-run at its documented working point (`--method geometric
   --blur_threshold 25`) instead.
-- **Result: deterministic in this set** — all three runs per scene produced
+- **Result: deterministic in this set**, all three runs per scene produced
   **identical entry counts and identical type/label lists** (min = typical =
   max): scene2wp **5/5/5**, scene4 **3/3/3**, scene5 **7/7/7**, scene6 **2/2/2**.
   scene6's three fresh runs reproduced the committed held-out result exactly.
@@ -730,7 +730,7 @@ the automatic mode choice contributed; no held-out output was changed.
   will serve them); `environment.yml` **unverified** (see setup.md).
 - **Tagged `v1.0.0`** and pushed.
 
-## 2026-10-11 — GitHub Pages enabled; viewers live
+## 2026-10-11, GitHub Pages enabled; viewers live
 
 - The owner enabled Pages (**Settings → Pages: Deploy from a branch, `main` /
   `/` root**). Verified **all 7 viewer URLs return HTTP 200** (demo, scene2,

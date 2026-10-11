@@ -5,7 +5,7 @@ deliberately *permissive*: on the demo scene it proposes **26 candidate
 clusters**, because photometric comparison cannot by itself tell a real change
 from a lighting, blur or exposure difference on a static object. This document
 explains every rule that `src/describe.py` applies to cut those candidates down
-to the final, confirmed change list — with the numbers observed on the demo
+to the final, confirmed change list, with the numbers observed on the demo
 scene, so the rules can be re-tuned knowingly.
 
 All rules run in order; every rejection is written to
@@ -18,7 +18,7 @@ to `cache/semantics/confirmed.json`. **Nothing is ever silently dropped.**
 
 Each candidate gets **two crops**: the best view from its own video and a
 pose-matched view from the other video (same region, camera pose closest to
-the own view — see `best_crop_for_cluster`). Qwen3-VL is asked to name the
+the own view, see `best_crop_for_cluster`). Qwen3-VL is asked to name the
 objects in each image and to confirm or deny the change claim.
 
 - Removed/added claim → `changed: false` rejects the candidate.
@@ -28,7 +28,7 @@ objects in each image and to confirm or deny the change claim.
 ### 2. Self-consistency override (removed/added)
 
 If the model names the **same object in both images** ("digital timer" vs
-"digital timer"), the claim is false *regardless of its own answer* — small
+"digital timer"), the claim is false *regardless of its own answer*, small
 blurry crops make the model over-sensitive. Descriptive words (colours,
 shapes, "blurred", "surface"...) are ignored by the comparison so that
 "dark surface with a blurred edge" vs "dark surface with a blue pen" does not
@@ -37,7 +37,7 @@ count as the same object (this exact pair wrongly rejected the pen once).
 ### 3. Mutual cancellation
 
 A confirmed `removed X` **and** a confirmed `added X` with the same label
-within 12 cm means X is present in both videos — both fragments came from
+within 12 cm means X is present in both videos, both fragments came from
 lighting differences and are dropped. (Demo: cancelled the highlighter pair
 #10/#17.)
 
@@ -83,7 +83,7 @@ misses; on the demo it removed the last low-evidence fragment.
 ### 9. Fragment merging
 
 Same-type confirmed fragments whose labels overlap **or** whose bboxes are
-within 6 cm (centroids < 25 cm) are merged into one change — the comb's teeth
+within 6 cm (centroids < 25 cm) are merged into one change, the comb's teeth
 cluster ("comb") and its handle cluster ("wooden fork") became one entry with
 263 cells. The merged entry keeps the larger cluster's id and gains a
 `merged_ids` field.
@@ -101,13 +101,13 @@ moved:      0   (the remote flipped in place → reported as "replaced")
 
 The demo scene is adversarial for a purely geometric pipeline:
 
-- the comb and pen are **1 cm thick** — below VGGT's patch scale, they are
+- the comb and pen are **1 cm thick**, below VGGT's patch scale, they are
   absent from the depth maps entirely;
 - the two phone recordings differ in **blur and exposure**, so the same static
   object (the timer) looks measurably different in A and B;
 - the remote **flips in place**, which is neither a removal nor an addition.
 
-Each rule above exists because a specific failure survived the previous ones —
+Each rule above exists because a specific failure survived the previous ones , 
 the git history and `logs/describe_real*.log` show the progression. When
 adapting the pipeline to a new scene, start from `rejected.json` and the
 `--debug` output rather than changing several thresholds at once

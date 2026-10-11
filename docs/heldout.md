@@ -1,4 +1,4 @@
-# Held-out test — scene5
+# Held-out test, scene5
 
 ## FROZEN (Step 0, recorded before any new code was written)
 
@@ -30,11 +30,11 @@ tuning (no thresholds, prompts or defaults were derived from it).
 
 A ground-truth change counts as **FOUND** only if all three hold:
 
-1. **Type matches** — `moved` for the clock, `removed` for the chair.
-2. **The evidence overlay shows the right object** — the per-change composite
+1. **Type matches**, `moved` for the clock, `removed` for the chair.
+2. **The evidence overlay shows the right object**, the per-change composite
    (`changes/change_XXX.png`) and the 3D box must sit on the clock / chair,
    respectively.
-3. **The label names it correctly** — the report's label for the entry must
+3. **The label names it correctly**, the report's label for the entry must
    name the clock / chair.
 
 Label correctness is reported **separately** from detection (an entry can
@@ -48,7 +48,7 @@ counted as changes.
 
 | | result |
 |---|---|
-| ground-truth changes found | **1/2 — type only** (the chair's removal is detected as `removed`, fragmented into 3 entries; the clock's move is missed) |
+| ground-truth changes found | **1/2, type only** (the chair's removal is detected as `removed`, fragmented into 3 entries; the clock's move is missed) |
 | labels correct | **0/2** (the fragments are named "wooden leg" / "chair leg" / "table leg") |
 | missed | **1** (the clock's move) |
 | extras | **≥ 2** (entries 4 and 5; entry 3 is a chair fragment that cannot be attributed cleanly) |
@@ -57,14 +57,14 @@ The user's overlay review, tile by tile:
 
 - **tiles 1-3** (removed): the chair's area. Type `removed` correct, but
   fragmented into three entries; the labels are wrong.
-- **tile 4** (added "small round object"): **false positive — a floor light
+- **tile 4** (added "small round object"): **false positive, a floor light
   reflection in video B**. Verified against the frames: the B-side crop shows
   the bright reflective floor patch; counted as an extra.
-- **tile 5** (added "bottle and clock"): **not a real addition** — the bottle
+- **tile 5** (added "bottle and clock"): **not a real addition**, the bottle
   is present in both videos; the clock's *new position* was reported as
   "added". The clock move counts as **missed**.
 
-## Result (scene5, run once — the single held-out execution)
+## Result (scene5, run once, the single held-out execution)
 
 Command (exactly once, frozen code, default settings, no overrides):
 
@@ -87,13 +87,13 @@ The runner validated the inputs and printed:
 
 | GT change | detected type | detected label | type correct? | label correct? | confidence |
 |---|---|---|---|---|---|
-| clock **moved** | *(no `moved` entry)* | — | **no** | — | — |
+| clock **moved** | *(no `moved` entry)* |, | **no** |, |, |
 | chair **removed** | `removed` (3 fragments, ids 1-3) | "wooden leg", "chair leg", "table leg" | **yes** (fragmented) | **no** (no fragment says "chair") | 0.74 / 0.29 / 0.45 |
 
 Overlay check (pending user confirmation): the three removed fragments sit at
 the chair's area next to the table (see `checking_sheet.png` tiles 1-3); the
 clock's new position appears only inside the "added bottle and clock" entry,
-whose before/after crops both show the clock - see the failure analysis.
+whose before/after crops both show the clock, see the failure analysis.
 
 ### Confirmed entries (5) and extras
 
@@ -152,7 +152,7 @@ source per change.)
    region from two very different viewpoints, which **likely** weakens both
    the cluster geometry and the VLM crops. Not proven.
 2. **The auto mode chose `geometric`** (dominant plane 11% of confident
-   points). The geometric mode's known weakness - coverage-difference
+   points). The geometric mode's known weakness, coverage-difference
    artifacts (documented on scene2) - is visible here: 58 candidates, 48
    denied by the VLM, 3 suppressed, 10 confirmed, 5 surviving the filters.
    The **11% plane coverage is likely the second contributing cause**: it both
@@ -240,7 +240,7 @@ Please confirm the overlays against the ground truth.
 
 ---
 
-# Held-out test — scene6
+# Held-out test, scene6
 
 ## FROZEN (Step 0, recorded before the run)
 
@@ -249,8 +249,8 @@ files are pinned (identical byte content verified across all three candidates):
 
 - task-stated frozen commit: **`93bf47d`**
 - `v0.12.0` tag actually resolves to: **`f0042c90e4b10c33b26491028dbfe38fa8f4a5f5`**
-- `HEAD` at run time: `f96d3b0` — `git diff 93bf47d HEAD` on the files below is **empty**
-- file digests (sha256, first 16 hex) — **identical to the scene5 freeze**:
+- `HEAD` at run time: `f96d3b0`, `git diff 93bf47d HEAD` on the files below is **empty**
+- file digests (sha256, first 16 hex), **identical to the scene5 freeze**:
 
 | file | sha256 (16) |
 |---|---|
@@ -294,12 +294,12 @@ never used for tuning (no thresholds, prompts or defaults were derived from it).
 
 A ground-truth change counts as **FOUND** only if all three hold:
 
-1. **Type matches** — `moved` for the cup, `removed` for the remote,
+1. **Type matches**, `moved` for the cup, `removed` for the remote,
    `added` for the apple.
-2. **The evidence overlay shows the right object** — the per-change composite
+2. **The evidence overlay shows the right object**, the per-change composite
    (`changes/change_XXX.png`) and the 3D box must sit on the cup / remote /
    apple, respectively.
-3. **The label names it correctly** — the report's label for the entry must
+3. **The label names it correctly**, the report's label for the entry must
    name the cup / remote / apple.
 
 A move counts as FOUND only if it is reported as `moved` (an `added` + `removed`
@@ -314,7 +314,7 @@ counted as changes.
 `outputs/scene6/checking_sheet.png`; tile 1's 3D box position was **not**
 verified by the user).
 
-## Result (scene6, run once — the single held-out execution)
+## Result (scene6, run once, the single held-out execution)
 
 Command (exactly once, frozen code, default settings, no overrides):
 
@@ -326,16 +326,16 @@ python detect.py --a data/scene6/a.mp4 --b data/scene6/b.mp4 --name scene6
 
 | GT change | detected type | detected label | type correct? | label correct? | confidence |
 |---|---|---|---|---|---|
-| cup **moved** | *(no `moved` entry; `move matches: 0`)* | — | **no — missed** | — | — |
+| cup **moved** | *(no `moved` entry; `move matches: 0`)* |, | **no, missed** |, |, |
 | remote **removed** | `removed` | "remote control" | **yes** | **yes** | 0.50 |
-| apple **added** | *(no `added` entry for the apple)* | — | **no — missed** | — | — |
+| apple **added** | *(no `added` entry for the apple)* |, | **no, missed** |, |, |
 
 Overlay review (user, authoritative):
 
 - **tile 1** (`removed` "remote control"): the before/after frames confirm the
-  remote is on the table in A and absent in B — type and label correct.
+  remote is on the table in A and absent in B, type and label correct.
   **3D box position not verified by the user.**
-- **tile 2** (`added` "electrical outlet"): **FALSE POSITIVE** — the outlet is
+- **tile 2** (`added` "electrical outlet"): **FALSE POSITIVE**, the outlet is
   on the wall in both videos.
 
 ### Scoring (pre-registered rule)
@@ -383,16 +383,16 @@ Files: viewer.html, change.gif, report.json
 
 ### Failure analysis (written after the run)
 
-1. **Cup move missed — the move matcher found no pair.** `cache/scene6/semantics/matches.json`
+1. **Cup move missed, the move matcher found no pair.** `cache/scene6/semantics/matches.json`
    is empty (`move matches: 0 (0 arrivals)`). The cup's *arrival* was seen: two
    `added` candidates were VLM-confirmed (`16` "white cup", `21` "bottle and
    cup"), but the **structural post-filter dropped both** ("inside an object
    present in both videos", 78% / 100% of their points), so no arrival survived
    to pair with a departure. **Likely** contributor: the auto mode chose
    `geometric` (plane coverage 6%), whose coverage-difference artifacts produce
-   exactly these fragments — 28 of the 32 rejects are VLM-denied fragments
+   exactly these fragments, 28 of the 32 rejects are VLM-denied fragments
    ("table leg", "wooden edge", …). Not proven.
-2. **Apple add missed — a candidate existed, the VLM denied it.** Candidate `28`
+2. **Apple add missed, a candidate existed, the VLM denied it.** Candidate `28`
    ("blue cup and red apple") was built; the VLM compared "plastic bottle with
    purple cap" vs "plastic bottle with purple cap, blue cup, red apple" and
    overrode it to `changed=False` (a VLM false negative). Candidate `19`
@@ -401,7 +401,7 @@ Files: viewer.html, change.gif, report.json
 3. **The one extra (electrical outlet)** is a wall feature present in both
    videos; the VLM confirmed candidate `20` ("electrical outlet") as an
    addition. It is a false positive under the user's overlay review.
-4. **`describe` dominated the runtime** (15:53 of 18:53) — 35 Qwen3-VL-32B
+4. **`describe` dominated the runtime** (15:53 of 18:53), 35 Qwen3-VL-32B
    verifications, each a full VLM call.
 
 **No tuning, no re-run and no prompt/threshold change was made for scene6.** The
@@ -413,8 +413,8 @@ touch detection.
 The user observed that tile 2's "before" crop showed video-B content. Root
 cause: `crops.json` stores `frame` for the change's *own* video (its `tag`) and
 `frame_other` for the opposite one, but `src/visualize.py` hard-coded
-`before=frame, after=frame_other` — for an `added` change (`tag: b`) that swaps
-the panels. Fixed in `src/visualize.py` (select before/after by tag) —
+`before=frame, after=frame_other`, for an `added` change (`tag: b`) that swaps
+the panels. Fixed in `src/visualize.py` (select before/after by tag) , 
 **visualization only; detection untouched**. `outputs/scene6/changes/*.png` and
 the checking sheet were re-rendered from the cached results; `report.json` and
 every detection number are unchanged.
