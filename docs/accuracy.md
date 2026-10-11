@@ -155,3 +155,24 @@ compares them with DINOv2 against the 0.65 gate.
 The probe fails, so objmatch2 is not built (the pass gate needs the object
 segmented and matched in at least 2 of the 3 targets). Segmented in both videos
 was not enough; the crops do not match. See docs/negative_results.md.
+
+## Track B controls (job 11023) and closure
+
+Same SAM 2 masks and cropping code, with controls. CLS is the DINOv2 CLS token,
+patch is the mean of the DINOv2 patch tokens inside the mask, size_r is the 3D
+extent ratio (min over max).
+
+| scene | pair | role | CLS | patch | size_r |
+|---|---|---|---|---|---|
+| scene4 | apple moved | positive (matched at 0.704 earlier) | 0.704 | 0.914 | 0.70 |
+| scene4 | scissor vs apple | negative (different objects) | 0.285 | 0.085 | 0.78 |
+| scene6 | cup | target | 0.482 | 0.374 | 0.51 |
+| scene5 | clock | target | 0.174 | 0.460 | 0.71 |
+
+The controls separate: the correct match scores 0.704 CLS (0.914 patch) and two
+different objects score 0.285 (0.085 patch). So the 0.65 gate is calibrated for
+cross-video matching. The targets stay below it, and the clock's CLS (0.174) is
+even below the negative control. The lane between the negative and positive
+controls is 0.285 to 0.704 (CLS) and 0.085 to 0.914 (patch). Track B is closed as
+a real negative result: the cup and clock candidate crops are not the same
+object, so object first matching on these crops cannot recover the moves.

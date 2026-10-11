@@ -47,3 +47,17 @@ problem: SAM 2 needs no training and produces the masks. The problem is that the
 candidate departure and arrival crops are not the same object, or the object
 looks too different between the two views, so masking does not raise the
 similarity. Track B stops here per the written pass gate. objmatch2 was not built.
+
+## Track B controls (job 11023): the gate is calibrated, targets still fail
+
+| scene | pair | role | CLS | patch | size_r |
+|---|---|---|---|---|---|
+| scene4 | apple moved | positive | 0.704 | 0.914 | 0.70 |
+| scene4 | scissor vs apple | negative | 0.285 | 0.085 | 0.78 |
+| scene6 | cup | target | 0.482 | 0.374 | 0.51 |
+| scene5 | clock | target | 0.174 | 0.460 | 0.71 |
+
+The positive control (a correct match) scores high and the negative control
+(different objects) scores low, so the 0.65 gate is not miscalibrated. The targets
+stay low, and the clock's CLS is below the negative control. Track B is closed as
+a real negative result. objmatch2 was not built.
