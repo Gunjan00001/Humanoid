@@ -62,8 +62,11 @@ See **[`docs/handoff.md`](handoff.md)** for the full brief. In short:
    sensitivity; orientation normalization) — all labelled post-hoc, never
    touching the held-out result.
 3. **scene2 reproducibility** (geometric-diff run-to-run spread).
-4. Optional: Qwen3-VL-8B vs 32B ablation, MASt3R/COLMAP backends, a **new
-   held-out scene6** (same orientation, landscape preferred).
+4. **scene6 is available** (`data-v0.5`: cup moved, remote removed, apple
+   added; both videos landscape 860x480) and has never been run — record a new
+   freeze, run it once as the next held-out scene (protocol in
+   `docs/heldout.md`), then re-encode its videos for clone-ability.
+5. Optional: Qwen3-VL-8B vs 32B ablation, MASt3R/COLMAP backends.
 
 Validation evidence so far (all from real runs; smoke tests are explicitly
 *not* project results):
