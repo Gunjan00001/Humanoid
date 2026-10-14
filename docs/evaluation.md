@@ -54,3 +54,24 @@ Likely causes (marked likely, not proven):
 Contributing: bedroom_2_bedroom_3 produced a change but no mask (its change is an
 addition whose annotated frames were not among the projected ones), and gym had
 101 rejected candidates, so the VLM filter is doing most of the work there.
+
+## Part C item 1: frames.adaptive_sharpness (post-hoc, validation only)
+
+The flag is implemented (default OFF): when the absolute blur threshold leaves
+fewer than `min_frames`, the sharpest N frames by rank are used, a single global
+rule.
+
+Frame-level evidence (measured):
+- demo: extracted frames with the flag ON are **byte identical** to the committed
+  ones (both videos), because the flag only runs on the failure path.
+- scene2: yields **12 + 23** frames with the flag ON (it fails at defaults with
+  1 frame).
+- previously unprocessable validation pairs now extract: bed_3_bed_4 13+11,
+  bedroom_1_bedroom_2 15+30, hallway_1_hallway_2 14+9.
+
+Full-pipeline run on the 13 unprocessable validation pairs and scene2 (job 11370)
+was **blocked by node OOM**: other users held the node's GPUs (six processes
+between 0.6 and 28.9 GB), so the describe stage failed for all but one pair. That
+one pair produced no changes. So the flag's frame-level effect is demonstrated;
+its end-to-end score on those pairs is **not measured** yet (environment limit,
+not a code limit). The run will be resumed when the node frees.
