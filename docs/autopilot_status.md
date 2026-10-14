@@ -211,3 +211,22 @@ Next steps and the exact commands:
   frames), reported as unprocessable, not changed.
 - Next: finisher runs the sanity check + validation evaluator on 11367's output,
   then freeze and the single test evaluation.
+
+### 2026-10-12 03:20 IST, decisions 1 and 4 implemented; job 11367 running
+- Decision 1: the unprocessable-pairs scoring rule is recorded in
+  docs/evaluation.md (headline counts an unprocessable pair as an empty
+  prediction; processable-only numbers next to it; each failed pair listed with a
+  reason; same rule for the test slice; no pair swapped). The C4 finisher now
+  writes empty pkls for unprocessable val pairs, runs the headline evaluator and a
+  processable-only evaluator, and lists failures.
+- Decision 4: README hardware runtime replaced with the measured ranges from
+  docs/timing.md (warm 2:16 to 3:12 per scene; held-out cold 7:07; queue 0 s to
+  1:33; describe 3:29 to 3:54; CPU offload can push a pair past ten minutes).
+  main = 221b1c8, tag v1.0.5.
+- Decision 2: the one node-OOM pair may be re-run as an infrastructure retry
+  (no output had been produced); the report will say so.
+- Decision 3 (adaptive frame selection, frames.adaptive_sharpness, default OFF)
+  is queued for the Part C branch after the test slice.
+- Job 11367 running: 14/20 val adapted, 4/10 test pairs processing. Finisher
+  relaunched (pid 3794027) for the val sanity + headline + processable-only runs.
+- Next: val sanity + manual overlay look, freeze, test once, then Part C.
