@@ -147,8 +147,13 @@ reported as an addition.
 
 GPU memory: the reconstruction (VGGT) fits one 80 GB A100; the label model
 (Qwen3-VL-32B, bf16) needs about 64 GB, so two A100s, or one A100 plus CPU offload
-which is much slower. Runtime on the cluster is 5 to 6 minutes per scene on the
-node, plus queue wait. Frame extraction, the diff, the report and the visualization
+which is much slower. Measured runtime on the cluster ([`docs/timing.md`](docs/timing.md)):
+a warm run is **2:16 to 3:12 per development scene** (demo 2:27, scene2 2:16,
+scene3 2:20, scene4 3:12); the held-out scene5 **cold run was 7:07** on the node
+(7:22 total). Queue wait measured 0 s to 1:33. The number of VLM verifications and
+the node load change this a lot: the describe stage measured 3:29 to 3:54, and a
+busy node that forces the 32B onto CPU offload can push one video pair past ten
+minutes. Frame extraction, the diff, the report and the visualization
 are CPU only. A smaller label model exists (`Qwen3-VL-8B-Instruct`, one GPU); the
 measured difference is documented in [`docs/timing.md`](docs/timing.md).
 

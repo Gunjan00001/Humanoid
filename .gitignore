@@ -52,3 +52,7 @@ third_party/
 .opencode/
 graphify-out/
 .commandcode/
+data/external/
+data/scenediff_benchmark
+outputs/scenediff/
+cache/scenediff/
