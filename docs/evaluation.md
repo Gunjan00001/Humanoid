@@ -346,3 +346,16 @@ sanity check.
 Next, per the plan: the adaptive frame selection (frames.adaptive_sharpness,
 default OFF) is the direct lever on the 12 upstream failures, and it is evaluated
 as a post-hoc diagnostic on the validation pairs only, on the Part C branch.
+
+## Projection control: pass rule (recorded before the run, 2026-10-12)
+
+Decisive adapter check, no detection involved. For each of the 7 processable
+validation pairs, the GT object masks are lifted to 3D with the cached depth and
+poses and sent through the production adapter path (3D projection, frame
+resampling raw//30, coordinate conversion, transpose, RLE, object_masks.pkl), then
+scored with the official evaluator.
+
+**Pass rule:** oracle px/im IoU above 0.5 on most pairs, and obj/sc AP clearly
+above zero. If it fails, find and fix the adapter bug (pure bug fix), re-run, and
+repeat the control. If it passes, the adapter is verified end to end and the
+near-zero validation score is a detection and domain result.
