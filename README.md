@@ -468,3 +468,25 @@ Observed on the demo scene (quantified in [`docs/results.md`](docs/results.md)):
 ## License
 
 MIT, see [`LICENSE`](LICENSE). Model checkpoints keep their own licenses.
+
+## Licenses and citations
+
+| component | license | used for |
+|---|---|---|
+| VGGT (`facebook/VGGT-1B`) | **CC BY-NC 4.0**, non commercial | 3D reconstruction |
+| Qwen3-VL-32B-Instruct | Apache-2.0 | verification, labels, sentences |
+| DINOv2 (`facebook/dinov2-large`) | Apache-2.0 | cross crop matching |
+| SAM 2 (`facebookresearch/sam2`) | Apache-2.0 | accuracy sprint probe only, not in the pipeline |
+| MapAnything (`facebook/map-anything-apache`) | Apache-2.0 | alternative reconstruction backend |
+| Depth Anything 3 (`depth-anything/DA3-LARGE-1.1`) | Apache-2.0 | stretch backend |
+| SceneDiff dataset and code | MIT | external evaluation |
+| HD-Epic | its own terms | source of the SceneDiff kitchen subset, not used here |
+| PyTorch, OpenCV, Open3D, NumPy, SciPy, scikit-learn, matplotlib | BSD or Apache style | base stack |
+
+The repository itself is MIT (see `LICENSE`). Model checkpoints keep their own
+licenses; VGGT is the only non-commercial one in the default path.
+
+Citations: VGGT (`facebookresearch/vggt`, `facebook/VGGT-1B`); Qwen3-VL
+(`Qwen/Qwen3-VL-32B-Instruct`); DINOv2 (`facebook/dinov2-large`); SceneDiff
+(Wu et al., `yuqunw/scene_diff`, https://arxiv.org/abs/2512.16908); HD-Epic
+(https://hd-epic.github.io/).

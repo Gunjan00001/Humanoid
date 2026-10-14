@@ -242,3 +242,13 @@ grep comment <(qstat -f <jobid>)                   # why a job is queued
 - **scene5's shipped `b.mp4` is a re-encode** (4.6 MB, plain git); the original
   6.9 MB LFS object is in history (oid `1be79cea00`). The held-out result came
   from the original.
+
+## Repository description and topics (owner actions)
+
+Suggested one-line description for the GitHub repository:
+
+> Two phone videos of a room in, a 3D change report out: moved, added and
+> removed objects with labels, sentences and interactive 3D viewers.
+
+Suggested topics: `3d-reconstruction`, `change-detection`, `scene-understanding`,
+`vggt`, `qwen3-vl`, `dinov2`, `computer-vision`, `python`.
