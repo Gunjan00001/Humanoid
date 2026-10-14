@@ -46,6 +46,31 @@ def nearest(rdict: dict, raw: int):
     return min(rdict, key=lambda k: abs(k - raw)) if rdict else None
 
 
+def mask_rle_for_points(recon: dict, ei: int, pts) -> dict:
+    """3D points -> RLE mask in the dataset's convention (transposed, original
+    resolution). Used by the adapter and by the projection control."""
+    import cv2
+    import pycocotools.mask as mask_utils
+    uv, _z = project_points(pts, recon["extrinsic"][ei], recon["intrinsic"][ei])
+    tr = recon["meta"]["frames"][ei]
+    uv = np.asarray(uv, dtype=float).copy()
+    uv[:, 0] = (uv[:, 0] + tr.get("crop_left", 0)) / tr["scale_w"]
+    uv[:, 1] = (uv[:, 1] + tr.get("crop_top", 0)) / tr["scale_h"]
+    oh, ow = int(tr["orig_h"]), int(tr["orig_w"])
+    m = np.zeros((oh, ow), dtype=np.uint8)
+    if len(uv) >= 3:
+        hull = cv2.convexHull(np.round(uv).astype(np.int32))
+        cv2.fillConvexPoly(m, hull, 1)
+    else:
+        for x, y in np.round(uv).astype(int):
+            m[min(max(y, 0), oh - 1), min(max(x, 0), ow - 1)] = 1
+    m = cv2.dilate(m, np.ones((11, 11), np.uint8))
+    m = np.ascontiguousarray(m.T)
+    rle = mask_utils.encode(np.asfortranarray(m))
+    rle["counts"] = rle["counts"].decode("ascii")
+    return {"size": [int(m.shape[0]), int(m.shape[1])], "counts": rle["counts"]}
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--pair", required=True)
@@ -107,27 +132,9 @@ def main() -> int:
                 ei = nearest(frames, raw)
                 if ei is None or ei >= len(recon["extrinsic"]):
                     continue
-                uv, z = project_points(pts, recon["extrinsic"][ei], recon["intrinsic"][ei])
-                tr = recon["meta"]["frames"][ei]
-                uv = np.asarray(uv, dtype=float).copy()
-                uv[:, 0] = (uv[:, 0] + tr.get("crop_left", 0)) / tr["scale_w"]
-                uv[:, 1] = (uv[:, 1] + tr.get("crop_top", 0)) / tr["scale_h"]
-                oh, ow = int(tr["orig_h"]), int(tr["orig_w"])
-                m = np.zeros((oh, ow), dtype=np.uint8)
-                import cv2
-                if len(uv) >= 3:
-                    hull = cv2.convexHull(np.round(uv).astype(np.int32))
-                    cv2.fillConvexPoly(m, hull, 1)
-                else:
-                    for x, y in np.round(uv).astype(int):
-                        m[min(max(y, 0), oh - 1), min(max(x, 0), ow - 1)] = 1
-                m = cv2.dilate(m, np.ones((11, 11), np.uint8))
-                # the dataset stores GT masks transposed: size is [orig_w, orig_h]
-                m = np.ascontiguousarray(m.T)
-                rle = mask_utils.encode(np.asfortranarray(m))
-                rle["counts"] = rle["counts"].decode("ascii")
+                rle = mask_rle_for_points(recon, ei, pts)
                 obj.setdefault(f"video_{1 if tag=='a' else 2}", {})[raw // RESAMPLE] = {
-                    "mask": {"size": [int(m.shape[0]), int(m.shape[1])], "counts": rle["counts"]},
+                    "mask": rle,
                     "cost": float(ch.get("confidence") or 0.5)}
     d = Path(args.out) / args.pair
     d.mkdir(parents=True, exist_ok=True)
