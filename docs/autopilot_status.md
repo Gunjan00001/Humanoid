@@ -92,3 +92,17 @@ step: timestamp, track, step, result, next step.
 - Next: Part C on exp/semantics-v2, first frames.adaptive_sharpness (default OFF),
   post-hoc diagnostic on the 13 unprocessable val pairs and scene2, plus a
   byte-identical check of the development outputs with the flag ON.
+
+### 2026-10-12 05:00 IST, Part C item 1: adaptive sharpness fallback
+- frames.adaptive_sharpness (default OFF) implemented: when the absolute blur
+  threshold leaves fewer than min_frames, the sharpest N frames by rank are used
+  (a global rule, bounded two-pass scan).
+- Verified: demo frames are byte-identical with the flag ON (both videos); scene2
+  now yields 12+23 frames (it fails at defaults with 1); the unprocessable val
+  pairs produce frames too (bed_3_bed_4 13+11, bedroom_1_bedroom_2 15+30,
+  hallway_1_hallway_2 14+9).
+- Job 11370 runs the post-hoc diagnostic: the 13 unprocessable val pairs and
+  scene2 through the full pipeline with the flag ON (val only, never the test
+  pairs), then scores them.
+- Next: items 2 to 6 (mode/plane check, scale, frame budget, freeze v1.1 + a
+  second pre-registered test slice if something passes, docs).
