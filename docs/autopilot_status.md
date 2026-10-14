@@ -60,3 +60,18 @@ step: timestamp, track, step, result, next step.
   then merge main into exp/accuracy.
 
 
+
+### 2026-10-12 04:00 IST, projection control passes; freeze recorded; test slice running
+- Control (scripts/oracle_projection_control.py): GT masks lifted to 3D and pushed
+  through the production adapter path. Per-pair oracle IoU above 0.5 on 6 of 7
+  processable val pairs (gym 0.947, bathroom_11 0.667, kitchen 0.761, bedroom_2_3
+  0.645, bathroom_1 0.550, bedroom_2_4 0.543; airhockeytable 0.195 on a 60x75 px
+  object). obj/sc AP 0.1147, 7 TPs. The adapter is verified end to end, so the
+  near-zero validation score is a detection and domain result.
+- Freeze recorded in docs/accuracy.md: v1.0.0 configs/default.yaml, detection file
+  digests (identical to the v1.0.0 held-out freeze).
+- Test slice regenerated at the frozen config (job 11368; earlier test predictions
+  came from the buggy adapter and no test score was seen). finish_c5.sh counts
+  unprocessable test pairs as empty and evaluates the test slice exactly once.
+- README Known limitations and docs/evaluation.md gain the honest small-tabletop
+  limitation paragraph. main = 139f507, tag v1.0.6.
