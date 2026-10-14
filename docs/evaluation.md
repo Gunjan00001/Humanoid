@@ -251,3 +251,26 @@ test pairs before running the driver. No threshold, prompt or flag changed and n
 adapter logic changed. The test slice was not evaluated before this fix (no test
 score was produced), so both slices are re-run from scratch and the test slice is
 still run once for scoring.
+
+## Adapter bug 2 (2026-10-12, found by the validation sanity check, before any test score)
+
+The sanity check found that every prediction file was **empty** (only H and W, no
+objects). Cause: the adapter looked for the pair's `report.json` in the wrong
+places (`<pred_dir>/<pair>/report.json` and `cache/<pair>/report.json`), but the
+pipeline writes it to `outputs/scenediff/<pair>/report.json`. With no report the
+adapter produced zero objects, and the evaluator would have scored zero for a
+reason that had nothing to do with detection. Fix: the adapter now takes an
+explicit `--report` path and `run_scenediff.sh` passes
+`outputs/scenediff/<pair>/report.json`; the adapter stops with a clear error if
+the report is missing. No threshold, prompt or flag changed. This was caught
+before any test score was produced, so both slices are re-run and the test slice
+is reported as run twice.
+
+Also recorded: bug 1 was the 10 versus 20 extraction bug (only 10 validation
+pairs had been extracted while the driver looped over 20).
+
+The six validation pairs that fail do so **upstream of the adapter**: at the
+frozen default `frames.blur_threshold` (100) `extract_frames` keeps fewer than 8
+sharp frames on those clips ("only 0/2/5 frames survived"). Changing the
+threshold would change frozen behaviour, so those pairs are reported as
+unprocessable at the frozen config, not fixed.
