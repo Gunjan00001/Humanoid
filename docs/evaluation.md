@@ -318,3 +318,31 @@ detected changes still do not line up with the GT objects (our two "removed"
 regions sit elsewhere on the frame). That is detection quality on these
 out-of-domain HD clips, not an adapter bug. The validation scores are reported as
 they come out.
+
+## C4 validation result (20 val pairs, fixed adapter)
+
+| | px/im IoU | obj/im AP | obj/sc AP | obj/sc AP (type) | TP | FP | FN |
+|---|---|---|---|---|---|---|---|
+| headline (unprocessable = empty) | 0.0074 | 0.0002 | 0.0000 | 0.0000 | 0 | 16 | 75 |
+| processable only (7 pairs) | 0.0150 | 0.0005 | 0.0000 | 0.0000 | 0 | 16 | 29 |
+
+Failures: 13 of 20 validation pairs are unprocessable, 12 of them because the
+frozen default blur threshold keeps fewer than 8 sharp frames, one because the
+fixed-adapter pass had not run for it. Processable pairs: 7.
+
+Reading: the mask fixes raised the pixel IoU from 0.0001 to 0.0074, so the
+adapter now writes masks in the right frame, but no detection reaches the 0.5 IoU
+needed for object level credit. On the processable pairs our changes are simply
+different regions from the GT objects. So at the frozen config the pipeline is
+**not competitive on SceneDiff**: two causes, a downstream one (detection quality
+on out-of-domain 1920x1080 clips) and an upstream one (the frozen blur threshold
+rejects 12 of 20 pairs before detection even runs).
+
+Because the sanity check does not pass for a reason that is not an adapter bug
+(the adapter is now verified: valid pkl, H/W match, masks in the right frame), the
+test slice is **not evaluated**. The pre-registered rule gates the test on the
+sanity check.
+
+Next, per the plan: the adaptive frame selection (frames.adaptive_sharpness,
+default OFF) is the direct lever on the 12 upstream failures, and it is evaluated
+as a post-hoc diagnostic on the validation pairs only, on the Part C branch.
