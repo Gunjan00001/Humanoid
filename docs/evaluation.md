@@ -293,3 +293,28 @@ for it (frame extraction leaves fewer than 8 sharp frames at the frozen default
 An infrastructure failure (a transient node OOM) may be re-run for the same
 frozen config; the report states that it was an infrastructure retry and that it
 had produced no output.
+
+## Adapter bugs 3 and 4 (masks), found by the manual overlay look
+
+The sanity look found the predicted masks never overlapped the GT masks. Two bugs:
+
+- Bug 3: the projected points were used in **model** pixel coordinates (about
+  518x294) but the masks must be in **original** coordinates (for example
+  1920x1080). Fix: map with the frame transform,
+  `orig = (model + crop) / scale` (`scale_w`, `scale_h`, `crop_left`, `crop_top`
+  from `reconstruction/meta.json`). Also fill the convex hull of the projected
+  points instead of dilating single pixels, for a solid object mask.
+- Bug 4: the dataset stores GT masks **transposed** relative to the video: the RLE
+  `size` is `[orig_w, orig_h]` (for example `[1920, 1080]` for a 1920x1080
+  video), so the decoded array is `(orig_w, orig_h)`. Fix: build the mask in video
+  coordinates and transpose it before encoding, and set the mask `size` to
+  `[orig_w, orig_h]`.
+
+Both are pure mask-fidelity fixes; no threshold, prompt or flag changed. After the
+fix the predicted masks sit in the same coordinate frame as the GT.
+
+Remaining result, after the fixes: on the processable validation pairs the
+detected changes still do not line up with the GT objects (our two "removed"
+regions sit elsewhere on the frame). That is detection quality on these
+out-of-domain HD clips, not an adapter bug. The validation scores are reported as
+they come out.
