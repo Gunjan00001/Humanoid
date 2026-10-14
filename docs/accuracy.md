@@ -176,3 +176,25 @@ even below the negative control. The lane between the negative and positive
 controls is 0.285 to 0.704 (CLS) and 0.085 to 0.914 (patch). Track B is closed as
 a real negative result: the cup and clock candidate crops are not the same
 object, so object first matching on these crops cannot recover the moves.
+
+## SceneDiff validation freeze (2026-10-12)
+
+Frozen configuration = the **v1.0.0 `configs/default.yaml`** (nothing accepted from
+the accuracy sprint; every accuracy flag stayed OFF). Detection file digests
+(sha256, first 16 hex) at the freeze, taken from tag v1.0.0:
+
+| file | sha256 (16) |
+|---|---|
+| `src/diff.py` | `72f10984090e44d0` |
+| `src/tabletop.py` | `d227110953138229` |
+| `src/geometry.py` | `f44767f014c55d5b` |
+| `src/describe.py` | `ac00b9382d074679` |
+| `src/align.py` | `b7400d42938e979e` |
+| `src/reconstruct.py` | `db9147329a3c047d` |
+| `configs/default.yaml` | `f05d5cb6323bad40` |
+
+The projection control passed (6 of 7 processable val pairs have oracle px/im IoU
+above 0.5; obj/sc AP 0.1147, 7 TPs), so the adapter is verified end to end and the
+near-zero validation score is a detection and domain result, not an adapter bug.
+The test slice is regenerated at this frozen config (the earlier test predictions
+came from the buggy adapter; no test score was seen) and evaluated once.
