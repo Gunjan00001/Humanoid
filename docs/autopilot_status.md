@@ -106,3 +106,11 @@ step: timestamp, track, step, result, next step.
   pairs), then scores them.
 - Next: items 2 to 6 (mode/plane check, scale, frame budget, freeze v1.1 + a
   second pre-registered test slice if something passes, docs).
+
+### 2026-10-12 05:30 IST, adaptive diagnostic: adapter was missing on this branch
+- src/eval_scenediff.py lives on exp/accuracy; the adaptive job on
+  exp/semantics-v2 called it and produced no predictions. Copied the adapter onto
+  this branch (no logic change) and committed. Pairs adapt as the job finishes
+  them. bedroom_4_bedroom_5 adapted (0 objects: its report has no changes).
+- Job 11370 still running the 13 val pairs + scene2 with frames.adaptive_sharpness
+  ON (val only). Next: score the adaptive predictions, then items 2 to 6.
