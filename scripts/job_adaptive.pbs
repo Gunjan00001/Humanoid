@@ -1,0 +1,29 @@
+#!/bin/bash
+#PBS -N adaptive
+#PBS -q gpu
+#PBS -l select=1:ncpus=4:mem=60gb:ngpus=2
+#PBS -l walltime=12:00:00
+#PBS -j oe
+#PBS -o /home/user/Desktop/Humanoid/logs/job_adaptive.log
+cd /home/user/Desktop/Humanoid || exit 1
+unset CUDA_VISIBLE_DEVICES
+source "$HOME/miniconda3/etc/profile.d/conda.sh"; conda activate spatialdiff
+export PATH="$CONDA_PREFIX/bin:$PATH"
+PY="$HOME/miniconda3/envs/spatialdiff/bin/python"
+# 1) the 13 unprocessable val pairs with the adaptive flag (post-hoc, val only)
+while read -r p; do
+  [ -z "$p" ] && continue
+  a=$(ls data/scenediff_benchmark/data/$p/original_video1.* | head -1)
+  b=$(ls data/scenediff_benchmark/data/$p/original_video2.* | head -1)
+  echo "=== adaptive $p ==="
+  "$PY" detect.py --config logs/configs/adaptive.yaml --a "$a" --b "$b" --name "sd_$p" \
+      --out "outputs/scenediff_adaptive/$p" --cache "cache/scenediff_adaptive/$p" --local
+  "$PY" src/eval_scenediff.py --pair "$p" --cache "cache/scenediff_adaptive/$p" \
+      --out logs/eval_pred_val_adaptive --data data/scenediff_benchmark/data \
+      --report "outputs/scenediff_adaptive/$p/report.json"
+done < logs/val13.txt
+# 2) scene2 (cannot run at defaults) with the adaptive flag
+echo "=== adaptive scene2 ==="
+"$PY" detect.py --config logs/configs/adaptive.yaml --a data/scene2/a.mp4 --b data/scene2/b.mp4 \
+    --name scene2_adaptive --out outputs/scene2_adaptive --cache cache/scene2_adaptive --local --force
+echo ADAPTIVE_JOB_DONE

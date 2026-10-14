@@ -70,6 +70,28 @@ def _scan_video(video: Path, fps: float, blur_threshold: float,
     return src_fps, candidates
 
 
+def _scan_blurs(video: Path, fps: float) -> tuple[float, list[tuple[int, float, float]]]:
+    """Blur-only scan of the sampled frames (no encoding): (idx, time, blur)."""
+    cap = cv2.VideoCapture(str(video))
+    if not cap.isOpened():
+        raise RuntimeError(f"cannot open video: {video}")
+    src_fps = float(cap.get(cv2.CAP_PROP_FPS)) or 30.0
+    step = max(1, int(round(src_fps / fps)))
+    out: list[tuple[int, float, float]] = []
+    idx = 0
+    while True:
+        ok, frame = cap.read()
+        if not ok:
+            break
+        if idx % step == 0:
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            out.append((idx, round(idx / src_fps, 3),
+                        float(cv2.Laplacian(gray, cv2.CV_64F).var())))
+        idx += 1
+    cap.release()
+    return src_fps, out
+
+
 def _evenly_spaced(items: list[dict], k: int) -> list[dict]:
     """Keep at most k items, evenly spaced over the sequence (coverage first)."""
     if len(items) <= k:
@@ -87,6 +109,20 @@ def extract_one(video: Path, tag: str, cfg: dict) -> dict:
     log.info("[%s] %d sharp candidates after blur filtering", tag, len(candidates))
 
     keep = _evenly_spaced(candidates, int(fcfg["max_frames_per_video"]))
+    if len(keep) < int(fcfg["min_frames"]) and bool(fcfg.get("adaptive_sharpness", False)):
+        # Usability fallback: the absolute blur threshold left too few frames, so
+        # take the sharpest N by rank instead (a global rule, no per scene value).
+        _fps, blurs = _scan_blurs(video, fcfg["fps"])
+        if blurs:
+            n = int(fcfg["max_frames_per_video"])
+            ranked = sorted(blurs, key=lambda b: -b[2])[:max(n, int(fcfg["min_frames"]))]
+            thr = ranked[-1][2]
+            log.info("[%s] adaptive sharpness: absolute threshold left %d frame(s); "
+                     "falling back to the sharpest %d (blur >= %.1f)",
+                     tag, len(keep), len(ranked), thr)
+            src_fps, candidates = _scan_video(video, fcfg["fps"], thr - 1e-6,
+                                              fcfg.get("jpeg_quality", 92))
+            keep = _evenly_spaced(candidates, n)
     if len(keep) < int(fcfg["min_frames"]):
         raise RuntimeError(
             f"[{tag}] only {len(keep)} frames survived (min_frames="
