@@ -108,16 +108,26 @@ def main() -> int:
                 if ei is None or ei >= len(recon["extrinsic"]):
                     continue
                 uv, z = project_points(pts, recon["extrinsic"][ei], recon["intrinsic"][ei])
-                uv = np.round(uv).astype(int)
-                m = np.zeros((H, W), dtype=np.uint8)
-                x = np.clip(uv[:, 0], 0, W - 1); y = np.clip(uv[:, 1], 0, H - 1)
-                m[y, x] = 1
+                tr = recon["meta"]["frames"][ei]
+                uv = np.asarray(uv, dtype=float).copy()
+                uv[:, 0] = (uv[:, 0] + tr.get("crop_left", 0)) / tr["scale_w"]
+                uv[:, 1] = (uv[:, 1] + tr.get("crop_top", 0)) / tr["scale_h"]
+                oh, ow = int(tr["orig_h"]), int(tr["orig_w"])
+                m = np.zeros((oh, ow), dtype=np.uint8)
                 import cv2
-                m = cv2.dilate(m, np.ones((15, 15), np.uint8))
+                if len(uv) >= 3:
+                    hull = cv2.convexHull(np.round(uv).astype(np.int32))
+                    cv2.fillConvexPoly(m, hull, 1)
+                else:
+                    for x, y in np.round(uv).astype(int):
+                        m[min(max(y, 0), oh - 1), min(max(x, 0), ow - 1)] = 1
+                m = cv2.dilate(m, np.ones((11, 11), np.uint8))
+                # the dataset stores GT masks transposed: size is [orig_w, orig_h]
+                m = np.ascontiguousarray(m.T)
                 rle = mask_utils.encode(np.asfortranarray(m))
                 rle["counts"] = rle["counts"].decode("ascii")
                 obj.setdefault(f"video_{1 if tag=='a' else 2}", {})[raw // RESAMPLE] = {
-                    "mask": {"size": [H, W], "counts": rle["counts"]},
+                    "mask": {"size": [int(m.shape[0]), int(m.shape[1])], "counts": rle["counts"]},
                     "cost": float(ch.get("confidence") or 0.5)}
     d = Path(args.out) / args.pair
     d.mkdir(parents=True, exist_ok=True)
