@@ -1,12 +1,14 @@
 # 3D Scene Change Detection
 
-Give it two phone recordings of the same small indoor space; it builds one
-shared 3D reconstruction and reports which objects were **moved**, **added** or
-**removed**, each with a semantic label and a natural-language sentence.
-Part of the **Spatial AI & Navigation Challenge**; one command runs the whole
-pipeline (a PBS GPU job on the cluster).
+Give it two phone recordings of the same small indoor space and it builds one
+shared 3D reconstruction of the room. It then tells you which objects were
+**moved**, **added** or **removed**, each with a semantic label, a natural
+language sentence and a 3D location, and shows them in the 3D viewer. One command
+runs the whole pipeline; on the cluster it submits and polls its own PBS GPU job.
 
 <!-- DEMO_VIDEO_URL (owner: paste the demo video link here) -->
+
+![scene4: apple moved, scissors removed, bottle added](outputs/scene4/change.gif)
 
 ## Quick start
 
@@ -20,21 +22,17 @@ pip install "vggt @ git+https://github.com/facebookresearch/vggt.git"
 python detect.py --a data/a.mp4 --b data/b.mp4 --name demo
 ```
 
-`detect.py` validates both videos and runs the whole pipeline (on a login node
-it submits and polls the PBS gpu job itself), writing `outputs/demo/`:
-`report.md`, `summary.*`, `change.gif`, `viewer.html`, `scene_mesh.ply`.
+`detect.py` validates the two videos and runs the pipeline, writing
+`outputs/demo/`: `report.md`, `summary.*`, `change.gif`, `viewer.html`,
+`scene_mesh.ply`.
 
-Verbatim summary from the held-out **scene6** run (real output, unused for
-tuning):
+## Challenge requirements and where to find them
 
-```text
-Compared a.mp4 and b.mp4. I found 2 change(s):
-1. Removed - remote control: The remote control was removed from the table.
-2. Added - electrical outlet: Possibly an electrical outlet was added to the wall.
-
-Notes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.
-Files: viewer.html, change.gif, report.json
-```
+| requirement | where it is |
+|---|---|
+| a shared 3D representation of both recordings | `outputs/scene4/scene.ply` and the TSDF mesh `scene_mesh.ply`; the interactive [`viewer.html`](https://gunjan00001.github.io/Humanoid/outputs/scene4/viewer.html); built in `src/reconstruct.py` |
+| moved, added and removed objects, visualized in 3D | [`outputs/scene4/change.gif`](outputs/scene4/change.gif) and one composite per change in `outputs/scene4/changes/` (before, after, 3D box); each change carries a 3D centroid and box in `report.json` |
+| changes described with semantic labels and natural language | `summary.txt`, `summary.md` and `report.md` per scene; labels and sentences come from Qwen3-VL and are validated against the report fields |
 
 ## Results at a glance
 
