@@ -274,3 +274,22 @@ frozen default `frames.blur_threshold` (100) `extract_frames` keeps fewer than 8
 sharp frames on those clips ("only 0/2/5 frames survived"). Changing the
 threshold would change frozen behaviour, so those pairs are reported as
 unprocessable at the frozen config, not fixed.
+
+## Scoring rule for unprocessable pairs (recorded 2026-10-12, before any test score)
+
+A pair is **unprocessable** when the frozen pipeline cannot produce a prediction
+for it (frame extraction leaves fewer than 8 sharp frames at the frozen default
+`frames.blur_threshold`, or an infrastructure failure such as a node OOM).
+
+- The **headline numbers** count an unprocessable pair as an empty prediction:
+  every ground truth object in it is a miss. This is done by writing an empty
+  `object_masks.pkl` for that pair (H and W from the GT mask size, no objects) so
+  the evaluator includes it.
+- **Processable-only numbers** are reported next to the headline, computed on the
+  pairs the pipeline could process.
+- Each failed pair is listed with its reason (too few sharp frames, OOM, other).
+- The same rule applies to the test slice. Pairs are never swapped or replaced.
+
+An infrastructure failure (a transient node OOM) may be re-run for the same
+frozen config; the report states that it was an infrastructure retry and that it
+had produced no output.
