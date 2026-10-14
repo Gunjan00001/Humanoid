@@ -75,3 +75,20 @@ step: timestamp, track, step, result, next step.
   unprocessable test pairs as empty and evaluates the test slice exactly once.
 - README Known limitations and docs/evaluation.md gain the honest small-tabletop
   limitation paragraph. main = 139f507, tag v1.0.6.
+
+### 2026-10-12 04:30 IST, control passes, test slice evaluated once, Part C next
+- Projection control passes: per-pair oracle IoU above 0.5 on 6 of 7 processable
+  val pairs, obj/sc AP 0.1147 (7 TPs). Adapter verified end to end; the near-zero
+  validation score is a detection and domain result.
+- Freeze recorded (v1.0.0 configs/default.yaml + digests, identical to the held-out
+  freeze).
+- Test slice (10 pairs) regenerated at the frozen config and evaluated exactly
+  once: all 10 pairs unprocessable at the frozen blur setting, headline all zero
+  (0 TP, 29 FN). No test score had been seen before. Committed as produced.
+- Failure analysis on the 7 processable val pairs recorded (scale mismatch, change
+  semantics, frame budget; plumbing ruled out).
+- README + evaluation.md carry the honest small-tabletop limitation. main =
+  51ee950 (tag v1.0.6).
+- Next: Part C on exp/semantics-v2, first frames.adaptive_sharpness (default OFF),
+  post-hoc diagnostic on the 13 unprocessable val pairs and scene2, plus a
+  byte-identical check of the development outputs with the flag ON.
