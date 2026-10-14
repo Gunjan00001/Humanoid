@@ -18,11 +18,15 @@ export PATH="$CONDA_PREFIX/bin:$PATH"
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY="$HOME/miniconda3/envs/spatialdiff/bin/python"
 
-retry_detect() {   # extra args are the detect.py arguments
-  for attempt in 1 2 3 4 5; do
-    echo "=== attempt $attempt: $PY detect.py $* ==="
+retry_detect() {   # extra args are the detect.py arguments. Keeps retrying for up
+  local deadline=$((SECONDS+1500))   # to 25 minutes per pair, so the moment any
+  local attempt=0                    # GPU frees the next attempt takes it.
+  while [ "$SECONDS" -lt "$deadline" ]; do
+    attempt=$((attempt+1))
+    echo "=== attempt $attempt at +${SECONDS}s: detect.py ==="
     "$PY" detect.py "$@" && return 0
-    echo "  attempt $attempt failed; re-pinning the idlest GPUs and retrying"
+    echo "  attempt $attempt failed; re-pinning the idlest GPUs in 20s"
+    sleep 20
   done
   return 1
 }
