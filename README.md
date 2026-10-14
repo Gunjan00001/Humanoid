@@ -70,6 +70,106 @@ clips are 3.8 s / 7.3 s, too few sharp frames). Full table:
 
 Full, honest numbers for every scene: [`docs/results.md`](docs/results.md).
 
+## Examples
+
+**scene4 is the headline.** Development scene (tuned), ground truth is apple
+moved, scissors removed, bottle added, and the pipeline reports all three with no
+extras.
+
+- inputs: [`data/scene4/a.mp4`](data/scene4/a.mp4) and [`data/scene4/b.mp4`](data/scene4/b.mp4)
+- viewer (GitHub Pages, owner must enable): https://gunjan00001.github.io/Humanoid/outputs/scene4/viewer.html
+- composites, one per change (before, after, 3D box): [`outputs/scene4/changes/`](outputs/scene4/changes)
+- report: [`outputs/scene4/report.md`](outputs/scene4/report.md)
+- 3D mesh: `outputs/scene4/scene_mesh.ply`
+
+verbatim summary (real output):
+
+```text
+Compared a.mp4 and b.mp4. I found 3 change(s):
+1. Moved: apple. The apple moved slightly to the right and upward (direction as seen in the before/after crops).
+2. Removed: scissors. The scissors were removed.
+3. Added: plastic bottle. The plastic bottle appeared.
+
+Notes: 7 unverified candidate(s) were seen in one video only; they are listed in report.json but not counted as changes. Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.
+Files: viewer.html, change.gif, report.json
+```
+
+**scene6 is held-out** (run once, never tuned). Ground truth is cup moved, remote
+removed, apple added. It finds the remote and reports one extra; the move and the
+apple are missed. Its recall is lower than the development scenes by design.
+
+- inputs: [`data/scene6/a.mp4`](data/scene6/a.mp4) and [`data/scene6/b.mp4`](data/scene6/b.mp4)
+- viewer: https://gunjan00001.github.io/Humanoid/outputs/scene6/viewer.html
+- composites: [`outputs/scene6/changes/`](outputs/scene6/changes)
+
+verbatim summary (real output):
+
+```text
+Compared a.mp4 and b.mp4. I found 2 change(s):
+1. Removed - remote control: The remote control was removed from the table.
+2. Added - electrical outlet: Possibly an electrical outlet was added to the wall.
+
+Notes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.
+Files: viewer.html, change.gif, report.json
+```
+
+## Design choices and tradeoffs
+
+Both videos are reconstructed together in one pass, so every frame lands in one
+coordinate frame and no cross run registration is needed. Detection is geometric
+and photometric: 3D distance and table appearance propose candidates; the vision
+language model only verifies and names them, it never detects. Two checks keep
+real changes apart from viewpoint effects. The visibility check marks a cluster
+removed only when the other video actually saw that space empty, and the coverage
+check requires an addition to sit where the other video saw empty space. A
+replacement at the same spot is separated from "nothing changed" by appearance,
+because geometry cannot see it. Summaries are generated only from report fields,
+so a sentence never claims something the report does not contain. Object names
+come from the model and can be wrong. Moves are the weakest part: only 1 of 4
+development moves is reported as `moved`. The longer note, with the rejected
+ideas and their numbers, is [`docs/design_note.md`](docs/design_note.md).
+
+## Telling real changes from viewpoint and occlusion
+
+| check | what it decides | where |
+|---|---|---|
+| visibility (seen empty) | a region is `removed` only if the other video's depth saw that space empty | `src/diff.py` (visibility check) |
+| coverage of additions | an `added` region must sit where the other video saw empty space | `src/describe.py` coverage check |
+| static object suppression | fragments of objects present in both videos are dropped as lighting or blur | `src/describe.py` post filters |
+| appearance and depth | a `replaced` claim needs a strong pixel change; a move needs a similar crop at a different 3D spot | `src/describe.py`, DINOv2 |
+
+One real rejected candidate (scene6, `cache/scene6/semantics/rejected.json`): the
+cluster labelled `white cup` was VLM confirmed but then dropped, "inside an object
+present in both videos (78% of its points), lighting/blur artefact", so it was not
+reported as an addition.
+
+## Hardware and a no-GPU path
+
+GPU memory: the reconstruction (VGGT) fits one 80 GB A100; the label model
+(Qwen3-VL-32B, bf16) needs about 64 GB, so two A100s, or one A100 plus CPU offload
+which is much slower. Runtime on the cluster is 5 to 6 minutes per scene on the
+node, plus queue wait. Frame extraction, the diff, the report and the visualization
+are CPU only. A smaller label model exists (`Qwen3-VL-8B-Instruct`, one GPU); the
+measured difference is documented in [`docs/timing.md`](docs/timing.md).
+
+No GPU needed to see results: open the committed `viewer.html` files, read
+`report.md` and `summary.txt` for each scene, or re-render the figures from the
+cached stages with
+
+```bash
+python src/visualize.py --config configs/default.yaml \
+    --cache cache/scene4 --out outputs/scene4 --render-only
+```
+
+## More evidence
+
+Benchmarks and sprint logs live in docs: [`docs/results.md`](docs/results.md)
+(all scenes), [`docs/heldout.md`](docs/heldout.md) (held-out protocol),
+[`docs/accuracy.md`](docs/accuracy.md) (accuracy sprint),
+[`docs/negative_results.md`](docs/negative_results.md) (what did not help),
+[`docs/evaluation.md`](docs/evaluation.md) (SceneDiff check),
+[`docs/timing.md`](docs/timing.md) (measured runtimes).
+
 ## Results
 
 On the demo scene (two 8–12 s phone recordings of a table; ground truth: comb
