@@ -52,6 +52,7 @@ def main() -> int:
     ap.add_argument("--cache", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--data", required=True)
+    ap.add_argument("--report", required=True, help="path to the pair's report.json")
     args = ap.parse_args()
 
     import pycocotools.mask as mask_utils
@@ -60,10 +61,10 @@ def main() -> int:
     cfg = load_config("configs/default.yaml")
     cfg["paths"]["cache_dir"] = str(cache)
     recon = load_reconstruction(cfg)
-    report = json.loads((Path(args.out).parent / args.pair / "report.json").read_text()) \
-        if (Path(args.out).parent / args.pair / "report.json").exists() else None
-    if report is None:
-        report = json.loads((cache / "report.json").read_text()) if (cache / "report.json").exists() else {"changes": []}
+    rpath = Path(args.report)
+    if not rpath.exists():
+        raise SystemExit(f"[eval_scenediff] report.json not found: {rpath}")
+    report = json.loads(rpath.read_text())
     changes = report.get("changes", [])
 
     index = json.loads((cache / "frames" / "index.json").read_text())

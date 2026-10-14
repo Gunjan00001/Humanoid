@@ -14,6 +14,6 @@ while read -r p; do
   "$PY" detect.py --a "$a" --b "$b" --name "sd_$p" \
       --out "outputs/scenediff/$p" --cache "cache/scenediff/$p" --local
   "$PY" src/eval_scenediff.py --pair "$p" --cache "cache/scenediff/$p" \
-      --out "$PRED" --data "$DATA"
+      --out "$PRED" --data "$DATA" --report "outputs/scenediff/$p/report.json"
 done < "$PAIRS"
 echo "SCENEDIFF_DRIVER_DONE"

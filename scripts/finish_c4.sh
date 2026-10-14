@@ -5,8 +5,8 @@ set -uo pipefail
 cd /home/jiit_992401210050/Desktop/Humanoid
 PY=/home/jiit_992401210050/miniconda3/envs/spatialdiff/bin/python
 
-while qstat 11033 >/dev/null 2>&1; do sleep 30; done
-echo "=== job 11033 ended $(date +%F_%H:%M:%S) ==="
+while qstat "${1:-11033}" >/dev/null 2>&1; do sleep 30; done
+echo "=== job ${1:-11033} ended $(date +%F_%H:%M:%S) ==="
 
 "$PY" - <<'PY' > logs/c4_sanity.txt 2>&1
 import pickle, json
