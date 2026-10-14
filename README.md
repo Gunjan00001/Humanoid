@@ -68,6 +68,13 @@ clips are 3.8 s / 7.3 s, too few sharp frames). Full table:
 - object names come from a VLM and can be wrong;
 - the automatic diff-mode choice is sensitive to the exact input encoding.
 
+Built for small tabletop scenes. On the room scale SceneDiff pairs the pipeline
+does not carry over: 13 of 20 validation pairs were unprocessable at the frozen
+blur setting (fewer than 8 sharp frames) and the 7 that ran produced no object
+level matches. The adapter itself is verified by a projection control, so this is
+a detection and domain limit, not a plumbing limit. Details and numbers:
+[`docs/evaluation.md`](docs/evaluation.md).
+
 Full, honest numbers for every scene: [`docs/results.md`](docs/results.md).
 
 ## Examples
