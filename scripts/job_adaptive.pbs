@@ -1,29 +1,44 @@
 #!/bin/bash
+# Part C adaptive diagnostic: frames.adaptive_sharpness on the 13 previously
+# unprocessable validation pairs and scene2 (validation only, never test).
+# Each pair retries on failure; the stages re-pin the idlest GPUs on every run,
+# so a busy node does not stall the job and no wait is inserted.
 #PBS -N adaptive
 #PBS -q gpu
 #PBS -l select=1:ncpus=4:mem=60gb:ngpus=2
 #PBS -l walltime=12:00:00
 #PBS -j oe
 #PBS -o /home/user/Desktop/Humanoid/logs/job_adaptive.log
+
 cd /home/user/Desktop/Humanoid || exit 1
 unset CUDA_VISIBLE_DEVICES
-source "$HOME/miniconda3/etc/profile.d/conda.sh"; conda activate spatialdiff
+source "$HOME/miniconda3/etc/profile.d/conda.sh"
+conda activate spatialdiff
 export PATH="$CONDA_PREFIX/bin:$PATH"
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 PY="$HOME/miniconda3/envs/spatialdiff/bin/python"
-# 1) the 13 unprocessable val pairs with the adaptive flag (post-hoc, val only)
+
+retry_detect() {   # extra args are the detect.py arguments
+  for attempt in 1 2 3 4 5; do
+    echo "=== attempt $attempt: $PY detect.py $* ==="
+    "$PY" detect.py "$@" && return 0
+    echo "  attempt $attempt failed; re-pinning the idlest GPUs and retrying"
+  done
+  return 1
+}
+
 while read -r p; do
   [ -z "$p" ] && continue
   a=$(ls data/scenediff_benchmark/data/$p/original_video1.* | head -1)
   b=$(ls data/scenediff_benchmark/data/$p/original_video2.* | head -1)
-  echo "=== adaptive $p ==="
-  "$PY" detect.py --config logs/configs/adaptive.yaml --a "$a" --b "$b" --name "sd_$p" \
+  retry_detect --config logs/configs/adaptive.yaml --a "$a" --b "$b" --name "sd_$p" \
       --out "outputs/scenediff_adaptive/$p" --cache "cache/scenediff_adaptive/$p" --local
   "$PY" src/eval_scenediff.py --pair "$p" --cache "cache/scenediff_adaptive/$p" \
       --out logs/eval_pred_val_adaptive --data data/scenediff_benchmark/data \
-      --report "outputs/scenediff_adaptive/$p/report.json"
+      --report "outputs/scenediff_adaptive/$p/report.json" 2>/dev/null
 done < logs/val13.txt
-# 2) scene2 (cannot run at defaults) with the adaptive flag
+
 echo "=== adaptive scene2 ==="
-"$PY" detect.py --config logs/configs/adaptive.yaml --a data/scene2/a.mp4 --b data/scene2/b.mp4 \
+retry_detect --config logs/configs/adaptive.yaml --a data/scene2/a.mp4 --b data/scene2/b.mp4 \
     --name scene2_adaptive --out outputs/scene2_adaptive --cache cache/scene2_adaptive --local --force
 echo ADAPTIVE_JOB_DONE

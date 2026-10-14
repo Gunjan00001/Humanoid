@@ -56,3 +56,8 @@ data/external/
 data/scenediff_benchmark
 outputs/scenediff/
 cache/scenediff/
+outputs/scenediff_adaptive/
+cache/scenediff_adaptive/
+outputs/scene2_adaptive/
+cache/scene2_adaptive/
+logs/configs/
