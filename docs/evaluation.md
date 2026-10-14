@@ -359,3 +359,15 @@ scored with the official evaluator.
 above zero. If it fails, find and fix the adapter bug (pure bug fix), re-run, and
 repeat the control. If it passes, the adapter is verified end to end and the
 near-zero validation score is a detection and domain result.
+
+## Honest summary of the SceneDiff slice
+
+The pipeline was built for small tabletop scenes. On room scale SceneDiff pairs it
+does not carry over: at the frozen blur setting **13 of the 20 validation pairs
+were unprocessable** (fewer than 8 sharp frames), and the **7 that ran produced no
+object level matches** (0 true positives; obj/sc AP 0.0000). The projection
+control shows the adapter itself is correct (oracle px/im IoU above 0.5 on 6 of 7
+pairs, obj/sc AP 0.1147), so the zero score is a detection and domain result, not
+a plumbing result. These are real numbers from the official evaluator on a
+pre-registered 20 pair validation slice and a 10 pair test slice of the varied
+subset, not the full benchmark.
