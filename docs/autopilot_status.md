@@ -194,3 +194,20 @@ Next steps and the exact commands:
 - Next: when 11033 finishes, sanity-check the val predictions (valid pkl, H/W
   match, non-degenerate scores, 3 overlay looks), freeze (v1.0.0 config + digests),
   evaluate the val slice, then evaluate the test slice once, then Track D.
+
+### 2026-10-12 02:55 IST, Part A done (v1.0.4); Part B re-running after adapter bug 2
+- Part A: docs/challenge-fit merged to main, tag v1.0.4 pushed and verified.
+  README first screen: 3 sentences, DEMO_VIDEO_URL placeholder, headline scene4
+  GIF, minimal quick start, "Challenge requirements and where to find them" table.
+  Added Examples (scene4 verbatim, scene6 held-out verbatim), Design choices and
+  tradeoffs, docs/design_note.md, the occlusion/visibility table with a real
+  rejected candidate, Hardware and a no-GPU path, More evidence, Licenses and
+  citations; handoff carries the repo description and topics. Tests pass, fresh
+  clone OK.
+- Part B: the validation sanity check found adapter bug 2 (predictions were empty
+  because the adapter looked for report.json in the wrong place). Fixed as a pure
+  bug fix, documented (bugs 1 and 2), both slices re-run as job 11367. Six
+  validation pairs fail upstream at the frozen blur threshold (fewer than 8 sharp
+  frames), reported as unprocessable, not changed.
+- Next: finisher runs the sanity check + validation evaluator on 11367's output,
+  then freeze and the single test evaluation.
