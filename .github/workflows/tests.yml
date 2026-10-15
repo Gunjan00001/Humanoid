@@ -1,0 +1,39 @@
+name: tests
+
+# CPU only, no model weights, no GPU. Every test here uses fixtures that ship
+# in the repository, as documented in tests/test_ma_contract.py and
+# docs/setup.md.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  lint-and-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: set up python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: install the test dependencies
+        run: pip install numpy pyyaml pillow ruff
+
+      - name: unit tests
+        run: |
+          python -m unittest -v \
+            tests.test_links \
+            tests.test_no_personal_paths \
+            tests.test_repo_budget \
+            tests.test_summary \
+            tests.test_heldout_claims \
+            tests.test_ma_contract
+
+      - name: lint with ruff
+        run: ruff check tests scripts src/naming

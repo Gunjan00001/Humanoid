@@ -1,0 +1,36 @@
+# Ruff configuration.
+#
+# The frozen detection files are deliberately not touched by the automated
+# formatter or linter, because formatting rewrites bytes and the held out
+# records document their sha256 digests. Hand edits to those files need human
+# review plus the digest table in docs/accuracy.md; see docs/rules and rules.md.
+#
+# Everything else (the naming package, scripts, tests) is fair game.
+line-length = 110
+
+exclude = [
+  "src/diff.py",
+  "src/tabletop.py",
+  "src/geometry.py",
+  "src/describe.py",
+  "src/align.py",
+  "src/reconstruct.py",
+  "detect.py",
+  "src/extract_frames.py",
+  "src/summary.py",
+  "src/report.py",
+  "src/visualize.py",
+  "scripts/rebuild_colors.py",
+  "third_party",
+  "outputs",
+  "data",
+]
+
+[lint]
+# Rules that catch real mistakes (undefined names, self-assignments, duplicate
+# keys, unreachable code), not style. The wider rule set is enabled gradually;
+# when a new rule turns on it does so because the whole tree passes it.
+select = ["E9", "F63", "F7", "F82"]
+
+[lint.mccabe]
+max-complexity = 12

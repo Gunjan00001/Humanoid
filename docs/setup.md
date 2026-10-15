@@ -180,3 +180,14 @@ cluster run instead.
 Every model name, path, and threshold lives in `configs/default.yaml`, never
 hard-code values in scripts. See
 [`architecture.md`](architecture.md#config-reference).
+
+## Continuous integration
+
+`.github/workflows/tests.yml` runs on every push to main and on pull requests.
+It is CPU only, installs no model weights, and runs the six CPU-safe test
+suites (documentation links, the personal-data checks, the repository budget,
+the summary invariants, the held-out claim check, the MapAnything contract with
+synthetic fixtures) and `ruff check` over the non-frozen code
+(`tests/`, `scripts/`, `src/naming/`). The frozen detection files are excluded
+from automated lint and formatting by `ruff.toml`, because rewriting them
+changes digests that the held-out documentation records.
