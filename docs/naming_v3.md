@@ -41,6 +41,7 @@ right). Counts include entries with no cached crops; those abstain.
 | naming_v3, knob sim 0.10, votes 1 | 6/19 | 31.6% | **66.7%** | **3 (15.8%)** | 13 (68.4%) |
 | naming_v3, knob sim 0.15, votes 1 | 4/19 | 21.1% | 66.7% | 1 (5.3%) | 15 (78.9%) |
 | naming_v3, knob sim 0.20, votes 1 | 0/19 | 0.0% | not measurable | 0 | 19 (100%) |
+| naming_v3, knob sim 0.05, votes 1 (the coverage ceiling) | 7/19 | **36.8%** | 66.7% | 4 (21.1%) | 12 (63.2%) |
 
 Breakdown at the default knob: 3 specific names (2 right), 3 category labels
 (1 right), 13 abstentions.
@@ -51,23 +52,43 @@ the entries.
 
 ## Why it is not enabled
 
-Leave one scene out, tuning the two global knobs on the other five scenes and
-scoring the held-out one, picks `min_sim` 0.15 or 0.20 every time, and at those
-values almost everything abstains: 0 named out of 2, 2, 3, 4, 5 and 2 entries on
-the six held-out scenes. Zero wrong names, almost zero coverage.
+The tuning objective was degenerate at first: "fewest wrong names, then highest
+coverage" can always reach zero wrong names by refusing to name anything, so the
+gate was satisfiable for free. `leave_one_scene_out` now takes a coverage floor
+(`--min-coverage`), and a knob has to name at least that share of the training
+entries before it is considered.
 
-That is a degenerate optimum, not a good result. The tuning objective as written
-(fewest wrong names first, then coverage) can always reach "no wrong names" by
-refusing to name anything, so the gate as stated is satisfiable for free and the
-result says nothing. Before this flag can be judged it needs a coverage floor in
-the objective, for example "the wrong-name rate subject to naming at least half
-of the entries", and a knob range that reflects the observed similarity
-distribution, which sits mostly below 0.2 for these crops.
+Two facts came out of that, and both matter more than the gate itself:
 
-I am not claiming the gate passed. Measured facts, in one line: at a fixed knob
-the ladder cuts wrong names by about two thirds and names a third of the
-entries; tuned leave-one-out it abstains almost completely, which is why the flag
-stays off.
+* **The rerank cannot name more than 36.8% of these entries at any knob.** That is
+  the maximum coverage over the whole knob grid, reached at similarity 0.05, and
+  it does not improve further. The similarities SigLIP 2 produces for these crops
+  sit mostly below 0.2, so there is no setting that names most objects.
+* **A 50% coverage floor is unattainable**, so the search falls back to
+  "abstain as much as possible" and the result says nothing. With a reachable
+  floor of 0.25 the search behaves sensibly.
+
+Leave one scene out with `--min-coverage 0.25`, six folds, held-out results only:
+
+| held-out scene | knob chosen on the other five | named | wrong | abstained |
+|---|---|---|---|---|
+| demo | sim 0.10 | 2 | 2 | 1 |
+| scene2 | sim 0.10 | 1 | 0 | 1 |
+| scene3 | sim 0.15 | 0 | 0 | 4 |
+| scene4 | sim 0.05, votes 2 | 1 | 0 | 2 |
+| scene5 | sim 0.15 | 0 | 0 | 5 |
+| scene6 | sim 0.10 | 0 | 0 | 2 |
+| **all 19 entries** | | **4 (21.1%)** | **2 (10.5%)** | **15 (78.9%)** |
+
+So the honest verdict, as measured: the wrong-name rate falls from 52.6% to
+10.5% under leave-one-out, which is the drop the gate asked for, and it is paid
+for in coverage, naming about a fifth of the entries instead of all of them. The
+type and localized recall are untouched because this flag only changes the label
+text; detection never reads it, and it is not wired into `describe.py` yet.
+
+Whether that trade is worth taking is a product decision, not a measurement. The
+flag stays **OFF** until that decision is made; it is not enabled by the gate
+alone.
 
 ## Reproducing
 

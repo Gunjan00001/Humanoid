@@ -46,6 +46,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--min-sim", type=float, default=0.10)
     p.add_argument("--min-votes", type=int, default=1)
     p.add_argument("--loso", action="store_true", help="leave one scene out for the knobs")
+    p.add_argument("--min-coverage", type=float, default=0.5,
+                   help="tuning must name at least this share of the training entries")
     p.add_argument("--out", default="logs/naming_v3.json")
     p.add_argument("--debug", action="store_true")
     return p.parse_args()
@@ -142,7 +144,8 @@ def main() -> int:
             lambda rows, k: run_ladder(
                 [e for e in entries if any(r["entry_id"] == e.entry_id and
                                            r["scene"] == e.scene for r in rows)],
-                scores, vocab, k))
+                scores, vocab, k),
+            min_coverage=args.min_coverage)
         result["loso"] = loso
         print("\nleave one scene out (knobs tuned on the other scenes):")
         for scene, info in loso["per_scene"].items():

@@ -125,36 +125,48 @@ def label_is_correct(label: str, kind: str, truth: str | None, vocab) -> bool:
     return False
 
 
-def leave_one_scene_out(rows: list[dict], knobs: list[dict], score_fn) -> dict:
+def leave_one_scene_out(rows: list[dict], knobs: list[dict], score_fn,
+                        min_coverage: float = 0.5) -> dict:
     """Tune on every scene but one, then score the held-out scene.
 
     rows   one dict per entry with a "scene" key
     knobs  the global settings to choose between, for example
            [{"min_sim": 0.10, "min_votes": 1}, ...]
     score_fn(rows, knob) -> Outcomes
+    min_coverage
+           coverage floor for the knob search. Without it the objective is
+           degenerate: refusing to name anything gives zero wrong names, which
+           always "wins" and says nothing. A knob must name at least this share
+           of the training entries before it is considered, and among the ones
+           that qualify the fewest wrong names wins.
 
-    Returns {"choice": {scene: knob}, "per_scene": {...}, "overall": Outcomes}.
+    Returns {"choice": {scene: knob}, "per_scene": {...},
+             "degenerate": [...], "min_coverage": ...}.
     """
     scenes = sorted({r["scene"] for r in rows})
     choice: dict[str, dict] = {}
     per_scene: dict[str, dict] = {}
+    degenerate: list[str] = []
     for held in scenes:
         train = [r for r in rows if r["scene"] != held]
         test = [r for r in rows if r["scene"] == held]
         if not train or not test:
             continue
-        # Pick the knob with the best training score: fewest wrong names first,
-        # then highest coverage, so the tie break favours answering.
-        best, best_key = None, None
-        for knob in knobs:
-            o = score_fn(train, knob)
-            key = (-o.wrong_name_rate, o.coverage)
-            log.debug("LOSO train=%s knob=%s -> wrong=%.3f coverage=%.3f",
-                      "all but " + held, knob, o.wrong_name_rate, o.coverage)
-            if best_key is None or key > best_key:
-                best, best_key = knob, key
+        scored = [(knob, score_fn(train, knob)) for knob in knobs]
+        eligible = [(k, o) for k, o in scored if o.coverage >= min_coverage]
+        if not eligible:
+            # Nothing reaches the coverage floor, so the floor itself is wrong
+            # for this data. Say so instead of silently picking the abstainer.
+            degenerate.append(held)
+            log.warning("LOSO: no knob reaches coverage %.2f on all but %s; "
+                        "falling back to the least abstaining knob", min_coverage, held)
+            eligible = scored
+        best, best_o = min(eligible, key=lambda ko: (ko[1].wrong_name_rate,
+                                                     -ko[1].coverage))
         choice[held] = best
         out = score_fn(test, best)
         per_scene[held] = {"knob": best, **out.summary()}
-        log.info("LOSO held out %s: %s", held, out.table())
-    return {"choice": choice, "per_scene": per_scene}
+        log.info("LOSO held out %s (chosen on the other scenes, coverage floor %.2f): %s",
+                 held, min_coverage, out.table())
+    return {"choice": choice, "per_scene": per_scene, "degenerate": degenerate,
+            "min_coverage": min_coverage}
