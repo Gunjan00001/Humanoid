@@ -1,0 +1,14 @@
+{
+  "scene": "scene3",
+  "resolution": "human-resolved (user, 2026-10-11)",
+  "entries": [
+    {"entry_id": 1, "gt_id": 2, "type_ok": true,  "name_ok": false, "fragment": false,
+     "evidence": "replaced 'black chair' -> GT2 apple->cup: type correct, label wrong"},
+    {"entry_id": 2, "gt_id": 2, "type_ok": false, "name_ok": true,  "fragment": true,
+     "evidence": "removed 'red apple' - duplicate/fragment of GT2 (apple side); not a type match, not an extra"},
+    {"entry_id": 3, "gt_id": null, "kind": "extra",
+     "evidence": "removed 'green and yellow object' - coconut-like object stays on the table"},
+    {"entry_id": 4, "gt_id": 1, "type_ok": true,  "name_ok": false, "fragment": false,
+     "evidence": "removed 'black trash can' -> GT1 chair removed: type correct, label wrong"}
+  ]
+}

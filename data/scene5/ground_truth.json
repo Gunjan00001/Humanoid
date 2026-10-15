@@ -1,0 +1,10 @@
+{
+  "scene": "scene5",
+  "source": "data/scene5/ground_truth.md",
+  "changes": [
+    {"id": 1, "type": "moved",   "object": "clock",
+     "synonyms": ["clock", "digital clock", "alarm clock", "wall clock"]},
+    {"id": 2, "type": "removed", "object": "chair",
+     "synonyms": ["chair", "wooden chair", "black chair"]}
+  ]
+}

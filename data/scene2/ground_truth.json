@@ -1,0 +1,8 @@
+{
+  "scene": "scene2",
+  "source": "data/scene2/ground_truth.md",
+  "changes": [
+    {"id": 1, "type": "removed", "object": "coconut",
+     "synonyms": ["coconut", "coco nut"]}
+  ]
+}

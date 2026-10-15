@@ -1,0 +1,12 @@
+{
+  "scene": "demo",
+  "resolution": "human-resolved (user, 2026-10-11)",
+  "entries": [
+    {"entry_id": 1, "gt_id": 2, "type_ok": true,  "name_ok": true,  "fragment": false,
+     "evidence": "removed comb = GT2 comb removed"},
+    {"entry_id": 2, "gt_id": 3, "type_ok": true,  "name_ok": true,  "fragment": false,
+     "evidence": "added pen (label 'pen and device') = GT3 pen added"},
+    {"entry_id": 3, "gt_id": 1, "type_ok": false, "name_ok": true,  "fragment": false,
+     "evidence": "replaced 'remote control' - right object + name, wrong type (GT1 is moved+flipped)"}
+  ]
+}

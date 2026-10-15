@@ -1,0 +1,15 @@
+{
+  "scene": "scene5",
+  "resolution": "human-resolved (user, 2026-10-11)",
+  "entries": [
+    {"entry_id": 1, "gt_id": 2, "type_ok": true,  "name_ok": false, "fragment": true,
+     "evidence": "chair fragment ('wooden leg'): type ok, part name wrong"},
+    {"entry_id": 2, "gt_id": 2, "type_ok": true,  "name_ok": false, "fragment": false,
+     "evidence": "chair fragment ('chair leg'): first resolved entry; part name NOT correct"},
+    {"entry_id": 3, "gt_id": 2, "type_ok": true,  "name_ok": false, "fragment": true,
+     "evidence": "chair fragment ('table leg'): part name wrong"},
+    {"entry_id": 4, "gt_id": null, "kind": "extra", "evidence": "added 'small round object' - floor reflection in video B"},
+    {"entry_id": 5, "gt_id": 1, "type_ok": false, "name_ok": false, "fragment": false,
+     "evidence": "clock's new position but typed 'added' (!= moved); 'bottle' is a false object name"}
+  ]
+}
