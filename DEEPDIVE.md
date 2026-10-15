@@ -570,3 +570,39 @@ probe and the closed tracks; `docs/evaluation.md` for SceneDiff including the fi
 adapter bugs and the oracle control; `docs/naming_v3.md` and `docs/naming_v4.md` for
 the naming round; `docs/timing.md` for measured runtimes; `docs/devlog.md` for the
 chronological log.
+
+---
+
+## 11. Repository history and archive tags
+
+Since v1.2.1 all work goes directly to **main**: small commits, each tested, with
+a tag only for a verified release (a patch tag for documentation and fixes, a
+minor tag for a behaviour change, always checked from a fresh clone). The rule
+itself is written in `rules.md` section 10 and in `AGENTS.md`.
+
+Work from before that rule happened on short branches. Nothing was lost: their
+history is preserved in annotated archive tags, and the branches are deleted on
+the remote, so the remote shows **main plus tags**.
+
+| archive tag | what it holds | why it matters |
+|---|---|---|
+| `archive/exp-accuracy` | the accuracy sprint: `scripts/score.py`, `scripts/sprint.py`, `scripts/worker.py`, the SAM 2 probes, the oracle projection control, the first SceneDiff adapter, `docs/accuracy.md` and `docs/negative_results.md` | it is where the four negative flag experiments and the SAM 2 negative result come from |
+| `archive/exp-semantics-v2` | the naming round: the adaptive sharpness flag and its verification script, the plane check, the naming package (v3 ladder, v4 tiers), the labelled crop set and its synonym table, the room-scale template | it is where the 23% rerank ceiling and the naming gate analysis come from |
+
+Everything a reviewer needs is on main: the archive tags only exist so that the
+history behind the numbers can still be inspected. `docs/branches.md` has the tags
+and the commands for reading a file out of an archive.
+
+**The freeze.** The detection files stay at `v0.12.0` and the held-out outputs of
+scene5 and scene6 stay byte identical to `v1.0.0`:
+
+```
+git diff v1.0.0 main -- src/diff.py src/tabletop.py src/geometry.py \
+                        src/describe.py src/align.py src/reconstruct.py   # empty
+git diff v1.0.0 main -- outputs/scene5 outputs/scene6                     # empty
+```
+
+`configs/default.yaml` and `src/extract_frames.py` differ from `v1.0.0` by exactly
+one released change: the v1.1.0 adaptive sharpness fallback, which only runs when
+the absolute blur threshold leaves too few frames and is byte identical on every
+scene that already worked (`scripts/verify_adaptive_identity.py`).
