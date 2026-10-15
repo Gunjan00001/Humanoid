@@ -90,6 +90,23 @@ Whether that trade is worth taking is a product decision, not a measurement. The
 flag stays **OFF** until that decision is made; it is not enabled by the gate
 alone.
 
+### The sample is too small to settle it
+
+Nineteen entries is not enough to separate these configurations. Wilson 95%
+intervals on the counts:
+
+| configuration | wrong names | Wilson 95% interval |
+|---|---|---|
+| labels as printed | 10 of 19 (52.6%) | **[31.7%, 72.7%]** |
+| naming_v3, leave-one-out | 2 of 19 (10.5%) | **[2.9%, 31.4%]** |
+
+The intervals overlap, so the data is consistent with anything from "v3 is much
+better" to "v3 is barely better", and the same holds for the coverage numbers.
+Nothing here should be read as a settled comparison. That is why the next step is
+a few hundred labelled crops from the SceneDiff validation pairs, with naming
+measured independently of detection and per-tier intervals instead of point
+estimates. Until that set exists, naming_v3 stays OFF on 19 entries.
+
 ## Reproducing
 
 ```
