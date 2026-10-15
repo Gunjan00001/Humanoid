@@ -8,9 +8,9 @@
 #PBS -l select=1:ncpus=4:mem=60gb:ngpus=2
 #PBS -l walltime=12:00:00
 #PBS -j oe
-#PBS -o /home/user/Desktop/Humanoid/logs/job_adaptive.log
+#PBS -o $HOME/Desktop/Humanoid/logs/job_adaptive.log
 
-cd /home/user/Desktop/Humanoid || exit 1
+cd $HOME/Desktop/Humanoid || exit 1
 unset CUDA_VISIBLE_DEVICES
 source "$HOME/miniconda3/etc/profile.d/conda.sh"
 conda activate spatialdiff

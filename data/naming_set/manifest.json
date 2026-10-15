@@ -6,7 +6,7 @@
       "object_index": 0,
       "label": "Air Hockey Sticker_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/airhockeytable_1_airhockeytable_2__o0__v1_00000.png",
+      "path": "data/naming_set/crops/airhockeytable_1_airhockeytable_2__o0__v1_00000.png",
       "frame": 0,
       "width": 154,
       "height": 37
@@ -16,7 +16,7 @@
       "object_index": 0,
       "label": "Air Hockey Sticker_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/airhockeytable_1_airhockeytable_2__o0__v1_00068.png",
+      "path": "data/naming_set/crops/airhockeytable_1_airhockeytable_2__o0__v1_00068.png",
       "frame": 68,
       "width": 207,
       "height": 52
@@ -26,7 +26,7 @@
       "object_index": 0,
       "label": "Air Hockey Sticker_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/airhockeytable_1_airhockeytable_2__o0__v1_00137.png",
+      "path": "data/naming_set/crops/airhockeytable_1_airhockeytable_2__o0__v1_00137.png",
       "frame": 137,
       "width": 452,
       "height": 137
@@ -36,7 +36,7 @@
       "object_index": 0,
       "label": "Air Hockey Sticker_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/airhockeytable_1_airhockeytable_2__o0__v1_00206.png",
+      "path": "data/naming_set/crops/airhockeytable_1_airhockeytable_2__o0__v1_00206.png",
       "frame": 206,
       "width": 754,
       "height": 240
@@ -46,7 +46,7 @@
       "object_index": 0,
       "label": "Air Hockey Sticker_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/airhockeytable_1_airhockeytable_2__o0__v2_00000.png",
+      "path": "data/naming_set/crops/airhockeytable_1_airhockeytable_2__o0__v2_00000.png",
       "frame": 0,
       "width": 122,
       "height": 33
@@ -56,7 +56,7 @@
       "object_index": 0,
       "label": "Air Hockey Sticker_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/airhockeytable_1_airhockeytable_2__o0__v2_00057.png",
+      "path": "data/naming_set/crops/airhockeytable_1_airhockeytable_2__o0__v2_00057.png",
       "frame": 57,
       "width": 112,
       "height": 32
@@ -66,7 +66,7 @@
       "object_index": 0,
       "label": "Air Hockey Sticker_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/airhockeytable_1_airhockeytable_2__o0__v2_00114.png",
+      "path": "data/naming_set/crops/airhockeytable_1_airhockeytable_2__o0__v2_00114.png",
       "frame": 114,
       "width": 103,
       "height": 32
@@ -76,7 +76,7 @@
       "object_index": 0,
       "label": "Air Hockey Sticker_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/airhockeytable_1_airhockeytable_2__o0__v2_00171.png",
+      "path": "data/naming_set/crops/airhockeytable_1_airhockeytable_2__o0__v2_00171.png",
       "frame": 171,
       "width": 96,
       "height": 30
@@ -86,7 +86,7 @@
       "object_index": 0,
       "label": "green bottle_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_11_bathroom_12__o0__v1_00000.png",
+      "path": "data/naming_set/crops/bathroom_11_bathroom_12__o0__v1_00000.png",
       "frame": 0,
       "width": 279,
       "height": 226
@@ -96,7 +96,7 @@
       "object_index": 0,
       "label": "green bottle_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_11_bathroom_12__o0__v1_00035.png",
+      "path": "data/naming_set/crops/bathroom_11_bathroom_12__o0__v1_00035.png",
       "frame": 35,
       "width": 291,
       "height": 232
@@ -106,7 +106,7 @@
       "object_index": 0,
       "label": "green bottle_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_11_bathroom_12__o0__v1_00235.png",
+      "path": "data/naming_set/crops/bathroom_11_bathroom_12__o0__v1_00235.png",
       "frame": 235,
       "width": 118,
       "height": 137
@@ -116,7 +116,7 @@
       "object_index": 0,
       "label": "green bottle_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_11_bathroom_12__o0__v1_00271.png",
+      "path": "data/naming_set/crops/bathroom_11_bathroom_12__o0__v1_00271.png",
       "frame": 271,
       "width": 229,
       "height": 142
@@ -126,7 +126,7 @@
       "object_index": 1,
       "label": "yellow lotion_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_11_bathroom_12__o1__v1_00000.png",
+      "path": "data/naming_set/crops/bathroom_11_bathroom_12__o1__v1_00000.png",
       "frame": 0,
       "width": 359,
       "height": 339
@@ -136,7 +136,7 @@
       "object_index": 1,
       "label": "yellow lotion_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_11_bathroom_12__o1__v1_00026.png",
+      "path": "data/naming_set/crops/bathroom_11_bathroom_12__o1__v1_00026.png",
       "frame": 26,
       "width": 373,
       "height": 339
@@ -146,7 +146,7 @@
       "object_index": 1,
       "label": "yellow lotion_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_11_bathroom_12__o1__v1_00280.png",
+      "path": "data/naming_set/crops/bathroom_11_bathroom_12__o1__v1_00280.png",
       "frame": 280,
       "width": 300,
       "height": 229
@@ -156,7 +156,7 @@
       "object_index": 0,
       "label": "eye contact lotion_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o0__v1_00136.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o0__v1_00136.png",
       "frame": 136,
       "width": 109,
       "height": 82
@@ -166,7 +166,7 @@
       "object_index": 0,
       "label": "eye contact lotion_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o0__v1_00169.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o0__v1_00169.png",
       "frame": 169,
       "width": 153,
       "height": 99
@@ -176,7 +176,7 @@
       "object_index": 0,
       "label": "eye contact lotion_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o0__v1_00202.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o0__v1_00202.png",
       "frame": 202,
       "width": 250,
       "height": 123
@@ -186,7 +186,7 @@
       "object_index": 0,
       "label": "eye contact lotion_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o0__v1_00235.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o0__v1_00235.png",
       "frame": 235,
       "width": 206,
       "height": 83
@@ -196,7 +196,7 @@
       "object_index": 1,
       "label": "eye contact lotion_2",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o1__v1_00139.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o1__v1_00139.png",
       "frame": 139,
       "width": 64,
       "height": 68
@@ -206,7 +206,7 @@
       "object_index": 1,
       "label": "eye contact lotion_2",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o1__v1_00171.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o1__v1_00171.png",
       "frame": 171,
       "width": 227,
       "height": 88
@@ -216,7 +216,7 @@
       "object_index": 1,
       "label": "eye contact lotion_2",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o1__v1_00204.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o1__v1_00204.png",
       "frame": 204,
       "width": 253,
       "height": 76
@@ -226,7 +226,7 @@
       "object_index": 1,
       "label": "eye contact lotion_2",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o1__v1_00236.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o1__v1_00236.png",
       "frame": 236,
       "width": 199,
       "height": 50
@@ -236,7 +236,7 @@
       "object_index": 2,
       "label": "mouth wash_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o2__v1_00000.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o2__v1_00000.png",
       "frame": 0,
       "width": 523,
       "height": 285
@@ -246,7 +246,7 @@
       "object_index": 2,
       "label": "mouth wash_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o2__v1_00018.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o2__v1_00018.png",
       "frame": 18,
       "width": 524,
       "height": 309
@@ -256,7 +256,7 @@
       "object_index": 2,
       "label": "mouth wash_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o2__v1_00037.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o2__v1_00037.png",
       "frame": 37,
       "width": 583,
       "height": 393
@@ -266,7 +266,7 @@
       "object_index": 2,
       "label": "mouth wash_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o2__v1_00055.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o2__v1_00055.png",
       "frame": 55,
       "width": 761,
       "height": 474
@@ -276,7 +276,7 @@
       "object_index": 2,
       "label": "mouth wash_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o2__v2_00000.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o2__v2_00000.png",
       "frame": 0,
       "width": 366,
       "height": 232
@@ -286,7 +286,7 @@
       "object_index": 2,
       "label": "mouth wash_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o2__v2_00033.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o2__v2_00033.png",
       "frame": 33,
       "width": 393,
       "height": 243
@@ -296,7 +296,7 @@
       "object_index": 2,
       "label": "mouth wash_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o2__v2_00066.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o2__v2_00066.png",
       "frame": 66,
       "width": 365,
       "height": 252
@@ -306,7 +306,7 @@
       "object_index": 2,
       "label": "mouth wash_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o2__v2_00099.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o2__v2_00099.png",
       "frame": 99,
       "width": 470,
       "height": 294
@@ -316,7 +316,7 @@
       "object_index": 3,
       "label": "cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o3__v1_00076.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o3__v1_00076.png",
       "frame": 76,
       "width": 91,
       "height": 80
@@ -326,7 +326,7 @@
       "object_index": 3,
       "label": "cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o3__v1_00088.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o3__v1_00088.png",
       "frame": 88,
       "width": 103,
       "height": 84
@@ -336,7 +336,7 @@
       "object_index": 3,
       "label": "cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o3__v1_00099.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o3__v1_00099.png",
       "frame": 99,
       "width": 134,
       "height": 90
@@ -346,7 +346,7 @@
       "object_index": 3,
       "label": "cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o3__v2_00196.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o3__v2_00196.png",
       "frame": 196,
       "width": 153,
       "height": 166
@@ -356,7 +356,7 @@
       "object_index": 3,
       "label": "cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o3__v2_00222.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o3__v2_00222.png",
       "frame": 222,
       "width": 171,
       "height": 169
@@ -366,7 +366,7 @@
       "object_index": 3,
       "label": "cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bathroom_1_bathroom_2__o3__v2_00248.png",
+      "path": "data/naming_set/crops/bathroom_1_bathroom_2__o3__v2_00248.png",
       "frame": 248,
       "width": 152,
       "height": 178
@@ -376,7 +376,7 @@
       "object_index": 0,
       "label": "Marker_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bed_3_bed_4__o0__v1_00000.png",
+      "path": "data/naming_set/crops/bed_3_bed_4__o0__v1_00000.png",
       "frame": 0,
       "width": 646,
       "height": 292
@@ -386,7 +386,7 @@
       "object_index": 0,
       "label": "Marker_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bed_3_bed_4__o0__v1_00031.png",
+      "path": "data/naming_set/crops/bed_3_bed_4__o0__v1_00031.png",
       "frame": 31,
       "width": 560,
       "height": 296
@@ -396,7 +396,7 @@
       "object_index": 0,
       "label": "Marker_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bed_3_bed_4__o0__v1_00062.png",
+      "path": "data/naming_set/crops/bed_3_bed_4__o0__v1_00062.png",
       "frame": 62,
       "width": 287,
       "height": 367
@@ -406,7 +406,7 @@
       "object_index": 0,
       "label": "Marker_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bed_3_bed_4__o0__v1_00093.png",
+      "path": "data/naming_set/crops/bed_3_bed_4__o0__v1_00093.png",
       "frame": 93,
       "width": 210,
       "height": 510
@@ -416,7 +416,7 @@
       "object_index": 0,
       "label": "Marker_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bed_3_bed_4__o0__v2_00000.png",
+      "path": "data/naming_set/crops/bed_3_bed_4__o0__v2_00000.png",
       "frame": 0,
       "width": 140,
       "height": 137
@@ -426,7 +426,7 @@
       "object_index": 0,
       "label": "Marker_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bed_3_bed_4__o0__v2_00025.png",
+      "path": "data/naming_set/crops/bed_3_bed_4__o0__v2_00025.png",
       "frame": 25,
       "width": 116,
       "height": 152
@@ -436,7 +436,7 @@
       "object_index": 0,
       "label": "Marker_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bed_3_bed_4__o0__v2_00051.png",
+      "path": "data/naming_set/crops/bed_3_bed_4__o0__v2_00051.png",
       "frame": 51,
       "width": 214,
       "height": 196
@@ -446,7 +446,7 @@
       "object_index": 0,
       "label": "Marker_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bed_3_bed_4__o0__v2_00077.png",
+      "path": "data/naming_set/crops/bed_3_bed_4__o0__v2_00077.png",
       "frame": 77,
       "width": 426,
       "height": 162
@@ -456,7 +456,7 @@
       "object_index": 1,
       "label": "PaintBrush_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bed_3_bed_4__o1__v2_00000.png",
+      "path": "data/naming_set/crops/bed_3_bed_4__o1__v2_00000.png",
       "frame": 0,
       "width": 745,
       "height": 248
@@ -466,7 +466,7 @@
       "object_index": 1,
       "label": "PaintBrush_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bed_3_bed_4__o1__v2_00011.png",
+      "path": "data/naming_set/crops/bed_3_bed_4__o1__v2_00011.png",
       "frame": 11,
       "width": 733,
       "height": 280
@@ -476,7 +476,7 @@
       "object_index": 1,
       "label": "PaintBrush_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bed_3_bed_4__o1__v2_00023.png",
+      "path": "data/naming_set/crops/bed_3_bed_4__o1__v2_00023.png",
       "frame": 23,
       "width": 677,
       "height": 312
@@ -486,7 +486,7 @@
       "object_index": 1,
       "label": "PaintBrush_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bed_3_bed_4__o1__v2_00034.png",
+      "path": "data/naming_set/crops/bed_3_bed_4__o1__v2_00034.png",
       "frame": 34,
       "width": 454,
       "height": 213
@@ -496,7 +496,7 @@
       "object_index": 0,
       "label": "jacket_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o0__v1_00208.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o0__v1_00208.png",
       "frame": 208,
       "width": 52,
       "height": 48
@@ -506,7 +506,7 @@
       "object_index": 0,
       "label": "jacket_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o0__v1_00248.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o0__v1_00248.png",
       "frame": 248,
       "width": 805,
       "height": 292
@@ -516,7 +516,7 @@
       "object_index": 0,
       "label": "jacket_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o0__v1_00289.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o0__v1_00289.png",
       "frame": 289,
       "width": 1153,
       "height": 218
@@ -526,7 +526,7 @@
       "object_index": 0,
       "label": "jacket_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o0__v1_00329.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o0__v1_00329.png",
       "frame": 329,
       "width": 1640,
       "height": 323
@@ -536,7 +536,7 @@
       "object_index": 1,
       "label": "tissue_box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o1__v1_00233.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o1__v1_00233.png",
       "frame": 233,
       "width": 233,
       "height": 112
@@ -546,7 +546,7 @@
       "object_index": 1,
       "label": "tissue_box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o1__v1_00271.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o1__v1_00271.png",
       "frame": 271,
       "width": 321,
       "height": 138
@@ -556,7 +556,7 @@
       "object_index": 1,
       "label": "tissue_box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o1__v1_00309.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o1__v1_00309.png",
       "frame": 309,
       "width": 340,
       "height": 131
@@ -566,7 +566,7 @@
       "object_index": 1,
       "label": "tissue_box_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o1__v2_00000.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o1__v2_00000.png",
       "frame": 0,
       "width": 302,
       "height": 117
@@ -576,7 +576,7 @@
       "object_index": 1,
       "label": "tissue_box_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o1__v2_00028.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o1__v2_00028.png",
       "frame": 28,
       "width": 284,
       "height": 112
@@ -586,7 +586,7 @@
       "object_index": 1,
       "label": "tissue_box_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o1__v2_00056.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o1__v2_00056.png",
       "frame": 56,
       "width": 293,
       "height": 120
@@ -596,7 +596,7 @@
       "object_index": 1,
       "label": "tissue_box_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o1__v2_00084.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o1__v2_00084.png",
       "frame": 84,
       "width": 366,
       "height": 145
@@ -606,7 +606,7 @@
       "object_index": 2,
       "label": "quilt_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o2__v1_00110.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o2__v1_00110.png",
       "frame": 110,
       "width": 533,
       "height": 340
@@ -616,7 +616,7 @@
       "object_index": 2,
       "label": "quilt_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o2__v1_00142.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o2__v1_00142.png",
       "frame": 142,
       "width": 1493,
       "height": 559
@@ -626,7 +626,7 @@
       "object_index": 2,
       "label": "quilt_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o2__v1_00174.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o2__v1_00174.png",
       "frame": 174,
       "width": 1520,
       "height": 493
@@ -636,7 +636,7 @@
       "object_index": 2,
       "label": "quilt_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o2__v2_00030.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o2__v2_00030.png",
       "frame": 30,
       "width": 32,
       "height": 44
@@ -646,7 +646,7 @@
       "object_index": 2,
       "label": "quilt_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o2__v2_00120.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o2__v2_00120.png",
       "frame": 120,
       "width": 1920,
       "height": 298
@@ -656,7 +656,7 @@
       "object_index": 2,
       "label": "quilt_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o2__v2_00211.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o2__v2_00211.png",
       "frame": 211,
       "width": 1128,
       "height": 351
@@ -666,7 +666,7 @@
       "object_index": 2,
       "label": "quilt_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o2__v2_00301.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o2__v2_00301.png",
       "frame": 301,
       "width": 1920,
       "height": 692
@@ -676,7 +676,7 @@
       "object_index": 3,
       "label": "pajamas_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o3__v1_00000.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o3__v1_00000.png",
       "frame": 0,
       "width": 705,
       "height": 87
@@ -686,7 +686,7 @@
       "object_index": 3,
       "label": "pajamas_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o3__v1_00031.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o3__v1_00031.png",
       "frame": 31,
       "width": 682,
       "height": 87
@@ -696,7 +696,7 @@
       "object_index": 3,
       "label": "pajamas_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o3__v1_00063.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o3__v1_00063.png",
       "frame": 63,
       "width": 779,
       "height": 107
@@ -706,7 +706,7 @@
       "object_index": 3,
       "label": "pajamas_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o3__v1_00094.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o3__v1_00094.png",
       "frame": 94,
       "width": 893,
       "height": 122
@@ -716,7 +716,7 @@
       "object_index": 3,
       "label": "pajamas_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o3__v2_00122.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o3__v2_00122.png",
       "frame": 122,
       "width": 1474,
       "height": 263
@@ -726,7 +726,7 @@
       "object_index": 3,
       "label": "pajamas_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o3__v2_00200.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o3__v2_00200.png",
       "frame": 200,
       "width": 892,
       "height": 360
@@ -736,7 +736,7 @@
       "object_index": 3,
       "label": "pajamas_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_1_bedroom_2__o3__v2_00278.png",
+      "path": "data/naming_set/crops/bedroom_1_bedroom_2__o3__v2_00278.png",
       "frame": 278,
       "width": 711,
       "height": 141
@@ -746,7 +746,7 @@
       "object_index": 0,
       "label": "laptop_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o0__v1_00000.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o0__v1_00000.png",
       "frame": 0,
       "width": 578,
       "height": 358
@@ -756,7 +756,7 @@
       "object_index": 0,
       "label": "laptop_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o0__v1_00026.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o0__v1_00026.png",
       "frame": 26,
       "width": 859,
       "height": 385
@@ -766,7 +766,7 @@
       "object_index": 0,
       "label": "laptop_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o0__v1_00052.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o0__v1_00052.png",
       "frame": 52,
       "width": 1375,
       "height": 398
@@ -776,7 +776,7 @@
       "object_index": 0,
       "label": "laptop_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o0__v1_00078.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o0__v1_00078.png",
       "frame": 78,
       "width": 1582,
       "height": 308
@@ -786,7 +786,7 @@
       "object_index": 1,
       "label": "gray_pajamas",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o1__v1_00122.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o1__v1_00122.png",
       "frame": 122,
       "width": 1474,
       "height": 229
@@ -796,7 +796,7 @@
       "object_index": 1,
       "label": "gray_pajamas",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o1__v1_00200.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o1__v1_00200.png",
       "frame": 200,
       "width": 892,
       "height": 361
@@ -806,7 +806,7 @@
       "object_index": 1,
       "label": "gray_pajamas",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o1__v1_00278.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o1__v1_00278.png",
       "frame": 278,
       "width": 711,
       "height": 142
@@ -816,7 +816,7 @@
       "object_index": 1,
       "label": "gray_pajamas",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o1__v2_00116.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o1__v2_00116.png",
       "frame": 116,
       "width": 57,
       "height": 75
@@ -826,7 +826,7 @@
       "object_index": 1,
       "label": "gray_pajamas",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o1__v2_00161.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o1__v2_00161.png",
       "frame": 161,
       "width": 598,
       "height": 166
@@ -836,7 +836,7 @@
       "object_index": 1,
       "label": "gray_pajamas",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o1__v2_00207.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o1__v2_00207.png",
       "frame": 207,
       "width": 509,
       "height": 125
@@ -846,7 +846,7 @@
       "object_index": 1,
       "label": "gray_pajamas",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o1__v2_00252.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o1__v2_00252.png",
       "frame": 252,
       "width": 114,
       "height": 164
@@ -856,7 +856,7 @@
       "object_index": 2,
       "label": "madicine_jar_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o2__v1_00000.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o2__v1_00000.png",
       "frame": 0,
       "width": 163,
       "height": 50
@@ -866,7 +866,7 @@
       "object_index": 2,
       "label": "madicine_jar_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o2__v1_00020.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o2__v1_00020.png",
       "frame": 20,
       "width": 161,
       "height": 49
@@ -876,7 +876,7 @@
       "object_index": 2,
       "label": "madicine_jar_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o2__v1_00040.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o2__v1_00040.png",
       "frame": 40,
       "width": 170,
       "height": 46
@@ -886,7 +886,7 @@
       "object_index": 2,
       "label": "madicine_jar_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o2__v1_00060.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o2__v1_00060.png",
       "frame": 60,
       "width": 199,
       "height": 47
@@ -896,7 +896,7 @@
       "object_index": 2,
       "label": "madicine_jar_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o2__v2_00196.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o2__v2_00196.png",
       "frame": 196,
       "width": 80,
       "height": 48
@@ -906,7 +906,7 @@
       "object_index": 2,
       "label": "madicine_jar_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o2__v2_00243.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o2__v2_00243.png",
       "frame": 243,
       "width": 91,
       "height": 52
@@ -916,7 +916,7 @@
       "object_index": 2,
       "label": "madicine_jar_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o2__v2_00290.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o2__v2_00290.png",
       "frame": 290,
       "width": 107,
       "height": 61
@@ -926,7 +926,7 @@
       "object_index": 3,
       "label": "cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o3__v1_00000.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o3__v1_00000.png",
       "frame": 0,
       "width": 215,
       "height": 105
@@ -936,7 +936,7 @@
       "object_index": 3,
       "label": "cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o3__v1_00022.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o3__v1_00022.png",
       "frame": 22,
       "width": 203,
       "height": 105
@@ -946,7 +946,7 @@
       "object_index": 3,
       "label": "cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o3__v1_00045.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o3__v1_00045.png",
       "frame": 45,
       "width": 199,
       "height": 111
@@ -956,7 +956,7 @@
       "object_index": 3,
       "label": "cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o3__v1_00067.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o3__v1_00067.png",
       "frame": 67,
       "width": 221,
       "height": 139
@@ -966,7 +966,7 @@
       "object_index": 3,
       "label": "cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o3__v2_00155.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o3__v2_00155.png",
       "frame": 155,
       "width": 45,
       "height": 76
@@ -976,7 +976,7 @@
       "object_index": 3,
       "label": "cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o3__v2_00200.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o3__v2_00200.png",
       "frame": 200,
       "width": 123,
       "height": 102
@@ -986,7 +986,7 @@
       "object_index": 3,
       "label": "cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o3__v2_00246.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o3__v2_00246.png",
       "frame": 246,
       "width": 145,
       "height": 108
@@ -996,7 +996,7 @@
       "object_index": 3,
       "label": "cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o3__v2_00291.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o3__v2_00291.png",
       "frame": 291,
       "width": 190,
       "height": 124
@@ -1006,7 +1006,7 @@
       "object_index": 4,
       "label": "curtain_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o4__v1_00095.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o4__v1_00095.png",
       "frame": 95,
       "width": 70,
       "height": 157
@@ -1016,7 +1016,7 @@
       "object_index": 4,
       "label": "curtain_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o4__v1_00170.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o4__v1_00170.png",
       "frame": 170,
       "width": 1920,
       "height": 403
@@ -1026,7 +1026,7 @@
       "object_index": 4,
       "label": "curtain_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o4__v1_00245.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o4__v1_00245.png",
       "frame": 245,
       "width": 1920,
       "height": 456
@@ -1036,7 +1036,7 @@
       "object_index": 4,
       "label": "curtain_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o4__v1_00320.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o4__v1_00320.png",
       "frame": 320,
       "width": 516,
       "height": 490
@@ -1046,7 +1046,7 @@
       "object_index": 4,
       "label": "curtain_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o4__v2_00000.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o4__v2_00000.png",
       "frame": 0,
       "width": 1610,
       "height": 320
@@ -1056,7 +1056,7 @@
       "object_index": 4,
       "label": "curtain_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o4__v2_00025.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o4__v2_00025.png",
       "frame": 25,
       "width": 1832,
       "height": 181
@@ -1066,7 +1066,7 @@
       "object_index": 4,
       "label": "curtain_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o4__v2_00050.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o4__v2_00050.png",
       "frame": 50,
       "width": 1920,
       "height": 209
@@ -1076,7 +1076,7 @@
       "object_index": 4,
       "label": "curtain_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o4__v2_00075.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o4__v2_00075.png",
       "frame": 75,
       "width": 1920,
       "height": 174
@@ -1086,7 +1086,7 @@
       "object_index": 5,
       "label": "plaid_pajamas_top",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o5__v2_00112.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o5__v2_00112.png",
       "frame": 112,
       "width": 43,
       "height": 80
@@ -1096,7 +1096,7 @@
       "object_index": 5,
       "label": "plaid_pajamas_top",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o5__v2_00151.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o5__v2_00151.png",
       "frame": 151,
       "width": 1017,
       "height": 298
@@ -1106,7 +1106,7 @@
       "object_index": 5,
       "label": "plaid_pajamas_top",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o5__v2_00190.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o5__v2_00190.png",
       "frame": 190,
       "width": 891,
       "height": 211
@@ -1116,7 +1116,7 @@
       "object_index": 5,
       "label": "plaid_pajamas_top",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o5__v2_00229.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o5__v2_00229.png",
       "frame": 229,
       "width": 857,
       "height": 232
@@ -1126,7 +1126,7 @@
       "object_index": 6,
       "label": "plaid_pajamas_bottom",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o6__v2_00154.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o6__v2_00154.png",
       "frame": 154,
       "width": 750,
       "height": 111
@@ -1136,7 +1136,7 @@
       "object_index": 6,
       "label": "plaid_pajamas_bottom",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o6__v2_00188.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o6__v2_00188.png",
       "frame": 188,
       "width": 977,
       "height": 298
@@ -1146,7 +1146,7 @@
       "object_index": 6,
       "label": "plaid_pajamas_bottom",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_3__o6__v2_00222.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_3__o6__v2_00222.png",
       "frame": 222,
       "width": 944,
       "height": 290
@@ -1156,7 +1156,7 @@
       "object_index": 0,
       "label": "laptop_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o0__v1_00000.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o0__v1_00000.png",
       "frame": 0,
       "width": 596,
       "height": 358
@@ -1166,7 +1166,7 @@
       "object_index": 0,
       "label": "laptop_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o0__v1_00029.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o0__v1_00029.png",
       "frame": 29,
       "width": 911,
       "height": 390
@@ -1176,7 +1176,7 @@
       "object_index": 0,
       "label": "laptop_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o0__v1_00059.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o0__v1_00059.png",
       "frame": 59,
       "width": 1526,
       "height": 384
@@ -1186,7 +1186,7 @@
       "object_index": 0,
       "label": "laptop_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o0__v1_00088.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o0__v1_00088.png",
       "frame": 88,
       "width": 1698,
       "height": 264
@@ -1196,7 +1196,7 @@
       "object_index": 1,
       "label": "tissue_box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o1__v1_00000.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o1__v1_00000.png",
       "frame": 0,
       "width": 302,
       "height": 116
@@ -1206,7 +1206,7 @@
       "object_index": 1,
       "label": "tissue_box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o1__v1_00028.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o1__v1_00028.png",
       "frame": 28,
       "width": 284,
       "height": 112
@@ -1216,7 +1216,7 @@
       "object_index": 1,
       "label": "tissue_box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o1__v1_00056.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o1__v1_00056.png",
       "frame": 56,
       "width": 292,
       "height": 120
@@ -1226,7 +1226,7 @@
       "object_index": 1,
       "label": "tissue_box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o1__v1_00084.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o1__v1_00084.png",
       "frame": 84,
       "width": 366,
       "height": 145
@@ -1236,7 +1236,7 @@
       "object_index": 2,
       "label": "curtain_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o2__v1_00096.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o2__v1_00096.png",
       "frame": 96,
       "width": 109,
       "height": 252
@@ -1246,7 +1246,7 @@
       "object_index": 2,
       "label": "curtain_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o2__v1_00170.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o2__v1_00170.png",
       "frame": 170,
       "width": 1920,
       "height": 387
@@ -1256,7 +1256,7 @@
       "object_index": 2,
       "label": "curtain_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o2__v1_00245.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o2__v1_00245.png",
       "frame": 245,
       "width": 1920,
       "height": 455
@@ -1266,7 +1266,7 @@
       "object_index": 2,
       "label": "curtain_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o2__v1_00320.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o2__v1_00320.png",
       "frame": 320,
       "width": 518,
       "height": 490
@@ -1276,7 +1276,7 @@
       "object_index": 3,
       "label": "white_madicine_jar_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o3__v1_00000.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o3__v1_00000.png",
       "frame": 0,
       "width": 161,
       "height": 50
@@ -1286,7 +1286,7 @@
       "object_index": 3,
       "label": "white_madicine_jar_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o3__v1_00020.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o3__v1_00020.png",
       "frame": 20,
       "width": 157,
       "height": 49
@@ -1296,7 +1296,7 @@
       "object_index": 3,
       "label": "white_madicine_jar_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o3__v1_00040.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o3__v1_00040.png",
       "frame": 40,
       "width": 170,
       "height": 46
@@ -1306,7 +1306,7 @@
       "object_index": 3,
       "label": "white_madicine_jar_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o3__v1_00060.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o3__v1_00060.png",
       "frame": 60,
       "width": 203,
       "height": 47
@@ -1316,7 +1316,7 @@
       "object_index": 3,
       "label": "white_madicine_jar_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o3__v2_00000.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o3__v2_00000.png",
       "frame": 0,
       "width": 120,
       "height": 50
@@ -1326,7 +1326,7 @@
       "object_index": 3,
       "label": "white_madicine_jar_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o3__v2_00034.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o3__v2_00034.png",
       "frame": 34,
       "width": 131,
       "height": 68
@@ -1336,7 +1336,7 @@
       "object_index": 3,
       "label": "white_madicine_jar_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o3__v2_00229.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o3__v2_00229.png",
       "frame": 229,
       "width": 109,
       "height": 60
@@ -1346,7 +1346,7 @@
       "object_index": 3,
       "label": "white_madicine_jar_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o3__v2_00264.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o3__v2_00264.png",
       "frame": 264,
       "width": 91,
       "height": 49
@@ -1356,7 +1356,7 @@
       "object_index": 4,
       "label": "cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o4__v1_00000.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o4__v1_00000.png",
       "frame": 0,
       "width": 215,
       "height": 113
@@ -1366,7 +1366,7 @@
       "object_index": 4,
       "label": "cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o4__v1_00022.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o4__v1_00022.png",
       "frame": 22,
       "width": 203,
       "height": 105
@@ -1376,7 +1376,7 @@
       "object_index": 4,
       "label": "cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o4__v1_00045.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o4__v1_00045.png",
       "frame": 45,
       "width": 197,
       "height": 111
@@ -1386,7 +1386,7 @@
       "object_index": 4,
       "label": "cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o4__v1_00067.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o4__v1_00067.png",
       "frame": 67,
       "width": 219,
       "height": 139
@@ -1396,7 +1396,7 @@
       "object_index": 4,
       "label": "cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o4__v2_00000.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o4__v2_00000.png",
       "frame": 0,
       "width": 190,
       "height": 147
@@ -1406,7 +1406,7 @@
       "object_index": 4,
       "label": "cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o4__v2_00026.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o4__v2_00026.png",
       "frame": 26,
       "width": 196,
       "height": 148
@@ -1416,7 +1416,7 @@
       "object_index": 4,
       "label": "cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o4__v2_00260.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o4__v2_00260.png",
       "frame": 260,
       "width": 160,
       "height": 109
@@ -1426,7 +1426,7 @@
       "object_index": 5,
       "label": "gray_pajamas_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o5__v1_00122.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o5__v1_00122.png",
       "frame": 122,
       "width": 1474,
       "height": 264
@@ -1436,7 +1436,7 @@
       "object_index": 5,
       "label": "gray_pajamas_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o5__v1_00200.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o5__v1_00200.png",
       "frame": 200,
       "width": 892,
       "height": 360
@@ -1446,7 +1446,7 @@
       "object_index": 5,
       "label": "gray_pajamas_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o5__v1_00278.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o5__v1_00278.png",
       "frame": 278,
       "width": 711,
       "height": 141
@@ -1456,7 +1456,7 @@
       "object_index": 5,
       "label": "gray_pajamas_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o5__v2_00075.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o5__v2_00075.png",
       "frame": 75,
       "width": 679,
       "height": 147
@@ -1466,7 +1466,7 @@
       "object_index": 5,
       "label": "gray_pajamas_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o5__v2_00204.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o5__v2_00204.png",
       "frame": 204,
       "width": 674,
       "height": 176
@@ -1476,7 +1476,7 @@
       "object_index": 5,
       "label": "gray_pajamas_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o5__v2_00272.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o5__v2_00272.png",
       "frame": 272,
       "width": 539,
       "height": 105
@@ -1486,7 +1486,7 @@
       "object_index": 6,
       "label": "face_cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o6__v1_00151.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o6__v1_00151.png",
       "frame": 151,
       "width": 73,
       "height": 47
@@ -1496,7 +1496,7 @@
       "object_index": 6,
       "label": "face_cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o6__v1_00240.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o6__v1_00240.png",
       "frame": 240,
       "width": 28,
       "height": 32
@@ -1506,7 +1506,7 @@
       "object_index": 6,
       "label": "face_cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o6__v1_00284.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o6__v1_00284.png",
       "frame": 284,
       "width": 90,
       "height": 53
@@ -1516,7 +1516,7 @@
       "object_index": 6,
       "label": "face_cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o6__v2_00000.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o6__v2_00000.png",
       "frame": 0,
       "width": 62,
       "height": 24
@@ -1526,7 +1526,7 @@
       "object_index": 6,
       "label": "face_cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o6__v2_00035.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o6__v2_00035.png",
       "frame": 35,
       "width": 79,
       "height": 31
@@ -1536,7 +1536,7 @@
       "object_index": 6,
       "label": "face_cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o6__v2_00230.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o6__v2_00230.png",
       "frame": 230,
       "width": 75,
       "height": 50
@@ -1546,7 +1546,7 @@
       "object_index": 6,
       "label": "face_cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o6__v2_00265.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o6__v2_00265.png",
       "frame": 265,
       "width": 65,
       "height": 46
@@ -1556,7 +1556,7 @@
       "object_index": 7,
       "label": "plaid_pajamas_top_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o7__v2_00075.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o7__v2_00075.png",
       "frame": 75,
       "width": 43,
       "height": 53
@@ -1566,7 +1566,7 @@
       "object_index": 7,
       "label": "plaid_pajamas_top_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o7__v2_00138.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o7__v2_00138.png",
       "frame": 138,
       "width": 667,
       "height": 148
@@ -1576,7 +1576,7 @@
       "object_index": 7,
       "label": "plaid_pajamas_top_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o7__v2_00214.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o7__v2_00214.png",
       "frame": 214,
       "width": 981,
       "height": 308
@@ -1586,7 +1586,7 @@
       "object_index": 7,
       "label": "plaid_pajamas_top_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o7__v2_00277.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o7__v2_00277.png",
       "frame": 277,
       "width": 487,
       "height": 184
@@ -1596,7 +1596,7 @@
       "object_index": 8,
       "label": "plaid_pajamas_bottom_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o8__v2_00152.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o8__v2_00152.png",
       "frame": 152,
       "width": 776,
       "height": 63
@@ -1606,7 +1606,7 @@
       "object_index": 8,
       "label": "plaid_pajamas_bottom_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o8__v2_00212.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o8__v2_00212.png",
       "frame": 212,
       "width": 541,
       "height": 93
@@ -1616,7 +1616,7 @@
       "object_index": 8,
       "label": "plaid_pajamas_bottom_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o8__v2_00289.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o8__v2_00289.png",
       "frame": 289,
       "width": 222,
       "height": 147
@@ -1626,7 +1626,7 @@
       "object_index": 9,
       "label": "black_madicine_jar_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o9__v2_00000.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o9__v2_00000.png",
       "frame": 0,
       "width": 165,
       "height": 96
@@ -1636,7 +1636,7 @@
       "object_index": 9,
       "label": "black_madicine_jar_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o9__v2_00041.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o9__v2_00041.png",
       "frame": 41,
       "width": 183,
       "height": 105
@@ -1646,7 +1646,7 @@
       "object_index": 9,
       "label": "black_madicine_jar_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o9__v2_00224.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o9__v2_00224.png",
       "frame": 224,
       "width": 126,
       "height": 93
@@ -1656,7 +1656,7 @@
       "object_index": 9,
       "label": "black_madicine_jar_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_2_bedroom_4__o9__v2_00265.png",
+      "path": "data/naming_set/crops/bedroom_2_bedroom_4__o9__v2_00265.png",
       "frame": 265,
       "width": 147,
       "height": 80
@@ -1666,7 +1666,7 @@
       "object_index": 0,
       "label": "magazine_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_30_bedroom_31__o0__v1_00071.png",
+      "path": "data/naming_set/crops/bedroom_30_bedroom_31__o0__v1_00071.png",
       "frame": 71,
       "width": 39,
       "height": 37
@@ -1676,7 +1676,7 @@
       "object_index": 0,
       "label": "magazine_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_30_bedroom_31__o0__v1_00082.png",
+      "path": "data/naming_set/crops/bedroom_30_bedroom_31__o0__v1_00082.png",
       "frame": 82,
       "width": 323,
       "height": 70
@@ -1686,7 +1686,7 @@
       "object_index": 0,
       "label": "magazine_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_30_bedroom_31__o0__v1_00094.png",
+      "path": "data/naming_set/crops/bedroom_30_bedroom_31__o0__v1_00094.png",
       "frame": 94,
       "width": 531,
       "height": 64
@@ -1696,7 +1696,7 @@
       "object_index": 0,
       "label": "magazine_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_30_bedroom_31__o0__v1_00105.png",
+      "path": "data/naming_set/crops/bedroom_30_bedroom_31__o0__v1_00105.png",
       "frame": 105,
       "width": 537,
       "height": 65
@@ -1706,7 +1706,7 @@
       "object_index": 0,
       "label": "magazine_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_30_bedroom_31__o0__v2_00000.png",
+      "path": "data/naming_set/crops/bedroom_30_bedroom_31__o0__v2_00000.png",
       "frame": 0,
       "width": 220,
       "height": 78
@@ -1716,7 +1716,7 @@
       "object_index": 0,
       "label": "magazine_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_30_bedroom_31__o0__v2_00025.png",
+      "path": "data/naming_set/crops/bedroom_30_bedroom_31__o0__v2_00025.png",
       "frame": 25,
       "width": 207,
       "height": 70
@@ -1726,7 +1726,7 @@
       "object_index": 0,
       "label": "magazine_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_30_bedroom_31__o0__v2_00051.png",
+      "path": "data/naming_set/crops/bedroom_30_bedroom_31__o0__v2_00051.png",
       "frame": 51,
       "width": 218,
       "height": 68
@@ -1736,7 +1736,7 @@
       "object_index": 0,
       "label": "magazine_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_30_bedroom_31__o0__v2_00077.png",
+      "path": "data/naming_set/crops/bedroom_30_bedroom_31__o0__v2_00077.png",
       "frame": 77,
       "width": 264,
       "height": 90
@@ -1746,7 +1746,7 @@
       "object_index": 0,
       "label": "tissue_box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o0__v1_00149.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o0__v1_00149.png",
       "frame": 149,
       "width": 47,
       "height": 73
@@ -1756,7 +1756,7 @@
       "object_index": 0,
       "label": "tissue_box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o0__v1_00196.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o0__v1_00196.png",
       "frame": 196,
       "width": 197,
       "height": 77
@@ -1766,7 +1766,7 @@
       "object_index": 0,
       "label": "tissue_box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o0__v1_00243.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o0__v1_00243.png",
       "frame": 243,
       "width": 212,
       "height": 84
@@ -1776,7 +1776,7 @@
       "object_index": 0,
       "label": "tissue_box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o0__v1_00290.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o0__v1_00290.png",
       "frame": 290,
       "width": 218,
       "height": 105
@@ -1786,7 +1786,7 @@
       "object_index": 1,
       "label": "bottle_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o1__v1_00145.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o1__v1_00145.png",
       "frame": 145,
       "width": 50,
       "height": 35
@@ -1796,7 +1796,7 @@
       "object_index": 1,
       "label": "bottle_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o1__v1_00193.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o1__v1_00193.png",
       "frame": 193,
       "width": 233,
       "height": 29
@@ -1806,7 +1806,7 @@
       "object_index": 1,
       "label": "bottle_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o1__v1_00241.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o1__v1_00241.png",
       "frame": 241,
       "width": 250,
       "height": 30
@@ -1816,7 +1816,7 @@
       "object_index": 1,
       "label": "bottle_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o1__v1_00289.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o1__v1_00289.png",
       "frame": 289,
       "width": 204,
       "height": 55
@@ -1826,7 +1826,7 @@
       "object_index": 2,
       "label": "bottle_2",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o2__v1_00156.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o2__v1_00156.png",
       "frame": 156,
       "width": 32,
       "height": 63
@@ -1836,7 +1836,7 @@
       "object_index": 2,
       "label": "bottle_2",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o2__v1_00201.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o2__v1_00201.png",
       "frame": 201,
       "width": 91,
       "height": 74
@@ -1846,7 +1846,7 @@
       "object_index": 2,
       "label": "bottle_2",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o2__v1_00246.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o2__v1_00246.png",
       "frame": 246,
       "width": 98,
       "height": 80
@@ -1856,7 +1856,7 @@
       "object_index": 2,
       "label": "bottle_2",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o2__v1_00291.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o2__v1_00291.png",
       "frame": 291,
       "width": 140,
       "height": 93
@@ -1866,7 +1866,7 @@
       "object_index": 3,
       "label": "bottle_3",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o3__v1_00156.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o3__v1_00156.png",
       "frame": 156,
       "width": 30,
       "height": 31
@@ -1876,7 +1876,7 @@
       "object_index": 3,
       "label": "bottle_3",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o3__v1_00202.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o3__v1_00202.png",
       "frame": 202,
       "width": 277,
       "height": 30
@@ -1886,7 +1886,7 @@
       "object_index": 3,
       "label": "bottle_3",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o3__v1_00247.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o3__v1_00247.png",
       "frame": 247,
       "width": 308,
       "height": 35
@@ -1896,7 +1896,7 @@
       "object_index": 3,
       "label": "bottle_3",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o3__v1_00292.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o3__v1_00292.png",
       "frame": 292,
       "width": 358,
       "height": 77
@@ -1906,7 +1906,7 @@
       "object_index": 4,
       "label": "bottle_4",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o4__v1_00000.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o4__v1_00000.png",
       "frame": 0,
       "width": 96,
       "height": 79
@@ -1916,7 +1916,7 @@
       "object_index": 4,
       "label": "bottle_4",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o4__v1_00027.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o4__v1_00027.png",
       "frame": 27,
       "width": 98,
       "height": 80
@@ -1926,7 +1926,7 @@
       "object_index": 4,
       "label": "bottle_4",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o4__v1_00055.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o4__v1_00055.png",
       "frame": 55,
       "width": 105,
       "height": 93
@@ -1936,7 +1936,7 @@
       "object_index": 4,
       "label": "bottle_4",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o4__v1_00083.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o4__v1_00083.png",
       "frame": 83,
       "width": 109,
       "height": 105
@@ -1946,7 +1946,7 @@
       "object_index": 5,
       "label": "face_cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o5__v1_00000.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o5__v1_00000.png",
       "frame": 0,
       "width": 49,
       "height": 40
@@ -1956,7 +1956,7 @@
       "object_index": 5,
       "label": "face_cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o5__v1_00029.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o5__v1_00029.png",
       "frame": 29,
       "width": 70,
       "height": 44
@@ -1966,7 +1966,7 @@
       "object_index": 5,
       "label": "face_cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o5__v1_00058.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o5__v1_00058.png",
       "frame": 58,
       "width": 73,
       "height": 48
@@ -1976,7 +1976,7 @@
       "object_index": 5,
       "label": "face_cream_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o5__v1_00087.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o5__v1_00087.png",
       "frame": 87,
       "width": 75,
       "height": 52
@@ -1986,7 +1986,7 @@
       "object_index": 5,
       "label": "face_cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o5__v2_00171.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o5__v2_00171.png",
       "frame": 171,
       "width": 33,
       "height": 26
@@ -1996,7 +1996,7 @@
       "object_index": 5,
       "label": "face_cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o5__v2_00184.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o5__v2_00184.png",
       "frame": 184,
       "width": 90,
       "height": 36
@@ -2006,7 +2006,7 @@
       "object_index": 5,
       "label": "face_cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o5__v2_00197.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o5__v2_00197.png",
       "frame": 197,
       "width": 78,
       "height": 49
@@ -2016,7 +2016,7 @@
       "object_index": 5,
       "label": "face_cream_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o5__v2_00210.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o5__v2_00210.png",
       "frame": 210,
       "width": 76,
       "height": 51
@@ -2026,7 +2026,7 @@
       "object_index": 6,
       "label": "madicine_jar_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o6__v2_00168.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o6__v2_00168.png",
       "frame": 168,
       "width": 209,
       "height": 113
@@ -2036,7 +2036,7 @@
       "object_index": 6,
       "label": "madicine_jar_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o6__v2_00193.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o6__v2_00193.png",
       "frame": 193,
       "width": 190,
       "height": 107
@@ -2046,7 +2046,7 @@
       "object_index": 6,
       "label": "madicine_jar_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_3_bedroom_5__o6__v2_00218.png",
+      "path": "data/naming_set/crops/bedroom_3_bedroom_5__o6__v2_00218.png",
       "frame": 218,
       "width": 198,
       "height": 106
@@ -2056,7 +2056,7 @@
       "object_index": 0,
       "label": "bottle_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_4_bedroom_5__o0__v1_00000.png",
+      "path": "data/naming_set/crops/bedroom_4_bedroom_5__o0__v1_00000.png",
       "frame": 0,
       "width": 504,
       "height": 51
@@ -2066,7 +2066,7 @@
       "object_index": 0,
       "label": "bottle_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_4_bedroom_5__o0__v1_00036.png",
+      "path": "data/naming_set/crops/bedroom_4_bedroom_5__o0__v1_00036.png",
       "frame": 36,
       "width": 98,
       "height": 44
@@ -2076,7 +2076,7 @@
       "object_index": 0,
       "label": "bottle_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_4_bedroom_5__o0__v1_00229.png",
+      "path": "data/naming_set/crops/bedroom_4_bedroom_5__o0__v1_00229.png",
       "frame": 229,
       "width": 222,
       "height": 64
@@ -2086,7 +2086,7 @@
       "object_index": 0,
       "label": "bottle_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_4_bedroom_5__o0__v1_00266.png",
+      "path": "data/naming_set/crops/bedroom_4_bedroom_5__o0__v1_00266.png",
       "frame": 266,
       "width": 200,
       "height": 51
@@ -2096,7 +2096,7 @@
       "object_index": 1,
       "label": "bottle_2",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_4_bedroom_5__o1__v1_00000.png",
+      "path": "data/naming_set/crops/bedroom_4_bedroom_5__o1__v1_00000.png",
       "frame": 0,
       "width": 134,
       "height": 98
@@ -2106,7 +2106,7 @@
       "object_index": 1,
       "label": "bottle_2",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_4_bedroom_5__o1__v1_00036.png",
+      "path": "data/naming_set/crops/bedroom_4_bedroom_5__o1__v1_00036.png",
       "frame": 36,
       "width": 145,
       "height": 106
@@ -2116,7 +2116,7 @@
       "object_index": 1,
       "label": "bottle_2",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_4_bedroom_5__o1__v1_00229.png",
+      "path": "data/naming_set/crops/bedroom_4_bedroom_5__o1__v1_00229.png",
       "frame": 229,
       "width": 142,
       "height": 94
@@ -2126,7 +2126,7 @@
       "object_index": 1,
       "label": "bottle_2",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_4_bedroom_5__o1__v1_00265.png",
+      "path": "data/naming_set/crops/bedroom_4_bedroom_5__o1__v1_00265.png",
       "frame": 265,
       "width": 106,
       "height": 80
@@ -2136,7 +2136,7 @@
       "object_index": 2,
       "label": "bottle_3",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_4_bedroom_5__o2__v1_00000.png",
+      "path": "data/naming_set/crops/bedroom_4_bedroom_5__o2__v1_00000.png",
       "frame": 0,
       "width": 199,
       "height": 118
@@ -2146,7 +2146,7 @@
       "object_index": 2,
       "label": "bottle_3",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_4_bedroom_5__o2__v1_00034.png",
+      "path": "data/naming_set/crops/bedroom_4_bedroom_5__o2__v1_00034.png",
       "frame": 34,
       "width": 205,
       "height": 136
@@ -2156,7 +2156,7 @@
       "object_index": 2,
       "label": "bottle_3",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_4_bedroom_5__o2__v1_00233.png",
+      "path": "data/naming_set/crops/bedroom_4_bedroom_5__o2__v1_00233.png",
       "frame": 233,
       "width": 260,
       "height": 75
@@ -2166,7 +2166,7 @@
       "object_index": 2,
       "label": "bottle_3",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_4_bedroom_5__o2__v1_00268.png",
+      "path": "data/naming_set/crops/bedroom_4_bedroom_5__o2__v1_00268.png",
       "frame": 268,
       "width": 241,
       "height": 60
@@ -2176,7 +2176,7 @@
       "object_index": 3,
       "label": "bottle_4",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_4_bedroom_5__o3__v1_00095.png",
+      "path": "data/naming_set/crops/bedroom_4_bedroom_5__o3__v1_00095.png",
       "frame": 95,
       "width": 59,
       "height": 70
@@ -2186,7 +2186,7 @@
       "object_index": 3,
       "label": "bottle_4",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_4_bedroom_5__o3__v1_00119.png",
+      "path": "data/naming_set/crops/bedroom_4_bedroom_5__o3__v1_00119.png",
       "frame": 119,
       "width": 93,
       "height": 88
@@ -2196,7 +2196,7 @@
       "object_index": 3,
       "label": "bottle_4",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_4_bedroom_5__o3__v1_00143.png",
+      "path": "data/naming_set/crops/bedroom_4_bedroom_5__o3__v1_00143.png",
       "frame": 143,
       "width": 106,
       "height": 93
@@ -2206,7 +2206,7 @@
       "object_index": 3,
       "label": "bottle_4",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/bedroom_4_bedroom_5__o3__v1_00167.png",
+      "path": "data/naming_set/crops/bedroom_4_bedroom_5__o3__v1_00167.png",
       "frame": 167,
       "width": 111,
       "height": 102
@@ -2216,7 +2216,7 @@
       "object_index": 0,
       "label": "car_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/gas_station_3_gas_station_4__o0__v1_00000.png",
+      "path": "data/naming_set/crops/gas_station_3_gas_station_4__o0__v1_00000.png",
       "frame": 0,
       "width": 294,
       "height": 176
@@ -2226,7 +2226,7 @@
       "object_index": 0,
       "label": "car_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/gas_station_3_gas_station_4__o0__v1_00019.png",
+      "path": "data/naming_set/crops/gas_station_3_gas_station_4__o0__v1_00019.png",
       "frame": 19,
       "width": 297,
       "height": 176
@@ -2236,7 +2236,7 @@
       "object_index": 0,
       "label": "car_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/gas_station_3_gas_station_4__o0__v1_00038.png",
+      "path": "data/naming_set/crops/gas_station_3_gas_station_4__o0__v1_00038.png",
       "frame": 38,
       "width": 258,
       "height": 184
@@ -2246,7 +2246,7 @@
       "object_index": 0,
       "label": "car_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/gas_station_3_gas_station_4__o0__v1_00057.png",
+      "path": "data/naming_set/crops/gas_station_3_gas_station_4__o0__v1_00057.png",
       "frame": 57,
       "width": 136,
       "height": 167
@@ -2256,7 +2256,7 @@
       "object_index": 0,
       "label": "Yoga Mat_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/gym_9_gym_10__o0__v1_00000.png",
+      "path": "data/naming_set/crops/gym_9_gym_10__o0__v1_00000.png",
       "frame": 0,
       "width": 1296,
       "height": 534
@@ -2266,7 +2266,7 @@
       "object_index": 0,
       "label": "Yoga Mat_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/gym_9_gym_10__o0__v1_00033.png",
+      "path": "data/naming_set/crops/gym_9_gym_10__o0__v1_00033.png",
       "frame": 33,
       "width": 1363,
       "height": 504
@@ -2276,7 +2276,7 @@
       "object_index": 0,
       "label": "Yoga Mat_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/gym_9_gym_10__o0__v1_00067.png",
+      "path": "data/naming_set/crops/gym_9_gym_10__o0__v1_00067.png",
       "frame": 67,
       "width": 1373,
       "height": 416
@@ -2286,7 +2286,7 @@
       "object_index": 0,
       "label": "Yoga Mat_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/gym_9_gym_10__o0__v1_00100.png",
+      "path": "data/naming_set/crops/gym_9_gym_10__o0__v1_00100.png",
       "frame": 100,
       "width": 855,
       "height": 322
@@ -2296,7 +2296,7 @@
       "object_index": 1,
       "label": "Bagpack_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/gym_9_gym_10__o1__v2_00130.png",
+      "path": "data/naming_set/crops/gym_9_gym_10__o1__v2_00130.png",
       "frame": 130,
       "width": 24,
       "height": 69
@@ -2306,7 +2306,7 @@
       "object_index": 1,
       "label": "Bagpack_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/gym_9_gym_10__o1__v2_00215.png",
+      "path": "data/naming_set/crops/gym_9_gym_10__o1__v2_00215.png",
       "frame": 215,
       "width": 585,
       "height": 237
@@ -2316,7 +2316,7 @@
       "object_index": 1,
       "label": "Bagpack_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/gym_9_gym_10__o1__v2_00301.png",
+      "path": "data/naming_set/crops/gym_9_gym_10__o1__v2_00301.png",
       "frame": 301,
       "width": 521,
       "height": 242
@@ -2326,7 +2326,7 @@
       "object_index": 1,
       "label": "Bagpack_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/gym_9_gym_10__o1__v2_00386.png",
+      "path": "data/naming_set/crops/gym_9_gym_10__o1__v2_00386.png",
       "frame": 386,
       "width": 523,
       "height": 239
@@ -2336,7 +2336,7 @@
       "object_index": 0,
       "label": "bagpack_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/hallway_1_hallway_2__o0__v2_00000.png",
+      "path": "data/naming_set/crops/hallway_1_hallway_2__o0__v2_00000.png",
       "frame": 0,
       "width": 96,
       "height": 192
@@ -2346,7 +2346,7 @@
       "object_index": 0,
       "label": "bagpack_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/hallway_1_hallway_2__o0__v2_00054.png",
+      "path": "data/naming_set/crops/hallway_1_hallway_2__o0__v2_00054.png",
       "frame": 54,
       "width": 106,
       "height": 236
@@ -2356,7 +2356,7 @@
       "object_index": 0,
       "label": "bagpack_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/hallway_1_hallway_2__o0__v2_00180.png",
+      "path": "data/naming_set/crops/hallway_1_hallway_2__o0__v2_00180.png",
       "frame": 180,
       "width": 160,
       "height": 78
@@ -2366,7 +2366,7 @@
       "object_index": 0,
       "label": "bagpack_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/hallway_1_hallway_2__o0__v2_00235.png",
+      "path": "data/naming_set/crops/hallway_1_hallway_2__o0__v2_00235.png",
       "frame": 235,
       "width": 417,
       "height": 370
@@ -2376,7 +2376,7 @@
       "object_index": 0,
       "label": "knife_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o0__v1_00156.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o0__v1_00156.png",
       "frame": 156,
       "width": 112,
       "height": 470
@@ -2386,7 +2386,7 @@
       "object_index": 0,
       "label": "knife_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o0__v1_00177.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o0__v1_00177.png",
       "frame": 177,
       "width": 125,
       "height": 461
@@ -2396,7 +2396,7 @@
       "object_index": 0,
       "label": "knife_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o0__v1_00198.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o0__v1_00198.png",
       "frame": 198,
       "width": 141,
       "height": 465
@@ -2406,7 +2406,7 @@
       "object_index": 0,
       "label": "knife_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o0__v2_00000.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o0__v2_00000.png",
       "frame": 0,
       "width": 61,
       "height": 365
@@ -2416,7 +2416,7 @@
       "object_index": 0,
       "label": "knife_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o0__v2_00037.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o0__v2_00037.png",
       "frame": 37,
       "width": 55,
       "height": 368
@@ -2426,7 +2426,7 @@
       "object_index": 0,
       "label": "knife_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o0__v2_00074.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o0__v2_00074.png",
       "frame": 74,
       "width": 49,
       "height": 366
@@ -2436,7 +2436,7 @@
       "object_index": 0,
       "label": "knife_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o0__v2_00111.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o0__v2_00111.png",
       "frame": 111,
       "width": 53,
       "height": 372
@@ -2446,7 +2446,7 @@
       "object_index": 1,
       "label": "dark_soy_sauce_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o1__v1_00000.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o1__v1_00000.png",
       "frame": 0,
       "width": 104,
       "height": 341
@@ -2456,7 +2456,7 @@
       "object_index": 1,
       "label": "dark_soy_sauce_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o1__v1_00016.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o1__v1_00016.png",
       "frame": 16,
       "width": 108,
       "height": 338
@@ -2466,7 +2466,7 @@
       "object_index": 1,
       "label": "dark_soy_sauce_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o1__v1_00032.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o1__v1_00032.png",
       "frame": 32,
       "width": 117,
       "height": 338
@@ -2476,7 +2476,7 @@
       "object_index": 1,
       "label": "dark_soy_sauce_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o1__v1_00048.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o1__v1_00048.png",
       "frame": 48,
       "width": 123,
       "height": 339
@@ -2486,7 +2486,7 @@
       "object_index": 1,
       "label": "dark_soy_sauce_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o1__v2_00000.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o1__v2_00000.png",
       "frame": 0,
       "width": 102,
       "height": 413
@@ -2496,7 +2496,7 @@
       "object_index": 1,
       "label": "dark_soy_sauce_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o1__v2_00042.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o1__v2_00042.png",
       "frame": 42,
       "width": 152,
       "height": 421
@@ -2506,7 +2506,7 @@
       "object_index": 1,
       "label": "dark_soy_sauce_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o1__v2_00084.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o1__v2_00084.png",
       "frame": 84,
       "width": 132,
       "height": 415
@@ -2516,7 +2516,7 @@
       "object_index": 1,
       "label": "dark_soy_sauce_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o1__v2_00126.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o1__v2_00126.png",
       "frame": 126,
       "width": 141,
       "height": 416
@@ -2526,7 +2526,7 @@
       "object_index": 2,
       "label": "pot_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o2__v1_00000.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o2__v1_00000.png",
       "frame": 0,
       "width": 633,
       "height": 357
@@ -2536,7 +2536,7 @@
       "object_index": 2,
       "label": "pot_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o2__v1_00022.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o2__v1_00022.png",
       "frame": 22,
       "width": 517,
       "height": 348
@@ -2546,7 +2546,7 @@
       "object_index": 2,
       "label": "pot_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o2__v1_00044.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o2__v1_00044.png",
       "frame": 44,
       "width": 354,
       "height": 344
@@ -2556,7 +2556,7 @@
       "object_index": 2,
       "label": "pot_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o2__v1_00066.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o2__v1_00066.png",
       "frame": 66,
       "width": 169,
       "height": 348
@@ -2566,7 +2566,7 @@
       "object_index": 2,
       "label": "pot_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o2__v2_00294.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o2__v2_00294.png",
       "frame": 294,
       "width": 124,
       "height": 249
@@ -2576,7 +2576,7 @@
       "object_index": 2,
       "label": "pot_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o2__v2_00309.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o2__v2_00309.png",
       "frame": 309,
       "width": 253,
       "height": 240
@@ -2586,7 +2586,7 @@
       "object_index": 2,
       "label": "pot_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_6_kitchen_7__o2__v2_00324.png",
+      "path": "data/naming_set/crops/kitchen_6_kitchen_7__o2__v2_00324.png",
       "frame": 324,
       "width": 368,
       "height": 237
@@ -2596,7 +2596,7 @@
       "object_index": 0,
       "label": "Cleaner_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_8_kitchen_9__o0__v1_00000.png",
+      "path": "data/naming_set/crops/kitchen_8_kitchen_9__o0__v1_00000.png",
       "frame": 0,
       "width": 241,
       "height": 268
@@ -2606,7 +2606,7 @@
       "object_index": 0,
       "label": "Cleaner_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_8_kitchen_9__o0__v1_00069.png",
+      "path": "data/naming_set/crops/kitchen_8_kitchen_9__o0__v1_00069.png",
       "frame": 69,
       "width": 358,
       "height": 257
@@ -2616,7 +2616,7 @@
       "object_index": 0,
       "label": "Cleaner_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_8_kitchen_9__o0__v1_00139.png",
+      "path": "data/naming_set/crops/kitchen_8_kitchen_9__o0__v1_00139.png",
       "frame": 139,
       "width": 74,
       "height": 135
@@ -2626,7 +2626,7 @@
       "object_index": 0,
       "label": "Cleaner_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_8_kitchen_9__o0__v1_00312.png",
+      "path": "data/naming_set/crops/kitchen_8_kitchen_9__o0__v1_00312.png",
       "frame": 312,
       "width": 374,
       "height": 261
@@ -2636,7 +2636,7 @@
       "object_index": 1,
       "label": "Playing Cards_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_8_kitchen_9__o1__v2_00000.png",
+      "path": "data/naming_set/crops/kitchen_8_kitchen_9__o1__v2_00000.png",
       "frame": 0,
       "width": 203,
       "height": 90
@@ -2646,7 +2646,7 @@
       "object_index": 1,
       "label": "Playing Cards_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_8_kitchen_9__o1__v2_00028.png",
+      "path": "data/naming_set/crops/kitchen_8_kitchen_9__o1__v2_00028.png",
       "frame": 28,
       "width": 205,
       "height": 89
@@ -2656,7 +2656,7 @@
       "object_index": 1,
       "label": "Playing Cards_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_8_kitchen_9__o1__v2_00057.png",
+      "path": "data/naming_set/crops/kitchen_8_kitchen_9__o1__v2_00057.png",
       "frame": 57,
       "width": 224,
       "height": 94
@@ -2666,7 +2666,7 @@
       "object_index": 1,
       "label": "Playing Cards_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_8_kitchen_9__o1__v2_00354.png",
+      "path": "data/naming_set/crops/kitchen_8_kitchen_9__o1__v2_00354.png",
       "frame": 354,
       "width": 153,
       "height": 105
@@ -2676,7 +2676,7 @@
       "object_index": 2,
       "label": "Oranges_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_8_kitchen_9__o2__v2_00016.png",
+      "path": "data/naming_set/crops/kitchen_8_kitchen_9__o2__v2_00016.png",
       "frame": 16,
       "width": 145,
       "height": 147
@@ -2686,7 +2686,7 @@
       "object_index": 2,
       "label": "Oranges_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_8_kitchen_9__o2__v2_00107.png",
+      "path": "data/naming_set/crops/kitchen_8_kitchen_9__o2__v2_00107.png",
       "frame": 107,
       "width": 1145,
       "height": 282
@@ -2696,7 +2696,7 @@
       "object_index": 2,
       "label": "Oranges_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_8_kitchen_9__o2__v2_00199.png",
+      "path": "data/naming_set/crops/kitchen_8_kitchen_9__o2__v2_00199.png",
       "frame": 199,
       "width": 145,
       "height": 224
@@ -2706,7 +2706,7 @@
       "object_index": 2,
       "label": "Oranges_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/kitchen_8_kitchen_9__o2__v2_00291.png",
+      "path": "data/naming_set/crops/kitchen_8_kitchen_9__o2__v2_00291.png",
       "frame": 291,
       "width": 1172,
       "height": 296
@@ -2716,7 +2716,7 @@
       "object_index": 1,
       "label": "Mopping pods_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/laundry_room_3_laundry_room_4__o1__v1_00151.png",
+      "path": "data/naming_set/crops/laundry_room_3_laundry_room_4__o1__v1_00151.png",
       "frame": 151,
       "width": 55,
       "height": 50
@@ -2726,7 +2726,7 @@
       "object_index": 1,
       "label": "Mopping pods_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/laundry_room_3_laundry_room_4__o1__v1_00167.png",
+      "path": "data/naming_set/crops/laundry_room_3_laundry_room_4__o1__v1_00167.png",
       "frame": 167,
       "width": 327,
       "height": 242
@@ -2736,7 +2736,7 @@
       "object_index": 1,
       "label": "Mopping pods_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/laundry_room_3_laundry_room_4__o1__v1_00183.png",
+      "path": "data/naming_set/crops/laundry_room_3_laundry_room_4__o1__v1_00183.png",
       "frame": 183,
       "width": 326,
       "height": 287
@@ -2746,7 +2746,7 @@
       "object_index": 1,
       "label": "Mopping pods_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/laundry_room_3_laundry_room_4__o1__v1_00199.png",
+      "path": "data/naming_set/crops/laundry_room_3_laundry_room_4__o1__v1_00199.png",
       "frame": 199,
       "width": 306,
       "height": 282
@@ -2756,7 +2756,7 @@
       "object_index": 2,
       "label": "Shoe box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/laundry_room_3_laundry_room_4__o2__v1_00000.png",
+      "path": "data/naming_set/crops/laundry_room_3_laundry_room_4__o2__v1_00000.png",
       "frame": 0,
       "width": 1136,
       "height": 116
@@ -2766,7 +2766,7 @@
       "object_index": 2,
       "label": "Shoe box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/laundry_room_3_laundry_room_4__o2__v1_00022.png",
+      "path": "data/naming_set/crops/laundry_room_3_laundry_room_4__o2__v1_00022.png",
       "frame": 22,
       "width": 1138,
       "height": 119
@@ -2776,7 +2776,7 @@
       "object_index": 2,
       "label": "Shoe box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/laundry_room_3_laundry_room_4__o2__v1_00044.png",
+      "path": "data/naming_set/crops/laundry_room_3_laundry_room_4__o2__v1_00044.png",
       "frame": 44,
       "width": 1154,
       "height": 124
@@ -2786,7 +2786,7 @@
       "object_index": 2,
       "label": "Shoe box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/laundry_room_3_laundry_room_4__o2__v1_00066.png",
+      "path": "data/naming_set/crops/laundry_room_3_laundry_room_4__o2__v1_00066.png",
       "frame": 66,
       "width": 1194,
       "height": 142
@@ -2796,7 +2796,7 @@
       "object_index": 2,
       "label": "Shoe box_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/laundry_room_3_laundry_room_4__o2__v2_00109.png",
+      "path": "data/naming_set/crops/laundry_room_3_laundry_room_4__o2__v2_00109.png",
       "frame": 109,
       "width": 1347,
       "height": 196
@@ -2806,7 +2806,7 @@
       "object_index": 2,
       "label": "Shoe box_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/laundry_room_3_laundry_room_4__o2__v2_00135.png",
+      "path": "data/naming_set/crops/laundry_room_3_laundry_room_4__o2__v2_00135.png",
       "frame": 135,
       "width": 1346,
       "height": 285
@@ -2816,7 +2816,7 @@
       "object_index": 2,
       "label": "Shoe box_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/laundry_room_3_laundry_room_4__o2__v2_00160.png",
+      "path": "data/naming_set/crops/laundry_room_3_laundry_room_4__o2__v2_00160.png",
       "frame": 160,
       "width": 1342,
       "height": 288
@@ -2826,7 +2826,7 @@
       "object_index": 0,
       "label": "orange_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o0__v1_00000.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o0__v1_00000.png",
       "frame": 0,
       "width": 213,
       "height": 295
@@ -2836,7 +2836,7 @@
       "object_index": 0,
       "label": "orange_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o0__v1_00074.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o0__v1_00074.png",
       "frame": 74,
       "width": 251,
       "height": 335
@@ -2846,7 +2846,7 @@
       "object_index": 0,
       "label": "orange_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o0__v1_00148.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o0__v1_00148.png",
       "frame": 148,
       "width": 248,
       "height": 178
@@ -2856,7 +2856,7 @@
       "object_index": 0,
       "label": "orange_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o0__v1_00222.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o0__v1_00222.png",
       "frame": 222,
       "width": 191,
       "height": 76
@@ -2866,7 +2866,7 @@
       "object_index": 1,
       "label": "placemat_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o1__v1_00000.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o1__v1_00000.png",
       "frame": 0,
       "width": 210,
       "height": 189
@@ -2876,7 +2876,7 @@
       "object_index": 1,
       "label": "placemat_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o1__v1_00074.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o1__v1_00074.png",
       "frame": 74,
       "width": 238,
       "height": 228
@@ -2886,7 +2886,7 @@
       "object_index": 1,
       "label": "placemat_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o1__v1_00148.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o1__v1_00148.png",
       "frame": 148,
       "width": 228,
       "height": 189
@@ -2896,7 +2896,7 @@
       "object_index": 1,
       "label": "placemat_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o1__v1_00222.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o1__v1_00222.png",
       "frame": 222,
       "width": 195,
       "height": 155
@@ -2906,7 +2906,7 @@
       "object_index": 2,
       "label": "stool_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o2__v1_00220.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o2__v1_00220.png",
       "frame": 220,
       "width": 117,
       "height": 150
@@ -2916,7 +2916,7 @@
       "object_index": 2,
       "label": "stool_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o2__v1_00246.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o2__v1_00246.png",
       "frame": 246,
       "width": 196,
       "height": 159
@@ -2926,7 +2926,7 @@
       "object_index": 2,
       "label": "stool_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o2__v1_00271.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o2__v1_00271.png",
       "frame": 271,
       "width": 175,
       "height": 87
@@ -2936,7 +2936,7 @@
       "object_index": 3,
       "label": "tissue_box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o3__v1_00000.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o3__v1_00000.png",
       "frame": 0,
       "width": 171,
       "height": 209
@@ -2946,7 +2946,7 @@
       "object_index": 3,
       "label": "tissue_box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o3__v1_00074.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o3__v1_00074.png",
       "frame": 74,
       "width": 198,
       "height": 258
@@ -2956,7 +2956,7 @@
       "object_index": 3,
       "label": "tissue_box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o3__v1_00148.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o3__v1_00148.png",
       "frame": 148,
       "width": 214,
       "height": 178
@@ -2966,7 +2966,7 @@
       "object_index": 3,
       "label": "tissue_box_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o3__v1_00222.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o3__v1_00222.png",
       "frame": 222,
       "width": 132,
       "height": 154
@@ -2976,7 +2976,7 @@
       "object_index": 3,
       "label": "tissue_box_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o3__v2_00000.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o3__v2_00000.png",
       "frame": 0,
       "width": 210,
       "height": 269
@@ -2986,7 +2986,7 @@
       "object_index": 3,
       "label": "tissue_box_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o3__v2_00082.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o3__v2_00082.png",
       "frame": 82,
       "width": 206,
       "height": 276
@@ -2996,7 +2996,7 @@
       "object_index": 3,
       "label": "tissue_box_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o3__v2_00165.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o3__v2_00165.png",
       "frame": 165,
       "width": 210,
       "height": 267
@@ -3006,7 +3006,7 @@
       "object_index": 3,
       "label": "tissue_box_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o3__v2_00248.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o3__v2_00248.png",
       "frame": 248,
       "width": 163,
       "height": 193
@@ -3016,7 +3016,7 @@
       "object_index": 4,
       "label": "controller_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o4__v1_00000.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o4__v1_00000.png",
       "frame": 0,
       "width": 102,
       "height": 196
@@ -3026,7 +3026,7 @@
       "object_index": 4,
       "label": "controller_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o4__v1_00074.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o4__v1_00074.png",
       "frame": 74,
       "width": 102,
       "height": 229
@@ -3036,7 +3036,7 @@
       "object_index": 4,
       "label": "controller_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o4__v1_00148.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o4__v1_00148.png",
       "frame": 148,
       "width": 125,
       "height": 205
@@ -3046,7 +3046,7 @@
       "object_index": 4,
       "label": "controller_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o4__v1_00222.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o4__v1_00222.png",
       "frame": 222,
       "width": 196,
       "height": 133
@@ -3056,7 +3056,7 @@
       "object_index": 4,
       "label": "controller_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o4__v2_00000.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o4__v2_00000.png",
       "frame": 0,
       "width": 184,
       "height": 168
@@ -3066,7 +3066,7 @@
       "object_index": 4,
       "label": "controller_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o4__v2_00082.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o4__v2_00082.png",
       "frame": 82,
       "width": 149,
       "height": 189
@@ -3076,7 +3076,7 @@
       "object_index": 4,
       "label": "controller_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o4__v2_00165.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o4__v2_00165.png",
       "frame": 165,
       "width": 62,
       "height": 184
@@ -3086,7 +3086,7 @@
       "object_index": 4,
       "label": "controller_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o4__v2_00248.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o4__v2_00248.png",
       "frame": 248,
       "width": 126,
       "height": 110
@@ -3096,7 +3096,7 @@
       "object_index": 5,
       "label": "bread_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o5__v2_00000.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o5__v2_00000.png",
       "frame": 0,
       "width": 283,
       "height": 290
@@ -3106,7 +3106,7 @@
       "object_index": 5,
       "label": "bread_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o5__v2_00082.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o5__v2_00082.png",
       "frame": 82,
       "width": 192,
       "height": 153
@@ -3116,7 +3116,7 @@
       "object_index": 5,
       "label": "bread_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o5__v2_00165.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o5__v2_00165.png",
       "frame": 165,
       "width": 208,
       "height": 164
@@ -3126,7 +3126,7 @@
       "object_index": 5,
       "label": "bread_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o5__v2_00248.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o5__v2_00248.png",
       "frame": 248,
       "width": 162,
       "height": 150
@@ -3136,7 +3136,7 @@
       "object_index": 6,
       "label": "pineapple_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o6__v2_00000.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o6__v2_00000.png",
       "frame": 0,
       "width": 203,
       "height": 190
@@ -3146,7 +3146,7 @@
       "object_index": 6,
       "label": "pineapple_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o6__v2_00082.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o6__v2_00082.png",
       "frame": 82,
       "width": 197,
       "height": 276
@@ -3156,7 +3156,7 @@
       "object_index": 6,
       "label": "pineapple_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o6__v2_00165.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o6__v2_00165.png",
       "frame": 165,
       "width": 209,
       "height": 320
@@ -3166,7 +3166,7 @@
       "object_index": 6,
       "label": "pineapple_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_15_living_room_16__o6__v2_00248.png",
+      "path": "data/naming_set/crops/living_room_15_living_room_16__o6__v2_00248.png",
       "frame": 248,
       "width": 154,
       "height": 310
@@ -3176,7 +3176,7 @@
       "object_index": 0,
       "label": "stool_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o0__v1_00000.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o0__v1_00000.png",
       "frame": 0,
       "width": 287,
       "height": 253
@@ -3186,7 +3186,7 @@
       "object_index": 0,
       "label": "stool_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o0__v1_00014.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o0__v1_00014.png",
       "frame": 14,
       "width": 286,
       "height": 236
@@ -3196,7 +3196,7 @@
       "object_index": 0,
       "label": "stool_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o0__v1_00029.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o0__v1_00029.png",
       "frame": 29,
       "width": 277,
       "height": 195
@@ -3206,7 +3206,7 @@
       "object_index": 0,
       "label": "stool_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o0__v1_00044.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o0__v1_00044.png",
       "frame": 44,
       "width": 242,
       "height": 117
@@ -3216,7 +3216,7 @@
       "object_index": 1,
       "label": "coat_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o1__v1_00000.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o1__v1_00000.png",
       "frame": 0,
       "width": 266,
       "height": 199
@@ -3226,7 +3226,7 @@
       "object_index": 1,
       "label": "coat_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o1__v1_00058.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o1__v1_00058.png",
       "frame": 58,
       "width": 423,
       "height": 368
@@ -3236,7 +3236,7 @@
       "object_index": 1,
       "label": "coat_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o1__v1_00116.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o1__v1_00116.png",
       "frame": 116,
       "width": 276,
       "height": 499
@@ -3246,7 +3246,7 @@
       "object_index": 1,
       "label": "coat_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o1__v1_00309.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o1__v1_00309.png",
       "frame": 309,
       "width": 406,
       "height": 415
@@ -3256,7 +3256,7 @@
       "object_index": 2,
       "label": "bread_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o2__v2_00209.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o2__v2_00209.png",
       "frame": 209,
       "width": 148,
       "height": 142
@@ -3266,7 +3266,7 @@
       "object_index": 2,
       "label": "bread_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o2__v2_00256.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o2__v2_00256.png",
       "frame": 256,
       "width": 56,
       "height": 117
@@ -3276,7 +3276,7 @@
       "object_index": 2,
       "label": "bread_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o2__v2_00321.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o2__v2_00321.png",
       "frame": 321,
       "width": 149,
       "height": 71
@@ -3286,7 +3286,7 @@
       "object_index": 3,
       "label": "tissue_box_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o3__v2_00224.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o3__v2_00224.png",
       "frame": 224,
       "width": 205,
       "height": 140
@@ -3296,7 +3296,7 @@
       "object_index": 3,
       "label": "tissue_box_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o3__v2_00247.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o3__v2_00247.png",
       "frame": 247,
       "width": 209,
       "height": 188
@@ -3306,7 +3306,7 @@
       "object_index": 3,
       "label": "tissue_box_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o3__v2_00270.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o3__v2_00270.png",
       "frame": 270,
       "width": 161,
       "height": 165
@@ -3316,7 +3316,7 @@
       "object_index": 4,
       "label": "pillow_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o4__v1_00000.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o4__v1_00000.png",
       "frame": 0,
       "width": 301,
       "height": 185
@@ -3326,7 +3326,7 @@
       "object_index": 4,
       "label": "pillow_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o4__v1_00092.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o4__v1_00092.png",
       "frame": 92,
       "width": 363,
       "height": 343
@@ -3336,7 +3336,7 @@
       "object_index": 4,
       "label": "pillow_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o4__v1_00184.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o4__v1_00184.png",
       "frame": 184,
       "width": 511,
       "height": 468
@@ -3346,7 +3346,7 @@
       "object_index": 4,
       "label": "pillow_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o4__v1_00276.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o4__v1_00276.png",
       "frame": 276,
       "width": 378,
       "height": 343
@@ -3356,7 +3356,7 @@
       "object_index": 4,
       "label": "pillow_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o4__v2_00129.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o4__v2_00129.png",
       "frame": 129,
       "width": 428,
       "height": 379
@@ -3366,7 +3366,7 @@
       "object_index": 4,
       "label": "pillow_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o4__v2_00208.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o4__v2_00208.png",
       "frame": 208,
       "width": 358,
       "height": 315
@@ -3376,7 +3376,7 @@
       "object_index": 4,
       "label": "pillow_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o4__v2_00287.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o4__v2_00287.png",
       "frame": 287,
       "width": 313,
       "height": 305
@@ -3386,7 +3386,7 @@
       "object_index": 5,
       "label": "controller_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o5__v1_00000.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o5__v1_00000.png",
       "frame": 0,
       "width": 195,
       "height": 76
@@ -3396,7 +3396,7 @@
       "object_index": 5,
       "label": "controller_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o5__v1_00009.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o5__v1_00009.png",
       "frame": 9,
       "width": 196,
       "height": 76
@@ -3406,7 +3406,7 @@
       "object_index": 5,
       "label": "controller_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o5__v1_00019.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o5__v1_00019.png",
       "frame": 19,
       "width": 184,
       "height": 77
@@ -3416,7 +3416,7 @@
       "object_index": 5,
       "label": "controller_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o5__v1_00029.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o5__v1_00029.png",
       "frame": 29,
       "width": 165,
       "height": 58
@@ -3426,7 +3426,7 @@
       "object_index": 5,
       "label": "controller_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o5__v2_00207.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o5__v2_00207.png",
       "frame": 207,
       "width": 166,
       "height": 39
@@ -3436,7 +3436,7 @@
       "object_index": 5,
       "label": "controller_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o5__v2_00261.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o5__v2_00261.png",
       "frame": 261,
       "width": 96,
       "height": 32
@@ -3446,7 +3446,7 @@
       "object_index": 5,
       "label": "controller_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o5__v2_00314.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o5__v2_00314.png",
       "frame": 314,
       "width": 153,
       "height": 60
@@ -3456,7 +3456,7 @@
       "object_index": 6,
       "label": "bag_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o6__v1_00000.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o6__v1_00000.png",
       "frame": 0,
       "width": 124,
       "height": 88
@@ -3466,7 +3466,7 @@
       "object_index": 6,
       "label": "bag_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o6__v1_00063.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o6__v1_00063.png",
       "frame": 63,
       "width": 149,
       "height": 106
@@ -3476,7 +3476,7 @@
       "object_index": 6,
       "label": "bag_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o6__v1_00126.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o6__v1_00126.png",
       "frame": 126,
       "width": 228,
       "height": 174
@@ -3486,7 +3486,7 @@
       "object_index": 6,
       "label": "bag_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o6__v1_00305.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o6__v1_00305.png",
       "frame": 305,
       "width": 171,
       "height": 122
@@ -3496,7 +3496,7 @@
       "object_index": 6,
       "label": "bag_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o6__v2_00213.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o6__v2_00213.png",
       "frame": 213,
       "width": 202,
       "height": 163
@@ -3506,7 +3506,7 @@
       "object_index": 6,
       "label": "bag_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o6__v2_00236.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o6__v2_00236.png",
       "frame": 236,
       "width": 208,
       "height": 236
@@ -3516,7 +3516,7 @@
       "object_index": 6,
       "label": "bag_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_17_living_room_18__o6__v2_00259.png",
+      "path": "data/naming_set/crops/living_room_17_living_room_18__o6__v2_00259.png",
       "frame": 259,
       "width": 55,
       "height": 110
@@ -3526,7 +3526,7 @@
       "object_index": 0,
       "label": "wallet_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o0__v1_00000.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o0__v1_00000.png",
       "frame": 0,
       "width": 127,
       "height": 46
@@ -3536,7 +3536,7 @@
       "object_index": 0,
       "label": "wallet_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o0__v1_00015.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o0__v1_00015.png",
       "frame": 15,
       "width": 258,
       "height": 60
@@ -3546,7 +3546,7 @@
       "object_index": 0,
       "label": "wallet_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o0__v1_00031.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o0__v1_00031.png",
       "frame": 31,
       "width": 373,
       "height": 77
@@ -3556,7 +3556,7 @@
       "object_index": 0,
       "label": "wallet_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o0__v1_00047.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o0__v1_00047.png",
       "frame": 47,
       "width": 425,
       "height": 99
@@ -3566,7 +3566,7 @@
       "object_index": 1,
       "label": "bag_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o1__v1_00000.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o1__v1_00000.png",
       "frame": 0,
       "width": 525,
       "height": 135
@@ -3576,7 +3576,7 @@
       "object_index": 1,
       "label": "bag_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o1__v1_00023.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o1__v1_00023.png",
       "frame": 23,
       "width": 291,
       "height": 132
@@ -3586,7 +3586,7 @@
       "object_index": 1,
       "label": "bag_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o1__v1_00072.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o1__v1_00072.png",
       "frame": 72,
       "width": 723,
       "height": 224
@@ -3596,7 +3596,7 @@
       "object_index": 1,
       "label": "bag_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o1__v1_00095.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o1__v1_00095.png",
       "frame": 95,
       "width": 874,
       "height": 206
@@ -3606,7 +3606,7 @@
       "object_index": 2,
       "label": "ladder_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o2__v1_00140.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o2__v1_00140.png",
       "frame": 140,
       "width": 28,
       "height": 52
@@ -3616,7 +3616,7 @@
       "object_index": 2,
       "label": "ladder_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o2__v1_00154.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o2__v1_00154.png",
       "frame": 154,
       "width": 445,
       "height": 678
@@ -3626,7 +3626,7 @@
       "object_index": 2,
       "label": "ladder_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o2__v1_00169.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o2__v1_00169.png",
       "frame": 169,
       "width": 296,
       "height": 708
@@ -3636,7 +3636,7 @@
       "object_index": 2,
       "label": "ladder_1",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o2__v1_00183.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o2__v1_00183.png",
       "frame": 183,
       "width": 510,
       "height": 709
@@ -3646,7 +3646,7 @@
       "object_index": 2,
       "label": "ladder_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o2__v2_00000.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o2__v2_00000.png",
       "frame": 0,
       "width": 417,
       "height": 875
@@ -3656,7 +3656,7 @@
       "object_index": 2,
       "label": "ladder_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o2__v2_00008.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o2__v2_00008.png",
       "frame": 8,
       "width": 514,
       "height": 879
@@ -3666,7 +3666,7 @@
       "object_index": 2,
       "label": "ladder_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o2__v2_00016.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o2__v2_00016.png",
       "frame": 16,
       "width": 664,
       "height": 881
@@ -3676,7 +3676,7 @@
       "object_index": 2,
       "label": "ladder_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o2__v2_00024.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o2__v2_00024.png",
       "frame": 24,
       "width": 491,
       "height": 906
@@ -3686,7 +3686,7 @@
       "object_index": 3,
       "label": "right_curtain",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o3__v1_00154.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o3__v1_00154.png",
       "frame": 154,
       "width": 119,
       "height": 183
@@ -3696,7 +3696,7 @@
       "object_index": 3,
       "label": "right_curtain",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o3__v1_00171.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o3__v1_00171.png",
       "frame": 171,
       "width": 652,
       "height": 603
@@ -3706,7 +3706,7 @@
       "object_index": 3,
       "label": "right_curtain",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o3__v1_00188.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o3__v1_00188.png",
       "frame": 188,
       "width": 1343,
       "height": 562
@@ -3716,7 +3716,7 @@
       "object_index": 3,
       "label": "right_curtain",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o3__v1_00205.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o3__v1_00205.png",
       "frame": 205,
       "width": 1034,
       "height": 518
@@ -3726,7 +3726,7 @@
       "object_index": 3,
       "label": "right_curtain",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o3__v2_00000.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o3__v2_00000.png",
       "frame": 0,
       "width": 654,
       "height": 690
@@ -3736,7 +3736,7 @@
       "object_index": 3,
       "label": "right_curtain",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o3__v2_00011.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o3__v2_00011.png",
       "frame": 11,
       "width": 804,
       "height": 666
@@ -3746,7 +3746,7 @@
       "object_index": 3,
       "label": "right_curtain",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o3__v2_00023.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o3__v2_00023.png",
       "frame": 23,
       "width": 676,
       "height": 637
@@ -3756,7 +3756,7 @@
       "object_index": 3,
       "label": "right_curtain",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o3__v2_00034.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o3__v2_00034.png",
       "frame": 34,
       "width": 667,
       "height": 649
@@ -3766,7 +3766,7 @@
       "object_index": 4,
       "label": "left_curtain",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o4__v1_00190.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o4__v1_00190.png",
       "frame": 190,
       "width": 139,
       "height": 250
@@ -3776,7 +3776,7 @@
       "object_index": 4,
       "label": "left_curtain",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o4__v1_00213.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o4__v1_00213.png",
       "frame": 213,
       "width": 977,
       "height": 407
@@ -3786,7 +3786,7 @@
       "object_index": 4,
       "label": "left_curtain",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o4__v1_00236.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o4__v1_00236.png",
       "frame": 236,
       "width": 494,
       "height": 368
@@ -3796,7 +3796,7 @@
       "object_index": 4,
       "label": "left_curtain",
       "side": 1,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o4__v1_00259.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o4__v1_00259.png",
       "frame": 259,
       "width": 475,
       "height": 270
@@ -3806,7 +3806,7 @@
       "object_index": 4,
       "label": "left_curtain",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o4__v2_00037.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o4__v2_00037.png",
       "frame": 37,
       "width": 109,
       "height": 210
@@ -3816,7 +3816,7 @@
       "object_index": 4,
       "label": "left_curtain",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o4__v2_00046.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o4__v2_00046.png",
       "frame": 46,
       "width": 542,
       "height": 482
@@ -3826,7 +3826,7 @@
       "object_index": 4,
       "label": "left_curtain",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o4__v2_00056.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o4__v2_00056.png",
       "frame": 56,
       "width": 410,
       "height": 466
@@ -3836,7 +3836,7 @@
       "object_index": 4,
       "label": "left_curtain",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o4__v2_00066.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o4__v2_00066.png",
       "frame": 66,
       "width": 542,
       "height": 474
@@ -3846,7 +3846,7 @@
       "object_index": 5,
       "label": "hairbrush_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o5__v2_00091.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o5__v2_00091.png",
       "frame": 91,
       "width": 546,
       "height": 54
@@ -3856,7 +3856,7 @@
       "object_index": 5,
       "label": "hairbrush_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o5__v2_00107.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o5__v2_00107.png",
       "frame": 107,
       "width": 533,
       "height": 45
@@ -3866,7 +3866,7 @@
       "object_index": 5,
       "label": "hairbrush_1",
       "side": 2,
-      "path": "/home/user/Desktop/Humanoid/data/naming_set/crops/living_room_1_living_room_2__o5__v2_00122.png",
+      "path": "data/naming_set/crops/living_room_1_living_room_2__o5__v2_00122.png",
       "frame": 122,
       "width": 586,
       "height": 55
