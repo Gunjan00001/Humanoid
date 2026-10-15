@@ -1,0 +1,12 @@
+{
+  "scene": "scene4",
+  "resolution": "human-resolved (user, 2026-10-11)",
+  "entries": [
+    {"entry_id": 1, "gt_id": 1, "type_ok": true, "name_ok": true, "fragment": false,
+     "evidence": "moved apple = GT1 apple moved"},
+    {"entry_id": 2, "gt_id": 2, "type_ok": true, "name_ok": true, "fragment": false,
+     "evidence": "removed scissors = GT2 scissor removed"},
+    {"entry_id": 3, "gt_id": 3, "type_ok": true, "name_ok": true, "fragment": false,
+     "evidence": "added plastic bottle = GT3 bottle added"}
+  ]
+}

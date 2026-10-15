@@ -1,0 +1,10 @@
+{
+  "scene": "scene3",
+  "source": "data/scene3/ground_truth.md",
+  "changes": [
+    {"id": 1, "type": "removed",  "object": "chair",
+     "synonyms": ["chair", "wooden chair", "black chair"]},
+    {"id": 2, "type": "replaced", "object": "apple",
+     "synonyms": ["apple", "cup", "mug", "glass", "teacup"]}
+  ]
+}

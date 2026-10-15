@@ -1,0 +1,12 @@
+{
+  "scene": "demo",
+  "source": "data/ground_truth.md",
+  "changes": [
+    {"id": 1, "type": "moved",   "object": "AC remote",
+     "synonyms": ["ac remote", "remote control", "remote", "air conditioner remote", "ac controller", "remote controller", "controller"]},
+    {"id": 2, "type": "removed", "object": "comb",
+     "synonyms": ["comb"]},
+    {"id": 3, "type": "added",   "object": "pen",
+     "synonyms": ["pen", "ballpoint pen", "ball-point pen", "ballpoint", "biro"]}
+  ]
+}
