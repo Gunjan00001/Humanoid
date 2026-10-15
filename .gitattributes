@@ -26,3 +26,27 @@ data/scene5/a.mp4  -filter -diff -merge -text
 # preserved in LFS under data/scene6/original/ (and the data-v0.5 history)
 data/scene6/a.mp4  -filter -diff -merge -text
 data/scene6/b.mp4  -filter -diff -merge -text
+
+# --- language statistics ------------------------------------------------
+# The viewers are generated: one HTML page with a big embedded JSON blob per
+# scene, 1.8 to 5.5 MB each and about 20 MB in total. Left alone they make HTML
+# the top language on GitHub, which hides the actual source. They are build
+# output, not source, so linguist should ignore them.
+outputs/viewer.html              linguist-generated=true
+outputs/**/viewer.html           linguist-generated=true
+# Keep them as plain git, never LFS: GitHub Pages serves LFS files as pointers,
+# so an LFS viewer would show a text stub instead of the interactive page.
+outputs/viewer.html              -filter -diff -merge -text
+outputs/**/viewer.html           -filter -diff -merge -text
+# The same applies to the rendered animations and figures next to the viewers.
+outputs/**/change.gif            linguist-generated=true
+docs/figures/*.png               linguist-generated=true
+
+# --- prose and vendored code -------------------------------------------
+# Docs are prose, not a programming language.
+*.md                             linguist-documentation
+docs/**                          linguist-documentation
+# third_party holds the upstream SceneDiff evaluator and vendored tools.
+third_party/**                   linguist-vendored
+# notebooks and configs stay visible: configs/default.yaml is the single source
+# of every threshold in the pipeline, so it should count.
