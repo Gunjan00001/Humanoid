@@ -41,13 +41,20 @@ ALLOWED_EMAILS = (
 # Ten or more digits, but not a hex digest, a sha256, a date or a version.
 DIGIT_RUN = re.compile(r"(?<![0-9a-fA-F])(?:\+?\d[\d\s().-]{8,}\d)(?![0-9a-fA-F])")
 
-SECRETS = (
-    re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"),
-    re.compile(r"\bghp_[A-Za-z0-9]{20,}"),
-    re.compile(r"\bgithub_pat_[A-Za-z0-9_]{20,}"),
-    re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
-    re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{10,}"),
-    re.compile(r"\bsk-[A-Za-z0-9]{20,}"),
+SECRET_PATTERNS = (
+    ("private key", re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----")),
+    ("github_pat", re.compile(r"\bgithub_pat_[A-Za-z0-9_]{20,}")),
+    ("ghp_", re.compile(r"\bghp_[A-Za-z0-9]{20,}")),
+    ("gho_", re.compile(r"\bgho_[A-Za-z0-9]{20,}")),
+    ("ghs_", re.compile(r"\bghs_[A-Za-z0-9]{20,}")),
+    ("aws key id", re.compile(r"\bAKIA[0-9A-Z]{16}\b")),
+    ("aws session", re.compile(r"\bASIA[0-9A-Z]{16}\b"))
+,
+    ("slack token", re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{10,}")),
+    ("hf token", re.compile(r"\bhf_[A-Za-z0-9]{30,}")),
+    ("anthropic key", re.compile(r"\bsk-ant-[A-Za-z0-9_-]{20,}")),
+    ("openai key", re.compile(r"\bsk-proj-[A-Za-z0-9_-]{20,}")),
+    ("generic sk", re.compile(r"\bsk-[A-Za-z0-9]{40,}")),
 )
 
 EMAIL = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
@@ -104,7 +111,7 @@ class TestNoPersonalData(unittest.TestCase):
 
     def test_no_secrets(self):
         hits = []
-        for pattern in SECRETS:
+        for _name, pattern in SECRET_PATTERNS:
             hits += grep(pattern.pattern)
         self.assertEqual(hits, [], "possible secrets:\n" + "\n".join(hits))
 
@@ -174,3 +181,30 @@ class TestNoMediaMetadata(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+ASSIGNMENT = re.compile(
+    r"(api[_-]?key|apikey|client[_-]?secret|access[_-]?token|password|passwd|secret)"
+    r'\s*[:=]\s*["\']([^"\']{8,})["\']', re.I)
+PLACEHOLDER = re.compile(
+    r'^(PASSWORD|PLACEHOLDER|X+|\*+|CHANGE[_-]?ME|<|%|\{)', re.I)
+
+
+class TestNoCredentialAssignments(unittest.TestCase):
+    """A config-style line that assigns a real value, not a placeholder.
+
+    The graphify skill documentation legitimately demonstrates `--password
+    PASSWORD`, so quoted placeholder words are allowed and everything else in
+    that shape fails.
+    """
+
+    def test_no_real_assignments(self):
+        offenders = []
+        for line in grep(ASSIGNMENT.pattern):
+            if line.startswith("tests/test_no_personal_paths.py:"):
+                continue                      # the enforcement tool itself
+            value = ASSIGNMENT.search(line).group(2)
+            if PLACEHOLDER.match(value) or value.lower() in ("none", "your_password"):
+                continue
+            offenders.append(line)
+        self.assertEqual(offenders, [],
+                         "credential-style assignments:\n" + "\n".join(offenders))

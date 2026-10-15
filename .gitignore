@@ -69,3 +69,8 @@ outputs/scene5_*/tabletop_posthoc
 outputs/scene5_reencode_check
 # labelled crops are derived data; rebuild with scripts/build_naming_set.py
 data/naming_set/crops/
+# secret material never goes in even by accident
+.env
+.env.*
+*.pem
+*.key
