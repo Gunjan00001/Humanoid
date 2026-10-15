@@ -75,3 +75,35 @@ between 0.6 and 28.9 GB), so the describe stage failed for all but one pair. Tha
 one pair produced no changes. So the flag's frame-level effect is demonstrated;
 its end-to-end score on those pairs is **not measured** yet (environment limit,
 not a code limit). The run will be resumed when the node frees.
+
+## Part C item 1: adaptive sharpness results (post-hoc, validation only)
+
+With `frames.adaptive_sharpness` ON, the 13 previously unprocessable validation
+pairs now run the full pipeline. Measured (job 11377, 7 of 13 pairs done at the
+time of writing; the rest are queued behind a saturated node):
+
+| pair | frames | changes | unverified |
+|---|---|---|---|
+| bedroom_1_bedroom_2 | 45 | 1 | 0 |
+| bedroom_4_bedroom_5 | 27 | 0 | 0 |
+| gas_station_3_gas_station_4 | 53 | 0 | 0 |
+| laundry_room_3_laundry_room_4 | 30 | 0 | 0 |
+| living_room_15_living_room_16 | 53 | 5 | 0 |
+| living_room_17_living_room_18 | 57 | 1 | 0 |
+| living_room_1_living_room_2 | 47 | 1 | 0 |
+
+**scene2 at default settings now runs** (35 frames) and reports 5 changes,
+including the ground-truth coconut: removed coconut, removed apple, removed small
+dark speck, added round object, added finger. That is the same count as the
+documented scene2 working point, but reached at defaults, so the fallback makes a
+clip that used to abort processable.
+
+Official evaluator on the 7 adaptive pairs: px/im IoU 0.0620 (up from 0.0074 with
+the pairs counted as empty), obj/im AP 0.0002, obj/sc AP 0.0000, TP 0, FP 8,
+FN 32. So the flag fixes the upstream failure (the pairs are processed and even
+produce candidates) but the downstream detection quality on the room-scale clips
+is still the limit: no detection reaches 0.5 IoU. That matches the oracle control
+finding.
+
+Dev-scene check: with the flag ON the demo frames are byte identical to the
+committed ones, so the flag changes nothing on scenes that already work.
