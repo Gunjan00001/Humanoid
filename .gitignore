@@ -61,3 +61,6 @@ cache/scenediff_adaptive/
 outputs/scene2_adaptive/
 cache/scene2_adaptive/
 logs/configs/
+
+# labelled crop set is derived data; rebuild with scripts/build_naming_set.py
+data/naming_set/crops/

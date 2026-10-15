@@ -97,12 +97,13 @@ def decide_tier(vlm_label: str, views: list[list[tuple[str, float]]], vocab: Voc
     views  one ranked list of (canonical name, similarity) per crop, best first.
            Only the ORDER and the top-1 versus top-2 difference are used.
     min_votes
-           how many views have to agree for the agreement signal to hold. With a
-           single available view it collapses to one, so a one-crop entry is not
-           permanently stuck in a hedged tier.
+           how many views have to agree for the agreement signal to hold. It is
+           deliberately NOT reduced when fewer views exist: with one crop there is
+           no multi view agreement, so such an entry can reach "possibly" but
+           never "plain". That is the honest reading of the tier definition.
     """
     usable = [v for v in views if v]
-    required_votes = max(1, min(min_votes, len(usable))) if usable else min_votes
+    required_votes = min_votes
 
     vlm_canon = vocab.canonical_of(vlm_label)
     part_only = vocab.is_part_only(vlm_label)
