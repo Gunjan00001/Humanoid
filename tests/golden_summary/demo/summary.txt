@@ -1,0 +1,7 @@
+Compared a.mp4 and b.mp4. I found 3 change(s):
+1. Removed: comb. The comb was removed from the table.
+2. Added: pen and device. Possibly a blue pen and a white device were added to the surface.
+3. Replaced: remote control. The remote control was replaced with a different one.
+
+Notes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.
+Files: viewer.html, change.gif, report.json
