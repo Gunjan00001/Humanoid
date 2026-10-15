@@ -20,8 +20,10 @@ frames:
                              # too few B frames for a smooth reconstruction)
   max_frames_per_video: 30   # hard cap after blur filtering (evenly spaced)
   blur_threshold: 100.0      # Laplacian variance; blurrier frames are dropped
-  adaptive_sharpness: false  # Part C: when the absolute threshold leaves fewer than
-                             # min_frames, take the sharpest N by rank instead
+  adaptive_sharpness: true   # v1.1.0 default. When the absolute threshold leaves
+                             # fewer than min_frames, take the sharpest N by rank
+                             # instead. Only fires on the failure path; verified
+                             # byte identical on the scenes that already work.
   min_frames: 8              # fail if fewer frames survive sampling
   jpeg_quality: 92
 
@@ -61,6 +63,12 @@ models:
   # a repo id (login node only - compute nodes may have no internet).
 
 diff:
+  auto_plane_rules: false    # Part C: when the chosen plane has low coverage, or is
+                             # floor-like or wall-like rather than table-like, fall back
+                             # to the plane free geometric mode. Evaluated on the room
+                             # scale scene before it is ever enabled.
+  relative_cells: false      # Part C: size the change cells as a fraction of the scene
+                             # or plane extent instead of the fixed 5 mm grid.
   method: tabletop           # geometric | tabletop (see src/tabletop.py)
   # geometric: 3D nearest-neighbour distance between the two clouds.
   # tabletop: appearance comparison over the dominant plane - needed because

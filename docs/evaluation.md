@@ -145,3 +145,13 @@ has low coverage, or is floor-like or wall-like rather than table-like, the diff
 stage would fall back to the plane-free `geometric` mode instead of building boxes
 on the wrong plane. It changes nothing unless switched on. The geometric
 re-comparison on these pairs is queued behind the GPU queue (job 11527).
+## SceneDiff: final position (time boxed, no further investment)
+
+SceneDiff is now closed. The reason is arithmetic, not effort: the projection
+control pushes **ground-truth** masks through the adapter and reaches obj/sc AP
+0.1147, so even with perfect masks the method's ceiling on this benchmark is
+0.11. The adapter is correct (6 of 7 pairs above 0.5 IoU on the control), the
+frame budget adds candidates but no true positives, and the domain is room scale
+where the automatic plane lands on a floor, a wall or a tilted surface instead of
+a table. Adapter, frame budget and domain each cap the score, and none of them is
+a bug. Numbers stay on the frozen v1.0.0 configuration.
