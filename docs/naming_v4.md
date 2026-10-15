@@ -65,3 +65,40 @@ python scripts/build_naming_set.py --per-object 4      # rebuild the crops (CPU)
 python scripts/naming_set_eval.py                      # rerank measurement (CPU)
 python scripts/naming_set_eval.py --vlm-answers logs/vlm_answers.json
 ```
+
+## Adoption decision (written before any wiring, per the rules)
+
+**Decision: not adopted. Flag `semantics.naming_v4` stays OFF and nothing is wired
+into `src/describe.py` or `src/summary.py` yet.** This document is the adoption
+decision; it is the only file that can flip the flag, and it flips it only when
+the gate below passes with evidence in this repository.
+
+The gate, copied from the reviewer's rules and evaluated for the first time
+here:
+
+| gate requirement | status today | evidence needed |
+|---|---|---|
+| plain tier precision clearly higher than the labels as printed, on this crop set **and** on the development scene entries | **not measurable** without VLM answers, because the tiers consume one VLM name per crop | one VLM answer run over the 317 mapped crops (32B or 8B), table into `logs/naming_set.json` |
+| the hedged tiers behave as their names say: precision ordered plain > possibly > unidentified | not measurable for the same reason | same run |
+| type and localized recall unchanged once the flag is wired in | not reached yet | the byte-identical re-run requirement below |
+| byte-identical outputs with the flag OFF | not reached yet | the warm-cache re run after wiring, compared against golden outputs |
+| no scene specific values | satisfied, the vocabulary and synonyms are one global file and the knobs stay global | `data/naming_vocabulary.json`, `data/naming_synonyms.json` |
+
+What is already true today, from measured data in this document and
+`docs/naming_v3.md`: (a) the SigLIP 2 rerank puts the right name in its top 3
+23.0% of the time over 317 labelled crops, so the plain tier is structurally rare;
+(b) the number of entries is very small (19 on the dev scenes), so intervals
+overlap; (c) banning part words removes the worst observed failure ("wooden leg",
+"chair leg", "table leg" on scene5).
+
+What would make the decision pass: one VLM run over the crops with answers
+dumped to a table, plus the recall and byte-identity re run on the dev scenes.
+If the plain tier is not clearly better than the as printed labels, the honest
+outcome is a permanent negative here, not a flag flip.
+
+Secret scan note (this round): `detect-secrets` reports 121 findings over the
+tracked tree and all 121 are our own generated artifacts (hex digests in the
+report.json files and the base64 point cloud blob embedded in the viewers), not
+credentials. Scan detail in `~/purge/detect_summary.md` and
+`~/purge/detect_tracked_summary.md`, both outside the repository by the privacy
+rules.
