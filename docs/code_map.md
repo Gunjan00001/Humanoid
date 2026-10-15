@@ -86,3 +86,26 @@ be re-run alone. Paths are `cache/<scene>/<stage>/`.
 The SceneDiff adapter (`src/eval_scenediff.py`, `scripts/job_scenediff.pbs`) is a
 separate path: it runs `detect.py` per pair and converts the result into the
 benchmark's `object_masks.pkl` format. It is not part of a normal run.
+
+## Experimental tooling (not used by detect.py)
+
+These files are evidence and measurement, kept on main so the claims in the docs
+can be re-checked. None of them runs during a normal pipeline run, and each one
+carries an EXPERIMENTAL header.
+
+| file | what it does |
+|---|---|
+| `scripts/score.py` | scoring against the human-resolved matches, the metric definitions |
+| `scripts/sprint.py`, `scripts/worker.py` | the accuracy-sprint orchestrator and its long-lived semantics-only worker |
+| `scripts/probe_sam2.py`, `scripts/probe_sam2_controls.py` | the SAM 2 mask refinement probe and its controls, a recorded negative |
+| `scripts/oracle_projection_control.py` | pushes ground truth through the adapter to find the SceneDiff ceiling |
+| `scripts/plane_check.py` | which plane the automatic mode picks, per scene |
+| `scripts/build_naming_set.py` | labelled crops from the SceneDiff validation pairs |
+| `scripts/naming_set_eval.py` | naming measured on those crops, with Wilson intervals |
+| `scripts/naming_v3_eval.py` | the naming ladder and tiers measured on the six scenes |
+| `src/eval_scenediff.py` | the SceneDiff adapter, separate from `detect.py` |
+| `src/naming/` | the naming package: text, vocabulary, descriptors, ladder, tiers, rerank, cache, evaluation |
+
+`scripts/verify_adaptive_identity.py` is in this group too, but note that the
+behaviour it protects (`frames.adaptive_sharpness`) *is* part of the default path
+since v1.1.0; the script itself only runs when you ask it to.
