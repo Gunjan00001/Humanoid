@@ -4,9 +4,18 @@ Video -> sharp, evenly spaced frames tagged with their source video.
 
     python src/extract_frames.py --config configs/default.yaml
 
-Writes (see docs/pipeline.md):
-    cache/frames/<a|b>/frame_XXXXX.jpg
-    cache/frames/index.json
+Where it sits in the pipeline: stage 1 of nine, the only stage that touches
+the recordings themselves; everything downstream consumes the JPEGs and the
+index, so a change here ripples through reconstruction quality, which is why
+the sharpness rule is a config value and not a hardcoded number. See
+docs/code_map.md for the order and the files each stage reads and writes.
+
+Inputs: the two recordings named on the command line. Outputs (under
+cfg["paths"]["cache_dir"]): cache/frames/a/*.jpg and b/*.jpg plus
+cache/frames/index.json (frame file, source frame index, timestamp and the
+Blur score that kept it). The blur score is the variance of the Laplacian
+computed on the grayscale frame, in arbitrary units; it is the only sharpness
+measure in the pipeline.
 """
 
 from __future__ import annotations
@@ -93,7 +102,14 @@ def _scan_blurs(video: Path, fps: float) -> tuple[float, list[tuple[int, float, 
 
 
 def _evenly_spaced(items: list[dict], k: int) -> list[dict]:
-    """Keep at most k items, evenly spaced over the sequence (coverage first)."""
+    """Keep at most k items, evenly spaced over the sequence.
+
+    Coverage first on purpose: taking the sharpest k frames instead would
+    cluster them where the recording was still (typically the first second) and
+    leave the end of the clip unrepresented, which produces a reconstruction
+    that covers only part of the table. Spacing keeps k points across the whole
+    take even when the blur scores are unevenly distributed.
+    """
     if len(items) <= k:
         return items
     picks = np.linspace(0, len(items) - 1, num=k).round().astype(int)
@@ -101,6 +117,21 @@ def _evenly_spaced(items: list[dict], k: int) -> list[dict]:
 
 
 def extract_one(video: Path, tag: str, cfg: dict) -> dict:
+    """Extract one video (tag 'a' or 'b') into its cache directory.
+
+    Order matters: _scan_video samples and keeps the frames that pass the
+    absolute blur threshold, _evenly_spaced picks k of them for coverage, and
+    only then, if the fallback flag is set AND too few frames came through,
+    the adaptive_sharpness path rescans the whole video for blur scores and
+    re-runs _scan_video with the threshold that picks the sharpest N by rank.
+    The fallback is deliberately after the spacing step: the two overrides
+    (threshold by rank, spacing for coverage) are independent knobs that can
+    mix, which is what v1.1.0 verified byte-identical on the working scenes.
+
+    The stale-frame cleanup before writing keeps --force reruns honest: without
+    it, frames left by an earlier run with different settings would survive in
+    the cache and the index would lie about what the reconstruction saw.
+    """
     fcfg = cfg["frames"]
     log.info("[%s] scanning %s (fps=%.2f, blur>=%.0f)",
              tag, video, fcfg["fps"], fcfg["blur_threshold"])
