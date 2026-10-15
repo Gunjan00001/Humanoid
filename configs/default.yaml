@@ -20,6 +20,10 @@ frames:
                              # too few B frames for a smooth reconstruction)
   max_frames_per_video: 30   # hard cap after blur filtering (evenly spaced)
   blur_threshold: 100.0      # Laplacian variance; blurrier frames are dropped
+  adaptive_sharpness: true   # v1.1.0 default. When the absolute threshold leaves
+                             # fewer than min_frames, take the sharpest N by rank
+                             # instead. Only fires on the failure path; verified
+                             # byte identical on the scenes that already work.
   min_frames: 8              # fail if fewer frames survive sampling
   jpeg_quality: 92
 
