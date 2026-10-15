@@ -15,9 +15,15 @@ Reads `outputs/<name>/report.json` and writes `summary.md`, `summary.txt` and
   saying which video it refers to;
 - on rejection (or without a GPU) a deterministic template is used.
 
-This stage never changes detection: it only phrases what the report contains.
-"""
+Where it sits in the pipeline: stage 6 of nine, after the report is written and
+before the viewer and GIFs are rendered; see docs/code_map.md for the order and
+for what each stage reads and writes.
 
+Inputs: one run's report.json plus, when a GPU is present, the run's VLM cache
+(the phrasing call reuses what the describe stage already produced). The
+"only from report fields" rule that tests/test_summary.py enforces is by
+design: this stage never adds a fact detection did not produce.
+"""
 from __future__ import annotations
 
 import argparse
@@ -215,6 +221,20 @@ def vlm_phrase(changes: list[dict], cfg: dict) -> dict:
 
 
 def build_summary(cfg: dict, use_vlm: bool = True) -> dict:
+    """Build the summary of one run, purely from its report.json.
+
+    cfg          config dict; only cfg["paths"]["out_dir"] is read, and it must
+                 point at the run's own output directory
+    use_vlm      when True and the GPU is up, ask the model once to rephrase
+                 every change; every answer is validated again
+                 (validate_sentence) and rejected answers fall back to the
+                 deterministic templates
+
+    Returns the summary dict: the entries themselves plus the finished 'text'
+    block that write_summaries() turns into summary.txt/.md/.json. The wording
+    is byte-for-byte stable for the same report, which is what
+    tests/golden_summary guards.
+    """
     out = out_dir(cfg)
     report_path = out / "report.json"
     if not report_path.exists():

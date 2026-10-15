@@ -198,3 +198,35 @@ above 0.5; obj/sc AP 0.1147, 7 TPs), so the adapter is verified end to end and t
 near-zero validation score is a detection and domain result, not an adapter bug.
 The test slice is regenerated at this frozen config (the earlier test predictions
 came from the buggy adapter; no test score was seen) and evaluated once.
+
+## Pre refactor to post refactor digests (v1.2.2 readability round)
+
+The held-out freeze documents the detection code by sha256. This table records
+the equivalence evidence for the readable-header pass, one module so far, in
+line with the rule that a refactor is only allowed when it proves itself:
+
+| file | pre digest (sha256[:16], at 8365223) | post digest (sha256[:16], this commit) | equals |
+|---|---|---|---|
+| `src/summary.py` | `527a4f576a481aa2` | `137c44676f1dd158` | **behavioural digest table only** |
+
+**Why the digest changes here:** the change to `src/summary.py` is docstring and
+docstring-comment-only (module docstring extended with the pipeline position,
+inputs, outputs and the grounding rule; `build_summary` given a real docstring
+with units of meaning for every argument and the returned shape). No code path,
+default, threshold, or string that a reader would see is altered. Eliminating
+the change behaviorally rather than textually is why the evidence is not "an
+empty digest diff" but a byte-level proof that the wording the reader sees is
+unchanged:
+
+* byte-identical proof: `python scripts/golden.py check` regenerates the
+  summary from the committed report.json on CPU, VLM disabled, and compares
+  byte-for-byte with fixtures committed at v1.2.1: identical on demo, scene2,
+  scene3, scene4 (the table above uses the golden fixtures only, not the
+  held-out outputs, which are frozen and out of scope on purpose);
+* the "only from report fields" rule of `tests/test_summary.py` still passes
+  against the committed data;
+* the held-out scene5 and scene6 outputs are untouchable and remain byte
+  identical to `v1.0.0` (`git diff v1.0.0 main -- outputs/scene5 outputs/scene6`
+  empty);
+* the other seven frozen files are untouched, which is what the digest table
+  itself shows.
