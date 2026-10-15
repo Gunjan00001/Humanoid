@@ -22,7 +22,6 @@ Never invents numbers: everything is measured from the cached artifacts.
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from pathlib import Path
 
@@ -131,7 +130,6 @@ def analyse(label: str, cache: Path, cfg: dict, conf_percentile: float) -> dict:
     cfg = {**cfg, "paths": {**cfg["paths"], "cache_dir": str(cache)}}
     cfg["reconstruction"] = {**cfg["reconstruction"], "conf_percentile": conf_percentile}
     recon = load_reconstruction(cfg, prefer_aligned=True)
-    rdir = recon["dir"]
     meta = recon["meta"]
     depth_conf = recon["depth_conf"]
 

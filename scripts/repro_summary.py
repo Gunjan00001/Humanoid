@@ -5,7 +5,6 @@ outputs). Usage: python scripts/repro_summary.py"""
 import glob
 import json
 import os
-import re
 from collections import defaultdict
 
 rows = defaultdict(list)

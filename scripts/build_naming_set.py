@@ -24,7 +24,6 @@ import argparse
 import json
 import logging
 import pickle
-import sys
 from pathlib import Path
 
 import cv2

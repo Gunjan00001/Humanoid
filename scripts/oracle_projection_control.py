@@ -60,7 +60,6 @@ def main() -> int:
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
     data, out = Path(args.data), Path(args.out)
-    cfg0 = load_config("configs/default.yaml")
 
     for pair in PAIRS:
         cache = ROOT / "cache" / "scenediff" / pair

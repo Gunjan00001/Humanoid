@@ -23,9 +23,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from src.naming import (Outcomes, RerankModel, decide_tier,   # noqa: E402
+from src.naming import (RerankModel, decide_tier,   # noqa: E402
                         load_all, load_vocabulary)
-from src.naming.tiers import tier_of  # noqa: E402
 
 SCORE_CACHE = ROOT / "logs" / "naming_dev_tiers" / "crop_scores.json"
 

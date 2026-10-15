@@ -29,7 +29,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
-from src.common import load_config, read_json, repo_path  # noqa: E402
+from src.common import load_config, repo_path  # noqa: E402
 from src.geometry import load_reconstruction, project_points, tagged_points  # noqa: E402
 
 

@@ -32,7 +32,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from src.naming import RerankModel, load_vocabulary           # noqa: E402
-from src.naming.tiers import decide_tier, tier_of             # noqa: E402
+from src.naming.tiers import decide_tier             # noqa: E402
 
 log = logging.getLogger("namingset.eval")
 

@@ -77,8 +77,8 @@ def check_prose() -> list[str]:
     bad: list[str] = []
     readme = (ROOT / "README.md").read_text()
     for scene, exp in EXPECT.items():
-        rows = [l for l in readme.splitlines()
-                if l.startswith("|") and re.search(rf"\b{scene}\b", l)]
+        rows = [row for row in readme.splitlines()
+                if row.startswith("|") and re.search(rf"\b{scene}\b", row)]
         if not rows:
             bad.append(f"README: no table row for {scene}")
             continue

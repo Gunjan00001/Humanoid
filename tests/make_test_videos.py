@@ -12,7 +12,6 @@ to chew on. A blurred segment around t=4s is injected to test the blur filter.
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import cv2

@@ -30,7 +30,8 @@ exclude = [
 # Rules that catch real mistakes (undefined names, self-assignments, duplicate
 # keys, unreachable code), not style. The wider rule set is enabled gradually;
 # when a new rule turns on it does so because the whole tree passes it.
-select = ["E9", "F63", "F7", "F82"]
+select = ["E4", "E7", "E9", "F"]  # real mistakes plus unused imports and variables
+# The wider style set stays off until the whole tree passes it in one sweep.
 
 [lint.mccabe]
 max-complexity = 12

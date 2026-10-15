@@ -45,7 +45,7 @@ def ensure_repo_images() -> None:
     REPO_DIR.mkdir(parents=True, exist_ok=True)
     cmd = (f"curl -sL --retry 3 -m 240 '{TARBALL_URL}' | "
            f"tar -xz -C '{REPO_DIR}' --wildcards '*/examples/kitchen/images/*'")
-    print(f"fetching VGGT example images via codeload tarball ...")
+    print("fetching VGGT example images via codeload tarball ...")
     if subprocess.run(cmd, shell=True).returncode != 0 or not LOCAL_IMAGES.is_dir():
         raise RuntimeError(
             "could not fetch the VGGT example images. Alternatives: copy the "

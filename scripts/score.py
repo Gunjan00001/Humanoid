@@ -177,7 +177,6 @@ def main() -> int:
         if "error" in r:
             print(f"{r['scene']:<8} ERROR {r['error']}")
             continue
-        mv = f"{r['move_found']}/{r['move_total']}" if r["move_total"] else "-"
         p = r["precision"]
         print(f"{r['scene']:<8} {r['n_gt']:>3} {r['n_report']:>3} "
               f"{fmt(r['recall_type']):>9} {fmt(r['recall_localized']):>11} "
