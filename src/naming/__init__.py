@@ -37,6 +37,7 @@ from src.naming.descriptor import (COLOR_WORDS, SIZE_WORDS, color_word, describe
 from src.naming.evaluation import Outcomes, label_is_correct, leave_one_scene_out
 from src.naming.ladder import Decision, decide
 from src.naming.rerank import RerankModel
+from src.naming.tiers import (PLAIN, POSSIBLY, UNIDENTIFIED, TierDecision, decide_tier, tier_of)  # noqa: F401
 from src.naming.vocabulary import Vocabulary, load_vocabulary
 
 __all__ = [

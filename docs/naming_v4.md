@@ -102,3 +102,31 @@ report.json files and the base64 point cloud blob embedded in the viewers), not
 credentials. Scan detail in `~/purge/detect_summary.md` and
 `~/purge/detect_tracked_summary.md`, both outside the repository by the privacy
 rules.
+
+## Development scene entries: the tiers measured with cached VLM answers
+
+`scripts/naming_dev_tiers.py` runs the tier ladder over the **19 development
+scene entries**, using the VLM labels cached at the time of each run (no VLM
+re-run) and SigLIP 2 scored on CPU. Table from one run, per-tier correctness
+against the ground-truth object of each entry:
+
+| tier | entries | right | precision |
+|---|---|---|---|
+| plain | 1 | 1 | 100.0% |
+| possibly | 6 | 2 | 33.3% |
+| unidentified | 12 (abstain) | n/a | n/a |
+| named anything | 7/19 (36.8%) | 3 | 42.9% |
+| labels as printed | 19/19 | 9 | 47.4% |
+
+Row `tiers named anything` counts only the two tiers that propose a name. The
+ordering the tier design promises holds: plain (100.0%) beats possibly
+(33.3%) and unidentified abstains. What does **not** hold today is that the
+tiers are clearly better than what the pipeline already printed: 3 of 7 named
+right (42.9%) against 9 of 19 for the current printing (47.4%), on a sample of
+19 entries where only one landed in the plain tier.
+
+Read honestly: one plain entry is a single data point; the possibly tier at
+33.3% is the interesting target, since a hedged label that is right about one
+in three objects is still better than a confident wrong name that claims the
+one. The adoption decision above stands: **not adopted**, with these numbers
+added to the evidence and the VLM crop run still the missing half of the gate.
