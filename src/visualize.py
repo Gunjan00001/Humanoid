@@ -66,7 +66,17 @@ def ab_evidence(ci: dict):
 
 
 def write_ply(path: Path, points: np.ndarray, colors: np.ndarray) -> None:
-    """Minimal binary little-endian PLY writer (points + uchar rgb)."""
+    """Minimal binary little-endian PLY writer for the scene meshes.
+
+    points  (n, 3) float or float32, in reconstruction units; the scale is
+            whatever the reconstruction produced, so the PLY itself is not
+            metric (see docs: the pipeline is not metric-validated)
+    colors  (n, 3) uint8 rgb, 0-255, already the display colours
+
+    Binary little endian on purpose: an external viewer can load it with
+    nothing but the 7 header lines, and the alternative (a JSON pose list)
+    would not open in cloud/mesh tools without extra work.
+    """
     arr = np.empty(len(points), dtype=[("x", "<f4"), ("y", "<f4"), ("z", "<f4"),
                                        ("red", "u1"), ("green", "u1"), ("blue", "u1")])
     arr["x"], arr["y"], arr["z"] = points[:, 0], points[:, 1], points[:, 2]
@@ -136,6 +146,11 @@ def scene_arrays(cfg: dict):
         all_c = np.concatenate([c["points"] for c in change_pts if len(c["points"])])
         if len(all_c):
             dist, _ = cKDTree(all_c).query(bg_pts, k=1, workers=-1)
+            # Drop background points that overlap a change point: they are
+            # drawn in the change colour anyway, and the overlap would make
+            # the change look darker and smaller than the evidence says.
+            # 2 * voxel size is the same "close enough to be the same point"
+            # call the voxel grid itself makes, so the two stages agree.
             keep = dist > float(vcfg["voxel_size"]) * 2.0
             bg_pts, bg_rgb, bg_tags = bg_pts[keep], bg_rgb[keep], bg_tags[keep]
     return bg_pts, bg_rgb, bg_tags, change_pts
@@ -162,6 +177,13 @@ def change_framing(change_pts: list[dict], bg_pts: np.ndarray):
 
 
 def _camera_pos(focus: np.ndarray, radius: float, azimuth: float, elev: float) -> np.ndarray:
+    """Camera position in reconstruction units, orbiting the change region.
+
+    focus/radius come from change_framing() and are in the same units the
+    reconstruction uses. The 2.6 factor is the framing margin: close enough
+    that the change fills the panel, far enough that the bbox and its label
+    are not clipped.
+    """
     a, e = np.radians(azimuth), np.radians(elev)
     d = np.array([np.cos(e) * np.cos(a), np.cos(e) * np.sin(a), np.sin(e)])
     return focus - d * (2.6 * radius)
