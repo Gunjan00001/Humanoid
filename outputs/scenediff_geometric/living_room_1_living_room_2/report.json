@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "video_a": "data/external/scenediff/scenediff_benchmark/data/living_room_1_living_room_2/original_video1.mp4",
+    "video_b": "data/external/scenediff/scenediff_benchmark/data/living_room_1_living_room_2/original_video2.mp4",
+    "backend": "vggt",
+    "model": "~/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-15T14:20:57Z",
+    "config_hash": "530c43b66d5f",
+    "num_frames": 47,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "brown bag",
+      "description": "The brown bag was removed from the table.",
+      "centroid": [
+        -0.33,
+        0.2188,
+        1.031
+      ],
+      "bbox": [
+        -0.5498,
+        0.049,
+        0.7739,
+        -0.0992,
+        0.5063,
+        1.1855
+      ],
+      "from": [
+        -0.33,
+        0.2188,
+        1.031
+      ],
+      "to": null,
+      "confidence": 0.75,
+      "cluster_ids": [
+        1
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00090.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00270.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 45,
+            "file": "b/frame_00270.jpg",
+            "n_valid": 4132,
+            "n_empty": 4129
+          },
+          {
+            "frame": 46,
+            "file": "b/frame_00330.jpg",
+            "n_valid": 1350,
+            "n_empty": 1343
+          },
+          {
+            "frame": 29,
+            "file": "b/frame_00000.jpg",
+            "n_valid": 0,
+            "n_empty": 0
+          }
+        ]
+      }
+    }
+  ],
+  "unverified_changes": []
+}

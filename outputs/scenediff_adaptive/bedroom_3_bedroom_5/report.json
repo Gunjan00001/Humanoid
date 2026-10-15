@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "video_a": "data/external/scenediff/scenediff_benchmark/data/bedroom_3_bedroom_5/original_video1.MOV",
+    "video_b": "data/external/scenediff/scenediff_benchmark/data/bedroom_3_bedroom_5/original_video2.MOV",
+    "backend": "vggt",
+    "model": "~/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-15T10:36:47Z",
+    "config_hash": "798e1549834b",
+    "num_frames": 26,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "fabric surface",
+      "description": "The white smooth surface was replaced by a gray textured fabric.",
+      "centroid": [
+        0.4555,
+        0.2048,
+        0.4837
+      ],
+      "bbox": [
+        0.4282,
+        0.191,
+        0.4451,
+        0.4871,
+        0.223,
+        0.5161
+      ],
+      "from": [
+        0.4555,
+        0.2048,
+        0.4837
+      ],
+      "to": null,
+      "confidence": 0.37,
+      "cluster_ids": [
+        2
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00210.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00290.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 25,
+            "file": "b/frame_00300.jpg",
+            "n_valid": 70,
+            "n_empty": 70
+          },
+          {
+            "frame": 24,
+            "file": "b/frame_00290.jpg",
+            "n_valid": 43,
+            "n_empty": 43
+          },
+          {
+            "frame": 23,
+            "file": "b/frame_00280.jpg",
+            "n_valid": 32,
+            "n_empty": 32
+          }
+        ]
+      }
+    }
+  ],
+  "unverified_changes": []
+}

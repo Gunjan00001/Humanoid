@@ -1,0 +1,30 @@
+{
+  "name": "living_room_29_living_room_30",
+  "video_a": "data/external/scenediff/scenediff_benchmark/data/living_room_29_living_room_30/original_video1.MOV",
+  "video_b": "data/external/scenediff/scenediff_benchmark/data/living_room_29_living_room_30/original_video2.MOV",
+  "n_changes": 1,
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "speckled object",
+      "sentence": "The speckled object was removed from the table.",
+      "confidence": 0.69,
+      "possibly": false,
+      "sentence_source": "report"
+    }
+  ],
+  "n_unverified": 0,
+  "notes": [
+    "Object names come from a vision-language model and can be wrong.",
+    "Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4).",
+    "No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated."
+  ],
+  "files": [
+    "viewer.html",
+    "change.gif",
+    "report.json"
+  ],
+  "generated": "2026-10-15T13:32:41Z",
+  "text": "Compared original_video1.MOV and original_video2.MOV. I found 1 change(s):\n1. Removed: speckled object. The speckled object was removed from the table.\n\nNotes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.\nFiles: viewer.html, change.gif, report.json"
+}

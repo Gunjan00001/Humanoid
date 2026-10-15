@@ -1,0 +1,302 @@
+{
+  "meta": {
+    "video_a": "data/external/scenediff/scenediff_benchmark/data/living_room_15_living_room_16/original_video1.mov",
+    "video_b": "data/external/scenediff/scenediff_benchmark/data/living_room_15_living_room_16/original_video2.MOV",
+    "backend": "vggt",
+    "model": "~/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-15T00:30:33Z",
+    "config_hash": "798e1549834b",
+    "num_frames": 53,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "colorful box",
+      "description": "A colorful box appeared on the white table in the second image.",
+      "centroid": [
+        -0.2167,
+        0.1625,
+        0.9598
+      ],
+      "bbox": [
+        -0.4629,
+        0.0704,
+        0.8657,
+        0.033,
+        0.2194,
+        0.9907
+      ],
+      "from": [
+        -0.2167,
+        0.1625,
+        0.9598
+      ],
+      "to": null,
+      "confidence": 0.75,
+      "cluster_ids": [
+        2
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00250.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00170.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 46,
+            "file": "b/frame_00190.jpg",
+            "n_valid": 351,
+            "n_empty": 218
+          },
+          {
+            "frame": 44,
+            "file": "b/frame_00170.jpg",
+            "n_valid": 111,
+            "n_empty": 111
+          },
+          {
+            "frame": 45,
+            "file": "b/frame_00180.jpg",
+            "n_valid": 112,
+            "n_empty": 110
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "type": "removed",
+      "label": "plastic object",
+      "description": "The white plastic object was removed from the table.",
+      "centroid": [
+        -0.2076,
+        0.4201,
+        0.7358
+      ],
+      "bbox": [
+        -0.28,
+        0.3779,
+        0.6177,
+        -0.121,
+        0.4697,
+        0.8159
+      ],
+      "from": [
+        -0.2076,
+        0.4201,
+        0.7358
+      ],
+      "to": null,
+      "confidence": 0.75,
+      "cluster_ids": [
+        3
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00210.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00250.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 52,
+            "file": "b/frame_00320.jpg",
+            "n_valid": 1097,
+            "n_empty": 1097
+          },
+          {
+            "frame": 50,
+            "file": "b/frame_00270.jpg",
+            "n_valid": 1066,
+            "n_empty": 1066
+          },
+          {
+            "frame": 49,
+            "file": "b/frame_00260.jpg",
+            "n_valid": 912,
+            "n_empty": 912
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "type": "removed",
+      "label": "cork coaster",
+      "description": "The cork coaster and oranges were removed and replaced with a pineapple and tissue box.",
+      "centroid": [
+        -0.0075,
+        -0.1647,
+        0.759
+      ],
+      "bbox": [
+        -0.192,
+        -0.2438,
+        0.665,
+        0.1083,
+        0.0422,
+        0.8281
+      ],
+      "from": [
+        -0.0075,
+        -0.1647,
+        0.759
+      ],
+      "to": null,
+      "confidence": 0.5,
+      "cluster_ids": [
+        4
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00040.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00140.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 42,
+            "file": "b/frame_00140.jpg",
+            "n_valid": 857,
+            "n_empty": 810
+          },
+          {
+            "frame": 36,
+            "file": "b/frame_00080.jpg",
+            "n_valid": 757,
+            "n_empty": 692
+          },
+          {
+            "frame": 39,
+            "file": "b/frame_00110.jpg",
+            "n_valid": 700,
+            "n_empty": 638
+          }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "type": "added",
+      "label": "tissue box",
+      "description": "A tissue box was added to the table.",
+      "centroid": [
+        -0.0051,
+        0.0087,
+        0.6486
+      ],
+      "bbox": [
+        -0.1287,
+        -0.0619,
+        0.5913,
+        0.0872,
+        0.0797,
+        0.7241
+      ],
+      "from": null,
+      "to": [
+        -0.0051,
+        0.0087,
+        0.6486
+      ],
+      "confidence": 0.75,
+      "cluster_ids": [
+        13
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00050.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00060.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 1,
+            "file": "a/frame_00010.jpg",
+            "n_valid": 2426,
+            "n_empty": 2426
+          },
+          {
+            "frame": 3,
+            "file": "a/frame_00030.jpg",
+            "n_valid": 2366,
+            "n_empty": 2366
+          },
+          {
+            "frame": 2,
+            "file": "a/frame_00020.jpg",
+            "n_valid": 2355,
+            "n_empty": 2355
+          }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "type": "added",
+      "label": "pineapple",
+      "description": "A pineapple was added to the table.",
+      "centroid": [
+        0.0325,
+        -0.2004,
+        0.6254
+      ],
+      "bbox": [
+        -0.0108,
+        -0.2428,
+        0.5801,
+        0.074,
+        -0.1559,
+        0.6768
+      ],
+      "from": null,
+      "to": [
+        0.0325,
+        -0.2004,
+        0.6254
+      ],
+      "confidence": 0.75,
+      "cluster_ids": [
+        14
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00010.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00320.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 9,
+            "file": "a/frame_00090.jpg",
+            "n_valid": 693,
+            "n_empty": 693
+          },
+          {
+            "frame": 8,
+            "file": "a/frame_00080.jpg",
+            "n_valid": 611,
+            "n_empty": 611
+          },
+          {
+            "frame": 5,
+            "file": "a/frame_00050.jpg",
+            "n_valid": 607,
+            "n_empty": 607
+          }
+        ]
+      }
+    }
+  ],
+  "unverified_changes": []
+}

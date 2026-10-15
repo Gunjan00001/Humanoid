@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "video_a": "data/external/scenediff/scenediff_benchmark/data/bedroom_1_bedroom_2/original_video1.MOV",
+    "video_b": "data/external/scenediff/scenediff_benchmark/data/bedroom_1_bedroom_2/original_video2.MOV",
+    "backend": "vggt",
+    "model": "~/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-15T00:11:44Z",
+    "config_hash": "798e1549834b",
+    "num_frames": 45,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "white rectangular object",
+      "description": "The white rectangular object was removed from the surface.",
+      "centroid": [
+        0.0676,
+        -0.0356,
+        1.1673
+      ],
+      "bbox": [
+        0.0583,
+        -0.0601,
+        1.1572,
+        0.0789,
+        -0.0107,
+        1.1768
+      ],
+      "from": [
+        0.0676,
+        -0.0356,
+        1.1673
+      ],
+      "to": null,
+      "confidence": 0.29,
+      "cluster_ids": [
+        2
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00070.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00370.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 40,
+            "file": "b/frame_00370.jpg",
+            "n_valid": 14,
+            "n_empty": 14
+          },
+          {
+            "frame": 31,
+            "file": "b/frame_00220.jpg",
+            "n_valid": 9,
+            "n_empty": 9
+          },
+          {
+            "frame": 32,
+            "file": "b/frame_00230.jpg",
+            "n_valid": 7,
+            "n_empty": 7
+          }
+        ]
+      }
+    }
+  ],
+  "unverified_changes": []
+}

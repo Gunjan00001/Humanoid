@@ -1,0 +1,9 @@
+# Change summary
+
+```
+Compared original_video1.mp4 and original_video2.mp4. I found 1 change(s):
+1. Removed: brown bag. The brown bag is absent in video B.
+
+Notes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.
+Files: viewer.html, change.gif, report.json
+```

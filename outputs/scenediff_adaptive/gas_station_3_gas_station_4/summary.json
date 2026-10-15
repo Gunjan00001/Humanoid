@@ -1,0 +1,20 @@
+{
+  "name": "gas_station_3_gas_station_4",
+  "video_a": "data/external/scenediff/scenediff_benchmark/data/gas_station_3_gas_station_4/original_video1.mp4",
+  "video_b": "data/external/scenediff/scenediff_benchmark/data/gas_station_3_gas_station_4/original_video2.mp4",
+  "n_changes": 0,
+  "changes": [],
+  "n_unverified": 0,
+  "notes": [
+    "Object names come from a vision-language model and can be wrong.",
+    "Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4).",
+    "No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated."
+  ],
+  "files": [
+    "viewer.html",
+    "change.gif",
+    "report.json"
+  ],
+  "generated": "2026-10-14T23:15:44Z",
+  "text": "Compared original_video1.mp4 and original_video2.mp4. No changes found.\n\nNotes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.\nFiles: viewer.html, change.gif, report.json"
+}

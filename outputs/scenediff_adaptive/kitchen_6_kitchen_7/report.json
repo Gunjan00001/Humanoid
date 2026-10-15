@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "video_a": "data/external/scenediff/scenediff_benchmark/data/kitchen_6_kitchen_7/original_video1.mp4",
+    "video_b": "data/external/scenediff/scenediff_benchmark/data/kitchen_6_kitchen_7/original_video2.mp4",
+    "backend": "vggt",
+    "model": "~/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-15T11:44:59Z",
+    "config_hash": "798e1549834b",
+    "num_frames": 52,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "jar with black lid",
+      "description": "The small jar with a black lid was removed from the table.",
+      "centroid": [
+        0.9796,
+        0.046,
+        0.5386
+      ],
+      "bbox": [
+        0.9697,
+        0.0041,
+        0.5269,
+        0.9912,
+        0.1031,
+        0.5645
+      ],
+      "from": [
+        0.9796,
+        0.046,
+        0.5386
+      ],
+      "to": null,
+      "confidence": 0.4,
+      "cluster_ids": [
+        12
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00120.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00180.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 28,
+            "file": "b/frame_00080.jpg",
+            "n_valid": 90,
+            "n_empty": 90
+          },
+          {
+            "frame": 29,
+            "file": "b/frame_00100.jpg",
+            "n_valid": 90,
+            "n_empty": 90
+          },
+          {
+            "frame": 30,
+            "file": "b/frame_00120.jpg",
+            "n_valid": 90,
+            "n_empty": 90
+          }
+        ]
+      }
+    }
+  ],
+  "unverified_changes": []
+}

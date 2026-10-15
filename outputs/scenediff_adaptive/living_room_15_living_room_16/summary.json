@@ -1,0 +1,66 @@
+{
+  "name": "living_room_15_living_room_16",
+  "video_a": "data/external/scenediff/scenediff_benchmark/data/living_room_15_living_room_16/original_video1.mov",
+  "video_b": "data/external/scenediff/scenediff_benchmark/data/living_room_15_living_room_16/original_video2.MOV",
+  "n_changes": 5,
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "colorful box",
+      "sentence": "The colorful box was removed.",
+      "confidence": 0.75,
+      "possibly": false,
+      "sentence_source": "template"
+    },
+    {
+      "id": 2,
+      "type": "removed",
+      "label": "plastic object",
+      "sentence": "The white plastic object was removed from the table.",
+      "confidence": 0.75,
+      "possibly": false,
+      "sentence_source": "report"
+    },
+    {
+      "id": 3,
+      "type": "removed",
+      "label": "cork coaster",
+      "sentence": "The cork coaster was removed.",
+      "confidence": 0.5,
+      "possibly": false,
+      "sentence_source": "template"
+    },
+    {
+      "id": 4,
+      "type": "added",
+      "label": "tissue box",
+      "sentence": "A tissue box was added to the table.",
+      "confidence": 0.75,
+      "possibly": false,
+      "sentence_source": "report"
+    },
+    {
+      "id": 5,
+      "type": "added",
+      "label": "pineapple",
+      "sentence": "A pineapple was added to the table.",
+      "confidence": 0.75,
+      "possibly": false,
+      "sentence_source": "report"
+    }
+  ],
+  "n_unverified": 0,
+  "notes": [
+    "Object names come from a vision-language model and can be wrong.",
+    "Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4).",
+    "No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated."
+  ],
+  "files": [
+    "viewer.html",
+    "change.gif",
+    "report.json"
+  ],
+  "generated": "2026-10-15T00:31:17Z",
+  "text": "Compared original_video1.mov and original_video2.MOV. I found 5 change(s):\n1. Removed: colorful box. The colorful box was removed.\n2. Removed: plastic object. The white plastic object was removed from the table.\n3. Removed: cork coaster. The cork coaster was removed.\n4. Added: tissue box. A tissue box was added to the table.\n5. Added: pineapple. A pineapple was added to the table.\n\nNotes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.\nFiles: viewer.html, change.gif, report.json"
+}

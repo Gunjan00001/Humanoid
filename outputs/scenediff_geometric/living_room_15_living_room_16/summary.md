@@ -1,0 +1,13 @@
+# Change summary
+
+```
+Compared original_video1.mov and original_video2.MOV. I found 5 change(s):
+1. Removed: colorful box. The colorful box was removed.
+2. Removed: plastic object. The white plastic object was removed from the table.
+3. Removed: cork coaster. The cork coaster was removed.
+4. Added: tissue box. A tissue box was added to the table.
+5. Added: pineapple. A pineapple was added to the table.
+
+Notes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.
+Files: viewer.html, change.gif, report.json
+```

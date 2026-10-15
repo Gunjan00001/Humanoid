@@ -1,0 +1,302 @@
+{
+  "meta": {
+    "video_a": "data/scene2/a.mp4",
+    "video_b": "data/scene2/b.mp4",
+    "backend": "vggt",
+    "model": "~/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-15T13:34:20Z",
+    "config_hash": "798e1549834b",
+    "num_frames": 35,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "coconut",
+      "description": "The coconut was removed from the table.",
+      "centroid": [
+        -0.0877,
+        -0.3298,
+        1.0811
+      ],
+      "bbox": [
+        -0.3801,
+        -0.4873,
+        1.0078,
+        0.1294,
+        -0.1909,
+        1.2451
+      ],
+      "from": [
+        -0.0877,
+        -0.3298,
+        1.0811
+      ],
+      "to": null,
+      "confidence": 0.75,
+      "cluster_ids": [
+        1
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00072.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00040.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 27,
+            "file": "b/frame_00120.jpg",
+            "n_valid": 6137,
+            "n_empty": 6137
+          },
+          {
+            "frame": 28,
+            "file": "b/frame_00128.jpg",
+            "n_valid": 6137,
+            "n_empty": 6137
+          },
+          {
+            "frame": 29,
+            "file": "b/frame_00136.jpg",
+            "n_valid": 6137,
+            "n_empty": 6137
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "type": "removed",
+      "label": "apple",
+      "description": "The apple was removed from the table.",
+      "centroid": [
+        0.1859,
+        -0.0555,
+        0.9854
+      ],
+      "bbox": [
+        0.0801,
+        -0.1131,
+        0.9194,
+        0.3176,
+        0.0156,
+        1.0928
+      ],
+      "from": [
+        0.1859,
+        -0.0555,
+        0.9854
+      ],
+      "to": null,
+      "confidence": 0.5,
+      "cluster_ids": [
+        2
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00088.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 12,
+            "file": "b/frame_00000.jpg",
+            "n_valid": 569,
+            "n_empty": 569
+          },
+          {
+            "frame": 13,
+            "file": "b/frame_00008.jpg",
+            "n_valid": 569,
+            "n_empty": 569
+          },
+          {
+            "frame": 14,
+            "file": "b/frame_00016.jpg",
+            "n_valid": 569,
+            "n_empty": 569
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "type": "removed",
+      "label": "small dark speck",
+      "description": "The small dark speck on the surface was removed between the two images.",
+      "centroid": [
+        0.3995,
+        0.1211,
+        0.8952
+      ],
+      "bbox": [
+        0.3403,
+        0.0215,
+        0.8423,
+        0.4429,
+        0.1986,
+        0.9644
+      ],
+      "from": [
+        0.3995,
+        0.1211,
+        0.8952
+      ],
+      "to": null,
+      "confidence": 0.75,
+      "cluster_ids": [
+        4
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00040.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00032.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 14,
+            "file": "b/frame_00016.jpg",
+            "n_valid": 656,
+            "n_empty": 656
+          },
+          {
+            "frame": 15,
+            "file": "b/frame_00024.jpg",
+            "n_valid": 656,
+            "n_empty": 656
+          },
+          {
+            "frame": 34,
+            "file": "b/frame_00176.jpg",
+            "n_valid": 656,
+            "n_empty": 656
+          }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "type": "added",
+      "label": "round object",
+      "description": "The round object was removed from the table surface.",
+      "centroid": [
+        -0.0919,
+        -0.2472,
+        1.0909
+      ],
+      "bbox": [
+        -0.1251,
+        -0.2798,
+        1.0791,
+        -0.0646,
+        -0.2281,
+        1.0986
+      ],
+      "from": null,
+      "to": [
+        -0.0919,
+        -0.2472,
+        1.0909
+      ],
+      "confidence": 0.36,
+      "cluster_ids": [
+        6
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00088.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 0,
+            "file": "a/frame_00000.jpg",
+            "n_valid": 67,
+            "n_empty": 67
+          },
+          {
+            "frame": 1,
+            "file": "a/frame_00008.jpg",
+            "n_valid": 67,
+            "n_empty": 67
+          },
+          {
+            "frame": 2,
+            "file": "a/frame_00016.jpg",
+            "n_valid": 67,
+            "n_empty": 67
+          }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "type": "added",
+      "label": "finger",
+      "description": "A finger was added to the table surface in the second image.",
+      "centroid": [
+        0.2848,
+        0.0564,
+        0.9208
+      ],
+      "bbox": [
+        0.2661,
+        0.0337,
+        0.9058,
+        0.2976,
+        0.0764,
+        0.9312
+      ],
+      "from": null,
+      "to": [
+        0.2848,
+        0.0564,
+        0.9208
+      ],
+      "confidence": 0.33,
+      "cluster_ids": [
+        8
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00088.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 2,
+            "file": "a/frame_00016.jpg",
+            "n_valid": 48,
+            "n_empty": 48
+          },
+          {
+            "frame": 3,
+            "file": "a/frame_00024.jpg",
+            "n_valid": 48,
+            "n_empty": 48
+          },
+          {
+            "frame": 4,
+            "file": "a/frame_00032.jpg",
+            "n_valid": 48,
+            "n_empty": 48
+          }
+        ]
+      }
+    }
+  ],
+  "unverified_changes": []
+}

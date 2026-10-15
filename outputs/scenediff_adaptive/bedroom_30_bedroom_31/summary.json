@@ -1,0 +1,192 @@
+{
+  "name": "bedroom_30_bedroom_31",
+  "video_a": "data/external/scenediff/scenediff_benchmark/data/bedroom_30_bedroom_31/original_video1.mov",
+  "video_b": "data/external/scenediff/scenediff_benchmark/data/bedroom_30_bedroom_31/original_video2.mov",
+  "n_changes": 19,
+  "changes": [
+    {
+      "id": 1,
+      "type": "moved",
+      "label": "wall corner",
+      "sentence": "The wall corner moved slightly to the right",
+      "confidence": 0.75,
+      "possibly": false,
+      "sentence_source": "report"
+    },
+    {
+      "id": 2,
+      "type": "moved",
+      "label": "wall",
+      "sentence": "The wall moved to a different position between the two videos.",
+      "confidence": 0.51,
+      "possibly": false,
+      "sentence_source": "template"
+    },
+    {
+      "id": 3,
+      "type": "removed",
+      "label": "plush toy",
+      "sentence": "Possibly the plush toy was removed.",
+      "confidence": 0.29,
+      "possibly": true,
+      "sentence_source": "template"
+    },
+    {
+      "id": 4,
+      "type": "removed",
+      "label": "small dark object",
+      "sentence": "The small dark object in the bottom right corner was removed.",
+      "confidence": 0.68,
+      "possibly": false,
+      "sentence_source": "report"
+    },
+    {
+      "id": 5,
+      "type": "removed",
+      "label": "paper document",
+      "sentence": "The paper document was removed from the surface.",
+      "confidence": 0.5,
+      "possibly": false,
+      "sentence_source": "report"
+    },
+    {
+      "id": 6,
+      "type": "removed",
+      "label": "surface color",
+      "sentence": "The surface color was removed.",
+      "confidence": 0.61,
+      "possibly": false,
+      "sentence_source": "template"
+    },
+    {
+      "id": 7,
+      "type": "removed",
+      "label": "black rectangular object",
+      "sentence": "Possibly the black rectangular object was removed from the table.",
+      "confidence": 0.29,
+      "possibly": true,
+      "sentence_source": "report"
+    },
+    {
+      "id": 8,
+      "type": "removed",
+      "label": "paper",
+      "sentence": "The paper was removed.",
+      "confidence": 0.41,
+      "possibly": false,
+      "sentence_source": "template"
+    },
+    {
+      "id": 9,
+      "type": "added",
+      "label": "table edge",
+      "sentence": "A table edge appeared in the second image.",
+      "confidence": 0.4,
+      "possibly": false,
+      "sentence_source": "report"
+    },
+    {
+      "id": 10,
+      "type": "added",
+      "label": "edge of object",
+      "sentence": "Possibly an edge of an object appeared in the second image that was not present in the first.",
+      "confidence": 0.35,
+      "possibly": true,
+      "sentence_source": "report"
+    },
+    {
+      "id": 11,
+      "type": "added",
+      "label": "thin dark line",
+      "sentence": "A thin dark line appeared on the table surface in the second image.",
+      "confidence": 0.5,
+      "possibly": false,
+      "sentence_source": "report"
+    },
+    {
+      "id": 12,
+      "type": "added",
+      "label": "shadow",
+      "sentence": "Possibly a shadow appeared in the second image that was not present in the first.",
+      "confidence": 0.32,
+      "possibly": true,
+      "sentence_source": "report"
+    },
+    {
+      "id": 13,
+      "type": "added",
+      "label": "vertical mark",
+      "sentence": "Possibly the vertical mark appeared.",
+      "confidence": 0.31,
+      "possibly": true,
+      "sentence_source": "template"
+    },
+    {
+      "id": 14,
+      "type": "added",
+      "label": "table edge",
+      "sentence": "The table edge appeared.",
+      "confidence": 0.5,
+      "possibly": false,
+      "sentence_source": "template"
+    },
+    {
+      "id": 15,
+      "type": "added",
+      "label": "black object",
+      "sentence": "Possibly a black object appeared in the second image.",
+      "confidence": 0.35,
+      "possibly": true,
+      "sentence_source": "report"
+    },
+    {
+      "id": 16,
+      "type": "added",
+      "label": "white box",
+      "sentence": "A white box-like object appeared in the second image.",
+      "confidence": 0.44,
+      "possibly": false,
+      "sentence_source": "report"
+    },
+    {
+      "id": 17,
+      "type": "added",
+      "label": "panda card",
+      "sentence": "Possibly a panda card was added to the surface.",
+      "confidence": 0.34,
+      "possibly": true,
+      "sentence_source": "report"
+    },
+    {
+      "id": 18,
+      "type": "added",
+      "label": "a plain surface with no visible object",
+      "sentence": "A a plain surface with no visible object appeared where the wall corner was before it moved",
+      "confidence": 0.75,
+      "possibly": false,
+      "sentence_source": "report"
+    },
+    {
+      "id": 19,
+      "type": "added",
+      "label": "a plain light surface with no visible objects",
+      "sentence": "A a plain light surface with no visible objects appeared where the wall was before it moved",
+      "confidence": 0.4,
+      "possibly": false,
+      "sentence_source": "report"
+    }
+  ],
+  "n_unverified": 0,
+  "notes": [
+    "Object names come from a vision-language model and can be wrong.",
+    "Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4).",
+    "No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated."
+  ],
+  "files": [
+    "viewer.html",
+    "change.gif",
+    "report.json"
+  ],
+  "generated": "2026-10-15T10:33:20Z",
+  "text": "Compared original_video1.mov and original_video2.mov. I found 19 change(s):\n1. Moved: wall corner. The wall corner moved slightly to the right\n2. Moved: wall. The wall moved to a different position between the two videos.\n3. Removed: plush toy. Possibly the plush toy was removed.\n4. Removed: small dark object. The small dark object in the bottom right corner was removed.\n5. Removed: paper document. The paper document was removed from the surface.\n6. Removed: surface color. The surface color was removed.\n7. Removed: black rectangular object. Possibly the black rectangular object was removed from the table.\n8. Removed: paper. The paper was removed.\n9. Added: table edge. A table edge appeared in the second image.\n10. Added: edge of object. Possibly an edge of an object appeared in the second image that was not present in the first.\n11. Added: thin dark line. A thin dark line appeared on the table surface in the second image.\n12. Added: shadow. Possibly a shadow appeared in the second image that was not present in the first.\n13. Added: vertical mark. Possibly the vertical mark appeared.\n14. Added: table edge. The table edge appeared.\n15. Added: black object. Possibly a black object appeared in the second image.\n16. Added: white box. A white box-like object appeared in the second image.\n17. Added: panda card. Possibly a panda card was added to the surface.\n18. Added: a plain surface with no visible object. A a plain surface with no visible object appeared where the wall corner was before it moved\n19. Added: a plain light surface with no visible objects. A a plain light surface with no visible objects appeared where the wall was before it moved\n\nNotes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.\nFiles: viewer.html, change.gif, report.json"
+}

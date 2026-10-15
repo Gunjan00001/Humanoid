@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "video_a": "data/external/scenediff/scenediff_benchmark/data/living_room_17_living_room_18/original_video1.MOV",
+    "video_b": "data/external/scenediff/scenediff_benchmark/data/living_room_17_living_room_18/original_video2.MOV",
+    "backend": "vggt",
+    "model": "~/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-15T00:55:38Z",
+    "config_hash": "798e1549834b",
+    "num_frames": 57,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "cushion",
+      "description": "The patterned cushion was removed from the sofa.",
+      "centroid": [
+        0.3819,
+        -0.2954,
+        0.9979
+      ],
+      "bbox": [
+        0.2754,
+        -0.4124,
+        0.9761,
+        0.5044,
+        -0.161,
+        1.041
+      ],
+      "from": [
+        0.3819,
+        -0.2954,
+        0.9979
+      ],
+      "to": null,
+      "confidence": 0.75,
+      "cluster_ids": [
+        2
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00100.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00020.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 34,
+            "file": "b/frame_00080.jpg",
+            "n_valid": 2619,
+            "n_empty": 2619
+          },
+          {
+            "frame": 33,
+            "file": "b/frame_00060.jpg",
+            "n_valid": 2245,
+            "n_empty": 2245
+          },
+          {
+            "frame": 35,
+            "file": "b/frame_00090.jpg",
+            "n_valid": 2000,
+            "n_empty": 2000
+          }
+        ]
+      }
+    }
+  ],
+  "unverified_changes": []
+}

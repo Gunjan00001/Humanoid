@@ -1,0 +1,30 @@
+{
+  "name": "bedroom_1_bedroom_2",
+  "video_a": "data/external/scenediff/scenediff_benchmark/data/bedroom_1_bedroom_2/original_video1.MOV",
+  "video_b": "data/external/scenediff/scenediff_benchmark/data/bedroom_1_bedroom_2/original_video2.MOV",
+  "n_changes": 1,
+  "changes": [
+    {
+      "id": 1,
+      "type": "removed",
+      "label": "white rectangular object",
+      "sentence": "Possibly the white rectangular object was removed from the surface.",
+      "confidence": 0.29,
+      "possibly": true,
+      "sentence_source": "report"
+    }
+  ],
+  "n_unverified": 0,
+  "notes": [
+    "Object names come from a vision-language model and can be wrong.",
+    "Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4).",
+    "No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated."
+  ],
+  "files": [
+    "viewer.html",
+    "change.gif",
+    "report.json"
+  ],
+  "generated": "2026-10-15T14:20:56Z",
+  "text": "Compared original_video1.MOV and original_video2.MOV. I found 1 change(s):\n1. Removed: white rectangular object. Possibly the white rectangular object was removed from the surface.\n\nNotes: Object names come from a vision-language model and can be wrong. Detection thresholds were tuned on the development scenes (demo, scene2, scene3, scene4). No absolute distances are reported (the reconstruction scale is not metric-validated); directions refer to the before/after videos as stated.\nFiles: viewer.html, change.gif, report.json"
+}

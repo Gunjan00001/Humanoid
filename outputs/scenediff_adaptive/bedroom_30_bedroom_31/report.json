@@ -1,0 +1,1064 @@
+{
+  "meta": {
+    "video_a": "data/external/scenediff/scenediff_benchmark/data/bedroom_30_bedroom_31/original_video1.mov",
+    "video_b": "data/external/scenediff/scenediff_benchmark/data/bedroom_30_bedroom_31/original_video2.mov",
+    "backend": "vggt",
+    "model": "~/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-15T10:32:22Z",
+    "config_hash": "798e1549834b",
+    "num_frames": 23,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [
+    {
+      "id": 1,
+      "type": "moved",
+      "label": "wall corner",
+      "description": "the wall corner moved slightly to the right",
+      "centroid": [
+        -0.7418,
+        0.0048,
+        0.8252
+      ],
+      "bbox": [
+        -0.8271,
+        -0.1004,
+        0.6382,
+        -0.6274,
+        0.17,
+        0.9565
+      ],
+      "from": [
+        -0.7418,
+        0.0048,
+        0.8252
+      ],
+      "to": [
+        -0.7569,
+        0.3665,
+        1.0786
+      ],
+      "confidence": 0.75,
+      "cluster_ids": [
+        1,
+        70
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00100.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 21,
+            "file": "b/frame_00090.jpg",
+            "n_valid": 1224,
+            "n_empty": 239
+          },
+          {
+            "frame": 22,
+            "file": "b/frame_00100.jpg",
+            "n_valid": 1224,
+            "n_empty": 221
+          },
+          {
+            "frame": 20,
+            "file": "b/frame_00080.jpg",
+            "n_valid": 1224,
+            "n_empty": 219
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "type": "moved",
+      "label": "wall",
+      "description": "the wall remained in the same position with no visible object movement",
+      "centroid": [
+        -0.2423,
+        -0.57,
+        0.5823
+      ],
+      "bbox": [
+        -0.3052,
+        -0.5923,
+        0.5439,
+        -0.1786,
+        -0.5381,
+        0.6035
+      ],
+      "from": [
+        -0.2423,
+        -0.57,
+        0.5823
+      ],
+      "to": [
+        -0.5582,
+        0.1167,
+        1.0395
+      ],
+      "confidence": 0.51,
+      "cluster_ids": [
+        33,
+        75
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00040.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00070.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 12,
+            "file": "b/frame_00000.jpg",
+            "n_valid": 88,
+            "n_empty": 88
+          },
+          {
+            "frame": 13,
+            "file": "b/frame_00010.jpg",
+            "n_valid": 88,
+            "n_empty": 88
+          },
+          {
+            "frame": 14,
+            "file": "b/frame_00020.jpg",
+            "n_valid": 88,
+            "n_empty": 88
+          }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "type": "removed",
+      "label": "plush toy",
+      "description": "A plush toy appeared on the surface in the second image.",
+      "centroid": [
+        -0.0355,
+        0.1545,
+        0.2609
+      ],
+      "bbox": [
+        -0.0582,
+        0.1357,
+        0.2271,
+        -0.0273,
+        0.171,
+        0.291
+      ],
+      "from": [
+        -0.0355,
+        0.1545,
+        0.2609
+      ],
+      "to": null,
+      "confidence": 0.29,
+      "cluster_ids": [
+        44
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00100.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 20,
+            "file": "b/frame_00080.jpg",
+            "n_valid": 25,
+            "n_empty": 25
+          },
+          {
+            "frame": 21,
+            "file": "b/frame_00090.jpg",
+            "n_valid": 25,
+            "n_empty": 25
+          },
+          {
+            "frame": 22,
+            "file": "b/frame_00100.jpg",
+            "n_valid": 25,
+            "n_empty": 25
+          }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "type": "removed",
+      "label": "small dark object",
+      "description": "The small dark object in the bottom right corner was removed.",
+      "centroid": [
+        0.3774,
+        -0.6694,
+        0.7255
+      ],
+      "bbox": [
+        0.2659,
+        -0.708,
+        0.6646,
+        0.4812,
+        -0.6323,
+        0.7705
+      ],
+      "from": [
+        0.3774,
+        -0.6694,
+        0.7255
+      ],
+      "to": null,
+      "confidence": 0.68,
+      "cluster_ids": [
+        54
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00040.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00070.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 12,
+            "file": "b/frame_00000.jpg",
+            "n_valid": 258,
+            "n_empty": 258
+          },
+          {
+            "frame": 13,
+            "file": "b/frame_00010.jpg",
+            "n_valid": 258,
+            "n_empty": 258
+          },
+          {
+            "frame": 14,
+            "file": "b/frame_00020.jpg",
+            "n_valid": 258,
+            "n_empty": 258
+          }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "type": "removed",
+      "label": "paper document",
+      "description": "The paper document was removed from the surface.",
+      "centroid": [
+        0.3429,
+        -0.6908,
+        0.2375
+      ],
+      "bbox": [
+        0.3213,
+        -0.7729,
+        0.1637,
+        0.363,
+        -0.6006,
+        0.3315
+      ],
+      "from": [
+        0.3429,
+        -0.6908,
+        0.2375
+      ],
+      "to": null,
+      "confidence": 0.5,
+      "cluster_ids": [
+        58
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00080.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 12,
+            "file": "b/frame_00000.jpg",
+            "n_valid": 136,
+            "n_empty": 136
+          },
+          {
+            "frame": 13,
+            "file": "b/frame_00010.jpg",
+            "n_valid": 136,
+            "n_empty": 136
+          },
+          {
+            "frame": 14,
+            "file": "b/frame_00020.jpg",
+            "n_valid": 136,
+            "n_empty": 136
+          }
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "type": "removed",
+      "label": "surface color",
+      "description": "The surface color changed from beige to white.",
+      "centroid": [
+        0.4294,
+        0.2221,
+        0.4162
+      ],
+      "bbox": [
+        0.353,
+        0.1914,
+        0.3696,
+        0.4937,
+        0.2474,
+        0.4546
+      ],
+      "from": [
+        0.4294,
+        0.2221,
+        0.4162
+      ],
+      "to": null,
+      "confidence": 0.61,
+      "cluster_ids": [
+        61
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00010.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00100.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 21,
+            "file": "b/frame_00090.jpg",
+            "n_valid": 215,
+            "n_empty": 215
+          },
+          {
+            "frame": 22,
+            "file": "b/frame_00100.jpg",
+            "n_valid": 215,
+            "n_empty": 215
+          },
+          {
+            "frame": 20,
+            "file": "b/frame_00080.jpg",
+            "n_valid": 142,
+            "n_empty": 142
+          }
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "type": "removed",
+      "label": "black rectangular object",
+      "description": "The black rectangular object was removed from the table.",
+      "centroid": [
+        0.3962,
+        0.141,
+        1.4896
+      ],
+      "bbox": [
+        0.3843,
+        0.1146,
+        1.4766,
+        0.4055,
+        0.1622,
+        1.4971
+      ],
+      "from": [
+        0.3962,
+        0.141,
+        1.4896
+      ],
+      "to": null,
+      "confidence": 0.29,
+      "cluster_ids": [
+        63
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00100.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 17,
+            "file": "b/frame_00050.jpg",
+            "n_valid": 27,
+            "n_empty": 27
+          },
+          {
+            "frame": 18,
+            "file": "b/frame_00060.jpg",
+            "n_valid": 27,
+            "n_empty": 27
+          },
+          {
+            "frame": 19,
+            "file": "b/frame_00070.jpg",
+            "n_valid": 27,
+            "n_empty": 27
+          }
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "type": "removed",
+      "label": "paper",
+      "description": "A piece of paper appeared on the table.",
+      "centroid": [
+        0.5442,
+        0.0456,
+        1.1059
+      ],
+      "bbox": [
+        0.5254,
+        0.0195,
+        1.0439,
+        0.5693,
+        0.0624,
+        1.1621
+      ],
+      "from": [
+        0.5442,
+        0.0456,
+        1.1059
+      ],
+      "to": null,
+      "confidence": 0.41,
+      "cluster_ids": [
+        66
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00000.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00100.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 16,
+            "file": "b/frame_00040.jpg",
+            "n_valid": 96,
+            "n_empty": 96
+          },
+          {
+            "frame": 17,
+            "file": "b/frame_00050.jpg",
+            "n_valid": 96,
+            "n_empty": 96
+          },
+          {
+            "frame": 18,
+            "file": "b/frame_00060.jpg",
+            "n_valid": 96,
+            "n_empty": 96
+          }
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "type": "added",
+      "label": "table edge",
+      "description": "A table edge appeared in the second image.",
+      "centroid": [
+        -0.6799,
+        0.4445,
+        0.8387
+      ],
+      "bbox": [
+        -0.7046,
+        0.4165,
+        0.7559,
+        -0.6431,
+        0.4841,
+        0.9341
+      ],
+      "from": null,
+      "to": [
+        -0.6799,
+        0.4445,
+        0.8387
+      ],
+      "confidence": 0.4,
+      "cluster_ids": [
+        73
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00010.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00100.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 0,
+            "file": "a/frame_00000.jpg",
+            "n_valid": 91,
+            "n_empty": 91
+          },
+          {
+            "frame": 1,
+            "file": "a/frame_00010.jpg",
+            "n_valid": 91,
+            "n_empty": 91
+          },
+          {
+            "frame": 2,
+            "file": "a/frame_00020.jpg",
+            "n_valid": 1,
+            "n_empty": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "type": "added",
+      "label": "edge of object",
+      "description": "An edge of an object appeared in the second image that was not present in the first.",
+      "centroid": [
+        -0.6586,
+        0.1609,
+        0.735
+      ],
+      "bbox": [
+        -0.7031,
+        0.1273,
+        0.6807,
+        -0.623,
+        0.1875,
+        0.8013
+      ],
+      "from": null,
+      "to": [
+        -0.6586,
+        0.1609,
+        0.735
+      ],
+      "confidence": 0.35,
+      "cluster_ids": [
+        74
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00040.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00060.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 0,
+            "file": "a/frame_00000.jpg",
+            "n_valid": 63,
+            "n_empty": 63
+          },
+          {
+            "frame": 1,
+            "file": "a/frame_00010.jpg",
+            "n_valid": 63,
+            "n_empty": 63
+          },
+          {
+            "frame": 2,
+            "file": "a/frame_00020.jpg",
+            "n_valid": 63,
+            "n_empty": 63
+          }
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "type": "added",
+      "label": "thin dark line",
+      "description": "A thin dark line appeared on the table surface in the second image.",
+      "centroid": [
+        -0.3146,
+        -0.2717,
+        0.7915
+      ],
+      "bbox": [
+        -0.4746,
+        -0.376,
+        0.6982,
+        -0.1343,
+        -0.2004,
+        0.8647
+      ],
+      "from": null,
+      "to": [
+        -0.3146,
+        -0.2717,
+        0.7915
+      ],
+      "confidence": 0.5,
+      "cluster_ids": [
+        79
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00080.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 0,
+            "file": "a/frame_00000.jpg",
+            "n_valid": 62,
+            "n_empty": 62
+          },
+          {
+            "frame": 1,
+            "file": "a/frame_00010.jpg",
+            "n_valid": 62,
+            "n_empty": 62
+          },
+          {
+            "frame": 2,
+            "file": "a/frame_00020.jpg",
+            "n_valid": 62,
+            "n_empty": 62
+          }
+        ]
+      }
+    },
+    {
+      "id": 12,
+      "type": "added",
+      "label": "shadow",
+      "description": "A shadow appeared in the second image that was not present in the first.",
+      "centroid": [
+        -0.31,
+        -0.1009,
+        0.5556
+      ],
+      "bbox": [
+        -0.3599,
+        -0.1119,
+        0.5269,
+        -0.2773,
+        -0.093,
+        0.583
+      ],
+      "from": null,
+      "to": [
+        -0.31,
+        -0.1009,
+        0.5556
+      ],
+      "confidence": 0.32,
+      "cluster_ids": [
+        92
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00060.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00040.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 0,
+            "file": "a/frame_00000.jpg",
+            "n_valid": 43,
+            "n_empty": 43
+          },
+          {
+            "frame": 1,
+            "file": "a/frame_00010.jpg",
+            "n_valid": 43,
+            "n_empty": 43
+          },
+          {
+            "frame": 2,
+            "file": "a/frame_00020.jpg",
+            "n_valid": 43,
+            "n_empty": 43
+          }
+        ]
+      }
+    },
+    {
+      "id": 13,
+      "type": "added",
+      "label": "vertical mark",
+      "description": "A faint vertical mark appeared on the surface in the second image.",
+      "centroid": [
+        -0.2962,
+        0.2473,
+        0.4683
+      ],
+      "bbox": [
+        -0.3228,
+        0.2169,
+        0.4192,
+        -0.2561,
+        0.2839,
+        0.5083
+      ],
+      "from": null,
+      "to": [
+        -0.2962,
+        0.2473,
+        0.4683
+      ],
+      "confidence": 0.31,
+      "cluster_ids": [
+        94
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00010.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00090.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 0,
+            "file": "a/frame_00000.jpg",
+            "n_valid": 38,
+            "n_empty": 38
+          },
+          {
+            "frame": 1,
+            "file": "a/frame_00010.jpg",
+            "n_valid": 37,
+            "n_empty": 37
+          },
+          {
+            "frame": 2,
+            "file": "a/frame_00020.jpg",
+            "n_valid": 12,
+            "n_empty": 12
+          }
+        ]
+      }
+    },
+    {
+      "id": 14,
+      "type": "added",
+      "label": "table edge",
+      "description": "A table edge became visible in the second image.",
+      "centroid": [
+        -0.0518,
+        -0.1403,
+        0.6763
+      ],
+      "bbox": [
+        -0.2183,
+        -0.1976,
+        0.6221,
+        0.0991,
+        -0.0935,
+        0.7271
+      ],
+      "from": null,
+      "to": [
+        -0.0518,
+        -0.1403,
+        0.6763
+      ],
+      "confidence": 0.5,
+      "cluster_ids": [
+        102
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00070.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00010.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 0,
+            "file": "a/frame_00000.jpg",
+            "n_valid": 31,
+            "n_empty": 31
+          },
+          {
+            "frame": 1,
+            "file": "a/frame_00010.jpg",
+            "n_valid": 31,
+            "n_empty": 31
+          },
+          {
+            "frame": 2,
+            "file": "a/frame_00020.jpg",
+            "n_valid": 31,
+            "n_empty": 31
+          }
+        ]
+      }
+    },
+    {
+      "id": 15,
+      "type": "added",
+      "label": "black object",
+      "description": "A black object appeared in the second image.",
+      "centroid": [
+        -0.0108,
+        -0.772,
+        0.5021
+      ],
+      "bbox": [
+        -0.0521,
+        -0.7876,
+        0.49,
+        0.0216,
+        -0.7529,
+        0.5215
+      ],
+      "from": null,
+      "to": [
+        -0.0108,
+        -0.772,
+        0.5021
+      ],
+      "confidence": 0.35,
+      "cluster_ids": [
+        110
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00080.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00000.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 6,
+            "file": "a/frame_00060.jpg",
+            "n_valid": 59,
+            "n_empty": 59
+          },
+          {
+            "frame": 7,
+            "file": "a/frame_00070.jpg",
+            "n_valid": 59,
+            "n_empty": 59
+          },
+          {
+            "frame": 8,
+            "file": "a/frame_00080.jpg",
+            "n_valid": 59,
+            "n_empty": 59
+          }
+        ]
+      }
+    },
+    {
+      "id": 16,
+      "type": "added",
+      "label": "white box",
+      "description": "A white box-like object appeared in the second image.",
+      "centroid": [
+        0.4301,
+        -0.0755,
+        1.2849
+      ],
+      "bbox": [
+        0.394,
+        -0.1006,
+        1.249,
+        0.4556,
+        -0.0433,
+        1.3115
+      ],
+      "from": null,
+      "to": [
+        0.4301,
+        -0.0755,
+        1.2849
+      ],
+      "confidence": 0.44,
+      "cluster_ids": [
+        121
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00060.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00050.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 0,
+            "file": "a/frame_00000.jpg",
+            "n_valid": 112,
+            "n_empty": 112
+          },
+          {
+            "frame": 1,
+            "file": "a/frame_00010.jpg",
+            "n_valid": 112,
+            "n_empty": 112
+          },
+          {
+            "frame": 2,
+            "file": "a/frame_00020.jpg",
+            "n_valid": 112,
+            "n_empty": 112
+          }
+        ]
+      }
+    },
+    {
+      "id": 17,
+      "type": "added",
+      "label": "panda card",
+      "description": "A panda card was added to the surface.",
+      "centroid": [
+        0.4866,
+        -0.0824,
+        1.1251
+      ],
+      "bbox": [
+        0.438,
+        -0.1019,
+        1.0879,
+        0.5254,
+        -0.0703,
+        1.1396
+      ],
+      "from": null,
+      "to": [
+        0.4866,
+        -0.0824,
+        1.1251
+      ],
+      "confidence": 0.34,
+      "cluster_ids": [
+        124
+      ],
+      "evidence": {
+        "frames_a": [
+          "a/frame_00060.jpg"
+        ],
+        "frames_b": [
+          "b/frame_00050.jpg"
+        ],
+        "confirmed_empty_in": [
+          {
+            "frame": 0,
+            "file": "a/frame_00000.jpg",
+            "n_valid": 56,
+            "n_empty": 56
+          },
+          {
+            "frame": 1,
+            "file": "a/frame_00010.jpg",
+            "n_valid": 56,
+            "n_empty": 56
+          },
+          {
+            "frame": 2,
+            "file": "a/frame_00020.jpg",
+            "n_valid": 56,
+            "n_empty": 56
+          }
+        ]
+      }
+    },
+    {
+      "id": 18,
+      "type": "added",
+      "label": "a plain surface with no visible object",
+      "description": "a a plain surface with no visible object appeared where the wall corner was before it moved",
+      "centroid": [
+        -0.7418,
+        0.0048,
+        0.8252
+      ],
+      "bbox": [
+        -0.8271,
+        -0.1004,
+        0.6382,
+        -0.6274,
+        0.17,
+        0.9565
+      ],
+      "from": null,
+      "to": [
+        -0.7418,
+        0.0048,
+        0.8252
+      ],
+      "confidence": 0.75,
+      "cluster_ids": [
+        900
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    },
+    {
+      "id": 19,
+      "type": "added",
+      "label": "a plain light surface with no visible objects",
+      "description": "a a plain light surface with no visible objects appeared where the wall was before it moved",
+      "centroid": [
+        -0.2423,
+        -0.57,
+        0.5823
+      ],
+      "bbox": [
+        -0.3052,
+        -0.5923,
+        0.5439,
+        -0.1786,
+        -0.5381,
+        0.6035
+      ],
+      "from": null,
+      "to": [
+        -0.2423,
+        -0.57,
+        0.5823
+      ],
+      "confidence": 0.4,
+      "cluster_ids": [
+        901
+      ],
+      "evidence": {
+        "frames_a": [],
+        "frames_b": [],
+        "confirmed_empty_in": []
+      }
+    }
+  ],
+  "unverified_changes": []
+}

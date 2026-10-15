@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "video_a": "data/external/scenediff/scenediff_benchmark/data/laundry_room_3_laundry_room_4/original_video1.MOV",
+    "video_b": "data/external/scenediff/scenediff_benchmark/data/laundry_room_3_laundry_room_4/original_video2.MOV",
+    "backend": "vggt",
+    "model": "~/models/VGGT-1B",
+    "diff_method": "tabletop",
+    "created": "2026-10-15T03:11:24Z",
+    "config_hash": "798e1549834b",
+    "num_frames": 30,
+    "semantics": "vlm-verified",
+    "confidence_note": "confidence is a heuristic in [0,1]: cluster size and change-score (photometric candidates), DINOv2 crop similarity for moved objects; unverified candidates (one video never saw the area) are capped at 0.3. It is not a calibrated probability"
+  },
+  "changes": [],
+  "unverified_changes": []
+}
