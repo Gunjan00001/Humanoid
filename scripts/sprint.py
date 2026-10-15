@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures as cf
+import os
 import json
 import shutil
 import subprocess
@@ -28,7 +29,13 @@ from pathlib import Path
 import yaml
 
 ROOT = Path(__file__).resolve().parent.parent
-PY = "/home/user/miniconda3/envs/spatialdiff/bin/python"
+# Interpreter used for the experiment jobs. Override with SPATIALDIFF_PYTHON
+# when the environment lives somewhere else; the default is the conda env that
+# docs/setup.md creates.
+PY = os.environ.get(
+    "SPATIALDIFF_PYTHON",
+    os.path.expanduser("~/miniconda3/envs/spatialdiff/bin/python"),
+)
 SPRINT = ROOT / "logs" / "sprint"
 (SPRINT / "configs").mkdir(parents=True, exist_ok=True)
 

@@ -3,8 +3,8 @@
 # pairs counted as empty predictions), processable-only numbers. Never evaluates
 # the test slice.
 set -uo pipefail
-cd /home/user/Desktop/Humanoid
-PY=/home/user/miniconda3/envs/spatialdiff/bin/python
+cd "$(dirname "$0")/.."    # repo root, wherever it is checked out
+PY="${SPATIALDIFF_PYTHON:-$HOME/miniconda3/envs/spatialdiff/bin/python}"
 JID="${1:-11367}"
 
 while qstat "$JID" >/dev/null 2>&1; do sleep 30; done

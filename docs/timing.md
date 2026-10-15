@@ -58,7 +58,7 @@ reclassified clusters), counted from the log. Measured rate: verifications
 - **GPU utilization (`nvidia-smi`): not measurable**, no snapshot was
   captured in any log. This number cannot be produced retroactively.
 - From PBS records: 3 concurrent jobs of the same account were running during
-  10802, each **1 GPU** (`otheruser-jobs-…`: 02:05→03:30, 02:09→03:10, 02:34→03:07)
+  10802, each **1 GPU** (three jobs belonging to another user, 02:05→03:30, 02:09→03:10, 02:34→03:07)
   on an 8-GPU node. The job asked for 2 GPUs, so GPU capacity was not the
   blocker; the CPU quota was (see above).
 

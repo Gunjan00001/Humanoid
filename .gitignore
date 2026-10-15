@@ -56,3 +56,6 @@ data/external/
 data/scenediff_benchmark
 outputs/scenediff/
 cache/scenediff/
+
+# Interpreter used by scripts/sprint.py and scripts/finish_c*.sh
+SPATIALDIFF_PYTHON=

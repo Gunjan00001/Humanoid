@@ -2,8 +2,8 @@
 # After the test-slice regeneration job ends: failure list, empty predictions for
 # unprocessable test pairs, then the TEST evaluator exactly once.
 set -uo pipefail
-cd /home/user/Desktop/Humanoid
-PY=/home/user/miniconda3/envs/spatialdiff/bin/python
+cd "$(dirname "$0")/.."    # repo root, wherever it is checked out
+PY="${SPATIALDIFF_PYTHON:-$HOME/miniconda3/envs/spatialdiff/bin/python}"
 JID="${1:-11368}"
 
 while qstat "$JID" >/dev/null 2>&1; do sleep 30; done

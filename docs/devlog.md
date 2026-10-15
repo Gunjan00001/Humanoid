@@ -611,7 +611,7 @@ the automatic mode choice contributed; no held-out output was changed.
   (`f96d3b0…`); local `main` == `origin/main`.
 - **Finding: the persistent `gpu-session` is stale.** `~/.gpu-session/jobid`
   still points at job **10831**, but that job is gone from the queue (a
-  different job, `otheruser-jobs-s*`, now occupies the account's CPUs), so `ready`/`out`
+  different job, another user's work, now occupies the account's CPUs), so `ready`/`out`
   still say `KERNEL_READY` while no server is actually running, a `gpu-send`
   would write `cmd.py` and wait forever. Fix when needed: `gpu-session start
   && gpu-session wait` (holds 4 CPUs and 1 A100 for 12 h; stop the idle session
