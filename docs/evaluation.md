@@ -54,3 +54,28 @@ Likely causes (marked likely, not proven):
 Contributing: bedroom_2_bedroom_3 produced a change but no mask (its change is an
 addition whose annotated frames were not among the projected ones), and gym had
 101 rejected candidates, so the VLM filter is doing most of the work there.
+
+## Which configuration a number came from
+
+The SceneDiff results in this document, both the validation slice and the test
+slice, were produced with the frozen **v1.0.0** configuration. They are not
+restated under any later configuration.
+
+`v1.1.0` adds one thing: `frames.adaptive_sharpness: true`, a fallback that only
+runs when the absolute blur threshold leaves fewer than `min_frames` frames, and
+warns when it fires. On every scene that already worked it produces byte identical
+frames (verified for demo, scene3, scene4, scene5 and scene6), so it cannot change
+a number produced under v1.0.0 on those scenes. It changes exactly one case,
+scene2, which aborted at defaults and now runs.
+
+For completeness, the numbers from the two settings on the SceneDiff validation
+pairs, with the fallback OFF (frozen) and ON (post-hoc diagnostic):
+
+| setting | pairs processed | px/im IoU | obj/im AP | obj/sc AP | TP | FP |
+|---|---|---|---|---|---|---|
+| frozen v1.0.0 | 7 of 20 | 0.0074 | 0.0002 | 0.0000 | 0 | 8 |
+| adaptive fallback ON | 19 of 20 | 0.0578 | 0.0001 | 0.0000 | 0 | 27 |
+
+The fallback makes the pairs processable and produces candidates, but no detection
+reaches 0.5 IoU, so the score stays effectively zero. That is the honest summary:
+the frame budget was an upstream blocker, not the reason for the low score.
