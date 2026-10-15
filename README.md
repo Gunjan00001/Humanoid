@@ -26,6 +26,38 @@ python detect.py --a data/a.mp4 --b data/b.mp4 --name demo
 `outputs/demo/`: `report.md`, `summary.*`, `change.gif`, `viewer.html`,
 `scene_mesh.ply`.
 
+## 5 minute reviewer path
+
+1. Watch [`outputs/scene4/change.gif`](outputs/scene4/change.gif): the apple moves,
+   the scissors are removed. This is the pipeline working on its cleanest scene.
+2. Read [`outputs/scene4/summary.txt`](outputs/scene4/summary.txt), then
+   [`outputs/scene4/report.json`](outputs/scene4/report.json). The summary is built
+   only from the report, so the two always agree.
+3. Open the interactive viewer (GitHub Pages):
+   [`outputs/scene4/viewer.html`](https://gunjan00001.github.io/Humanoid/outputs/scene4/viewer.html).
+4. Read the held-out result in [docs/heldout.md](docs/heldout.md). scene5 and
+   scene6 were pre-registered, run **once each**, and never re-run. This is the
+   honest number: 1 of 2 and 1 of 3.
+5. Skim [DEEPDIVE.md](DEEPDIVE.md) section 6, what failed and why, then section 5,
+   the decision log.
+
+If you read code: [docs/code_map.md](docs/code_map.md) has the reading order and
+the data flow between stages.
+
+## Repository map
+
+| path | what is in it |
+|---|---|
+| `detect.py` | the entry point; runs the stages in order |
+| `src/` | the pipeline, one module per stage, plus shared geometry helpers |
+| `configs/default.yaml` | **every** threshold in the pipeline, one global file, commented |
+| `docs/` | one topic per file: results, held-out protocol, evaluation, setup, timing |
+| `DEEPDIVE.md` | the full teaching document: concepts, decisions, results, mistakes |
+| `outputs/<scene>/` | one directory per run: `report.json`, `summary.txt`, `viewer.html`, `change.gif`, composites |
+| `data/<scene>/` | the recordings plus `ground_truth.json` and the human-resolved `matches.json` |
+| `scripts/` | scoring, checks and figures; not needed for a normal run |
+| `tests/` | invariant tests, no GPU required |
+
 ## Challenge requirements and where to find them
 
 | requirement | where it is |
@@ -211,12 +243,36 @@ python src/visualize.py --config configs/default.yaml \
 
 ## More evidence
 
+[`DEEPDIVE.md`](DEEPDIVE.md) is the teaching document: the concepts behind each
+piece, the stage-by-stage walkthrough, the decision log, what worked and what
+failed with numbers, the mistakes and how they were caught, honest limits, and
+interview preparation. [`docs/code_map.md`](docs/code_map.md) is the code layout,
+the reading order, and the files each stage reads and writes.
+
 Benchmarks and sprint logs live in docs: [`docs/results.md`](docs/results.md)
 (all scenes), [`docs/heldout.md`](docs/heldout.md) (held-out protocol),
 [`docs/accuracy.md`](docs/accuracy.md) (accuracy sprint),
 [`docs/negative_results.md`](docs/negative_results.md) (what did not help),
 [`docs/evaluation.md`](docs/evaluation.md) (SceneDiff check),
 [`docs/timing.md`](docs/timing.md) (measured runtimes).
+
+## How this project was built
+
+The implementation was written by an AI coding agent working under human
+direction, which the challenge explicitly allows. The human set the goals,
+constraints and gates, approved every irreversible step, reviewed the outputs by
+eye, and made every scope decision: what to freeze, what to release, what to
+abandon. The agent read the environment, built and ran the pipeline, wrote the
+scoring and checking tools, ran the experiments and wrote the documentation.
+
+Verification is the part that matters, so it is all in the repository: detection
+files pinned to `v0.12.0` with their sha256 digests recorded and re-checked, two
+held-out scenes pre-registered and run exactly once each, golden tests over the
+committed reports, three reproducibility runs per scene with fresh caches, and
+oracle controls that push ground truth through the project's own code to separate
+a detection failure from a plumbing failure. The mistakes are written down too,
+including a documentation error that now fails the test suite, and the full list
+is in [DEEPDIVE.md](DEEPDIVE.md) section 6.
 
 ## Results
 
