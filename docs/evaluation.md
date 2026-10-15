@@ -155,3 +155,25 @@ frame budget adds candidates but no true positives, and the domain is room scale
 where the automatic plane lands on a floor, a wall or a tilted surface instead of
 a table. Adapter, frame budget and domain each cap the score, and none of them is
 a bug. Numbers stay on the frozen v1.0.0 configuration.
+
+## Part C item 2, second half: geometric versus tabletop on the same pairs
+
+Run locally from the cached reconstruction, no GPU and no VLM (the semantic
+caches were complete), same clips and same caches for both modes:
+
+| pair | tabletop entries | geometric entries |
+|---|---|---|
+| living_room_15_16 | 5 | 5 |
+| bedroom_1_2 | 1 | 1 |
+| living_room_1_2 | 1 | 1 |
+| gas_station_3_4 | 0 | 0 |
+
+Identical entry counts on all four. So the plane the auto mode picks is not what
+drives these results: falling back to the plane-free geometric mode changes
+nothing about how much is reported. Combined with the plane table above (a floor,
+a wall or a tilted plane with 1% to 48% coverage) and the oracle control (the
+projection is correct), the picture is consistent: on room scale clips the
+candidate set itself carries no detections worth reporting, and the plane choice
+is downstream of that. `diff.auto_plane_rules` therefore stays off and is not
+expected to help on SceneDiff; it is kept for the room scale scene, where the
+table-like assumption may still be the right one.
