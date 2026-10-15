@@ -117,9 +117,9 @@ def extract_one(video: Path, tag: str, cfg: dict) -> dict:
             n = int(fcfg["max_frames_per_video"])
             ranked = sorted(blurs, key=lambda b: -b[2])[:max(n, int(fcfg["min_frames"]))]
             thr = ranked[-1][2]
-            log.info("[%s] adaptive sharpness: absolute threshold left %d frame(s); "
-                     "falling back to the sharpest %d (blur >= %.1f)",
-                     tag, len(keep), len(ranked), thr)
+            log.warning("[%s] adaptive sharpness fallback: the absolute threshold left "
+                        "%d frame(s), using the sharpest %d instead (blur >= %.1f)",
+                        tag, len(keep), len(ranked), thr)
             src_fps, candidates = _scan_video(video, fcfg["fps"], thr - 1e-6,
                                               fcfg.get("jpeg_quality", 92))
             keep = _evenly_spaced(candidates, n)
