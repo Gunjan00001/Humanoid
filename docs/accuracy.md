@@ -208,7 +208,8 @@ line with the rule that a refactor is only allowed when it proves itself:
 | file | pre digest (sha256[:16], at 8365223) | post digest (sha256[:16], this commit) | equals |
 |---|---|---|---|
 | `src/summary.py` | `527a4f576a481aa2` | `137c44676f1dd158` | docstring/comment only |
-| `src/visualize.py` | `c822d0c65abf7552` | `4e53ea9c80f6b02d` | docstrings/w Thumbnails only |
+| `src/visualize.py` | `c822d0c65abf7552` | `4e53ea9c80f6b02d` |
+| `src/report.py` | `b1fe6be1e5b6e5d5` | `77acdded6746de57` | docstring only, module header and main() documented | docstrings/w Thumbnails only |
 
 **Why the digest changes here:** the change to `src/summary.py` is docstring and
 docstring-comment-only (module docstring extended with the pipeline position,

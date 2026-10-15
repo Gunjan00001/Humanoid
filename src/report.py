@@ -5,6 +5,18 @@
 Writes outputs/report.json (machine-readable) and outputs/report.md
 (human-readable). No numbers are invented: everything comes from the cached
 artifacts of the previous stages.
+
+Where it sits in the pipeline: stage 7 of nine, after describe has the
+confirmed changes and before summary/visualize render them; see docs/code_map.md
+for the order and the files each stage reads and writes.
+
+Inputs (all under `cfg["paths"]["cache_dir"]`): the reconstruction directories
+(points, cameras, depth), diff points and clusters, and the semantics caches
+that describe produced. Output: report.json whose entries carry id, type, label,
+3D centroid and box, confidence, evidence frames and paths made repo-relative by
+_rel so the JSON stays portable and privacy clean. report.md is the same
+content re-read by the natural language summary stage, which enforces the
+"only from report fields" rule (tests/test_summary.py).
 """
 
 from __future__ import annotations
@@ -53,6 +65,15 @@ CONFIDENCE_NOTE = (
 
 
 def main() -> int:
+    """Run the report stage for one scene.
+
+    Reads the caches named in the module docstring, builds the change
+    list with build_change_list() (geometry), attaches the confidence and
+    the evidence frames, and writes report.json plus report.md. Never
+    calls a model and never rewrites a detection value: the numbers it
+    stores are the numbers earlier stages computed.
+
+    """
     parser = argparse.ArgumentParser(description=__doc__)
     add_common_args(parser)
     args = parser.parse_args()
