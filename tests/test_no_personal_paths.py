@@ -13,7 +13,9 @@ What it fails on, in a tracked file (binary files are skipped by git grep -I):
    address (documentation, licenses and package registries are allowed);
 4. obvious secret patterns: private keys, GitHub, AWS and Slack tokens;
 5. phone numbers of ten digits or more that are not a hash, digest or timestamp;
-6. another user's job names, the `otheruser-jobs` project being the one that was found
+another user's job names. The job prefix is assembled in the test
+body from pieces, so this source file is not itself the string
+it looks for.
    in this repository's status files.
 
 A separate test checks tracked media for location or device metadata.
@@ -107,7 +109,10 @@ class TestNoPersonalData(unittest.TestCase):
         self.assertEqual(hits, [], "possible secrets:\n" + "\n".join(hits))
 
     def test_no_other_users_jobs(self):
-        hits = grep(r"otheruser-jobs|[0-9]{5}\.the login node")
+        # The other project's job prefix, assembled from pieces so that this
+        # source file does not contain the string it looks for.
+        other_jobs = "asr" + "1bit"
+        hits = grep(other_jobs + r"|[0-9]{5}\.the login node")
         self.assertEqual(hits, [], "another user's job names:\n" + "\n".join(hits))
 
     def test_no_phone_numbers(self):

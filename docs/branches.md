@@ -36,3 +36,18 @@ git checkout archive/exp-semantics-v2 -- src/naming   # restore a file
 | `v1.1.0` | `frames.adaptive_sharpness: true` by default, a usability fallback that only fires when the absolute blur threshold leaves too few frames. Verified byte identical on demo, scene3 to scene6 |
 | `v1.2.0` | the recruiter pass: language statistics, code map, DEEPDIVE.md, README reviewer path. No behaviour change |
 | `v1.2.1` | consolidation: archive tags, evidence tooling brought onto main, link test. No behaviour change |
+
+## Where the removed bulk went
+
+The slimming in Step 1 of v1.2.2 removed per-pair GIFs, viewers, meshes and the
+labelled crops from main. They were never lost: they are in the tags below, and
+the compact summaries stayed on main.
+
+| removed from main | archive tag | how to get one file back |
+|---|---|---|
+| `outputs/scenediff_adaptive/**` GIFs, viewers and meshes | `archive/exp-semantics-v2` | `git checkout archive/exp-semantics-v2 -- outputs/scenediff_adaptive/<pair>/<file>` |
+| `outputs/scenediff_geometric/**` same | `archive/exp-semantics-v2` | same path |
+| `probe/plane/naming` crops in `data/naming_set/crops/**` | `archive/exp-semantics-v2` | `git checkout archive/exp-semantics-v2 -- data/naming_set/crops/<name>.png` |
+| SceneDiff early runs (`scripts/finish_c*`, the old adapter behaviour) | `archive/exp-accuracy` | `git show archive/exp-accuracy:<path>` |
+| `outputs/scene5_tabletop_posthoc` and `outputs/scene5_reencode_check` viewers, GIFs, meshes | tag `v1.2.1` (all tagged content stays) | `git checkout v1.2.1 -- outputs/scene5_reencode_check/<file>` |
+| the held-out outputs (`outputs/scene5`, `outputs/scene6`) | **never removed**, unchanged since `v1.0.0` | |

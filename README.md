@@ -13,7 +13,8 @@ runs the whole pipeline; on the cluster it submits and polls its own PBS GPU job
 ## Quick start
 
 ```bash
-git clone https://github.com/Gunjan00001/Humanoid.git && cd Humanoid
+git clone --depth 1 https://github.com/Gunjan00001/Humanoid.git && cd Humanoid
+# videos and meshes come from Large File Storage: install git-lfs and let git pulls fetch automatically
 conda create -n spatialdiff python=3.10 -y && conda activate spatialdiff
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
 pip install -r requirements.txt
@@ -283,12 +284,15 @@ eye, and made every scope decision: what to freeze, what to release, what to
 abandon. The agent read the environment, built and ran the pipeline, wrote the
 scoring and checking tools, ran the experiments and wrote the documentation.
 
-Verification is the part that matters, so it is all in the repository: detection
-files pinned to `v0.12.0` with their sha256 digests recorded and re-checked, two
-held-out scenes pre-registered and run exactly once each, golden tests over the
-committed reports, three reproducibility runs per scene with fresh caches, and
-oracle controls that push ground truth through the project's own code to separate
-a detection failure from a plumbing failure. The mistakes are written down too,
+Verification is the part that matters, so it is all in the repository: the frozen
+detection files are **identical to `v0.12.0`** (sha256 recorded and re-checked),
+and the default config differs from `v1.0.0` by exactly one released change, the
+`frames.adaptive_sharpness` fallback, which only runs when the absolute blur
+threshold leaves too few frames and is byte identical on every scene that already
+works. Two held-out scenes were pre-registered and run exactly once each, golden
+tests run over the committed reports, three reproducibility runs per scene used
+fresh caches, and oracle controls push ground truth through the project's own code
+so that a detection failure is not confused with a plumbing failure. The mistakes are written down too,
 including a documentation error that now fails the test suite, and the full list
 is in [DEEPDIVE.md](DEEPDIVE.md) section 6.
 

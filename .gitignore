@@ -59,3 +59,13 @@ cache/scenediff/
 
 # Interpreter used by scripts/sprint.py and scripts/finish_c*.sh
 SPATIALDIFF_PYTHON=
+
+# experiments: bulk artifacts stay out, compact summaries only
+outputs/scenediff_*/**/*.gif
+outputs/scenediff_*/**/*.html
+outputs/scenediff_*/**/*.png
+outputs/scenediff_*/**/*.ply
+outputs/scene5_*/tabletop_posthoc
+outputs/scene5_reencode_check
+# labelled crops are derived data; rebuild with scripts/build_naming_set.py
+data/naming_set/crops/

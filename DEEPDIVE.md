@@ -413,9 +413,13 @@ rejected results that did not hold up, and insisted on the honesty rules that
 shaped the repository, including keeping every negative result.
 
 **How the work was verified**, because that is the part that matters:
-* **Frozen digests.** The detection files are pinned to `v0.12.0`; their sha256
-  digests are recorded in `docs/heldout.md` and re-checked, so a later change cannot
-  silently alter the released behaviour.
+* **Frozen digests.** The frozen detection files are **identical to `v0.12.0`**
+  (`src/diff.py`, `src/tabletop.py`, `src/geometry.py`, `src/describe.py`,
+  `src/align.py`, `src/reconstruct.py`); their sha256 digests are recorded in
+  `docs/heldout.md` and re-checked, so a later change cannot silently alter the
+  released behaviour. The default config is `v1.0.0` plus exactly one released
+  change, the `frames.adaptive_sharpness` fallback (failure-path only, byte
+  identical on the working scenes).
 * **Held-out runs.** scene5 and scene6 were pre-registered, run once each, and
   never re-run, with the outputs committed at `v1.0.0` and never regenerated.
 * **Golden tests.** `tests/test_summary.py` checks the summary invariants against
