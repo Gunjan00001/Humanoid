@@ -149,3 +149,17 @@ Rules for exceptions:
 
 *See `gpu.md` in this folder for how to access the GPUs, and `AGENT_PLAN.md` for the project plan.*
 *The agent writing this file follows these rules too.*
+
+## 10. Branching (standing rule, from v1.2.1)
+
+**All work goes directly to main.** No feature branches, no docs branches, no long
+lived experiment branches. Commit small, test every commit, and tag only a verified
+release: a patch tag for documentation and fixes, a minor tag for a behaviour
+change, always checked from a fresh clone.
+
+History from before this rule is kept in archive tags (`archive/exp-accuracy`,
+`archive/exp-semantics-v2`) and those branches are deleted on the remote, so the
+remote shows main plus tags.
+
+Never force push and never rewrite history. The held-out outputs of scene5 and
+scene6 stay byte identical to `v1.0.0`.

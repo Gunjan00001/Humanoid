@@ -10,3 +10,15 @@ Rules:
 - If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
 - Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
 - After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+
+## Branching (standing rule, from v1.2.1)
+
+All work goes directly to **main**. No feature branches, no docs branches, no long
+lived experiment branches. Commit small, test each commit, and tag only a verified
+release: a patch tag for documentation and fixes, a minor tag for a behaviour
+change, always verified from a fresh clone.
+
+Older history lives in archive tags (`archive/exp-accuracy`,
+`archive/exp-semantics-v2`); those branches are deleted on the remote, so the remote
+shows main plus tags. Never force push, never rewrite history, and keep the held-out
+outputs of scene5 and scene6 byte identical to `v1.0.0`.

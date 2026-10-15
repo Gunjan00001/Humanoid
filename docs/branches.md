@@ -1,20 +1,28 @@
-# Branches and tags
+# Repository history and archive tags
 
-**`main` is the submission.** Everything else is experiment or documentation
-history, kept for the audit trail. No branch other than main is needed to run or
-grade the project.
+**`main` is the submission and the only branch.** Since v1.2.1 all work goes
+directly to main: small commits, tested, with a tag only for a verified release (a
+patch tag for documentation and fixes, a minor tag for a behaviour change, always
+checked from a fresh clone).
 
-## Branches
+## Where the old branches went
 
-| branch | what it contains | status |
-|---|---|---|
-| `main` | the submission. Detection frozen at v0.12.0, config v1.0.0, plus the v1.1.0 usability fallback and the docs | the one to read |
-| `exp/accuracy` | the accuracy sprint: the scorer, the flag experiments (soft veto, coverage added, objmatch, fragment merge), the golden JSONs, the first SceneDiff adapter | nothing was accepted, all flags default OFF |
-| `exp/semantics-v2` | the current naming round: `frames.adaptive_sharpness`, the plane check, the naming package (v3 ladder and v4 tiers), the labelled crop set, the room-scale template | active |
-| `feat/adaptive-default` | the single change that became v1.1.0, merged into main | merged |
-| `docs/humanize` | the prose pass over the summaries and docs | merged into main |
-| `docs/challenge-fit` | the README top, the example section, the design note | merged into main |
-| `docs/v1.0.2`, `docs/fix` | small documentation and viewer fixes on the way to v1.0.3 | merged into main |
+Before that rule, work happened on short branches. Their history is preserved in
+**archive tags**, so nothing is lost and nothing left dangling:
+
+| archive tag | what it holds |
+|---|---|
+| `archive/exp-accuracy` | the accuracy sprint: the scorer, the flag experiments (soft veto, coverage added, objmatch, fragment merge), the ground-truth and matches JSONs, the first SceneDiff adapter |
+| `archive/exp-semantics-v2` | the naming round: the adaptive sharpness flag, the plane check, the naming package (v3 ladder, v4 tiers), the labelled crop set, the room-scale template |
+
+The corresponding remote branches are deleted. Their local copies are kept until
+the archive tags were verified on the remote. If you need something from them:
+
+```
+git tag -l 'archive/*'                 # list what exists
+git show archive/exp-accuracy:docs/accuracy.md
+git checkout archive/exp-semantics-v2 -- src/naming   # restore a file
+```
 
 ## Tags
 
@@ -26,4 +34,5 @@ grade the project.
 | `v1.0.2`, `v1.0.3` | the correction: held-out summaries restored to v1.0.0, tests accept both formats, viewer fix for the swapped before and after crops |
 | `v1.0.4` to `v1.0.6` | the challenge-fit documentation, the README figures, the SceneDiff limitation wording |
 | `v1.1.0` | `frames.adaptive_sharpness: true` by default, a usability fallback that only fires when the absolute blur threshold leaves too few frames. Verified byte identical on demo, scene3 to scene6 |
-| `v1.2.0` | this pass: language statistics, code map, DEEPDIVE.md, recruiter README, no behaviour change |
+| `v1.2.0` | the recruiter pass: language statistics, code map, DEEPDIVE.md, README reviewer path. No behaviour change |
+| `v1.2.1` | consolidation: archive tags, evidence tooling brought onto main, link test. No behaviour change |
