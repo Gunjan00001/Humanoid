@@ -107,3 +107,41 @@ finding.
 
 Dev-scene check: with the flag ON the demo frames are byte identical to the
 committed ones, so the flag changes nothing on scenes that already work.
+
+## Part C item 2: which plane does the automatic mode pick on SceneDiff pairs?
+
+`scripts/plane_check.py` fits the dominant plane the same way the auto mode does
+and reports the unit normal, how vertical it is (|nz|), the fraction of confident
+points within 2 cm of the plane, and the plane height above the lowest confident
+surface. All 13 pairs shown (7 baseline-processable first, then the adaptive ones).
+
+| pair | normal | vertical | coverage 2 cm | height (m) | reading |
+|---|---|---|---|---|---|
+| airhockeytable_1_2 | -0.38 -0.13 0.92 | 92% | 8% | 0.478 | floor-like |
+| bathroom_11_12 | 0.06 -0.65 0.76 | 76% | 21% | 0.308 | tilted |
+| bathroom_1_2 | -0.14 -0.49 0.86 | 86% | 3% | 0.892 | floor-like |
+| bedroom_2_3 | -0.33 0.44 0.83 | 83% | 10% | 0.340 | tilted |
+| bedroom_2_4 | -0.55 0.33 0.77 | 77% | 13% | 0.328 | tilted |
+| gym_9_10 | -0.93 0.13 0.36 | 36% | 7% | 0.478 | tilted |
+| kitchen_8_9 | -0.85 0.00 0.53 | 53% | 31% | 0.050 | tilted |
+| bedroom_1_2 | -0.49 -0.12 0.86 | 86% | 7% | 0.327 | floor-like |
+| gas_station_3_4 | 0.01 -0.99 0.15 | 15% | 48% | 0.203 | wall-like |
+| laundry_room_3_4 | 0.02 -0.50 0.86 | 86% | 43% | 0.236 | floor-like |
+| living_room_15_16 | -0.01 -0.54 0.84 | 84% | 1% | 0.234 | tilted |
+| living_room_17_18 | 0.22 -0.61 0.76 | 76% | 21% | 0.234 | tilted |
+| living_room_1_2 | -0.66 0.26 0.71 | 71% | 9% | 0.362 | tilted |
+
+Reading: on these room-scale clips the auto mode does **not** find a table. Four
+pairs give a floor-like plane, one gives a wall-like plane, and eight give a tilted
+plane that is neither. The coverage test is weak everywhere (1% to 48% of confident
+points lie within 2 cm of the chosen plane, against a tabletop scene where that
+fraction is high). So the plane the tabletop method assumes does not exist in these
+scenes, and the "height above the plane" boxes are built on the wrong surface. That
+is the mechanical reason behind the zero true positives, and it is consistent with
+the oracle control, which showed the mask projection itself is fine.
+
+Proposed, not enabled: `diff.auto_plane_rules` (default OFF). When the chosen plane
+has low coverage, or is floor-like or wall-like rather than table-like, the diff
+stage would fall back to the plane-free `geometric` mode instead of building boxes
+on the wrong plane. It changes nothing unless switched on. The geometric
+re-comparison on these pairs is queued behind the GPU queue (job 11527).
