@@ -1,34 +1,34 @@
-=== attempt 1 on GPU 4 (22:44:28) ===
+=== attempt 1 on GPU 4 (23:10:13) ===
 model /home/jiit_992401210050/models/Qwen3.5-4B on cuda:0, 317 labelled crops
   loaded in 3s
 {
   "model": "/home/jiit_992401210050/models/Qwen3.5-4B",
-  "n": 5,
-  "load_s": 3.5,
-  "latency_mean_s": 0.0,
-  "latency_p50_s": null,
-  "latency_max_s": null,
-  "peak_mem_gb": 8.5,
+  "n": 2,
+  "load_s": 3.4,
+  "latency_mean_s": 0.44,
+  "latency_p50_s": 0.45,
+  "latency_max_s": 1.48,
+  "peak_mem_gb": 8.9,
   "correct": {
-    "unparsable": 317
+    "wrong": 16
   },
   "table": [
     {
       "bucket": "all crops",
-      "n": 5,
+      "n": 2,
       "exact": 0,
       "exact_pct": 0.0,
       "exact_ci": [
-        -0.0,
-        43.4
+        0.0,
+        65.8
       ],
       "exact_or_parent": 0,
       "exact_or_parent_pct": 0.0,
       "exact_or_parent_ci": [
-        -0.0,
-        43.4
+        0.0,
+        65.8
       ],
-      "unparsable": 317
+      "unparsable": 0
     }
   ]
 }

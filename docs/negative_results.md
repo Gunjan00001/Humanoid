@@ -94,3 +94,18 @@ fixed or queued as described in docs/autopilot_status.md:
 Not adopted: the gate needs numbers and this attempt produced none; Qwen3-VL-32B stays the baseline for the naming decision until the
 integration mismatch is fixed (drop the unused model_kwargs / align the
 transformers revision), exactly as the conservative rule requires.
+
+### Naming bake-off attempt 3 (Qwen3.5-4B): runs, then fails on placeholder echo (2026-10-17)
+
+With the processor chat-template flow plus `enable_thinking=False` and a
+tighter prompt, the model runs end to end: 317 crops, per-crop latency
+0.44 s (p50 0.45, max 1.48), peak 8.9 GB. Sixteen answers parsed and were
+wrong; 301 answers echo the literal placeholder (`{"name": "text"}`), so no
+exact or parent score is measurable. Diagnosis queued for the next attempt
+(docs/autopilot_status.md): drop the placeholder example from the prompt (the
+model parrots the example key), and add the non-blank crop variant: the
+mask-tight set blanks everything outside the mask to black, which at 4B scale
+may be the harder input; the dev-scene crops under
+`cache/<scene>/semantics/crops` are plain rectangles and are the same data the
+32B baseline verified. No adoption decision: the gate needs exact and parent
+numbers, and this attempt produced none.
