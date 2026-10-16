@@ -1,5 +1,27 @@
 # Autopilot status
 
+RESUME HERE (batch 1 phase 3, bake-off attempt 4 plan; the 4B attempt is a
+recorded negative: placeholder echo, 301 of 317 replies `{"name": "text"}`,
+16 wrong names; no gate decision possible):
+
+```
+# attempt 4 (two prompts, in order, stop at the first that works):
+#   1. no placeholder anywhere: PROMPT = "Identify the object in this image,
+
+#      reply with JSON {name: object}", and strip ``` fences if present in
+#      parse (r"```[a-z]*(.*?)```" then json)
+#   2. if parse fails again, run the SAME model on the plain crop variant:
+#      scripts/build_naming_set.py --no-blank (append the flag: skip patch[~sub]=0)
+#      so the crop keeps its photographic background at 4B scale
+# then: bake off (a) for 9B and 27B (download on the login node, smallest first),
+#       then bake offs b (SAM 3.1 vs SAM 2.1), c (DINOv3 vs DINOv2 controls),
+#       d (geometry: VGGT vs DA3 vs Pi3X vs MapAnything), each per
+#       docs/stack_selection.md rules 1-6 written before the runs, then the
+#       batch 1 report (docs/autopilot_report_batch1.md) and the final message
+```
+
+# Autopilot status
+
 RESUME HERE (batch 1 phase 3, naming bake-off attempt 2 for Qwen3.5-4B:
 the run fails at generate with unused model_kwargs; exact resume, in order):
 
