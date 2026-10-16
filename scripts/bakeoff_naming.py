@@ -35,8 +35,8 @@ SYNONYMS = ROOT / "data" / "naming_synonyms.json"
 # like for like. The answer format is strict JSON because parse failures are
 # themselves a result (a model that cannot follow instructions is not a
 # naming candidate).
-PROMPT = ("Name the single everyday object in this image. "
-          'Answer with JSON only: {"name": "<lowercase object name>"}')
+PROMPT = ("Identify the single everyday object in this image. No reasoning, no "
+          'explanations; reply with JSON only: {"name": "<object>"}')
 
 LABEL = "// the Axelrod recipe for correctness: exact means the canonical name"
 
@@ -148,20 +148,31 @@ def main() -> int:
             # The processor owns the chat template and the vision pipeline for
             # the Qwen3-VL family (the tokenizer alone cannot place pixels):
             # text template first, then the text+image pass below.
-            chat_text = proc.apply_chat_template(
-                [{"role": "user",
+            chat_sess = [{"role": "user",
                   "content": [{"type": "text", "text": PROMPT},
-                              {"type": "image"}]}],
-                add_generation_prompt=True, tokenize=False)
+                               {"type": "image"}]}]
+            try:
+                chat_text = proc.apply_chat_template(
+                    chat_sess, add_generation_prompt=True, tokenize=False,
+                    enable_thinking=False)
+            except TypeError:                 # template without the flag
+                chat_text = proc.apply_chat_template(
+                    chat_sess, add_generation_prompt=True, tokenize=False)
             inputs = proc(text=[chat_text], images=[image],
                           return_tensors="pt").to(args.device)
+            # Checkpoint processors may emit auxiliary keys their model does not
+            # accept (the kwargs mismatch that ended attempt 2); keep only the
+            # keys the forward pass actually takes.
+            import inspect
+            fwd = inspect.signature(model.forward).parameters
+            inputs = {k: v for k, v in inputs.items() if k in fwd}
             with torch.no_grad():
-                out = model.generate(**inputs, max_new_tokens=64, do_sample=False)
+                out = model.generate(**inputs, max_new_tokens=32, do_sample=False)
             raw_answer = tok.decode(out[0][inputs["input_ids"].shape[1]:],
                                     skip_special_tokens=True)
         except Exception as exc:                     # a broken crop or generate
-            row = {"path": sample["path"], "error": str(exc)[:80],
-                   "raw": raw_answer[:80], "name": None}
+            row = {"path": sample["path"], "error": str(exc)[:300],
+                   "raw": raw_answer[:200], "name": None}
             rows.append(row)
             counter["unparsable"] += 1
             continue

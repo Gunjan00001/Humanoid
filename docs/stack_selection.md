@@ -73,3 +73,13 @@ d. **Geometry:** VGGT (incumbent) versus DA3 Giant 1.1 (nested metric), Pi3X
    and MapAnything on the dev scenes (same frames, then 2x and 4x): static
    alignment residual before and after ICP, point density on GT objects,
    metric scale against a known object size, runtime and memory.
+
+
+## Bake-off (a) first result: Qwen3.5-4B fails on echo and instruction noise
+
+One run over the 317 mapped crops (logs/bakeoff_naming_Qwen3.5-4B.json):
+per-crop latency 0.44 s (p50 0.45, max 1.48), peak 8.9 GB, no exact or parent
+measurement possible because 301 of 317 replies echo the prompt's placeholder
+literal and 16 parsed names are wrong. Per the decision rules: **not adopted**,
+the Qwen3-VL-32B baseline stays the naming reference. Attempt-notes and the
+next fix are in the bake-off log and docs/negative_results.md.
