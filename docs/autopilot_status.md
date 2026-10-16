@@ -1,5 +1,18 @@
 # Autopilot status
 
+RESUME HERE (batch 1 phase 3, bake offs RUNNING):
+
+```
+qstat | grep bakeoff        # job 11670, 4 GB challenger (Qwen3.5-4B)
+tail -f logs/bakeoff_naming_job.log      # done = BAKEOFF_DONE
+ls logs/bakeoff_naming_Qwen3.5-4B.json  # results when done
+# then: python scripts/make_bakeoff_table.py (TODO or print the json)
+# next models: 9B (19.3 GB, download started on the login node), 27B (55.6 GB)
+# then phases b/c/d of docs/stack_selection.md and the batch 1 report
+```
+
+# Autopilot status
+
 RESUME HERE (batch 1 phase 3: probes and rules done in docs/stack_selection.md;
 next the offline bake offs, then Phase 7's batch 1 report):
 
