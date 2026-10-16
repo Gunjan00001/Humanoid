@@ -199,7 +199,8 @@ near-zero validation score is a detection and domain result, not an adapter bug.
 The test slice is regenerated at this frozen config (the earlier test predictions
 came from the buggy adapter; no test score was seen) and evaluated once.
 
-## Pre refactor to post refactor digests (v1.2.2 readability round)
+## Pre refactor to post refactor digests (readability round on main,
+## tag pending after the purge)
 
 The held-out freeze documents the detection code by sha256. This table records
 the equivalence evidence for the readable-header pass, one module so far, in

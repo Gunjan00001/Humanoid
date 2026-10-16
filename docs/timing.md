@@ -4,7 +4,7 @@ Real numbers from the PBS job records (`qstat -xf`) and the job logs in
 `logs/`. Nothing here is estimated unless the row says so.
 
 **Clock bases.** The PBS client reports times on the login node's clock; the
-compute node (`the GPU node`) writes its logs 3:30:00 behind that clock
+compute node (the GPU node) writes its logs 3:30:00 behind that clock
 (verified: job 10802 `stime` 02:39:35 ↔ its first log activity 23:09:35, and
 `obittime` 02:44:52 ↔ the last log line 23:14:52). Durations inside one source
 are exact; cross-source absolute times are quoted in one clock and the offset

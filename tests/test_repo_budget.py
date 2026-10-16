@@ -23,7 +23,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# Measured at 163.6 MB after the slimming in v1.2.2; 175 gives room for compact
+# Measured at 163.6 MB after the slimming work on main (v1.2.2 round); 175 gives room for compact
 # summaries and figures without letting bulk output back in.
 TOTAL_BUDGET_MB = 175
 

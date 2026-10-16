@@ -1,7 +1,7 @@
 # GPU Access on This Cluster
 
 Everything here was discovered and **verified live** on this machine (login node
-`the login node` → GPU node `the GPU node`, PBS scheduler). Last updated 2026-10-10.
+an interactive cluster (login + a dedicated GPU node, PBS scheduler). Last updated 2026-10-10.
 
 ---
 
@@ -30,7 +30,7 @@ PY
 
 | Item | Value |
 | --- | --- |
-| Node | `the GPU node` |
+| Node | the GPU node |
 | GPUs | **8 × NVIDIA A100-SXM4-80GB** |
 | Compute capability | **sm_80** (Ampere), 108 SMs each |
 | Memory per GPU | 80 GiB HBM2e (~85.0 GB reported) |
@@ -100,8 +100,8 @@ the 525 driver via minor-version compatibility.
 
 ### Gotcha 3 — a FIFO cannot bridge the login node and GPU node
 Home is a **network filesystem**. A named pipe (FIFO) created there has no shared
-kernel object across nodes, so a writer on `the login node` blocks forever waiting
-for a reader that lives on `the GPU node`. Use a **file-based queue** instead
+kernel object across nodes, so a writer on the login node blocks forever waiting
+for a reader that lives on the GPU node. Use a **file-based queue** instead
 (`gpu-send` does exactly this).
 
 ### Bonus — all 8 GPUs are visible, and the node is busy
@@ -210,7 +210,7 @@ device count: 8
 device 0: NVIDIA A100-SXM4-80GB
 GPU matmul on persisted tensor: (8192, 8192) sum=1.3743e+11
 ```
-Persistent session confirmed on `the GPU node`; `nvidia-smi` lists 8 × A100-SXM4-80GB.
+Persistent session confirmed on the GPU node; `nvidia-smi` lists 8 × A100-SXM4-80GB.
 
 ---
 
@@ -238,4 +238,4 @@ Persistent session confirmed on `the GPU node`; `nvidia-smi` lists 8 × A100-SXM
 | "driver ... too old (found version 12030)" | CUDA-13 build on 525 driver | install `+cu126` (see Gotcha 2) |
 | `gpu-send` blocks forever writing a FIFO | network-FS FIFO across nodes | use file queue (`gpu-send`) |
 | job OOM-killed | 32 GB default cgroup | raise `-l mem=` (max `64gb`) |
-| `Cgroup mem limit exceeded:` printed at job end | benign epilogue artifact observed on `the GPU node` | ignore |
+| `Cgroup mem limit exceeded:` printed at job end | benign epilogue artifact observed on the GPU node | ignore |

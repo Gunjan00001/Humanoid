@@ -98,7 +98,7 @@ Rules for exceptions:
 
 ## 6. Resource use (this is an HPC cluster)
 
-- Be a good citizen: GPUs on `the GPU node` are shared and often busy. Check
+- Be a good citizen: GPUs on the GPU node are shared and often busy. Check
   `nvidia-smi` and pick an idle GPU; don't hog all 8.
 - **Never wait on a busy GPU.** If the GPU you would use is busy (e.g. another
   agent's job), pick another idle GPU instead of queueing behind it. Jobs that

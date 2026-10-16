@@ -47,7 +47,7 @@ python run.py --video_a data/a.mp4 --video_b data/b.mp4 --out outputs/
 
 | Item | Value |
 |---|---|
-| Node | `the GPU node` |
+| Node | the GPU node |
 | GPUs | 8 x NVIDIA A100-SXM4-80GB (NVLink, fully connected) |
 | Driver | 525.147.05 → **max CUDA 12.3** |
 | MIG | Disabled, ECC on |

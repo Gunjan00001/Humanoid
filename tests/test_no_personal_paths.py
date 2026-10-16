@@ -82,6 +82,10 @@ def grep(pattern: str) -> list[str]:
     return [line for line in out.stdout.splitlines() if line.strip()]
 
 
+# The cluster name, assembled from pieces so this enforcement tool is not
+# itself a hit for the hostname or account strings it looks for.
+CLUSTER = "ji" + "it"
+
 class TestNoPersonalData(unittest.TestCase):
     def test_no_absolute_home_paths(self):
         hits = [h for h in grep(r"/home/[A-Za-z]|/Users/[A-Za-z]")
@@ -109,6 +113,14 @@ class TestNoPersonalData(unittest.TestCase):
                     hits.append(f"{line}  ->  {address}")
         self.assertEqual(hits, [], "unexpected email addresses:\n" + "\n".join(hits))
 
+    def test_no_cluster_hostnames(self):
+        """Hostnames are built from parts so this file is not itself a hit."""
+        pattern = rf"{CLUSTER}-(gpu\d+|master)"
+        hits = [h for h in grep(pattern)
+                if not h.startswith("tests/test_no_personal_paths.py:")]
+        self.assertEqual(hits, [], "cluster hostnames in tracked files:\n"
+                                   + "\n".join(hits))
+
     def test_no_secrets(self):
         hits = []
         for _name, pattern in SECRET_PATTERNS:
@@ -119,7 +131,7 @@ class TestNoPersonalData(unittest.TestCase):
         # The other project's job prefix, assembled from pieces so that this
         # source file does not contain the string it looks for.
         other_jobs = "asr" + "1bit"
-        hits = grep(other_jobs + r"|[0-9]{5}\.the login node")
+        hits = grep(other_jobs + r"|[0-9]{5}\." + CLUSTER + r"-master")
         self.assertEqual(hits, [], "another user's job names:\n" + "\n".join(hits))
 
     def test_no_phone_numbers(self):

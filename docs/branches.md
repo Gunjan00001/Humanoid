@@ -39,7 +39,8 @@ git checkout archive/exp-semantics-v2 -- src/naming   # restore a file
 
 ## Where the removed bulk went
 
-The slimming in Step 1 of v1.2.2 removed per-pair GIFs, viewers, meshes and the
+The slimming in Step 1 of the v1.2.2 round (work on main, tag pending
+after the purge) removed per-pair GIFs, viewers, meshes and the
 labelled crops from main. They were never lost: they are in the tags below, and
 the compact summaries stayed on main.
 

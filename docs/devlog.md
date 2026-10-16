@@ -602,7 +602,7 @@ the automatic mode choice contributed; no held-out output was changed.
 ## 2026-10-11, Agent-handover access verification
 
 - **GPU access: verified live.** One-shot probe via `gpu-run -n 1 -g 1`
-  (job 10863, interactive, exited cleanly): `the GPU node` shows all 8
+  (job 10863, interactive, exited cleanly): the GPU node shows all 8
   A100-SXM4-80GB; `torch 2.14.1+cu126`, `cuda_available True`,
   `device_count 8`, matmul OK. Note the env torch is now **2.14.1+cu126**
   (newer than the 2.11.0 recorded in `gpu.md`), still on the working cu126 line.
