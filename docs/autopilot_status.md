@@ -1,10 +1,14 @@
 # Autopilot status
 
-RESUME HERE (batch 1 phase 2 IN PROGRESS on the branch `refactor/readability`,
-currently checked out: geometry documented at `b73eb78`, diff at `8ed08b9`,
-with digest rows in docs/accuracy.md; next module in the order:
-tabletop.py, then describe.py, reconstruct.py, align.py; after the last one:
-merge with --ff-only, delete the branch, tag v1.2.3, per docs/autopilot_batch1.md):
+RESUME HERE (batch 1 phase 2 code COMPLETE: geometry b73eb78, diff 8ed08b9,
+tabletop 66a8271, describe d44de88, reconstruct 5e449fc, align 7f23f4f, all
+merged into main by fast forward, branch deleted; next: patch tag):
+
+```
+git tag -a v1.2.3 -m "readability pass (headers and docstrings only)" && git push origin main
+git push origin v1.2.3
+# then Phase 3 (stack selection) per docs/autopilot_batch1.md, then the Phase 7 report
+```
 
 ```
 git checkout refactor/readability   # unless already there
