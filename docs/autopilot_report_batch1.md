@@ -64,3 +64,19 @@ workflow file exists and the same tests pass locally).
 GitHub Support request (text ready at ~/purge/support_request.txt), enabling
 GitHub Pages, the demo video, new scene recordings, frame review, deleting
 backups when you are satisfied.
+
+
+## Phase 3 (stack selection) — probes and rules done; bake offs running
+
+Access probes: all the candidate repos resolve (sam3.1 and sam3 gated-accepted,
+Qwen family not gated, DA3-GIANT cc-by-nc-4.0, Pi3X cc-by-nc-4.0, two repo
+names corrected in docs/stack_selection.md). Decision rules were written before
+any run. Bake off (a) attempted for the smallest challenger
+(Qwen/Qwen3.5-4B, apache 2.0, 8.8 GB local): three failed attempts recorded as
+a negative in docs/negative_results.md (offline cache miss fixed with the local
+weights directory; unused model_kwargs on generate fixed by keeping only the
+forward keys; placeholder echo 301 of 317 replies at attempt 3, latency
+0.44 s per crop, peak 8.9 GB). Qwen3-VL-32B remains the naming baseline;
+attempt-4 plan (no placeholder, and a non-blank crop variant for the small
+model) is the resume command at the top of docs/autopilot_status.md.
+
