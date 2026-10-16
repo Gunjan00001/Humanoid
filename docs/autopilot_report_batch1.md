@@ -17,7 +17,7 @@ as tagger, and one literal in the status doc.
    state, 36 refs), older backups kept.
 5. fresh clone rewrite with two-entry mailmap (cluster identity -> noreply for
    author and committer; personal gmail -> noreply for the taggers) and the
-   otheruser-jobs replacement rule. The full LFS store answered a first failed push
+   another user's jobs replacement rule. The full LFS store answered a first failed push
    (missing objects in the disposable clone), fixed by copying the store.
 6. staging at ~/purge/staging2.git, fresh clone verify_b: all audit items at
    zero across pickaxe, messages, tag messages, tree AND identity fields (the
