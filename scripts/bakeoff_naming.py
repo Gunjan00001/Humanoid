@@ -96,6 +96,12 @@ class collections_counter(dict):
         return self
 
 
+def abs_path(rel: str) -> Path:
+    """Manifest paths are stored repo-relative; resolve them from ROOT."""
+    p_ = Path(rel)
+    return p_ if p_.is_absolute() else ROOT / p_
+
+
 def load_inputs() -> list[dict]:
     syn = json.loads(SYNONYMS.read_text())
     crops = json.loads(MANIFEST.read_text())["crops"]
@@ -138,17 +144,21 @@ def main() -> int:
         raw_answer = ""
         name = None
         try:
-            image = Image.open(sample["path"]).convert("RGB")
-            prompt = PROMPT
-            chat = tok.apply_chat_template(
+            image = Image.open(abs_path(sample["path"])).convert("RGB")
+            # The processor owns the chat template and the vision pipeline for
+            # the Qwen3-VL family (the tokenizer alone cannot place pixels):
+            # text template first, then the text+image pass below.
+            chat_text = proc.apply_chat_template(
                 [{"role": "user",
-                  "content": [{"type": "text", "text": prompt},
-                              {"type": "image", "image": image}]}],
-                tokenize=True, add_generation_prompt=True, return_tensors="pt")
-            chat = chat.to(args.device)
+                  "content": [{"type": "text", "text": PROMPT},
+                              {"type": "image"}]}],
+                add_generation_prompt=True, tokenize=False)
+            inputs = proc(text=[chat_text], images=[image],
+                          return_tensors="pt").to(args.device)
             with torch.no_grad():
-                out = model.generate(chat, max_new_tokens=64, do_sample=False)
-            raw_answer = tok.decode(out[0][chat.shape[1]:], skip_special_tokens=True)
+                out = model.generate(**inputs, max_new_tokens=64, do_sample=False)
+            raw_answer = tok.decode(out[0][inputs["input_ids"].shape[1]:],
+                                    skip_special_tokens=True)
         except Exception as exc:                     # a broken crop or generate
             row = {"path": sample["path"], "error": str(exc)[:80],
                    "raw": raw_answer[:80], "name": None}
