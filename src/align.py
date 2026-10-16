@@ -11,6 +11,10 @@ Writes cache/reconstruction/aligned/  (transformed B cloud + poses + transform.j
 
 Downstream stages automatically prefer the aligned directory when
 reconstruction.use_icp_refinement is true (see src/geometry.recon_dir_for).
+
+Where it sits in the pipeline: stage 3 of nine, optional, off for held-out and
+benchmark runs (the demo needed it, the held-out scenes ran without it - the
+threshold is a config value and the choice is documented in docs/pipeline.md).
 """
 
 from __future__ import annotations
@@ -38,6 +42,13 @@ log = setup_logging("align")
 
 
 def static_subset(pts: np.ndarray, other: np.ndarray, threshold: float) -> np.ndarray:
+    """Points of one cloud with a close neighbour in the other one.
+
+    Static by construction: if the same surface is seen in both videos
+    within the threshold, it did not move, so only these pairs should
+    steer the alignment. Including changed or occluded points would fit
+    the transform to the very things the pipeline is trying to measure.
+    """
     dist, _ = cKDTree(other).query(pts, k=1, workers=-1)
     return dist < threshold
 
