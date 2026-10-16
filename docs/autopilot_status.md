@@ -5,8 +5,8 @@ step: timestamp, track, step, result, next step.
 
 ## State at start (2026-10-11 21:41 IST)
 
-- main is at commit 485d33f (tag v1.0.0 = 5e5185d, plus three docs and CI commits:
-  3fbc9dc, a6fc8c0, 485d33f). The held-out scene5 and scene6 outputs are on main
+- main is at commit 28e67580 (tag v1.0.0 = 77908f1, plus three docs and CI commits:
+  e25defae, 7d48da28, 28e67580). The held-out scene5 and scene6 outputs are on main
   and are left untouched.
 - Branch exp/accuracy holds the accuracy sprint: Phase A and B (scorer, ground
   truth, failure attribution), the semantics worker, and the D, E and F flags.
@@ -74,7 +74,7 @@ step: timestamp, track, step, result, next step.
   came from the buggy adapter and no test score was seen). finish_c5.sh counts
   unprocessable test pairs as empty and evaluates the test slice exactly once.
 - README Known limitations and docs/evaluation.md gain the honest small-tabletop
-  limitation paragraph. main = 139f507, tag v1.0.6.
+  limitation paragraph. main = c30337ec, tag v1.0.6.
 
 ### 2026-10-12 04:30 IST, control passes, test slice evaluated once, Part C next
 - Projection control passes: per-pair oracle IoU above 0.5 on 6 of 7 processable
@@ -88,7 +88,7 @@ step: timestamp, track, step, result, next step.
 - Failure analysis on the 7 processable val pairs recorded (scale mismatch, change
   semantics, frame budget; plumbing ruled out).
 - README + evaluation.md carry the honest small-tabletop limitation. main =
-  51ee950 (tag v1.0.6).
+  798b4603 (tag v1.0.6).
 - Next: Part C on exp/semantics-v2, first frames.adaptive_sharpness (default OFF),
   post-hoc diagnostic on the 13 unprocessable val pairs and scene2, plus a
   byte-identical check of the development outputs with the flag ON.

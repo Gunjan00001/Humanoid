@@ -5,7 +5,7 @@
 Scene5 results must be produced by exactly this code. The detection-relevant
 files are frozen at:
 
-- **frozen commit: `e8c77d9292460ff4decb84adbe4e49f142367de3`**
+- **frozen commit: `2c9969642775792547150753bfd863cfb72fd650`**
 - file digests (sha256, first 16 hex):
 
 | file | sha256 (16) |
@@ -18,7 +18,7 @@ files are frozen at:
 | `src/reconstruct.py` | `db9147329a3c047d` |
 | `configs/default.yaml` | `f05d5cb6323bad40` |
 
-Verification at the end of the task: `git diff e8c77d9 -- src/diff.py
+Verification at the end of the task: `git diff 2c996964 -- src/diff.py
 src/tabletop.py src/geometry.py src/describe.py src/align.py
 src/reconstruct.py configs/default.yaml` must be empty.
 
@@ -247,9 +247,9 @@ Please confirm the overlays against the ground truth.
 Scene6 results must be produced by exactly this code. The detection-relevant
 files are pinned (identical byte content verified across all three candidates):
 
-- task-stated frozen commit: **`93bf47d`**
-- `v0.12.0` tag actually resolves to: **`f0042c90e4b10c33b26491028dbfe38fa8f4a5f5`**
-- `HEAD` at run time: `f96d3b0`, `git diff 93bf47d HEAD` on the files below is **empty**
+- task-stated frozen commit: **`f007d2a3`**
+- `v0.12.0` tag actually resolves to: **`f007d2a34c455faad14fcc5fb7fbb59fb31b33a3`**
+- `HEAD` at run time: `f96d3b0`, `git diff f007d2a3 HEAD` on the files below is **empty**
 - file digests (sha256, first 16 hex), **identical to the scene5 freeze**:
 
 | file | sha256 (16) |
@@ -262,7 +262,7 @@ files are pinned (identical byte content verified across all three candidates):
 | `src/reconstruct.py` | `db9147329a3c047d` |
 | `configs/default.yaml` | `f05d5cb6323bad40` |
 
-Verification at the end of the task: `git diff 93bf47d -- src/diff.py
+Verification at the end of the task: `git diff f007d2a3 -- src/diff.py
 src/tabletop.py src/geometry.py src/describe.py src/align.py
 src/reconstruct.py configs/default.yaml detect.py` must be empty.
 

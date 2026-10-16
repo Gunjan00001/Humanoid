@@ -526,7 +526,7 @@ exactly, 355 px. All five GIFs re-rendered with the fix.
 
 ### Step 0-2 (built before any scene5 execution)
 
-- `docs/heldout.md` froze commit `e8c77d9` + sha256 of the 7 detection files
+- `docs/heldout.md` froze commit `2c996964` + sha256 of the 7 detection files
   and pre-registered the scoring rule **before** any new code was written.
 - `detect.py`: input validation (decode/stream/duration/resolution/
   orientation, LFS-pointer detection), automatic diff-mode choice from the
@@ -619,12 +619,12 @@ the automatic mode choice contributed; no held-out output was changed.
 
 ## 2026-10-11, Held-out scene6: Step 0 (data + freeze) and pre-registration
 
-- **Frozen code confirmed.** `git diff 93bf47d HEAD` (and vs the working tree)
+- **Frozen code confirmed.** `git diff f007d2a3 HEAD` (and vs the working tree)
   is **empty** for `src/{diff,tabletop,geometry,describe,align,reconstruct}.py`,
   `configs/default.yaml`, `detect.py`. The 7 digest prefixes are identical to
   the scene5 freeze (`72f10984`, `d2271109`, `f44767f0`, `ac00b938`, `b7400d42`,
   `db914732`, `f05d5cb6`). Noted honestly in `heldout.md`: the task named the
-  frozen commit as `93bf47d`, but tag `v0.12.0` resolves to `f0042c9`; the
+  frozen commit as `f007d2a3`, but tag `v0.12.0` resolves to `f007d2a3`; the
   detection code is byte-identical across both and HEAD, so the pin holds.
 - **scene6 data re-encoded.** Originals (a 9,090,092 B oid `baf3f76f34`; b
   8,050,457 B oid `cf1d265b48`) copied to `data/scene6/original/` (LFS) and
