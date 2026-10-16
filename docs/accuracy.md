@@ -215,7 +215,8 @@ line with the rule that a refactor is only allowed when it proves itself:
 | `src/geometry.py` | `f44767f014c55d5b` | `d8c3c54d5e73c1ce` |
 | `src/diff.py` | `72f10984090e44d0` | `d4fc94359e6477e3` |
 | `src/tabletop.py` | `d227110953138229` | `08c7c109479c6011` |
-| `src/describe.py` | `ac00b9382d074679` | `538aa59ef2804fd5` | module footer docstring and three helper docstrings | docstrings on the five core helpers, no code change | module header, visibility docstring, two statement lines split | module header, build_change_list docstring, one unused import dropped | docstring only, module header, spacing and the fallback order documented | docstring only, module header and main() documented | docstrings/w Thumbnails only |
+| `src/describe.py` | `ac00b9382d074679` | `538aa59ef2804fd5` |
+| `src/reconstruct.py` | `db9147329a3c047d` | `4b69dd1c7564311b` | module footer docstring and two helper docstrings | module footer docstring and three helper docstrings | docstrings on the five core helpers, no code change | module header, visibility docstring, two statement lines split | module header, build_change_list docstring, one unused import dropped | docstring only, module header, spacing and the fallback order documented | docstring only, module header and main() documented | docstrings/w Thumbnails only |
 
 **Why the digest changes here:** the change to `src/summary.py` is docstring and
 docstring-comment-only (module docstring extended with the pipeline position,
