@@ -1,8 +1,25 @@
 # Autopilot status
 
-RESUME HERE (exact commands, in order):
+RESUME HERE (batch 1 phase 2 IN PROGRESS on the branch `refactor/readability`,
+currently checked out: geometry documented at `b73eb78`, diff at `8ed08b9`,
+with digest rows in docs/accuracy.md; next module in the order:
+tabletop.py, then describe.py, reconstruct.py, align.py; after the last one:
+merge with --ff-only, delete the branch, tag v1.2.3, per docs/autopilot_batch1.md):
 
 ```
+git checkout refactor/readability   # unless already there
+# per module (tabletop, describe, reconstruct, align): headers and why-docstrings only
+python scripts/golden.py check
+python -m unittest tests.test_summary tests.test_golden_summary tests.test_heldout_claims -q
+ruff check tests scripts src/naming
+git add -A && git commit -m "readability: <module> documented (frozen file)"
+python - <<'PY'   # append one digest row: sha256 pre -> post to docs/accuracy.md
+PY
+git checkout main && git merge --ff-only refactor/readability
+git branch -d refactor/readability && git push origin main
+git tag -a v1.2.3 -m "readability pass (headers and docstrings only)" && git push origin v1.2.3
+# then Phase 3 (stack selection) per docs/autopilot_batch1.md, then the Phase 7 report
+
 # Phase 2 next step: the golden outputs already live in tests/golden_summary.
 git checkout -b refactor/readability
 # iterate per frozen module (geometry, diff, tabletop, describe, reconstruct, align):
