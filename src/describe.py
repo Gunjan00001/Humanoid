@@ -24,6 +24,12 @@ All VLM answers are cached incrementally: re-runs never re-spend GPU time on
 the same crop. Model lifecycle: the VLM stays loaded for verification, labels
 and final move sentences; DINOv2 is loaded on the least-used GPU and freed
 before the sentences are generated.
+
+Where it sits in the pipeline: stage 5 of nine, the only GPU stage after
+reconstruction; see docs/code_map.md. Nothing it computes is allowed to
+feed back into detection: verification can reject a candidate, naming can
+only label what diff.py already found (the "verifier, not discoverer"
+rule), and the move sentence is written from the two crops only.
 """
 
 from __future__ import annotations
@@ -126,6 +132,13 @@ def _pose_score(recon: dict, ref: int, other: int) -> float:
 
 def best_crop_for_cluster(cid: int, points: np.ndarray, tag: str, recon: dict, cfg: dict,
                           suffix: str = "", ref_frame: int | None = None) -> dict | None:
+    """Choose the least-occlusion crop of one cluster in one video.
+
+    The pose score (relative camera angle plus the distance travelled since
+    the cluster) ranks which candidate frame should carry the evidence, and
+    a background word filter keeps a good frame from becoming a dull grey
+    square; the caller decides the cluster and which video side.
+    """
     """Pick the frame of the given video that sees the cluster best, crop it.
 
     When ``ref_frame`` is given (the own-video best frame), the frame is chosen
@@ -240,6 +253,9 @@ def load_vlm(cfg: dict):
 
 
 def vlm_answer(model, processor, images: list, prompt: str) -> str:
+    """ONE prompt in, ONE text out (single generate call, max tokens
+    from the config). Kept tiny deliberately: every caller owns its
+    own retry and caching policy, and failures raise."""
     import torch
 
     content = [{"type": "image", "image": img} for img in images]
@@ -257,6 +273,7 @@ def vlm_answer(model, processor, images: list, prompt: str) -> str:
 
 
 def parse_json_reply(text: str) -> dict:
+    """Defensive JSON parsing of the model reply (dict, else {})."""
     m = re.search(r"\{.*\}", text, re.S)
     if m:
         try:
