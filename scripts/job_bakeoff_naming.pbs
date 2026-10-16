@@ -23,7 +23,7 @@ for ATTEMPT in 1 2 3; do
   GPU=$(idlest)
   echo "=== attempt $ATTEMPT on GPU $GPU ($(date +%T)) ==="
   CUDA_VISIBLE_DEVICES=$GPU timeout 3000 $PY scripts/bakeoff_naming.py \
-      --model Qwen/Qwen3.5-4B --device cuda:0 \
+      --model "$HOME/models/Qwen3.5-4B" --device cuda:0 \
       --out logs/bakeoff_naming_Qwen3.5-4B.json
   code=$?
   if [ $code -eq 0 ]; then

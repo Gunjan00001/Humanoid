@@ -73,3 +73,24 @@ arrival cluster), a different descriptor, or a different gate could change it.
 The clock is the more worrying case: its CLS similarity (0.174) is below the
 negative control, which suggests the candidate pair is not the same object. Track
 B is closed here and is not reopened.
+
+## Stack selection: Qwen3.5-4B naming bake-off, attempt failed twice (2026-10-17)
+
+Per the failure rule, two distinct causes before the run produced numbers; both
+fixed or queued as described in docs/autopilot_status.md:
+
+1. `from_pretrained("Qwen/Qwen3.5-4B")` pointed at the hub cache while the
+   weights were a `local_dir`; in offline mode this resolved to an incomplete
+   snapshot. Fixed by passing the local weights directory.
+2. After wiring the processor's chat template with images, `generate()` fails
+   for every crop with "the following model_kwargs are not used by the model:
+   ['mm_token_type_ids', ...]" on 317 crops (peak mem 8.5 GB recorded, so the
+   model itself loads and runs). Diagnosis incomplete this round: the reply
+   truncation in the script (80 chars) hid the remainder of the message, and
+   the processor emits input keys the checkpoint's generate rejects, which is
+   an integration mismatch between the installed transformers and the
+   checkpoint revision rather than a scorer problem.
+
+Not adopted: the gate needs numbers and this attempt produced none; Qwen3-VL-32B stays the baseline for the naming decision until the
+integration mismatch is fixed (drop the unused model_kwargs / align the
+transformers revision), exactly as the conservative rule requires.

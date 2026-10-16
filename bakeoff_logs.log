@@ -1,0 +1,36 @@
+=== attempt 1 on GPU 4 (22:44:28) ===
+model /home/jiit_992401210050/models/Qwen3.5-4B on cuda:0, 317 labelled crops
+  loaded in 3s
+{
+  "model": "/home/jiit_992401210050/models/Qwen3.5-4B",
+  "n": 5,
+  "load_s": 3.5,
+  "latency_mean_s": 0.0,
+  "latency_p50_s": null,
+  "latency_max_s": null,
+  "peak_mem_gb": 8.5,
+  "correct": {
+    "unparsable": 317
+  },
+  "table": [
+    {
+      "bucket": "all crops",
+      "n": 5,
+      "exact": 0,
+      "exact_pct": 0.0,
+      "exact_ci": [
+        -0.0,
+        43.4
+      ],
+      "exact_or_parent": 0,
+      "exact_or_parent_pct": 0.0,
+      "exact_or_parent_ci": [
+        -0.0,
+        43.4
+      ],
+      "unparsable": 317
+    }
+  ]
+}
+wrote logs/bakeoff_naming_Qwen3.5-4B.json
+BAKEOFF_DONE

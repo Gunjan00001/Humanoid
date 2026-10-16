@@ -1,5 +1,23 @@
 # Autopilot status
 
+RESUME HERE (batch 1 phase 3, naming bake-off attempt 2 for Qwen3.5-4B:
+the run fails at generate with unused model_kwargs; exact resume, in order):
+
+```
+# 1. reproduce the full error (the 80-char cap hid it):
+cd /home/jiit_992401210050/Desktop/Humanoid
+GIT_LFS off; qsub scripts/job_bakeoff_naming.pbs; tail logs/bakeoff_naming_job.err
+# 2. in scripts/bakeoff_naming.py, strip the INPUT KEYS the model rejects:
+#    build local_inputs = {k: v for k, v in inputs.items() if k not in ("mm_token_type_ids",
+#    "pixel_values"?? ...)} per the full error's list, and raise the error cap from 80 to 200
+# 3. resubmit (qsub scripts/job_bakeoff_naming.pbs), read logs/bakeoff_naming_Qwen3.5-4B.json
+# 4. then the same for 9B and 27B (weights: download on the login node, smallest first),
+#    then bake offs b/c/d per docs/stack_selection.md, then the decision table there,
+#    then docs/autopilot_report_batch1.md and the final message per batch 1
+```
+
+# Autopilot status
+
 RESUME HERE (batch 1 phase 3, bake offs RUNNING):
 
 ```
