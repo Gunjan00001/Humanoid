@@ -1,5 +1,45 @@
 # Autopilot status
 
+## Phase 1 complete (privacy purge push)
+
+The authorized history rewrite was executed end to end:
+
+1. source: the rewritten repo `~/purge/work` (checked out from
+   `~/purge/staging.git`), HEAD at the purge tip, 33 tags, remote pre-purse
+   state verified, `git push --force-with-lease` applied
+2. LFS store copied from the working clone, `git lfs fsck` OK without the
+   `allowincompletepush` escape hatch, `git lfs push --all origin` clean
+3. force-with-lease on main then force tags
+4. fresh clone from GitHub verified: HEAD at the purge tip, 33 tags with the
+   same names, zero hits of the account name, the bare number, the home path,
+   the two hostnames, `otheruser-jobs` and the personal gmail anywhere in any ref,
+   commit message or tag message; `git lfs pull` and `git lfs fsck` OK; all 7
+   test suites pass; the 7 frozen digests unchanged; held-out outputs byte
+   identical to v1.0.0
+5. the cited hashes refreshed from the commit map in one normal commit; the
+   working repo reset to the rewritten history after verifying nothing was
+   unpushed; reflog expired and pruned; the v1.2.2 release tag at this commit
+6. rollback materials held at `~/backups/` and not deleted:
+   `humanoid_all.bundle` (complete history), `mirror.git` and
+   `~/purge/commit-map_real.txt`
+
+NEXT (Phase 2, exact commands):
+
+```
+# golden outputs recorded for demo, scene2..scene6 already exist in
+# tests/golden_summary (regenerate on CPU when scenes change)
+git checkout -b refactor/readability          # frozen files only
+# per module (geometry, diff, tabletop, describe, reconstruct, align):
+#   edit (headers/docstrings only), then
+#   python scripts/golden.py check
+#   python -m unittest tests.test_summary -q
+#   add a row to docs/accuracy.md per file (sha256 pre -> post)
+# merge by fast forward: git checkout main && git merge --ff-only refactor/readability
+# then delete the branch and tag a patch version
+```
+
+# Autopilot status
+
 Progress log for the automated run described in AUTOPILOT.md. Updated after every
 step: timestamp, track, step, result, next step.
 
