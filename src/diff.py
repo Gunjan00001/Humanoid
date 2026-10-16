@@ -8,9 +8,21 @@ other video actually observed that space and saw it empty.
     python src/diff.py --config configs/default.yaml
 
 Reads  cache/reconstruction/...            (poses, depth, tagged cloud)
-Writes cache/diff/clusters.json            (kept clusters, type added/removed)
+Writes cache/diff/clusters.json            (kept clusters with id, type, 3D
+                                            centroid and box in reconstruction
+                                            units, confidence, evidence frames)
        cache/diff/visibility.json          (per-candidate diagnostics)
        cache/diff/points.npz               (candidate points + cluster labels)
+
+Where it sits in the pipeline: stage 4 of nine, after reconstruction and
+describe feeds on its output; see docs/code_map.md. The occlusion-aware rule is
+the deliberate core of the method: a voxel only counts as changed when BOTH
+takes had a camera ray into that space, and one of them saw it empty, so a
+shadow, a camera move or a previously hidden object can never be reported.
+
+The thresholds live in configs/default.yaml (change_distance, the DBSCAN eps
+and min_samples, the outlier k and std_ratio, the visibility Unlike limits)
+with a comment each; nothing here is per scene.
 """
 
 from __future__ import annotations
@@ -68,6 +80,17 @@ def cluster_points(points: np.ndarray, cfg: dict) -> np.ndarray:
 
 
 def visibility_check(cluster_pts: np.ndarray, frame_idx: list[int], recon: dict, cfg: dict):
+    """The stage gate: is the region really observable in both takes?
+
+    Roughly half of all candidates die here, and they are the dangerous
+    half: a surface that was hidden in video A (behind the moving object)
+    would look like an addition, and a ray that only grazes the region
+    would make it look removed. The check projects the cluster into both
+    cameras, asks whether the depth image actually saw the space (and how
+    confidently), and returns the per-frame diagnostics that
+    cache/diff/visibility.json stores for every candidate - so a rejected
+    candidate can be audited without a re-run.
+    """
     """Fraction of cluster points that the other video saw as empty space.
 
     A point is "seen empty" in a frame when it projects inside the image and it
@@ -161,11 +184,14 @@ def main() -> int:
         for c in all_clusters:
             if c["source_tag"] in ("a", "both"):
                 p = np.asarray(c["sample_points"], dtype=np.float32)
-                a_pts.append(p); a_lab.append(np.full(len(p), c["id"], dtype=np.int32))
+                a_pts.append(p)
+                a_lab.append(np.full(len(p), c["id"], dtype=np.int32))
             if c["source_tag"] in ("b", "both"):
                 p = np.asarray(c.get("sample_points_other", c["sample_points"]),
                                dtype=np.float32)
-                b_pts.append(p); b_lab.append(np.full(len(p), c["id"], dtype=np.int32))
+                b_pts.append(p)
+
+                b_lab.append(np.full(len(p), c["id"], dtype=np.int32))
         np.savez_compressed(
             diff_dir / "points.npz",
             a_points=np.concatenate(a_pts) if a_pts else np.zeros((0, 3), np.float32),
