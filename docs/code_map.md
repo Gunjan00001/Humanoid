@@ -109,3 +109,15 @@ carries an EXPERIMENTAL header.
 `scripts/verify_adaptive_identity.py` is in this group too, but note that the
 behaviour it protects (`frames.adaptive_sharpness`) *is* part of the default path
 since v1.1.0; the script itself only runs when you ask it to.
+
+
+## The readability pass (v1.2.3)
+
+The six frozen detection files and the harness now carry stage-position,
+input and output statements in their module docstrings, `why` reasoning for
+every threshold and non-obvious conversion (crop and pad modes, the
+occlusion-aware rule, the plane inliers, the alignment's static-subset rule),
+and `why` comments at the two-column trickier loops. The digest ledger in
+docs/accuracy.md has one pre-to-post row per file: geometry, diff, tabletop,
+describe, reconstruct, align. Golden summaries under tests/golden_summary
+regenerate byte identical, so the refactor provably changed no behaviour.
