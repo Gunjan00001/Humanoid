@@ -23,6 +23,12 @@ Writes cache/reconstruction/:
 Memory note: with 60 frames at 518px in bf16 VGGT fits one A100-80GB. If it
 does not (torch.cuda.OutOfMemoryError), lower frames.max_frames_per_video or
 use --limit_per_video for a chunked workflow.
+
+Where it sits in the pipeline: stage 2 of nine; everything geometric reads
+what it writes, so this stage is the single backend gate and the reason both
+videos always land in ONE coordinate frame (see docs/code_map.md). The
+OpenCV convention note matters: the extrinsics are camera-from-world, and
+project_points() in src/geometry.py applies them the same way.
 """
 
 from __future__ import annotations
@@ -64,6 +70,11 @@ MODEL_TARGET = 518  # VGGT's native input width (see vggt.utils.load_fn)
 
 
 def load_frame_list(cfg: dict, limit_per_video: int | None = None) -> list[dict]:
+    """Read frames/index.json and return the per-frame metadata list.
+
+    The optional cap is the smoke-test path (--limit_per_video): fewer
+    frames per video, cheaper reconstruction, same artifact layout.
+    """
     """Ordered frames: all of video A, then all of video B (tags preserved)."""
     index = read_json(cache_dir(cfg, "frames") / "index.json")
     frames_dir = repo_path(cfg["paths"]["cache_dir"]) / "frames"
@@ -85,6 +96,12 @@ def load_frame_list(cfg: dict, limit_per_video: int | None = None) -> list[dict]
 
 
 def run_vggt(frames: list[dict], cfg: dict, limit_per_video: int | None = None) -> dict:
+    """VGGT in-process: both videos in one call, one shared frame.
+
+    The list interleaves A and B frames on purpose (joint optimisation
+    is the whole point); the returned dict matches the cache contract
+    of the backends, so main() can write the same files either way.
+    """
     import os
 
     import torch
