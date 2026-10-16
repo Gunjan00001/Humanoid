@@ -1,7 +1,20 @@
-"""Shared array/geometry helpers for the CPU stages.
+"""Shared array and geometry helpers for the CPU stages.
 
-Keeps the expensive-artifact formats in one place: everything here reads the
-cache written by src/reconstruct.py (or src/align.py) and never touches a GPU.
+Where it sits in the pipeline: stage 1 to 4 read and write the caches this
+module interprets, and stages 6 to 9 project through it; see docs/code_map.md.
+It holds the on-disk formats ("what the cache of one run looks like"), the
+camera maths shared by every consumer, and the model-space to original-frame
+transform (so model coordinates can be shown on the JPEG the reader saw).
+
+Inputs: the reconstruction cache written by src/reconstruct.py (or
+src/align.py's aligned/ form) - meta.json, cameras.npz, dense.npz,
+colors.npz - plus the run config. Outputs: in-memory dicts and arrays, never
+GPU calls (the reconstruction backends live elsewhere and the CPU stages here
+consume their results).
+
+The 518 constant is VGGT's native input width (hard-coded upstream by the
+preprocessing); see model_to_original_transform for what it means for the
+reader's frames.
 """
 
 from __future__ import annotations
@@ -11,7 +24,7 @@ from typing import Any
 
 import numpy as np
 
-from src.common import cache_dir, read_json, repo_path
+from src.common import read_json, repo_path
 
 MODEL_TARGET = 518  # VGGT native width (vggt.utils.load_fn)
 
@@ -161,6 +174,15 @@ def model_bbox_to_original(bbox_xyxy: tuple[float, float, float, float],
 
 
 def build_change_list(cfg: dict[str, Any]) -> list[dict[str, Any]]:
+    """Read the diff stage cache and return the change entries.
+
+    Reads diff/points.npz and diff/clusters.json under the run cache and
+    returns one dict per change: id, type, label, 3D centroid and bbox
+    (in reconstruction units), confidence and the evidence frames.
+    Shared verbatim by report.py (which writes it to report.json) and
+    visualize.py (which draws it), so the two can never disagree about
+    what a change is.
+    """
     """Merge clusters + VLM verification + DINOv2 matches into final changes.
 
     Sources (all optional except the diff output):
