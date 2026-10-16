@@ -42,6 +42,15 @@ log = logging.getLogger("tabletop")
 
 
 def fit_dominant_plane(points: np.ndarray, thresh: float = 0.03, iters: int = 6) -> np.ndarray:
+    """Iteratively fit the dominant plane, returning [a, b, c, d].
+
+    The plane is the transform's z=0 surface, so every later "height above the
+    table" is a signed distance to this plane (units: reconstruction units,
+    same as the voxel size in configs/default.yaml). Iterations matter more
+    than precision: points of objects on the table pull a naive fit, so the
+    inlier threshold (0.03 ~ 3 cm at demo scale) rejects them and each round
+    refits over the survivors.
+    """
     """z = a*x + b*y + c for the dominant surface, via iterative reweighting."""
     p = points
     coef = np.array([0.0, 0.0, float(np.median(points[:, 2]))])
@@ -57,6 +66,7 @@ def fit_dominant_plane(points: np.ndarray, thresh: float = 0.03, iters: int = 6)
 
 
 def plane_height(points: np.ndarray, coef: np.ndarray) -> np.ndarray:
+    """Signed height of every point above the fitted plane (units as above)."""
     return points[:, 2] - (coef[0] * points[:, 0] + coef[1] * points[:, 1] + coef[2])
 
 
@@ -129,14 +139,24 @@ def fit_color_field(color: np.ndarray, valid: np.ndarray, iters: int = 4,
 
 
 def objectness(color: np.ndarray, field: np.ndarray) -> np.ndarray:
-    """Per-cell distance from the fitted table colour (0-255 RGB units)."""
+    """Per-cell objectness score: projected colour distance from the
+    locally fitted table colour field (see fit_color_field). Numbers are
+    in the same units as the colour channels (0-255 scaled), so the
+    threshold in configs/default.yaml compares like with like."""
     return np.linalg.norm(color - field, axis=2)
 
 
 def ratio_distance(color_a: np.ndarray, color_b: np.ndarray,
                    field_a: np.ndarray, field_b: np.ndarray, floor: float = 12.0) -> np.ndarray:
-    """Cast-robust comparison: how different are the two colours *relative* to
-    their own fitted table colours? (used for 'replaced')."""
+    """Cast-robust comparison for the replaced ruling: how different are
+    the two colours *relative* to their own fitted table colours?
+
+    Both clouds exist, so this is the field the replaced-versus-moved
+    decision reads: a moved object keeps its colour and changes its
+    neighbourhood, so its cell colours track each other and the ratio
+    stays near one. The floor keeps the division safe where the table
+    colour is nearly black (scaled 0-255 RGB units like objectness).
+    """
     ra = color_a / np.maximum(field_a, floor)
     rb = color_b / np.maximum(field_b, floor)
     return np.linalg.norm(ra - rb, axis=2) * 255.0 / 3.0

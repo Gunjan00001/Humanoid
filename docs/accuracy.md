@@ -213,7 +213,8 @@ line with the rule that a refactor is only allowed when it proves itself:
 | `src/report.py` | `b1fe6be1e5b6e5d5` | `77acdded6746de57` |
 | `src/extract_frames.py` | `599c4d80edd8b0db` | `d291529ae6bc5feb` |
 | `src/geometry.py` | `f44767f014c55d5b` | `d8c3c54d5e73c1ce` |
-| `src/diff.py` | `72f10984090e44d0` | `d4fc94359e6477e3` | module header, visibility docstring, two statement lines split | module header, build_change_list docstring, one unused import dropped | docstring only, module header, spacing and the fallback order documented | docstring only, module header and main() documented | docstrings/w Thumbnails only |
+| `src/diff.py` | `72f10984090e44d0` | `d4fc94359e6477e3` |
+| `src/tabletop.py` | `d227110953138229` | `08c7c109479c6011` | docstrings on the five core helpers, no code change | module header, visibility docstring, two statement lines split | module header, build_change_list docstring, one unused import dropped | docstring only, module header, spacing and the fallback order documented | docstring only, module header and main() documented | docstrings/w Thumbnails only |
 
 **Why the digest changes here:** the change to `src/summary.py` is docstring and
 docstring-comment-only (module docstring extended with the pipeline position,
