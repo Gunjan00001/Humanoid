@@ -1,5 +1,30 @@
 # Autopilot status
 
+RESUME HERE (exact commands, in order):
+
+```
+# Phase 2 next step: the golden outputs already live in tests/golden_summary.
+git checkout -b refactor/readability
+# iterate per frozen module (geometry, diff, tabletop, describe, reconstruct, align):
+#   headers + why-comments + docstrings only, no behavior change, then in this order:
+#   python scripts/golden.py check
+#   python -m unittest tests.test_summary tests.test_golden_summary -q
+#   python -m unittest tests.test_heldout_claims          # frozen digest rows
+#   ruff check tests scripts src/naming                    # E4,E7,E9,F
+#   append one digest row (sha256 pre -> post) to docs/accuracy.md
+#   git commit -m "readability: <module> documented"
+# after the last module:
+git checkout main && git merge --ff-only refactor/readability
+git branch -d refactor/readability && git push origin main
+git tag -a v1.2.3 -m "readability pass (headers and docstrings only)"
+git push origin v1.2.3
+# then Phase 3 stack selection (docs/stack_selection.md), Phase 4 object-first on
+# exp/object-first, Phase 5 naming adoption behind flags, Phase 6 merge decision,
+# Phase 7 final report per the master autopilot.
+```
+
+utopilot status
+
 ## Phase 1 complete (privacy purge push)
 
 The authorized history rewrite was executed end to end:
