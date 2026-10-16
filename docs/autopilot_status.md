@@ -1,5 +1,22 @@
 # Autopilot status
 
+RESUME HERE (batch 1 phase 3: probes and rules done in docs/stack_selection.md;
+next the offline bake offs, then Phase 7's batch 1 report):
+
+```
+# bake offs per the plan in docs/stack_selection.md:
+# a) naming: Qwen3.5 family vs Qwen3-VL-32B cached baseline on the 387 crops
+#    + dev crops (mask-tight crop variant included), Wilson intervals
+# b) segmentation: SAM 3.1 vs SAM 2.1 on the dev scenes (stable track IDs)
+# c) matching: DINOv3 ViT-L vs DINOv2 on the recorded control pairs
+# d) geometry: VGGT vs DA3 / Pi3X / MapAnything (2x, 4x), residual, density,
+#    metric scale, runtime, memory
+# write results into docs/stack_selection.md per decision rule 1-6, then the
+# batch 1 report file docs/autopilot_report_batch1.md and the final message
+```
+
+# Autopilot status
+
 RESUME HERE (batch 1 phase 2 code COMPLETE: geometry b73eb78, diff 8ed08b9,
 tabletop 66a8271, describe d44de88, reconstruct 5e449fc, align 7f23f4f, all
 merged into main by fast forward, branch deleted; next: patch tag):
