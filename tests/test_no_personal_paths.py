@@ -220,3 +220,49 @@ class TestNoCredentialAssignments(unittest.TestCase):
             offenders.append(line)
         self.assertEqual(offenders, [],
                          "credential-style assignments:\n" + "\n".join(offenders))
+
+
+NOREPLY = "Gunjan00001@users.noreply.github.com"
+
+
+class TestAuthorIdentity(unittest.TestCase):
+    """Every commit and annotated tag carries the public identity, and nothing
+    else. This is the check that keeps an author or committer leak from coming
+    back after a reset: a commit made from a cluster login (where git guesses
+    the identity from the hostname) would fail here the moment it lands."""
+
+    def test_commit_identities(self):
+        out = subprocess.run(["git", "log", "--all", "--format=%H|%an|%ae|%cn|%ce"],
+                             cwd=ROOT, capture_output=True, text=True).stdout
+        bad = []
+        for line in out.splitlines():
+            parts = line.split("|")
+            if len(parts) != 5:
+                continue
+            sha, an, ae, cn, ce = parts
+            for email in (ae, ce):
+                if email != NOREPLY:
+                    bad.append(f"{sha[:12]} author/committer {email}")
+            for name in (an, cn):
+                if CLUSTER in name:
+                    bad.append(f"{sha[:12]} name contains the cluster login")
+        self.assertEqual(bad, [], "non-public identities in history:\n" + "\n".join(bad))
+
+    def test_tagger_identities(self):
+        """Annotated tags carry a tagger; lightweight tags have none and are
+        skipped. A shallow clone checks whatever exists."""
+        out = subprocess.run(
+            ["git", "for-each-ref", "refs/tags",
+             "--format=%(refname:short)|%(taggername)|%(taggeremail)|%(objecttype)"],
+            cwd=ROOT, capture_output=True, text=True).stdout
+        bad = []
+        for line in out.splitlines():
+            parts = line.split("|")
+            if len(parts) != 4 or parts[3] != "tag":
+                continue                       # lightweight tag: no tagger field
+            name, email = parts[1], parts[2]
+            if email and email.strip(" <>") != NOREPLY:
+                bad.append(f"{parts[0]} tagger {email}")
+            if name and CLUSTER in name:
+                bad.append(f"{parts[0]} tagger name contains the cluster login")
+        self.assertEqual(bad, [], "non-public taggers:\n" + "\n".join(bad))

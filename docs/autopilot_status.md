@@ -37,7 +37,7 @@ The authorized history rewrite was executed end to end:
 3. force-with-lease on main then force tags
 4. fresh clone from GitHub verified: HEAD at the purge tip, 33 tags with the
    same names, zero hits of the account name, the bare number, the home path,
-   the two hostnames, `otheruser-jobs` and the personal gmail anywhere in any ref,
+   the two hostnames, another user's jobs and the personal gmail anywhere in any ref,
    commit message or tag message; `git lfs pull` and `git lfs fsck` OK; all 7
    test suites pass; the 7 frozen digests unchanged; held-out outputs byte
    identical to v1.0.0
