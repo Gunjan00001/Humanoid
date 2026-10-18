@@ -89,8 +89,8 @@ next the offline bake offs, then Phase 7's batch 1 report):
 
 # Autopilot status
 
-RESUME HERE (batch 1 phase 2 code COMPLETE: geometry b73eb78, diff 8ed08b9,
-tabletop 66a8271, describe d44de88, reconstruct 5e449fc, align 7f23f4f, all
+RESUME HERE (batch 1 phase 2 code COMPLETE: geometry 8bbe09d, diff 9577848,
+tabletop baa8e02, describe dca63fb, reconstruct c85710f, align f6c6fdf, all
 merged into main by fast forward, branch deleted; next: patch tag):
 
 ```
