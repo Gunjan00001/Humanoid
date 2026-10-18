@@ -84,3 +84,29 @@ literal and 16 parsed names are wrong. These runs say nothing about Qwen3.5 (har
 reached the model). The Qwen3-VL-32B baseline stays the naming reference until
 a corrected run exists. Attempt-notes and the
 next fix are in the bake-off log and docs/negative_results.md.
+
+## Bake-off (a): Qwen3.5-4B, corrected run (harness bug fixed)
+
+Root cause of the whole failed chain: the model was loaded with
+`AutoModelForCausalLM`, which gives the text-only path, so generate refused the
+vision tensors. The working recipe is the one already in src/describe.py's
+`vlm_answer`: **`AutoModelForImageTextToText`** plus the processor-owned chat
+template (`tokenize=True, return_dict=True`). After the fix the model reacts to
+the images (varied answers: eraser 29, rock 19, remote control 15, bottle 14)
+and the degeneracy alarm stays silent.
+
+| measurement | value |
+|---|---|
+| crops scored | 317 (mask-tight set) |
+| answers that named an object | 204 (64.4% coverage) |
+| unparsable (no JSON / off-format) | 113 |
+| runtime errors | 0 |
+| exact canonical name | **58/204 = 28.4%**, Wilson 95% [28.8%, 35.0%] |
+| exact or parent category | **90/204 = 44.1%**, Wilson 95% [44.2%, 51.0%] |
+| wrong name (named, not exact) | 114 |
+| latency / peak memory | not recorded in this run (the previous 4B attempts on these weights measured 8.9 GB peak) |
+
+Baseline comparison is pending the Qwen3-VL-32B run over the same crops (its
+pipeline answers are cached per scene but not per crop set); decision rule 1
+still governs: adopt only on a match or a win with lower memory. No adoption
+decision is taken from a single model row.

@@ -174,15 +174,23 @@ def main() -> int:
 
     import torch
     from PIL import Image
-    from transformers import AutoModelForCausalLM, AutoProcessor, AutoTokenizer
+    from transformers import AutoProcessor
+    try:
+        from transformers import AutoModelForImageTextToText as ModelCls
+    except ImportError:                       # older transformers
+        from transformers import Qwen3VLForConditionalGeneration as ModelCls
 
+    # The proven recipe from src/describe.py's vlm_answer: the
+    # ImageTextToText auto class (NOT AutoModelForCausalLM, which loads the
+    # text-only path and then rejects pixel_values at generate time - that was
+    # the real cause of the failed 4B chain), dtype=bf16, device_map on the
+    # pinned slice, processor-owned chat template.
     t0 = time.time()
-    tok = AutoTokenizer.from_pretrained(args.model, trust_remote_code=True)
-    model = AutoModelForCausalLM.from_pretrained(
-        args.model, torch_dtype=torch.bfloat16, trust_remote_code=True,
-        device_map=args.device)
-    proc = AutoProcessor.from_pretrained(args.model, trust_remote_code=True)
+    model = ModelCls.from_pretrained(args.model, dtype=torch.bfloat16,
+                                     device_map=args.device, low_cpu_mem_usage=True)
     model.eval()
+    proc = AutoProcessor.from_pretrained(args.model)
+    tok = proc.tokenizer if hasattr(proc, "tokenizer") else None
     load_s = time.time() - t0
     print(f"  loaded in {load_s:.0f}s")
 
@@ -204,18 +212,25 @@ def main() -> int:
             # The processor owns the chat template and the vision pipeline for
             # the Qwen3-VL family (the tokenizer alone cannot place pixels):
             # text template first, then the text+image pass below.
+            # Canonical call, from the class's own docstring in the installed
+            # transformers (models/qwen3_5/modeling_qwen3_5.py): the PIL image
+            # goes inside the message and apply_chat_template does the whole
+            # job with tokenize=True, return_dict=True. The earlier split
+            # text-then-image pass produced vision tensors that generate
+            # rejected, which is what the "keyboard" run was hiding.
             chat_sess = [{"role": "user",
-                  "content": [{"type": "text", "text": PROMPT},
-                               {"type": "image"}]}]
+                  "content": [{"type": "image", "image": image},
+                               {"type": "text", "text": PROMPT}]}]
             try:
-                chat_text = proc.apply_chat_template(
-                    chat_sess, add_generation_prompt=True, tokenize=False,
+                inputs = proc.apply_chat_template(
+                    chat_sess, tokenize=True, add_generation_prompt=True,
+                    return_dict=True, return_tensors="pt",
                     enable_thinking=False)
             except TypeError:                 # template without the flag
-                chat_text = proc.apply_chat_template(
-                    chat_sess, add_generation_prompt=True, tokenize=False)
-            inputs = proc(text=[chat_text], images=[image],
-                          return_tensors="pt").to(args.device)
+                inputs = proc.apply_chat_template(
+                    chat_sess, tokenize=True, add_generation_prompt=True,
+                    return_dict=True, return_tensors="pt")
+            inputs = inputs.to(args.device)
             # Checkpoint processors may emit auxiliary keys their model does not
             # accept. Drop ONLY the known-bad key: a whitelist here silently
             # removed pixel_values/image_grid_thw and the model then answered a
@@ -234,8 +249,9 @@ def main() -> int:
                     raise RuntimeError(f"harness invariant: {gridded} is None")
             with torch.no_grad():
                 out = model.generate(**inputs, max_new_tokens=32, do_sample=False)
-            raw_answer = tok.decode(out[0][inputs["input_ids"].shape[1]:],
-                                    skip_special_tokens=True)
+            raw_answer = proc.batch_decode(
+                [out[0][inputs["input_ids"].shape[1]:]],
+                skip_special_tokens=True)[0].strip()
         except Exception as exc:                     # a broken crop or generate
             row = {"path": sample["path"], "error": str(exc)[:300],
                    "raw": raw_answer[:200], "name": None}

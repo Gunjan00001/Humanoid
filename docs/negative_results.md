@@ -143,3 +143,11 @@ the naming baseline. The corrected integration is the first resume command in
 docs/autopilot_status.md; this is attempt five in the chain and the round is
 recorded as a negative so the next session starts from the fix, not from
 re-deriving it.
+
+Resolved (batch 2): the cause was the model class, not the checkpoint.
+`AutoModelForCausalLM` gives the text-only path and generate then rejects
+`pixel_values`; `AutoModelForImageTextToText` (the class the working 32B path
+already uses) fixes it. The corrected run on the same 317 crops produced real
+numbers (exact 28.4%, exact-or-parent 44.1%) and varied answers, so **none of
+the attempts in this section is a result about Qwen3.5**. Kept as history of the
+debugging, with the invariants now guarding the class of bug.
