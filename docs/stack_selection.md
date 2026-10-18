@@ -110,3 +110,17 @@ Baseline comparison is pending the Qwen3-VL-32B run over the same crops (its
 pipeline answers are cached per scene but not per crop set); decision rule 1
 still governs: adopt only on a match or a win with lower memory. No adoption
 decision is taken from a single model row.
+
+### Bake-off (a) rows so far (same 317 mask-tight crops, same prompt)
+
+| model | named (coverage) | exact | exact or parent | wrong | unparsable |
+|---|---|---|---|---|---|
+| Qwen3.5-4B | 204/317 (64.4%) | **58 (28.4%) [28.8, 35.0]** | **90 (44.1%) [44.2, 51.0]** | 114 | 113 |
+| Qwen3.5-9B | 217/317 (68.5%) | **63 (29.0%) [29.4, 35.4]** | **101 (46.5%) [46.6, 53.2]** | 116 | 100 |
+
+The two challengers land within one point of each other on exact and two points
+on exact-or-parent, with intervals that overlap: no separation yet. The 32B
+baseline over the same crop set is still to be measured (its per-crop answers
+are cached per scene, not for this set); until it is, decision rule 1 is not
+satisfied and the flag stays OFF. Both models share a visible bias (the single
+answer "eraser" is 26-29 of the answers), which belongs in any write-up.
