@@ -1,5 +1,24 @@
 # Autopilot status
 
+RESUME HERE (batch 2 phase 3: scoring fixes done, four runs in flight):
+
+```
+qstat | grep -E "bakeoff"        # 11791 4B loglik, 11792 9B loglik, 11793 ablation,
+                                 # 11794 9B blank-calibrated loglik, +32B baseline (new)
+# outputs land as logs/bakeoff_naming_<TAG>_<PROTOCOL>_<CANDIDATES>.json
+# 32B baseline: logs/bakeoff_naming_Qwen3-VL-32B_free_all.json  <- rule 1 needs it
+# (the first 32B submission failed because qsub -v passed $HOME literally; the
+#  job now expands it, and the run was resubmitted)
+# then: decision table with corrected numbers (all-crops denominator), then
+# bake offs b (SAM 3.1 vs SAM 2.1), c (DINOv3 vs DINOv2 controls; weights local),
+# d (geometry), then docs/autopilot_report_batch1.md and Phase 4 as written.
+# BLOCKED in the last time box: item 1c public vocabulary (LVIS lvis package has
+# no category list and the raw JSON paths 404; candidates: LVIS v1 1,203,
+# ScanNet200 + Objects365). Recorded, not guessed.
+```
+
+# Autopilot status
+
 RESUME HERE (batch 2 phase 3: bake-offs running in parallel; Wilson fixed; next
 = read the three queued jobs, then b/c/d):
 

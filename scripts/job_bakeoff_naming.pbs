@@ -16,6 +16,7 @@
 cd "$PBS_O_WORKDIR" || exit 1
 MODEL="${MODEL:-4B}"
 MODEL_DIR="${MODEL_DIR:-$HOME/models/Qwen3.5-$MODEL}"
+MODEL_DIR="${MODEL_DIR/\$HOME/$HOME}"      # qsub -v passes $HOME literally
 TAG="${TAG:-Qwen3.5-$MODEL}"
 DEVICE="${DEVICE:-cuda:0}"
 PROTOCOL="${PROTOCOL:-free}"
