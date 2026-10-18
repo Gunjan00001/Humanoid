@@ -1,0 +1,35 @@
+#!/bin/bash
+# Context ablation (item 6) and the bias subset (item 4), sequential in one job
+# to respect the per-user job budget. All invocations share the scoring code,
+# the prompt and the parser; only the crop context and the protocol differ.
+#PBS -N bakeoff_ablation
+#PBS -q gpu
+#PBS -l select=1:ncpus=4:mem=60gb:ngpus=1
+#PBS -l walltime=04:00:00
+#PBS -o logs/bakeoff_ablation.log
+#PBS -e logs/bakeoff_ablation.err
+
+cd "$PBS_O_WORKDIR" || exit 1
+MODEL="${MODEL:-9B}"
+MODEL_DIR="${MODEL_DIR:-$HOME/models/Qwen3.5-$MODEL}"
+TAG="${TAG:-Qwen3.5-$MODEL}"
+PY="${SPATIALDIFF_PYTHON:-$HOME/miniconda3/envs/spatialdiff/bin/python}"
+export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+
+GPU=$(nvidia-smi --query-gpu=index,memory.free --format=csv,noheader,nounits \
+      | sort -t, -k2 -rn | head -1 | cut -d, -f1)
+echo "=== $TAG on GPU $GPU ($(date +%T)) ==="
+
+run() {  # run <suffix> <extra args...>
+  local suffix="$1"; shift
+  echo "--- $suffix ($(date +%T))"
+  CUDA_VISIBLE_DEVICES=$GPU timeout 3500 "$PY" scripts/bakeoff_naming.py \
+      --model "$MODEL_DIR" --device cuda:0 "$@" \
+      --out "logs/bakeoff_naming_${TAG}_${suffix}.json" || echo "  $suffix FAILED"
+}
+
+run "variant_blanked" --manifest data/naming_set/manifest.json
+run "variant_margin"  --manifest data/naming_set/manifest_margin.json
+run "variant_frame"   --manifest data/naming_set/manifest_frame.json
+run "loglik_shuffled_40" --protocol loglik --shuffle-seed 0 --limit 40
+echo "ABLATION_DONE"

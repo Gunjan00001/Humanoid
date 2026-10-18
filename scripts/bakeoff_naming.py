@@ -55,6 +55,10 @@ def parse_args() -> argparse.Namespace:
                    help="free generation, or closed-set scoring by log likelihood")
     p.add_argument("--candidates", choices=["all", "top10"], default="all",
                    help="loglik: score the whole vocabulary or the SigLIP top 10")
+    p.add_argument("--manifest", default=str(MANIFEST),
+                   help="crop manifest to score (variants share the code)")
+    p.add_argument("--shuffle-seed", type=int, default=None,
+                   help="loglik: shuffle the candidate order with this seed")
     p.add_argument("--max-memory", default=None,
                    help="e.g. 40GiB per GPU when --device auto (32B with offload)")
     return p.parse_args()
@@ -102,9 +106,9 @@ def abs_path(rel: str) -> Path:
     return p_ if p_.is_absolute() else ROOT / p_
 
 
-def load_inputs() -> list[dict]:
+def load_inputs(manifest: str | None = None) -> list[dict]:
     syn = json.loads(SYNONYMS.read_text())
-    crops = json.loads(MANIFEST.read_text())["crops"]
+    crops = json.loads(Path(manifest or MANIFEST).read_text())["crops"]
     rows = []
     for c in crops:
         truth = syn["mapped"].get(c["label"])
@@ -208,7 +212,7 @@ def main() -> int:
     global _SIGLIP
     args = parse_args()
     vocab: Vocabulary = load_vocabulary()
-    inputs = load_inputs()
+    inputs = load_inputs(args.manifest)
     if args.limit:
         inputs = inputs[: args.limit]
     print(f"model {args.model} on {args.device}, "
@@ -272,6 +276,9 @@ def main() -> int:
             # rejected, which is what the "keyboard" run was hiding.
             if args.protocol == "loglik":
                 cands = list(vocab.canonical)
+                if args.shuffle_seed is not None:
+                    import random
+                    random.Random(args.shuffle_seed).shuffle(cands)
                 if args.candidates == "top10":
                     # SigLIP rerank narrows the closed set to ten plausible
                     # labels; run it on CPU when the VLM owns the GPU.

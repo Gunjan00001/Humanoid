@@ -67,7 +67,8 @@ def crop_indices(keys: list[str], limit: int) -> list[int]:
 
 
 def crop_object(video: Path, masks: dict, limit: int, out_dir: Path, tag: str,
-                margin: float = 0.08) -> list[dict]:
+                margin: float = 0.08, blank: bool = True,
+                full_frame: bool = False) -> list[dict]:
     """One pass over the video, writing a crop for each sampled frame."""
     wanted = set(crop_indices(list(masks), limit))
     if not wanted:
@@ -107,11 +108,21 @@ def crop_object(video: Path, masks: dict, limit: int, out_dir: Path, tag: str,
                 if patch is None or patch.size == 0 or min(patch.shape[:2]) < 2:
                     index += 1
                     continue                  # degenerate box, skip this frame
-                # Blank everything outside the mask so the crop is the object
-                # alone: naming should not be helped or hurt by the background.
-                patch = patch.copy()
+                # Three variants for the context ablation (item 6):
+                #   blanked (a): background outside the mask zeroed, the default;
+                #   margin  (b): a real 20% margin of background, no blanking;
+                #   frame   (c): the whole frame with the mask outlined.
                 sub = mask[y0:y1, x0:x1]
-                patch[~sub] = 0
+                if full_frame:
+                    patch = frame.copy()
+                    outline = cv2.morphologyEx(mask.astype(np.uint8), cv2.MORPH_GRADIENT,
+                                               np.ones((5, 5), np.uint8)) > 0
+                    patch[outline] = (0, 0, 255)
+                elif blank:
+                    patch = patch.copy()
+                    patch[~sub] = 0
+                else:
+                    patch = patch.copy()
                 name = f"{tag}_{index:05d}.png"
                 cv2.imwrite(str(out_dir / name), patch)
                 rows.append({"path": str(out_dir / name), "frame": index,
@@ -125,6 +136,8 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--pairs", nargs="*", default=None)
+    ap.add_argument("--variant", choices=["blanked", "margin", "frame"],
+                    default="blanked", help="crop context variant (item 6)")
     ap.add_argument("--per-object", type=int, default=6,
                     help="crops per object per video side")
     ap.add_argument("--min-size", type=int, default=24, help="skip crops smaller than this")
@@ -134,7 +147,7 @@ def main() -> int:
                         format="%(levelname)-7s %(message)s")
 
     pairs = args.pairs or val_pairs()
-    out_dir = OUT / "crops"
+    out_dir = OUT / ("crops" if args.variant == "blanked" else f"crops_{args.variant}")
     out_dir.mkdir(parents=True, exist_ok=True)
     manifest: list[dict] = []
 
@@ -154,8 +167,9 @@ def main() -> int:
                 if not masks or not videos[side]:
                     continue
                 tag = f"{pair}__o{idx}__v{side}"
-                rows = crop_object(videos[side][0], masks, args.per_object,
-                                   out_dir, tag)
+                rows = crop_object(videos[side][0], masks, args.per_object, out_dir, tag,
+                                   blank=(args.variant == "blanked"),
+                                   full_frame=(args.variant == "frame"))
                 for row in rows:
                     if min(row["width"], row["height"]) < args.min_size:
                         Path(row["path"]).unlink(missing_ok=True)
@@ -164,12 +178,14 @@ def main() -> int:
                                      "label": label, "side": side, **row})
         log.info("%s: %d crops so far", pair, len(manifest))
 
-    (OUT / "manifest.json").write_text(json.dumps(
+    manifest_name = {"blanked": "manifest.json", "margin": "manifest_margin.json",
+                     "frame": "manifest_frame.json"}[args.variant]
+    (OUT / manifest_name).write_text(json.dumps(
         {"source": "SceneDiff validation pairs only", "crops": manifest}, indent=2))
     labels = sorted({m["label"] for m in manifest})
     print(f"\nwrote {len(manifest)} crops from {len(pairs)} validation pairs")
     print(f"distinct ground-truth labels: {len(labels)}")
-    print(f"manifest: {OUT / 'manifest.json'}")
+    print(f"manifest: {OUT / manifest_name}   crops: {out_dir}")
     return 0
 
 
