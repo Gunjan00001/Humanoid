@@ -75,11 +75,12 @@ d. **Geometry:** VGGT (incumbent) versus DA3 Giant 1.1 (nested metric), Pi3X
    metric scale against a known object size, runtime and memory.
 
 
-## Bake-off (a) first result: Qwen3.5-4B fails on echo and instruction noise
+## Bake-off (a): the Qwen3.5-4B attempts were a harness bug (see the correction in docs/negative_results.md)
 
 One run over the 317 mapped crops (logs/bakeoff_naming_Qwen3.5-4B.json):
 per-crop latency 0.44 s (p50 0.45, max 1.48), peak 8.9 GB, no exact or parent
 measurement possible because 301 of 317 replies echo the prompt's placeholder
-literal and 16 parsed names are wrong. Per the decision rules: **not adopted**,
-the Qwen3-VL-32B baseline stays the naming reference. Attempt-notes and the
+literal and 16 parsed names are wrong. These runs say nothing about Qwen3.5 (harness bug: the image tensors never
+reached the model). The Qwen3-VL-32B baseline stays the naming reference until
+a corrected run exists. Attempt-notes and the
 next fix are in the bake-off log and docs/negative_results.md.

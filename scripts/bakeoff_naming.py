@@ -163,11 +163,21 @@ def main() -> int:
             inputs = proc(text=[chat_text], images=[image],
                           return_tensors="pt").to(args.device)
             # Checkpoint processors may emit auxiliary keys their model does not
-            # accept (the kwargs mismatch that ended attempt 2); keep only the
-            # keys the forward pass actually takes.
-            import inspect
-            fwd = inspect.signature(model.forward).parameters
-            inputs = {k: v for k, v in inputs.items() if k in fwd}
+            # accept. Drop ONLY the known-bad key: a whitelist here silently
+            # removed pixel_values/image_grid_thw and the model then answered a
+            # constant (the "keyboard" run, docs/negative_results.md), which the
+            # invariants below now refuse to let happen silently.
+            inputs.pop("mm_token_type_ids", None)
+            inputs = {k: v for k, v in inputs.items() if v is not None}
+            # Invariant (a): the model must actually receive the image. A run
+            # without pixel_values (and image_grid_thw where the checkpoint uses
+            # it) is a harness bug, not a model result: fail loudly.
+            if "pixel_values" not in inputs or inputs["pixel_values"] is None:
+                raise RuntimeError("harness invariant: no pixel_values in the "
+                                   "processor output; the model would see text only")
+            for gridded in ("image_grid_thw", "image_sizes"):
+                if gridded in inputs and inputs[gridded] is None:
+                    raise RuntimeError(f"harness invariant: {gridded} is None")
             with torch.no_grad():
                 out = model.generate(**inputs, max_new_tokens=32, do_sample=False)
             raw_answer = tok.decode(out[0][inputs["input_ids"].shape[1]:],
@@ -217,6 +227,18 @@ def main() -> int:
             counter["wrong"] += 1; correct = "wrong"
         rows.append({"path": sample["path"], "name": name, "canon": better,
                      "truth": truth_canon, "correct": correct})
+
+    # Invariant (c): a constant answer over many crops means the model is not
+    # seeing the images or the prompt is broken. Stop and report instead of
+    # writing a result nobody should believe.
+    from collections import Counter
+    if len(rows) >= 20:
+        top, top_n = Counter((r.get("name") or "") for r in rows if not r.get("error")).most_common(1)[0]
+        if top and top_n / max(1, len(rows)) > 0.5:
+            print(f"DEGENERACY ALARM: {top!r} for {top_n}/{len(rows)} answers; "
+                  f"refusing to write a result (harness bug, see docs/debugging.md)",
+                  file=sys.stderr)
+            raise SystemExit("degenerate answer distribution")
 
     peak = torch.cuda.max_memory_allocated(args.device) / 1e9
     table = [

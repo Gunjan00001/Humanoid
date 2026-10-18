@@ -1,3 +1,14 @@
+## Stack selection: the Qwen3.5-4B attempts are a HARNESS BUG, not a model result
+
+Correction (batch 2, Phase 3 item 3): every Qwen3.5-4B entry below was a harness
+failure. The final one is proven: the kwargs whitelist added after attempt 2
+dropped `pixel_values` and `image_grid_thw`, so the model received text only and
+answered a constant. Nothing in this section says anything about what Qwen3.5
+can do; the attempts are kept only as a debugging record, and none of them
+appears in the decision table. The invariants added in Phase 3 (pixel_values
+required, visual control, degeneracy alarm, known-answer smoke) exist so this
+class of bug cannot hide again.
+
 # Negative results
 
 Real outcomes that did not work. Kept so they are not retried blindly. All
