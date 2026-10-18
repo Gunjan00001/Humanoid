@@ -1,40 +1,46 @@
 #!/bin/bash
-# Paths: the directives use paths RELATIVE to the submission directory (PBS
-# does not expand variables in directives), and the body uses $HOME and
-# $PBS_O_WORKDIR. Nothing here contains an absolute home path.
+# Naming bake-off over the labelled crop set, one model per GPU.
+# Submit with qsub -v KEY=VALUE ...:
+#   MODEL=4B|9B|27B (implies MODEL_DIR=$HOME/models/Qwen3.5-$MODEL, TAG=Qwen3.5-$MODEL)
+#   MODEL_DIR=... TAG=... DEVICE=cuda:0|auto MAXMEM=40GiB
+#   PROTOCOL=free|loglik  CANDIDATES=all|top10
+# Paths: PBS directives are relative to the submission directory (variables are
+# not expanded there); the body uses $PBS_O_WORKDIR and $HOME only.
 #PBS -N bakeoff_naming
-# Submit with e.g.  qsub -v MODEL=9B scripts/job_bakeoff_naming.pbs
 #PBS -q gpu
 #PBS -l select=1:ncpus=4:mem=60gb:ngpus=1
 #PBS -l walltime=04:00:00
 #PBS -o logs/bakeoff_naming_job.log
 #PBS -e logs/bakeoff_naming_job.err
-# Naming bake-off on the labelled crop set. One large model per GPU: the job
-# pins the A100 with the most free memory, runs the smallest challenger first
-# (Qwen3.5-4B), and retries on the next one if the first attempt OOMs.
 
 cd "$PBS_O_WORKDIR" || exit 1
-MODEL="${MODEL:-4B}"                       # 4B | 9B | 27B
+MODEL="${MODEL:-4B}"
+MODEL_DIR="${MODEL_DIR:-$HOME/models/Qwen3.5-$MODEL}"
+TAG="${TAG:-Qwen3.5-$MODEL}"
+DEVICE="${DEVICE:-cuda:0}"
+PROTOCOL="${PROTOCOL:-free}"
+CANDIDATES="${CANDIDATES:-all}"
 PY="${SPATIALDIFF_PYTHON:-$HOME/miniconda3/envs/spatialdiff/bin/python}"
-export HF_HUB_OFFLINE=1            # compute nodes have no internet
+export HF_HUB_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
 
-idlest() {  # print the CUDA index of the GPU with the most free memory
+idlest() {
   nvidia-smi --query-gpu=index,memory.free --format=csv,noheader,nounits \
     | sort -t, -k2 -rn | head -1 | cut -d, -f1
 }
 
+EXTRA="--protocol $PROTOCOL --candidates $CANDIDATES"
+[ -n "$MAXMEM" ] && EXTRA="$EXTRA --max-memory $MAXMEM"
+
 for ATTEMPT in 1 2 3; do
   GPU=$(idlest)
-  echo "=== attempt $ATTEMPT on GPU $GPU ($(date +%T)) ==="
-  CUDA_VISIBLE_DEVICES=$GPU timeout 3000 "$PY" scripts/bakeoff_naming.py \
-      --model "$HOME/models/Qwen3.5-$MODEL" --device cuda:0 \
-      --out "logs/bakeoff_naming_Qwen3.5-$MODEL.json"
+  echo "=== $TAG attempt $ATTEMPT on GPU $GPU ($(date +%T)) protocol=$PROTOCOL/$CANDIDATES ==="
+  if [ "$DEVICE" = "auto" ]; then PINNED="$DEVICE"; else PINNED="cuda:0"; fi
+  CUDA_VISIBLE_DEVICES=$GPU timeout 13000 "$PY" scripts/bakeoff_naming.py \
+      --model "$MODEL_DIR" --device "$PINNED" $EXTRA \
+      --out "logs/bakeoff_naming_${TAG}_${PROTOCOL}_${CANDIDATES}.json"
   code=$?
-  if [ $code -eq 0 ]; then
-    echo "BAKEOFF_DONE"
-    exit 0
-  fi
+  [ $code -eq 0 ] && { echo "BAKEOFF_DONE"; exit 0; }
   echo "attempt $ATTEMPT failed (code $code); re-pinning"
 done
 echo "BAKEOFF_FAILED"

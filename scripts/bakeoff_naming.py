@@ -30,6 +30,7 @@ from src.naming.vocabulary import Vocabulary, load_vocabulary  # noqa: E402
 from src.naming.descriptor import describe  # noqa: E402
 
 MANIFEST = ROOT / "data" / "naming_set" / "manifest.json"
+_SIGLIP = None
 SYNONYMS = ROOT / "data" / "naming_synonyms.json"
 
 # One neutral prompt for every model in the bake off, so the comparison is
@@ -50,6 +51,12 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--out", default=None)
     p.add_argument("--controls", action="store_true",
                    help="run the visual control (12 crops) and stop")
+    p.add_argument("--protocol", choices=["free", "loglik"], default="free",
+                   help="free generation, or closed-set scoring by log likelihood")
+    p.add_argument("--candidates", choices=["all", "top10"], default="all",
+                   help="loglik: score the whole vocabulary or the SigLIP top 10")
+    p.add_argument("--max-memory", default=None,
+                   help="e.g. 40GiB per GPU when --device auto (32B with offload)")
     return p.parse_args()
 
 
@@ -155,7 +162,50 @@ def run_controls(model, proc, tok, vocab, inputs, device, n=12):
     return distinct >= max(1, len(picks) // 2)
 
 
+def score_candidates(model, proc, image, candidates, device, topk=3):
+    """Closed-set protocol: score each candidate by mean token log likelihood.
+
+    Removes parsing as a confound entirely: the model never generates free text,
+    it only ranks the given labels. Returns (ranked list of (name, score),
+    top1, top3) where top1/top3 are the candidate lists.
+    """
+    import torch
+    prompt_texts = []
+    for cand in candidates:
+        cont = '{"name": "%s"}' % cand
+        sess = [{"role": "user", "content": [{"type": "image", "image": image},
+                                             {"type": "text", "text": PROMPT}]}]
+        try:
+            base = proc.apply_chat_template(sess, tokenize=False,
+                                            add_generation_prompt=True,
+                                            enable_thinking=False)
+        except TypeError:
+            base = proc.apply_chat_template(sess, tokenize=False,
+                                            add_generation_prompt=True)
+        prompt_texts.append(base + cont)
+    scores = []
+    with torch.no_grad():
+        for i in range(0, len(prompt_texts), 32):
+            batch = prompt_texts[i:i + 32]
+            ins = proc(text=batch, images=[image] * len(batch),
+                       padding=True, return_tensors="pt").to(model.device)
+            ins.pop("mm_token_type_ids", None)
+            out = model(**ins)
+            logits = out.logits[:, :-1]
+            ids = ins["input_ids"][:, 1:]
+            logprobs = torch.log_softmax(logits.float(), dim=-1)
+            picked = logprobs.gather(-1, ids.unsqueeze(-1)).squeeze(-1)
+            # the continuation is the tail of each sequence; score the last 8
+            # tokens, which always cover '{"name": "..."}' for short labels
+            for j in range(len(batch)):
+                tail = picked[j][-8:].mean().item()
+                scores.append(tail)
+    ranked = sorted(zip(candidates, scores), key=lambda t: -t[1])
+    return ranked
+
+
 def main() -> int:
+    global _SIGLIP
     args = parse_args()
     vocab: Vocabulary = load_vocabulary()
     inputs = load_inputs()
@@ -178,8 +228,18 @@ def main() -> int:
     # the real cause of the failed 4B chain), dtype=bf16, device_map on the
     # pinned slice, processor-owned chat template.
     t0 = time.time()
-    model = ModelCls.from_pretrained(args.model, dtype=torch.bfloat16,
-                                     device_map=args.device, low_cpu_mem_usage=True)
+    if args.device == "auto":
+        import torch as _t
+        mm = None
+        if args.max_memory:
+            mm = {i: args.max_memory for i in range(_t.cuda.device_count())}
+        model = ModelCls.from_pretrained(args.model, dtype=torch.bfloat16,
+                                         device_map="auto", max_memory=mm,
+                                         low_cpu_mem_usage=True)
+    else:
+        model = ModelCls.from_pretrained(args.model, dtype=torch.bfloat16,
+                                         device_map=args.device,
+                                         low_cpu_mem_usage=True)
     model.eval()
     proc = AutoProcessor.from_pretrained(args.model)
     tok = proc.tokenizer if hasattr(proc, "tokenizer") else None
@@ -210,6 +270,38 @@ def main() -> int:
             # job with tokenize=True, return_dict=True. The earlier split
             # text-then-image pass produced vision tensors that generate
             # rejected, which is what the "keyboard" run was hiding.
+            if args.protocol == "loglik":
+                cands = list(vocab.canonical)
+                if args.candidates == "top10":
+                    # SigLIP rerank narrows the closed set to ten plausible
+                    # labels; run it on CPU when the VLM owns the GPU.
+                    global _SIGLIP
+                    if _SIGLIP is None:
+                        from src.naming.rerank import RerankModel as _RM
+                        dev = "cpu" if args.device != "cpu" else "cpu"
+                        _SIGLIP = _RM(vocab, device=dev)
+                        _SIGLIP.load()
+                    views = _SIGLIP.score_image(abs_path(sample["path"]), top_k=10)
+                    if views:
+                        cands = [n for n, _ in views]
+                ranked = score_candidates(model, proc, image, cands, args.device)
+                name = ranked[0][0]
+                top3 = [c for c, _ in ranked[:3]]
+                raw_answer = _j.dumps({"protocol": "loglik", "ranked": ranked[:5]})
+                row_proto = "loglik"
+                better = vocab.canonical_of(name)
+                truth_canon = vocab.canonical_of(sample["truth"]) or sample["truth"].lower()
+                correct = ("exact" if better == truth_canon else
+                           "parent" if better and vocab.parent_of(better) == vocab.parent_of(truth_canon) else "wrong")
+                counter[correct] += 1
+                in_top3 = truth_canon in [vocab.canonical_of(c) or c for c in top3]
+                counter["top3"] = counter["top3"] + (1 if in_top3 else 0)
+                rows.append({"path": sample["path"], "name": name, "canon": better,
+                             "truth": truth_canon, "correct": correct, "top3_hit": in_top3,
+                             "protocol": "loglik", "ranked": [c for c, _ in ranked[:5]]})
+                if (i % 25) == 0:
+                    out_partial.write_text(_j.dumps({"model": args.model, "rows": rows, "partial": True}, indent=2))
+                continue
             chat_sess = [{"role": "user",
                   "content": [{"type": "image", "image": image},
                                {"type": "text", "text": PROMPT}]}]
@@ -288,7 +380,8 @@ def main() -> int:
         else:
             counter["wrong"] += 1; correct = "wrong"
         rows.append({"path": sample["path"], "name": name, "canon": better,
-                     "truth": truth_canon, "correct": correct})
+                     "truth": truth_canon, "correct": correct,
+                     "protocol": "free", "raw": raw_answer[:200]})
 
     # Invariant (c): a constant answer over many crops means the model is not
     # seeing the images or the prompt is broken. Stop and report instead of
