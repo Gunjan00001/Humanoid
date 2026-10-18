@@ -35,10 +35,9 @@ SYNONYMS = ROOT / "data" / "naming_synonyms.json"
 # like for like. The answer format is strict JSON because parse failures are
 # themselves a result (a model that cannot follow instructions is not a
 # naming candidate).
-PROMPT = ("Identify the single everyday object in this image. No reasoning, no "
-          'explanations; reply with JSON only: {"name": "<object>"}')
-
-LABEL = "// the Axelrod recipe for correctness: exact means the canonical name"
+PROMPT = ("Identify the single everyday object in this photograph. "
+          "No reasoning and no extra words: reply with one JSON object whose "
+          'field name is "name" and whose value is the object.')
 
 
 def parse_args() -> argparse.Namespace:
@@ -55,7 +54,7 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     """Wilson 95% interval; the small-count workhorse of this project."""
     if n == 0:
         return (0.0, 0.0)
-    p_ = k / n
+    p_ = min(1.0, max(0.0, k / n))
     d = 1 + z * z / n
     c = (p_ + z * z / (2 * n)) / d
     h = z * math.sqrt(p_ * (1 - p_) / n + z * z / (4 * n * n)) / d
@@ -136,6 +135,9 @@ def main() -> int:
     load_s = time.time() - t0
     print(f"  loaded in {load_s:.0f}s")
 
+    out_partial = Path(args.out or ROOT / "logs" /
+                        f"bakeoff_naming_{Path(args.model).name}.json")
+    out_partial.parent.mkdir(parents=True, exist_ok=True)
     torch.cuda.reset_peak_memory_stats(args.device)
     latencies, rows = [], []
     counter: collections_counter = collections_counter()
@@ -177,11 +179,26 @@ def main() -> int:
             counter["unparsable"] += 1
             continue
         latencies.append(time.time() - t1)
+        if (i % 25) == 0:                        # incremental save: a late crash
+            out_partial.write_text(json.dumps({  # must not lose the answers
+                "model": args.model, "rows": rows, "partial": True}, indent=2))
         import re
-        match = re.search(r'"name"\s*:\s*"([^"]+)"', raw_answer)
-        if match:
-            name = match.group(1)
-        else:
+        import json as _json
+        text = raw_answer.strip()
+        fence = re.search(r"```[a-zA-Z]*\s*(.*?)```", text, re.S)
+        if fence:
+            text = fence.group(1).strip()
+        try:
+            parsed = _json.loads(text)
+            if isinstance(parsed, dict) and parsed.get("name"):
+                name = str(parsed["name"])
+        except Exception:
+            pass
+        if name is None:
+            match = re.search(r'"name"\s*:\s*"([^"]+)"', text)
+            if match:
+                name = match.group(1)
+        if name is None:
             counter["unparsable"] += 1
         better = (vocab.canonical_of(name) if name else None)
         truth_canon = vocab.canonical_of(sample["truth"]) or sample["truth"].lower()
@@ -216,8 +233,7 @@ def main() -> int:
         "correct": dict(counter),
         "table": table, "rows": rows,
     }
-    out = Path(args.out or ROOT / "logs" /
-               f"bakeoff_naming_{args.model.replace('/', '_')}.json")
+    out = out_partial
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(result, indent=2))
     print(json.dumps({k: v for k, v in result.items() if k != "rows"}, indent=2)[:1200])

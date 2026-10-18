@@ -1,5 +1,24 @@
 # Autopilot status
 
+RESUME HERE (batch 1 phase 3; the 4B chain is a recorded negative with the
+cause identified; the fix is one line):
+
+```
+# 1. in scripts/bakeoff_naming.py, replace the whitelist filter with a blacklist:
+#      inputs.pop("mm_token_type_ids", None)      # the only rejected key
+#    (the whitelist dropped pixel_values/image_grid_thw, so the model saw text only
+#     and answered "keyboard" for all 317 crops - cause proven, see
+#     docs/negative_results.md attempt 4/5)
+# 2. resubmit: qsub scripts/job_bakeoff_naming.pbs ; read logs/bakeoff_naming_Qwen3.5-4B.json
+#    expected: non-constant answers; then exact/parent with Wilson intervals
+# 3. same for 9B and 27B (download on the login node, smallest first, 19.3 GB / 55.6 GB)
+# 4. bake offs b (SAM 3.1 vs SAM 2.1), c (DINOv3 vs DINOv2), d (geometry) per
+#    docs/stack_selection.md rules written before the runs
+# 5. decision table, then docs/autopilot_report_batch1.md and the final message
+```
+
+# Autopilot status
+
 RESUME HERE (batch 1 phase 3, bake-off attempt 4 plan; the 4B attempt is a
 recorded negative: placeholder echo, 301 of 317 replies `{"name": "text"}`,
 16 wrong names; no gate decision possible):

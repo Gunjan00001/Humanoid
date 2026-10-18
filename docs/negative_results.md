@@ -109,3 +109,26 @@ may be the harder input; the dev-scene crops under
 `cache/<scene>/semantics/crops` are plain rectangles and are the same data the
 32B baseline verified. No adoption decision: the gate needs exact and parent
 numbers, and this attempt produced none.
+
+### Naming bake-off attempt 4/5 (Qwen3.5-4B): complete run, constant answer, cause identified (2026-10-18)
+
+The full 317-crop run completed and is saved
+(logs/bakeoff_naming_Qwen3.5-4B.json): every one of the 317 answers is the
+constant string "keyboard" (294 wrong, 23 counted as parent because that string
+lands in the electronic-device category), latency 1.01 s per crop, peak 8.9 GB.
+A constant answer across bathroom, bedroom, gym and living-room crops is not a
+model opinion, it is evidence the model never saw the images.
+
+Cause, identified from the code path: the kwargs filter added after attempt 2
+keeps only keys present in `inspect.signature(model.forward).parameters`.
+Qwen3.5 routes its vision tensors at generate time, so `pixel_values` and
+`image_grid_thw` are not in the forward signature and were silently dropped,
+leaving text only. The fix is one line: drop the single known-bad key
+(`inputs.pop("mm_token_type_ids", None)`) instead of whitelisting, mirroring the
+working 32B path in src/describe.py.
+
+Not adopted, again by the conservative rule: no measurement, Qwen3-VL-32B stays
+the naming baseline. The corrected integration is the first resume command in
+docs/autopilot_status.md; this is attempt five in the chain and the round is
+recorded as a negative so the next session starts from the fix, not from
+re-deriving it.
