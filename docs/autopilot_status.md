@@ -1,5 +1,28 @@
 # Autopilot status
 
+RESUME HERE (batch 2: Phase 1C DONE; Phase 3 harness done, 4B rerun BLOCKED on an
+integration detail with the exact next commands):
+
+```
+# 1. the blocker, precisely: Qwen3_5ForConditionalGeneration (installed
+#    transformers, modeled by line 1756 of .../models/qwen3_5/modeling_qwen3_5.py)
+#    has NO prepare_inputs_for_generation override, and generate rejects
+#    pixel_values/image_grid_thw as unused kwargs. The canonical call is in the
+#    model card:   grep -n -A25 "Usage" ~/models/Qwen3.5-4B/README.md
+#    Align scripts/bakeoff_naming.py with that snippet (likely images= passed to
+#    the processor and inputs used verbatim) and rerun:
+qsub scripts/job_bakeoff_naming.pbs          # writes logs/bakeoff_naming_Qwen3.5-4B.json
+tail logs/bakeoff_naming_job.err             # invariant messages are explicit
+# 2. harness invariants already in place: (a) pixel_values required before every
+#    generate, (c) degeneracy alarm over >50% of >=20 crops, plus --controls for
+#    the visual control (b) and the known-answer smoke (d)
+# 3. then: same corrected harness for 9B and 27B (login-node downloads, smallest
+#    first), then bake offs b/c/d per docs/stack_selection.md rules, then the
+#    decision table, then docs/autopilot_report_batch1.md and the final message
+```
+
+# Autopilot status
+
 RESUME HERE (batch 1 phase 3; the 4B chain is a recorded negative with the
 cause identified; the fix is one line):
 

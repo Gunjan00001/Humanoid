@@ -47,6 +47,8 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--device", default="cuda:0")
     p.add_argument("--limit", type=int, default=None, help="score the first N crops (smoke)")
     p.add_argument("--out", default=None)
+    p.add_argument("--controls", action="store_true",
+                   help="run the visual control (12 crops) and stop")
     return p.parse_args()
 
 
@@ -112,6 +114,55 @@ def load_inputs() -> list[dict]:
     return rows
 
 
+def run_controls(model, proc, tok, vocab, inputs, device, n=12):
+    """Invariants (b) and (d): the model must react to the IMAGE.
+
+    Real, blank and shuffled inputs must produce different answers; a model that
+    answers the same thing for all three is text-only and its scores are
+    meaningless (this is exactly what the whitelist bug produced). The known
+    answer smoke prints the first few answers so a human can see they are
+    plausible object names, not a constant.
+    """
+    import torch
+    from PIL import Image
+    import numpy as np
+    import inspect
+    picks = inputs[:n]
+    answers = {"real": [], "blank": [], "shuffled": []}
+    rng = np.random.default_rng(0)
+    fwd = inspect.signature(model.forward).parameters
+    for i, sample in enumerate(picks):
+        real = Image.open(abs_path(sample["path"])).convert("RGB")
+        others = [Image.open(abs_path(inputs[(i + 1 + k) % len(inputs)]["path"])).convert("RGB")
+                  for k in range(2)]
+        variants = {"real": real,
+                    "blank": Image.new("RGB", real.size, (0, 0, 0)),
+                    "shuffled": others[rng.integers(0, len(others))]}
+        for name, img in variants.items():
+            sess = [{"role": "user", "content": [{"type": "text", "text": PROMPT},
+                                                 {"type": "image"}]}]
+            try:
+                txt = proc.apply_chat_template(sess, add_generation_prompt=True,
+                                               tokenize=False, enable_thinking=False)
+            except TypeError:
+                txt = proc.apply_chat_template(sess, add_generation_prompt=True, tokenize=False)
+            ins = proc(text=[txt], images=[img], return_tensors="pt").to(device)
+            ins.pop("mm_token_type_ids", None)
+            ins = {k: v for k, v in ins.items() if v is not None and k in fwd or k == "pixel_values"}
+            with torch.no_grad():
+                out = model.generate(**ins, max_new_tokens=32, do_sample=False)
+            answers[name].append(tok.decode(out[0][ins["input_ids"].shape[1]:],
+                                            skip_special_tokens=True).strip()[:60])
+    print("visual control (invariant b):")
+    for k, v in answers.items():
+        print(f"  {k:8} first three: {v[:3]}")
+    distinct = sum(1 for a, b in zip(answers["real"], answers["blank"]) if a != b)
+    print(f"  real differs from blank on {distinct}/{len(picks)} crops "
+          f"(must be most of them)")
+    print("known answers (invariant d):", [a[:30] for a in answers["real"][:5]])
+    return distinct >= max(1, len(picks) // 2)
+
+
 def main() -> int:
     args = parse_args()
     vocab: Vocabulary = load_vocabulary()
@@ -138,6 +189,9 @@ def main() -> int:
     out_partial = Path(args.out or ROOT / "logs" /
                         f"bakeoff_naming_{Path(args.model).name}.json")
     out_partial.parent.mkdir(parents=True, exist_ok=True)
+    if args.controls:
+        ok = run_controls(model, proc, tok, vocab, inputs, args.device)
+        raise SystemExit(0 if ok else 'visual control failed')
     torch.cuda.reset_peak_memory_stats(args.device)
     latencies, rows = [], []
     counter: collections_counter = collections_counter()
@@ -232,8 +286,14 @@ def main() -> int:
     # seeing the images or the prompt is broken. Stop and report instead of
     # writing a result nobody should believe.
     from collections import Counter
-    if len(rows) >= 20:
-        top, top_n = Counter((r.get("name") or "") for r in rows if not r.get("error")).most_common(1)[0]
+    if rows and all(r.get("error") for r in rows):
+        print("EVERY crop errored; first three messages:", file=sys.stderr)
+        for r in rows[:3]:
+            print("  " + str(r.get("error"))[:200], file=sys.stderr)
+        raise SystemExit("harness: no crop succeeded")
+    named_counts = Counter((r.get("name") or "") for r in rows if not r.get("error"))
+    if len(rows) >= 20 and named_counts:
+        top, top_n = named_counts.most_common(1)[0]
         if top and top_n / max(1, len(rows)) > 0.5:
             print(f"DEGENERACY ALARM: {top!r} for {top_n}/{len(rows)} answers; "
                   f"refusing to write a result (harness bug, see docs/debugging.md)",
