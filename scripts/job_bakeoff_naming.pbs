@@ -31,6 +31,7 @@ idlest() {
 
 EXTRA="--protocol $PROTOCOL --candidates $CANDIDATES"
 [ -n "$MAXMEM" ] && EXTRA="$EXTRA --max-memory $MAXMEM"
+[ "$BLANKCAL" = "1" ] && EXTRA="$EXTRA --blank-calibration"
 
 for ATTEMPT in 1 2 3; do
   GPU=$(idlest)

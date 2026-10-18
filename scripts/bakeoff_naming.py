@@ -57,6 +57,8 @@ def parse_args() -> argparse.Namespace:
                    help="loglik: score the whole vocabulary or the SigLIP top 10")
     p.add_argument("--manifest", default=str(MANIFEST),
                    help="crop manifest to score (variants share the code)")
+    p.add_argument("--blank-calibration", action="store_true",
+                   help="loglik: subtract the score of the same label on a blank image")
     p.add_argument("--shuffle-seed", type=int, default=None,
                    help="loglik: shuffle the candidate order with this seed")
     p.add_argument("--max-memory", default=None,
@@ -166,7 +168,7 @@ def run_controls(model, proc, tok, vocab, inputs, device, n=12):
     return distinct >= max(1, len(picks) // 2)
 
 
-def score_candidates(model, proc, image, candidates, device, topk=3):
+def score_candidates(model, proc, image, candidates, device, topk=3, blank_image=None):
     """Closed-set protocol: score each candidate by mean token log likelihood.
 
     Removes parsing as a confound entirely: the model never generates free text,
@@ -204,6 +206,36 @@ def score_candidates(model, proc, image, candidates, device, topk=3):
             for j in range(len(batch)):
                 tail = picked[j][-8:].mean().item()
                 scores.append(tail)
+    if blank_image is not None:
+        # Calibrated scoring: log p(label | image) minus log p(label | blank
+        # image). The blank pass measures how much the model likes a label with
+        # no visual evidence at all; subtracting it removes the text-only prior,
+        # which is the same idea as the visual control but per candidate.
+        blank_scores = [0.0] * len(candidates)
+        blank_texts = []
+        for cand in candidates:
+            sess = [{"role": "user", "content": [{"type": "image", "image": blank_image},
+                                                 {"type": "text", "text": PROMPT}]}]
+            try:
+                base = proc.apply_chat_template(sess, tokenize=False,
+                                                add_generation_prompt=True,
+                                                enable_thinking=False)
+            except TypeError:
+                base = proc.apply_chat_template(sess, tokenize=False,
+                                                add_generation_prompt=True)
+            blank_texts.append(base + '{"name": "%s"}' % cand)
+        with torch.no_grad():
+            for i in range(0, len(blank_texts), 32):
+                batch = blank_texts[i:i + 32]
+                ins = proc(text=batch, images=[blank_image] * len(batch),
+                           padding=True, return_tensors="pt").to(model.device)
+                ins.pop("mm_token_type_ids", None)
+                out = model(**ins)
+                logprobs = torch.log_softmax(out.logits[:, :-1].float(), dim=-1)
+                picked = logprobs.gather(-1, ins["input_ids"][:, 1:].unsqueeze(-1)).squeeze(-1)
+                for j in range(len(batch)):
+                    blank_scores[i + j] = picked[j][-8:].mean().item()
+        scores = [r - b for r, b in zip(scores, blank_scores)]
     ranked = sorted(zip(candidates, scores), key=lambda t: -t[1])
     return ranked
 
@@ -291,7 +323,10 @@ def main() -> int:
                     views = _SIGLIP.score_image(abs_path(sample["path"]), top_k=10)
                     if views:
                         cands = [n for n, _ in views]
-                ranked = score_candidates(model, proc, image, cands, args.device)
+                blank = (Image.new("RGB", image.size, (0, 0, 0))
+                         if args.blank_calibration else None)
+                ranked = score_candidates(model, proc, image, cands, args.device,
+                                          blank_image=blank)
                 name = ranked[0][0]
                 top3 = [c for c, _ in ranked[:3]]
                 raw_answer = _j.dumps({"protocol": "loglik", "ranked": ranked[:5]})
