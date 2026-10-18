@@ -111,16 +111,23 @@ pipeline answers are cached per scene but not per crop set); decision rule 1
 still governs: adopt only on a match or a win with lower memory. No adoption
 decision is taken from a single model row.
 
-### Bake-off (a) rows so far (same 317 mask-tight crops, same prompt)
+### Bake-off (a) rows, corrected intervals and both denominators
 
-| model | named (coverage) | exact | exact or parent | wrong | unparsable |
+Correction: the intervals first published here were wrong (the reporting helper
+returned the centre as the lower bound; see docs/debugging.md). The table below
+is recomputed from the raw per-crop rows with src/naming/stats.py, which has
+known-value tests. Decision rule 1 uses the **all-crops** denominator, with
+unparsable and abstained answers counted as not correct; the named-crops numbers
+are shown separately because they answer a different question (how good the
+names are when the model commits to one).
+
+| model | exact / all 317 | exact+parent / all 317 | named (coverage) | exact / named | exact+parent / named |
 |---|---|---|---|---|---|
-| Qwen3.5-4B | 204/317 (64.4%) | **58 (28.4%) [28.8, 35.0]** | **90 (44.1%) [44.2, 51.0]** | 114 | 113 |
-| Qwen3.5-9B | 217/317 (68.5%) | **63 (29.0%) [29.4, 35.4]** | **101 (46.5%) [46.6, 53.2]** | 116 | 100 |
+| Qwen3.5-4B | 58 = **18.3% [14.4, 22.9]** | 90 = **28.4% [23.7, 33.6]** | 204 (64.4%) | 28.4% [22.7, 35.0] | 44.1% [37.5, 51.0] |
+| Qwen3.5-9B | 63 = **19.9% [15.9, 24.6]** | 101 = **31.9% [27.0, 37.2]** | 217 (68.5%) | 29.0% [23.4, 35.4] | 46.5% [40.0, 53.2] |
 
-The two challengers land within one point of each other on exact and two points
-on exact-or-parent, with intervals that overlap: no separation yet. The 32B
-baseline over the same crop set is still to be measured (its per-crop answers
-are cached per scene, not for this set); until it is, decision rule 1 is not
-satisfied and the flag stays OFF. Both models share a visible bias (the single
-answer "eraser" is 26-29 of the answers), which belongs in any write-up.
+Reading, with the correct denominators: the two challengers differ by 1.6 points
+on exact and 3.5 on exact-or-parent over all crops, with intervals that overlap
+almost completely. No separation, and no adoption decision is possible until the
+32B baseline is measured on the same crops with the same protocol.
+

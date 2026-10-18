@@ -178,3 +178,34 @@ The script is installed as `.githooks/pre-commit` and `.githooks/pre-push`
 (`git config core.hooksPath .githooks`; `tests/test_hooks.py` fails if the
 hooks are missing, not executable, or not wired into CI). Paths in job scripts
 are now relative to `$PBS_O_WORKDIR`; a stray root `*.log` is ignored.
+
+## The Wilson interval that went out wrong (2026-10-18)
+
+A reporting helper computed the Wilson score interval and then returned
+`(centre, centre + half)` instead of `(centre - half, centre + half)`, so every
+published interval had its lower bound equal to the centre. Nothing in the
+pipeline used it (the scorer and the naming evaluation were correct); the damage
+was in the tables I quoted from ad-hoc snippets, including
+docs/stack_selection.md.
+
+Why it survived the numbers themselves: for 58/204 the wrong interval
+[28.8, 35.0] still looked plausible, and the lower bound sitting just above the
+point estimate (28.4%) was the only tell. The earlier helper was right, which is
+how the 10/19 = [31.7, 72.7] figure quoted in docs/naming_v3.md stayed correct.
+
+What changed:
+
+1. `src/naming/stats.py` is now the single implementation (`wilson`, plus
+   `wilson_pair` for the (point, lower, upper) shape the reports use). Callers
+   import it; no module re-derives the formula.
+2. `tests/test_wilson.py` pins known values: 10/19 = [31.7, 72.7],
+   58/204 = [22.7, 35.0], 90/204 = [37.5, 51.0], 0/20 = [0, 16.1],
+   20/20 = [83.9, 100], and the invariant that the interval always contains the
+   point estimate and stays inside [0, 100].
+3. The clamp added after a stats crash was moved to the OUTPUT (`[0, 100]`,
+   float noise only: 0/20 used to report -1.4e-15). It never touches the
+   proportion, which is the mistake that would hide a real bug.
+4. Every interval published since the clamp was recomputed from the raw per-crop
+   rows: docs/stack_selection.md and the two `logs/bakeoff_naming_*.json` files
+   now carry both denominators (all crops and named crops) with the corrected
+   intervals.

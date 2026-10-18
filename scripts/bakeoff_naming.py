@@ -25,6 +25,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+from src.naming.stats import wilson_pair  # noqa: E402
 from src.naming.vocabulary import Vocabulary, load_vocabulary  # noqa: E402
 from src.naming.descriptor import describe  # noqa: E402
 
@@ -52,29 +53,20 @@ def parse_args() -> argparse.Namespace:
     return p.parse_args()
 
 
-def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
-    """Wilson 95% interval; the small-count workhorse of this project."""
-    if n == 0:
-        return (0.0, 0.0)
-    p_ = min(1.0, max(0.0, k / n))
-    d = 1 + z * z / n
-    c = (p_ + z * z / (2 * n)) / d
-    h = z * math.sqrt(p_ * (1 - p_) / n + z * z / (4 * n * n)) / d
-    return (100 * (c - h), 100 * (c + h))
 
 
 def stats(c: collections_counter, total: int, name: str) -> dict:
     """One correctness row for the results table."""
     exact = c["exact"]
     parent = c["parent"] + exact
-    lo_e, hi_e = wilson(exact, total)
-    lo_p, hi_p = wilson(parent, total)
+    point_e, lo_e, hi_e = wilson_pair(exact, total)
+    point_p, lo_p, hi_p = wilson_pair(parent, total)
     parse_fail = c["unparsable"]
     row = {
         "bucket": name, "n": total,
-        "exact": exact, "exact_pct": round(100 * exact / max(1, total), 1),
+        "exact": exact, "exact_pct": round(point_e, 1),
         "exact_ci": [round(lo_e, 1), round(hi_e, 1)],
-        "exact_or_parent": parent, "exact_or_parent_pct": round(100 * parent / max(1, total), 1),
+        "exact_or_parent": parent, "exact_or_parent_pct": round(point_p, 1),
         "exact_or_parent_ci": [round(lo_p, 1), round(hi_p, 1)],
         "unparsable": parse_fail,
     }
