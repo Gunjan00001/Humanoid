@@ -3,6 +3,7 @@
 # does not expand variables in directives), and the body uses $HOME and
 # $PBS_O_WORKDIR. Nothing here contains an absolute home path.
 #PBS -N bakeoff_naming
+# Submit with e.g.  qsub -v MODEL=9B scripts/job_bakeoff_naming.pbs
 #PBS -q gpu
 #PBS -l select=1:ncpus=4:mem=60gb:ngpus=1
 #PBS -l walltime=04:00:00
@@ -13,6 +14,7 @@
 # (Qwen3.5-4B), and retries on the next one if the first attempt OOMs.
 
 cd "$PBS_O_WORKDIR" || exit 1
+MODEL="${MODEL:-4B}"                       # 4B | 9B | 27B
 PY="${SPATIALDIFF_PYTHON:-$HOME/miniconda3/envs/spatialdiff/bin/python}"
 export HF_HUB_OFFLINE=1            # compute nodes have no internet
 export TRANSFORMERS_OFFLINE=1
@@ -26,8 +28,8 @@ for ATTEMPT in 1 2 3; do
   GPU=$(idlest)
   echo "=== attempt $ATTEMPT on GPU $GPU ($(date +%T)) ==="
   CUDA_VISIBLE_DEVICES=$GPU timeout 3000 "$PY" scripts/bakeoff_naming.py \
-      --model "$HOME/models/Qwen3.5-4B" --device cuda:0 \
-      --out logs/bakeoff_naming_Qwen3.5-4B.json
+      --model "$HOME/models/Qwen3.5-$MODEL" --device cuda:0 \
+      --out "logs/bakeoff_naming_Qwen3.5-$MODEL.json"
   code=$?
   if [ $code -eq 0 ]; then
     echo "BAKEOFF_DONE"
