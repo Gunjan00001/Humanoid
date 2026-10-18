@@ -1,5 +1,21 @@
 # Autopilot status
 
+RESUME HERE (batch 2 phase 3: bake-offs running in parallel; Wilson fixed; next
+= read the three queued jobs, then b/c/d):
+
+```
+qstat | grep bakeoff        # 11790 32B free baseline, 11791 4B loglik, 11792 9B loglik
+ls -l logs/bakeoff_naming_*.json
+# 32B: logs/bakeoff_naming_Qwen3-VL-32B_free_all.json   (rule 1 needs this row)
+# loglik rows give top-1 and top-3 without parsing as a confound
+# then: 40-crop eraser-bias subset (free vs top10), context ablation variants
+# (a) blanked (b) 20% real margin (c) full frame outlined, then bake offs
+# b (SAM 3.1 vs SAM 2.1), c (DINOv3 vs DINOv2 controls, weights downloading),
+# d (geometry), then the decision table and docs/autopilot_report_batch2.md
+```
+
+# Autopilot status
+
 RESUME HERE (batch 2: Phase 1C DONE; Phase 3 harness done, 4B rerun BLOCKED on an
 integration detail with the exact next commands):
 
