@@ -1,16 +1,19 @@
 #!/bin/bash
+# Paths: the directives use paths RELATIVE to the submission directory (PBS
+# does not expand variables in directives), and the body uses $HOME and
+# $PBS_O_WORKDIR. Nothing here contains an absolute home path.
 #PBS -N bakeoff_naming
 #PBS -q gpu
 #PBS -l select=1:ncpus=4:mem=60gb:ngpus=1
 #PBS -l walltime=04:00:00
-#PBS -o bakeoff_logs.log
-#PBS -e /home/user/Desktop/Humanoid/logs/bakeoff_naming_job.err
+#PBS -o logs/bakeoff_naming_job.log
+#PBS -e logs/bakeoff_naming_job.err
 # Naming bake-off on the labelled crop set. One large model per GPU: the job
 # pins the A100 with the most free memory, runs the smallest challenger first
 # (Qwen3.5-4B), and retries on the next one if the first attempt OOMs.
 
-cd "$HOME/Desktop/Humanoid" || exit 1
-export PY=/home/user/miniconda3/envs/spatialdiff/bin/python
+cd "$PBS_O_WORKDIR" || exit 1
+PY="${SPATIALDIFF_PYTHON:-$HOME/miniconda3/envs/spatialdiff/bin/python}"
 export HF_HUB_OFFLINE=1            # compute nodes have no internet
 export TRANSFORMERS_OFFLINE=1
 
@@ -22,7 +25,7 @@ idlest() {  # print the CUDA index of the GPU with the most free memory
 for ATTEMPT in 1 2 3; do
   GPU=$(idlest)
   echo "=== attempt $ATTEMPT on GPU $GPU ($(date +%T)) ==="
-  CUDA_VISIBLE_DEVICES=$GPU timeout 3000 $PY scripts/bakeoff_naming.py \
+  CUDA_VISIBLE_DEVICES=$GPU timeout 3000 "$PY" scripts/bakeoff_naming.py \
       --model "$HOME/models/Qwen3.5-4B" --device cuda:0 \
       --out logs/bakeoff_naming_Qwen3.5-4B.json
   code=$?

@@ -1,24 +1,4 @@
 #!/bin/sh
-# Pre-commit hook: keep personal data and broken documentation links out.
-#
-# Enable once per clone:
-#   git config core.hooksPath .githooks
-#
-# Runs only the fast checks, so a commit stays quick. The full suite runs in CI
-# and before a release.
-
-set -e
-
-PY="${SPATIALDIFF_PYTHON:-$HOME/miniconda3/envs/spatialdiff/bin/python}"
-if [ ! -x "$PY" ]; then
-  PY="$(command -v python3)"
-fi
-
-echo "pre-commit: privacy and link checks"
-"$PY" -m unittest tests.test_no_personal_paths tests.test_links >/dev/null || {
-  echo "pre-commit FAILED: personal data or a broken link. Run these for detail:"
-  echo "  $PY -m unittest tests.test_no_personal_paths"
-  echo "  $PY -m unittest tests.test_links"
-  exit 1
-}
-echo "pre-commit: ok"
+# Pre-commit: privacy and documentation guards.
+# Enable once per clone: git config core.hooksPath .githooks
+exec "$(git rev-parse --show-toplevel)/scripts/prepush_audit.sh" --range HEAD

@@ -74,3 +74,5 @@ data/naming_set/crops/
 .env.*
 *.pem
 *.key
+# stray root logs from jobs submitted at the repo root
+/*.log

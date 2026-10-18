@@ -25,6 +25,9 @@ jobs:
       - name: install the test dependencies
         run: pip install numpy pyyaml pillow ruff
 
+      - name: prepush audit
+        run: sh scripts/prepush_audit.sh --range HEAD
+
       - name: unit tests
         run: |
           python -m unittest -v \

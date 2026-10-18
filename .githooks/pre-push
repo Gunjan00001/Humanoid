@@ -1,0 +1,3 @@
+#!/bin/sh
+# Pre-push: the same audit over the range about to be pushed.
+exec "$(git rev-parse --show-toplevel)/scripts/prepush_audit.sh" --range origin/main..HEAD

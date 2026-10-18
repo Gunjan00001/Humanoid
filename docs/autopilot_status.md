@@ -46,7 +46,7 @@ the run fails at generate with unused model_kwargs; exact resume, in order):
 
 ```
 # 1. reproduce the full error (the 80-char cap hid it):
-cd /home/user/Desktop/Humanoid
+cd "$(git rev-parse --show-toplevel)"
 GIT_LFS off; qsub scripts/job_bakeoff_naming.pbs; tail logs/bakeoff_naming_job.err
 # 2. in scripts/bakeoff_naming.py, strip the INPUT KEYS the model rejects:
 #    build local_inputs = {k: v for k, v in inputs.items() if k not in ("mm_token_type_ids",

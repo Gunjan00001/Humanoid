@@ -148,3 +148,33 @@ decision trace:
 ```bash
 python src/describe.py --config configs/default.yaml --debug 2>&1 | tee logs/debug_describe.log
 ```
+
+## Why the privacy guard missed the batch-1 log file (2026-10-18)
+
+Two leaks reached the remote with every test green. The cause was the shape of
+the guard, not its strength:
+
+1. **The tests scanned the tracked tree, and ran before `git add`.** The usual
+   loop was `run tests` then `git add -A && git commit`. A file created after
+   the test run, or created at all while untracked, was invisible to the scan
+   and got committed by `git add -A`. `bakeoff_logs.log` (written at the repo
+   root because a PBS `-o` directive used a bare relative name) came in exactly
+   this way.
+2. **Nothing looked at the identity fields.** Author, committer and tagger
+   strings were never scanned, so a cluster login could leak through the
+   envelope of a commit rather than its content.
+
+Both are closed by `scripts/prepush_audit.sh` and its Python implementation
+`scripts/prepush_audit.py`, which scan the staged change set and every added
+line in the range about to be pushed (not just the tracked tree), every file at
+HEAD regardless of extension (only genuinely binary files are skipped, sniffed
+by a NUL byte), and the author, committer and tagger of every commit and
+annotated tag in the range. The patterns are built at runtime from
+`getpass.getuser()`, `$HOME`, the hostname, the numeric part of the login and an
+optional local `.git/info/other_users.txt`, so the guard never contains the
+literals it hunts for.
+
+The script is installed as `.githooks/pre-commit` and `.githooks/pre-push`
+(`git config core.hooksPath .githooks`; `tests/test_hooks.py` fails if the
+hooks are missing, not executable, or not wired into CI). Paths in job scripts
+are now relative to `$PBS_O_WORKDIR`; a stray root `*.log` is ignored.
