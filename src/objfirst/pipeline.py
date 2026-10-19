@@ -39,13 +39,40 @@ def run_objfirst(cfg: dict) -> dict:
 
     matched_a = {i for i, _, _ in pairs}
     matched_b = {j for _, j, _ in pairs}
-    candidates = []
+
+    # Merge on matching evidence: several A fragments matching several B
+    # fragments of the same label are one object. The matcher already knows this,
+    # so the merge needs no new threshold: group the pairs by label and require
+    # the B side boxes to touch (the same written rule as fragments.py).
+    def touch(x1, e1, x2, e2) -> bool:
+        """Same written rule as fragments.py: boxes touch or overlap."""
+        return float(((x1 - x2) ** 2).sum() ** 0.5) <= 0.5 * (e1 + e2)
+
+    merged_pairs: list[list[tuple[int, int, float]]] = []
     for i, j, cost in pairs:
-        moved = float(((a[i].centroid - b[j].centroid) ** 2).sum() ** 0.5)
+        placed = False
+        for group in merged_pairs:
+            gi, gj, _ = group[0]
+            if (a[i].label == a[gi].label and b[j].label == b[gj].label
+                    and touch(b[j].centroid, b[j].extent, b[gj].centroid, b[gj].extent)
+                    and touch(a[i].centroid, a[i].extent, a[gi].centroid, a[gi].extent)):
+                group.append((i, j, cost))
+                placed = True
+                break
+        if not placed:
+            merged_pairs.append([(i, j, cost)])
+
+    candidates = []
+    for group in merged_pairs:
+        i0, j0, cost = group[0]
+        disps = [float(((a[i].centroid - b[j].centroid) ** 2).sum() ** 0.5) for i, j, _ in group]
+        moved = max(disps)
         candidates.append({"type": "moved" if moved > 0.02 else "unchanged",
-                           "label": a[i].label, "cost": round(cost, 3),
+                           "label": a[i0].label, "cost": round(min(c for _, _, c in group), 3),
                            "displacement": round(moved, 4),
-                           "from_cluster": a[i].key, "to_cluster": b[j].key})
+                           "from_cluster": "+".join(a[i].key for i, _, _ in group),
+                           "to_cluster": "+".join(b[j].key for _, j, _ in group),
+                           "matched_fragments": len(group)})
     for i, inst in enumerate(a):
         if i not in matched_a:
             candidates.append({"type": "removed", "label": inst.label,

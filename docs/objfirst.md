@@ -58,3 +58,21 @@ relative to the label's measured extent distribution — a global rule but one
 that needs the distribution measured first; (2) merge on matching evidence: two
 A fragments that match the same B object are one object, which the matcher
 already knows. The second is the cleaner route and belongs with M5.
+
+## Merge on matching evidence (attempt, no change) and what it proved
+
+Pipeline now groups matched pairs by label and only merges when **both sides'
+boxes touch** (the same written rule as fragments.py, no new constant). Result on
+scene4: **no merge** — the two apple fragments and their B counterparts sit apart
+in 3D, so they remain two `moved` candidates, and the three scissors fragments
+remain three `removed` candidates.
+
+What that proves, and the next step: these clusters are not adjacent fragments
+of one object; they are distant pieces of the same physical object, which is why
+a touching-boxes rule cannot join them. The honest route is route (1) from the
+previous section: merge same-label instances when the union box is still
+one-object sized **relative to the label's own extent distribution**, and that
+distribution must be measured first (per label, from the GT crops and their
+reconstructions). That is a measurement task for the manifest, not another
+constant to guess. Until then the object-first path reports fragments as
+fragments, and the gate evaluation must treat fragmentation as a known loss.
