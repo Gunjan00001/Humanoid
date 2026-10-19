@@ -1,5 +1,30 @@
 # Autopilot status
 
+RESUME HERE (batch 2, unattended mode; read logs/batch/*.done and *.failed first):
+
+```
+ls logs/batch/                     # <task>.done / <task>.failed / <task>_<jobid>_a<N>.{out,err}
+qstat | grep -E "batch_runner|bakeoff_sam"
+```
+
+Current state:
+1. SAM 3.1 is ADOPTED as the primary segmenter (autocast bf16 fixed the dtype
+   blocker; 4 of 11 GT objects segmented in both videos, 14 spurious; track IDs
+   not measured). SAM 2.1 is the fallback for automatic masks.
+2. Unattended runner: scripts/run_batch.py + scripts/run_batch.pbs, manifest
+   data/batch_manifest.json with four geometry tasks (VGGT 1x, VGGT 2x,
+   MapAnything 1x, MapAnything 2x). Job 11815 is running; it skips .done
+   tasks, retries failures once, and resubmits itself when the walltime cuts it.
+   Per-task logs carry the job id; results are logs/batch/<task>.json.
+3. Next: read each logs/batch/<task>.json as its .done appears and write rows
+   into docs/stack_selection.md; then build Phase 4 (M1-M5, docs/autopilot_final.md)
+   on exp/object-first with SAM 3.1 masks + DINOv3 patch matching + the baseline
+   VLM, appending its evaluation tasks to the manifest as stages become ready.
+4. Phase 4 is NOT built yet; nothing was merged; flags stay OFF.
+```
+
+# Autopilot status
+
 RESUME HERE (batch 2 phase 3: scoring fixes done, four runs in flight):
 
 ```

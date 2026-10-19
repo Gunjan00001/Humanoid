@@ -1,0 +1,14 @@
+#!/bin/bash
+#PBS -N batch_runner
+#PBS -q gpu
+#PBS -l select=1:ncpus=4:mem=60gb:ngpus=1
+#PBS -l walltime=12:00:00
+#PBS -o logs/batch_runner.out
+#PBS -e logs/batch_runner.err
+# Unattended batch runner: see scripts/run_batch.py and data/batch_manifest.json.
+# It survives the job boundary by resubmitting itself for the remaining tasks.
+cd "$PBS_O_WORKDIR" || exit 1
+PY="${SPATIALDIFF_PYTHON:-$HOME/miniconda3/envs/spatialdiff/bin/python}"
+export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+export BATCH_RESUBMIT_SCRIPT="$PBS_O_WORKDIR/scripts/run_batch.pbs"
+"$PY" scripts/run_batch.py

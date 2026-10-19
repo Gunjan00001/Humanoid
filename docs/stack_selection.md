@@ -328,3 +328,30 @@ win.
 the **alternative**, pending the dtype fix and the same harness run. Track-ID
 stability is reported as **not measured** for both: the image route has no
 tracker, and the video-session route was not reached in the time box.
+
+## Bake-off (b) RESULT: SAM 3.1 adopted as the primary segmenter (autocast fixed)
+
+The dtype blocker was solved by running the official path under
+`torch.autocast(device_type="cuda", dtype=torch.bfloat16)`: the checkpoint's
+bf16 and the processor's float32 meet inside autocast instead of fighting.
+Job 11813 completed the SAM 3.1 pass over the dev scenes (44 frame/prompt runs,
+name prompt and the generic "object" prompt, frames A and B):
+
+| measurement | SAM 3.1 (named prompt) | SAM 3.1 (generic "object") |
+|---|---|---|
+| GT objects segmented in both videos | **4 of 11** | 2 of 11 |
+| spurious masks beyond the best | 14 | 14 |
+| track-ID stability | not measured (image route has no tracker) | same |
+
+Example row: scene2 coconut, prompt "coconut", frame A -> one mask, area 4.6% of
+the frame, object-like, confidence 0.90; frame B -> no mask, so that object
+does not count as segmented in both.
+
+**Decision, by the written rule.** SAM 2.1 has no text interface, so it cannot
+say which GT object a mask belongs to; its automatic pass produced 8-16 masks
+per frame with no object attribution. The comparison the rule asks for (GT
+objects segmented in both videos) can therefore only be met by SAM 3.1, which
+does it for 4 of 11 objects with 14 spurious masks. SAM 3.1 becomes the
+**primary segmenter** (mask quality and track IDs still to be measured), and
+SAM 2.1 stays the fallback for automatic masks. The licence remains the custom
+Meta "SAM License" recorded in docs/models.md.

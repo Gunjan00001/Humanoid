@@ -1,0 +1,9 @@
+{
+  "note": "Unattended task queue for scripts/run_batch.py. Order matters: the first four are the geometry bake-off; Phase 4 evaluation tasks are appended as their stages become ready.",
+  "tasks": [
+    {"id": "geom_vggt_1x", "type": "geometry", "backend": "vggt", "frames": "1x", "scene": "scene4", "min_free_mb": 20000},
+    {"id": "geom_vggt_2x", "type": "geometry", "backend": "vggt", "frames": "2x", "scene": "scene4", "min_free_mb": 25000},
+    {"id": "geom_mapanything_1x", "type": "geometry", "backend": "mapanything", "frames": "1x", "scene": "scene4", "min_free_mb": 20000},
+    {"id": "geom_mapanything_2x", "type": "geometry", "backend": "mapanything", "frames": "2x", "scene": "scene4", "min_free_mb": 25000}
+  ]
+}

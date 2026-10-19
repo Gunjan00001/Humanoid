@@ -62,9 +62,6 @@ def run_sam3(device: str) -> list[dict]:
 
     model = build_sam3_image_model(checkpoint_path=CKPT, device=device,
                                    eval_mode=True, load_from_HF=False)
-    # the checkpoint loads in bf16 while the processor feeds float32; the
-    # official forward mixes them. Cast the model, not the inputs.
-    model = model.float()
     proc = Sam3Processor(model, device=device, confidence_threshold=0.3)
     rows = []
     for scene in SCENES:
@@ -76,8 +73,12 @@ def run_sam3(device: str) -> list[dict]:
             for prompt in (obj, "object"):
                 for side, path in pick.items():
                     img = Image.open(path).convert("RGB")
-                    state = proc.set_image(img)
-                    state = proc.set_text_prompt(prompt, state)
+                    # Run the official path under bf16 autocast: the checkpoint
+                    # is bf16, the processor feeds float32, and autocast is the
+                    # documented way to let the two meet.
+                    with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+                        state = proc.set_image(img)
+                        state = proc.set_text_prompt(prompt, state)
                     masks = state.get("masks")
                     scores = state.get("scores")
                     n = 0 if masks is None else int(masks.shape[0])
