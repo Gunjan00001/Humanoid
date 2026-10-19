@@ -27,7 +27,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from src.common import load_config  # noqa: E402
+from src.common import cache_dir, load_config, write_json  # noqa: E402
 
 
 def write(path: Path, data: dict) -> None:
@@ -58,8 +58,12 @@ def main() -> int:
     scene_dir = ROOT / "data" / args.scene
     a = (scene_dir / "a.mp4") if scene_dir.exists() else ROOT / "data" / "a.mp4"
     b = (scene_dir / "b.mp4") if scene_dir.exists() else ROOT / "data" / "b.mp4"
-    na = len(extract_one(a, "a", cfg)["frames"])
-    nb = len(extract_one(b, "b", cfg)["frames"])
+    info_a = extract_one(a, "a", cfg)
+    info_b = extract_one(b, "b", cfg)
+    # load_frame_list() reads this index; extract_one alone does not write it.
+    write_json(cache_dir(cfg, "frames") / "index.json",
+               {"videos": {"a": info_a, "b": info_b}})
+    na, nb = len(info_a["frames"]), len(info_b["frames"])
     result.update({"frames_a": na, "frames_b": nb,
                    "extract_s": round(time.time() - t0, 1), "status": "extracted"})
     write(out, result)
