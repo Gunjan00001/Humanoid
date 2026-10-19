@@ -155,3 +155,30 @@ identical crops for every model, N in the headers:
 
 The project's own classes are **not** easier for these models: the strict group
 sits below the all-crops line for the 4B and the 27B, and the 9B leads on both.
+
+## Bake-off (c) DONE: DINOv3 ViT-L versus DINOv2-large — **DINOv3 is adopted**
+
+Control design without new labels: every cluster in a scene's semantics cache
+has a crop in one video and a crop of the same object in the other, which is a
+positive pair (same object, two viewpoints); two crops from different clusters
+are a negative pair. A matcher is useful when positives sit clearly above
+negatives, so the number that matters is the separation. 30 positive and 30
+negative pairs, all six scenes, CPU, local weights.
+
+| encoder | CLS positive | CLS negative | **CLS separation** | patch positive | patch negative | **patch separation** |
+|---|---|---|---|---|---|---|
+| DINOv2-large | 0.431 | 0.270 | **0.162** | 0.223 | 0.167 | **0.057** |
+| DINOv3 ViT-L | 0.493 | 0.291 | **0.202** | 0.331 | 0.231 | **0.099** |
+
+Decision (rule 3, written before the run): adopt only if the candidate stays at
+or above the incumbent on the same controls. **DINOv3 ViT-L is above on both
+descriptors** (+0.040 CLS separation, +0.042 patch separation, and higher
+positive similarity on each), so it becomes the **primary matcher** with
+DINOv2-large as the fallback. This is the first accepted change of the stack
+selection. Relation to the earlier probe: those numbers (apple 0.704 CLS /
+0.914 patch) came from SAM 2 mask-tight crops of single objects, a different and
+easier control set than the pipeline's own crops used here, so the two are not
+comparable directly; both were run with identical crops *inside* each study.
+
+Source: `logs/bakeoff_matching.json`, produced by `scripts/bakeoff_matching.py`
+(CPU, no GPU time).
