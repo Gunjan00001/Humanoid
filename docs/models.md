@@ -112,3 +112,13 @@ same artifact contract (see `scripts/run_mapanything.py` and
   official `facebookresearch/sam3` package for this `.pt`. That is the precise
   blocker behind "SAM 3.1 text route: blocked on integration", not a property
   of the model.
+
+### SAM 3.1 environment (added)
+
+`spatialdiff-sam3`: Python 3.12.15, torch 2.14.1+cu126, `sam3 0.1.0` from
+`github.com/facebookresearch/sam3`, with the undeclared dependencies the
+package needs (einops, timm, omegaconf, hydra-core, pycocotools, psutil,
+scipy, imageio, numpy<2, setuptools<81). Import verified; the model build takes
+`checkpoint_path=~/models/sam3.1/sam3.1_multiplex.pt` and a `bpe_path` for the
+text tokenizer, which is the one remaining detail before the per-frame
+segmentation bake-off.

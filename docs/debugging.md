@@ -247,3 +247,30 @@ raises "no file named model.safetensors". The remaining routes are therefore
 `facebookresearch/sam3` package which loads this `.pt` (separate env,
 `spatialdiff-sam3`, Python 3.12). The per-frame comparison harness is written
 and waiting (`scripts/bakeoff_segmentation.py`).
+
+## SAM 3.1: the separate env works (official package imports)
+
+The route from the review (b) succeeded up to a working import:
+
+* env **`spatialdiff-sam3`** created: **Python 3.12.15**, **torch 2.14.1+cu126**
+  (the same CUDA build as the other envs).
+* official package installed from the repository:
+  **`pip install git+https://github.com/facebookresearch/sam3.git`** →
+  `sam3 0.1.0`.
+* its imports needed five undeclared packages: `setuptools` (pkg_resources;
+  version <81 was required), `einops`, `timm`, `omegaconf`, `hydra-core`,
+  `opencv-python-headless`, `pillow`, `numpy<2`, `pycocotools`, `psutil`,
+  `scipy`, `tqdm`, `imageio`. All installed; `from sam3 import
+  build_sam3_image_model, build_sam3_predictor` now succeeds.
+* API read from the installed package:
+  `build_sam3_image_model(bpe_path=None, device='cpu', eval_mode=True,
+  checkpoint_path=None, load_from_HF=True, enable_segmentation=True, ...)` and
+  `build_sam3_predictor(checkpoint_path=None, bpe_path=None, version='sam3.1',
+  max_num_objects=16, multiplex_count=16, ...)`.
+* remaining detail before the per-frame bake-off: the text prompt needs a
+  **BPE vocabulary path** (`bpe_path`); the local snapshot has `merges.txt`
+  (524 KB) and the package expects its own BPE file, so the next command is to
+  pass the correct bpe_path (or let `load_from_HF` fetch it while online) and
+  then run the predictor with `~/models/sam3.1/sam3.1_multiplex.pt` on a pinned
+  GPU. Nothing about the model is in doubt any more; only the tokenizer file
+  location and the per-frame harness run remain.
