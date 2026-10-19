@@ -4,6 +4,32 @@ RESUME HERE (unattended mode; read logs/batch/*.done and *.failed first):
 
 ```
 ls logs/batch/*.done logs/batch/*.failed
+cat logs/batch/geom_*.json               # geometry rows (done)
+git log --oneline exp/object-first -5    # Phase 4 spine
+cat docs/objfirst.md                     # state, smoke, limitations, gates
+```
+
+State:
+1. Geometry (d) DONE: VGGT 4.1 mm / 8.05 M points / 25.5 s at 1x versus
+   MapAnything 13.4 mm / 4.59 M / 32.8 s; 2x buys density, not accuracy. VGGT
+   stays primary.
+2. Adopted stack: SAM 3.1 segmenter (SAM 2.1 fallback), DINOv3 ViT-L matcher,
+   VGGT backend, Qwen3-VL-32B naming baseline.
+3. Phase 4 on `exp/object-first`: M1 inventory, M3 lift, M4 matching and the
+   M1-M4 spine run end to end (scene4: 6+2 instances, 2 apple pairs, 4 removed
+   scissors fragments). Next: a true per-frame VLM inventory (M1 proper), SAM 3.1
+   segmentation/tracking (M2), fragment merging and verification/fusion (M5),
+   then the Phase 4 gate evaluation; append its task to data/batch_manifest.json
+   when the stages run.
+4. The batch manifest currently has no pending tasks (all four geometry tasks
+   done). Nothing is merged; `diff.method` stays tabletop.
+
+# Autopilot status
+
+RESUME HERE (unattended mode; read logs/batch/*.done and *.failed first):
+
+```
+ls logs/batch/*.done logs/batch/*.failed
 cat logs/batch/geom_*.json          # geometry rows: residual, density, runtime
 qstat | grep batch_runner
 ```
