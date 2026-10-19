@@ -76,3 +76,20 @@ distribution must be measured first (per label, from the GT crops and their
 reconstructions). That is a measurement task for the manifest, not another
 constant to guess. Until then the object-first path reports fragments as
 fragments, and the gate evaluation must treat fragmentation as a known loss.
+
+## Measured extent rule (route 1), implemented and re-smoked
+
+`scripts/objfirst_extents.py` measured the per-label 3D extent distribution from
+the diff boxes joined with the cached VLM labels: **19 labels**, e.g. apple
+n=10 median 0.143 P90 0.319, chair n=10 median 0.172 P90 0.512, coconut n=5
+median 0.197 P90 0.503; labels with fewer than three instances have no extent
+rule and keep the touching-boxes rule. Written to `data/objfirst_extents.json`.
+
+`merge_by_extent` then merges same-label instances while the **union diagonal
+stays within the label's P90**. Effect on scene4: side A **5 -> 4** instances
+(scissors 3 -> 2), candidates **5 -> 4** (two moved apples, two removed
+scissors). The remaining pairs stay apart because their unions exceed the label's
+P90 by a wide margin, i.e. they are far apart for one object of that class. Two
+readings, both honest: either these are genuinely different pieces the detector
+split across metres, or they are separate objects labelled with one name; the
+gate evaluation will tell, because it scores against GT objects, not fragments.

@@ -49,3 +49,53 @@ def merge_fragments(items: list[dict]) -> list[dict]:
                        "bbox_min": lo, "bbox_max": hi,
                        "fragments": len(group)})
     return merged
+
+
+# ---------------------------------------------------------------------------
+# extent-relative merge, using the measured per-label distribution
+
+
+def merge_by_extent(items: list[dict], extents_path) -> list[dict]:
+    """Merge same-label instances while the union still looks like one object.
+
+    Rule, written before the run and using measured numbers only: two or more
+    instances of the same label merge when the diagonal of their union box is no
+    larger than that label's P90 extent in data/objfirst_extents.json. Labels
+    with fewer than three measured instances have no extent rule and are left to
+    the touching-boxes rule already applied.
+    """
+    import json
+    from pathlib import Path
+
+    data = json.loads(Path(extents_path).read_text())["labels"]
+    by_label: dict[str, list[dict]] = {}
+    out: list[dict] = []
+    for it in items:
+        by_label.setdefault(it["label"], []).append(it)
+    for label, group in by_label.items():
+        spec = data.get(label)
+        if not spec or spec["rule"] != "extent":
+            out.extend(group)
+            continue
+        limit = float(spec["p90"])
+        pending = list(group)
+        while pending:
+            base = pending.pop(0)
+            lo, hi = np.asarray(base["bbox_min"]), np.asarray(base["bbox_max"])
+            members = [base]
+            for other in list(pending):
+                ulo = np.minimum(lo, np.asarray(other["bbox_min"]))
+                uhi = np.maximum(hi, np.asarray(other["bbox_max"]))
+                if float(np.linalg.norm(uhi - ulo)) <= limit:
+                    members.append(other)
+                    pending.remove(other)
+                    lo, hi = ulo, uhi
+            if len(members) == 1:
+                out.append(base)
+            else:
+                best = max(members, key=lambda g: g["extent"])
+                out.append({**best, "centroid": (lo + hi) / 2.0,
+                            "extent": float(np.linalg.norm(hi - lo)),
+                            "bbox_min": lo, "bbox_max": hi,
+                            "fragments": len(members)})
+    return out
