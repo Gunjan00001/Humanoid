@@ -1,5 +1,31 @@
 # Autopilot status
 
+RESUME HERE (unattended mode; read logs/batch/*.done and *.failed first):
+
+```
+ls logs/batch/*.done logs/batch/*.failed
+cat logs/batch/geom_*.json          # geometry rows: residual, density, runtime
+qstat | grep batch_runner
+```
+
+State:
+1. Geometry bake-off (d) is DONE: VGGT 4.1 mm / 8.05 M points / 25.5 s at 1x
+   versus MapAnything 13.4 mm / 4.59 M / 32.8 s; 2x doubles density and time
+   without improving the residual. **VGGT stays primary, MapAnything the
+   alternative.**
+2. SAM 3.1 is the adopted segmenter (autocast; 4 of 11 GT objects both videos,
+   14 spurious, track IDs not measured); SAM 2.1 remains the automatic-mask
+   fallback.
+3. DINOv3 ViT-L is the adopted matcher (GT pairs, interval-clean).
+4. Phase 4 is on `exp/object-first`: M4 matching implemented (DINOv3 patch,
+   four-signal cost, Hungarian). M1 inventory, M2 segmentation/tracking, M3
+   lift and M5 verify/fuse are the next commits. Nothing is merged; the default
+   path is untouched (`diff.method` stays tabletop).
+5. The batch manifest holds only the four geometry tasks; they are done. Append
+   the Phase 4 evaluation tasks when the stages exist.
+
+# Autopilot status
+
 RESUME HERE (batch 2, unattended mode; read logs/batch/*.done and *.failed first):
 
 ```
