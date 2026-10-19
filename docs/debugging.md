@@ -229,3 +229,21 @@ What changed:
 4. Status: **blocked on integration, not a model result.** SAM 2.1 base-plus
    stays the segmenter meanwhile. The comparison harness is written and ready
    (`scripts/bakeoff_segmentation.py`).
+
+## SAM 3.1 image route, final probe of the box
+
+`transformers.models.sam3` does contain an image text-prompted path:
+**`Sam3Processor`** and **`Sam3Model`**, whose `forward` takes `input_ids`,
+`attention_mask`, `text_embeds` and `input_boxes`. That is exactly the route
+the review suggested, and it is different from `Sam3VideoProcessor` (which
+`AutoProcessor` picks because the checkpoint config says `sam3_video`).
+
+It cannot load this download: `~/models/sam3.1` contains
+**`sam3.1_multiplex.pt`** (3.5 GB, Meta's own state dict), a `LICENSE` and a
+config with `architectures = ["Sam3VideoModel"]`. There is no
+`model.safetensors` / `pytorch_model.bin`, so `Sam3Model.from_pretrained`
+raises "no file named model.safetensors". The remaining routes are therefore
+(a) a transformers-format image checkpoint, or (b) the official
+`facebookresearch/sam3` package which loads this `.pt` (separate env,
+`spatialdiff-sam3`, Python 3.12). The per-frame comparison harness is written
+and waiting (`scripts/bakeoff_segmentation.py`).

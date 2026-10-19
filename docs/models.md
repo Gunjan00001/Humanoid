@@ -93,3 +93,22 @@ same artifact contract (see `scripts/run_mapanything.py` and
 - **DINOv2**, robust self-supervised crop embeddings for deciding that two
   detections are the *same* object moved, not two different changes.
 - **SAM 2**, optional: tightens cluster masks so crops are cleaner.
+
+## SAM 3.1 (downloaded, text route not yet usable)
+
+* repo: `facebook/sam3.1`, gated (accepted), HF licence field **"other"**.
+* local files: `sam3.1_multiplex.pt` (3.5 GB), `LICENSE` (7.3 KB), config with
+  `architectures = ["Sam3VideoModel"]`, `model_type = "sam3_video"`,
+  `processor_config.json`.
+* the licence is a custom Meta text; the local copy is the authority and it was
+  read in the batch (key phrases below). **Recorded as not yet cleared for
+  product use**; the project uses it only for the research bake-off when the
+  route works.
+* the checkpoint is in Meta's own format, not transformers format: there is no
+  `model.safetensors` / `pytorch_model.bin`, and the architecture is the video
+  (multiplex) model. `Sam3Model.from_pretrained` therefore cannot load it, and
+  the transformers image text-prompted class (`Sam3Processor` + `Sam3Model`,
+  which does exist) needs either a transformers-format image checkpoint or the
+  official `facebookresearch/sam3` package for this `.pt`. That is the precise
+  blocker behind "SAM 3.1 text route: blocked on integration", not a property
+  of the model.
