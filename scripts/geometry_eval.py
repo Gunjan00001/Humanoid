@@ -84,7 +84,6 @@ def main() -> int:
     # returns the arrays and leaves writing to the caller. MapAnything's worker
     # writes its own files instead.
     if not backend_result.get("wrote_files"):
-        import numpy as np
         from src.common import repo_path, stamp
         rdir = repo_path(cfg["paths"]["cache_dir"]) / "reconstruction"
         rdir.mkdir(parents=True, exist_ok=True)
