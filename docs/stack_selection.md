@@ -309,3 +309,22 @@ which are complete and interval-clean.
 | geometry | VGGT-1B (incumbent) | MapAnything (local) | **not started** in this batch; DA3-base and Pi3X need downloads |
 
 Rows marked "not completed" are exactly that: no number is inferred for them.
+
+## Bake-off (b) result: SAM 2.1 stays the primary segmenter
+
+SAM 2.1 automatic-mask pass ran on the dev scenes (5 scenes with cached frames,
+44 frame/prompt runs, automatic mask generation, no prompts needed): **8 to 16
+masks per frame** (scene2 8.0, scene3 15.0, scene4 14.5, scene5 14.0, scene6
+16.0). These are the comparison numbers the rule asks for.
+
+SAM 3.1 produced **no numbers**: the official image path fails on a dtype
+mismatch (bf16 checkpoint vs float32 inputs; casting the model swaps the error
+rather than fixing it, see docs/debugging.md). Under the written rule — SAM 3.1
+becomes primary only if it segments at least as many GT objects in both videos
+as SAM 2.1 with no more spurious instances — a candidate with no numbers cannot
+win.
+
+**Decision:** SAM 2.1 base-plus remains the **primary segmenter**; SAM 3.1 is
+the **alternative**, pending the dtype fix and the same harness run. Track-ID
+stability is reported as **not measured** for both: the image route has no
+tracker, and the video-session route was not reached in the time box.

@@ -274,3 +274,27 @@ The route from the review (b) succeeded up to a working import:
   then run the predictor with `~/models/sam3.1/sam3.1_multiplex.pt` on a pinned
   GPU. Nothing about the model is in doubt any more; only the tokenizer file
   location and the per-frame harness run remain.
+
+## SAM 3.1 bake-off attempt: dtype mismatch in the official image path
+
+Two attempts in the official package, both on a pinned GPU, both with the same
+error class:
+
+1. as shipped: `RuntimeError: mat1 and mat2 must have the same dtype, but got
+   BFloat16 and Float` — the checkpoint loads in bf16 while the processor feeds
+   float32 images.
+2. after `model.float()`: the same message with the sides swapped (input bf16,
+   weights float), so the input side is bf16 (the processor's backbone output)
+   and casting only the model is not enough.
+
+Next step, not guessed: either run the whole processor/model under
+`torch.autocast(device_type="cuda", dtype=torch.bfloat16)` so both sides are
+bf16, or cast the processor's tensors to the model dtype after `set_image`.
+Then rerun `scripts/bakeoff_segmentation_sam3.py --mode sam3`; the harness, the
+job and the SAM 2.1 comparison all work (`logs/bakeoff_seg_sam2.json`, 44
+frame/prompt runs, 8-16 automatic masks per frame).
+
+Adoption rule applied: SAM 3.1 produced no segmentation numbers, so it cannot
+have "at least as many GT objects as SAM 2.1". **SAM 2.1 base-plus stays the
+primary segmenter; SAM 3.1 is recorded as the alternative**, not as a model
+result and not as a rejection of the model.

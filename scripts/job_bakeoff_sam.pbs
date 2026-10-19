@@ -1,0 +1,21 @@
+#!/bin/bash
+# Bake-off (b): SAM 3.1 (official package, sam3 env) then SAM 2.1 automatic masks
+# (sam env) on the same frames. Pinned GPU with the most free memory.
+#PBS -N bakeoff_sam
+#PBS -q gpu
+#PBS -l select=1:ncpus=4:mem=48gb:ngpus=1
+#PBS -l walltime=02:00:00
+#PBS -o logs/bakeoff_sam.log
+#PBS -e logs/bakeoff_sam.err
+cd "$PBS_O_WORKDIR" || exit 1
+PY3="${SPATIALDIFF_SAM3_PYTHON:-$HOME/miniconda3/envs/spatialdiff-sam3/bin/python}"
+PY2="${SPATIALDIFF_SAM_PYTHON:-$HOME/miniconda3/envs/spatialdiff-sam/bin/python}"
+export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+GPU=$(nvidia-smi --query-gpu=index,memory.free --format=csv,noheader,nounits \
+      | sort -t, -k2 -rn | head -1 | cut -d, -f1)
+echo "=== SAM3 on GPU $GPU ($(date +%T)) ==="
+CUDA_VISIBLE_DEVICES=$GPU "$PY3" scripts/bakeoff_segmentation_sam3.py --mode sam3 || echo SAM3_FAILED
+echo "=== SAM2 on GPU $GPU ($(date +%T)) ==="
+CUDA_VISIBLE_DEVICES=$GPU "$PY2" scripts/bakeoff_segmentation_sam3.py --mode sam2 || echo SAM2_FAILED
+"$PY3" scripts/bakeoff_segmentation_sam3.py --merge || true
+echo "BAKEOFF_SAM_DONE"
