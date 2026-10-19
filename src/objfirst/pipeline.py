@@ -13,6 +13,7 @@ import json
 from pathlib import Path
 
 from src.objfirst.inventory import build_inventory
+from src.objfirst.fragments import merge_fragments
 from src.objfirst.lift import lift
 from src.objfirst.match import Instance, embed_patches, match_instances
 
@@ -23,6 +24,7 @@ def run_objfirst(cfg: dict) -> dict:
         raise RuntimeError("run_objfirst called without diff.method=objfirst")
     scene_dir = Path(cfg["paths"]["cache_dir"]).resolve()
     inv = lift(build_inventory(scene_dir), scene_dir)
+    inv = {side: merge_fragments(items) for side, items in inv.items()}
 
     def as_instances(side: str) -> list[Instance]:
         return [Instance(key=f"{side}-{it['cluster_id']}", label=it["label"],

@@ -42,3 +42,19 @@ do not drop, extras do not rise, scene4 and demo do not regress, three runs are
 stable, outputs are byte identical with the flag OFF, tests pass, no per-scene
 values, and the gain does not come from a single scene. Otherwise the flag stays
 OFF and the negative result is written.
+
+## Fragment merging (commit after the first smoke)
+
+`src/objfirst/fragments.py` merges same-label instances whose 3D boxes touch or
+overlap (written rule: centre distance below half the sum of the extents), with
+transitive merging and a union box. Effect on scene4: side A **6 -> 5**
+instances (scissors 4 -> 3), side B unchanged at 2, matched pairs still 2.
+
+Honest reading: the rule only merges fragments that touch in 3D, and these
+fragments mostly do not touch (the two apple fragments on each side sit apart),
+so the effect is partial. Two options are recorded for the next pass, in order:
+(1) merge same-label instances whose union box is still "one object" sized
+relative to the label's measured extent distribution — a global rule but one
+that needs the distribution measured first; (2) merge on matching evidence: two
+A fragments that match the same B object are one object, which the matcher
+already knows. The second is the cleaner route and belongs with M5.
