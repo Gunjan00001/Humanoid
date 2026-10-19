@@ -277,3 +277,35 @@ with `--vocab public`; combined with the SigLIP top-20 rerank this keeps the
 closed-set cost small. **Not run yet**: the naming job budget is closed at the
 five allowed jobs, so this is implementation-ready and recorded as pending,
 not as a result.
+
+## Controls rerun (item 1c) — BLOCKED on a patch-grid mapping, recorded
+
+The SAM 2 mask-tight controls (apple positive; scissors-vs-apple negative; cup;
+clock) were re-run with **both encoders on the same masked crops**
+(`scripts/probe_sam2_controls_dinov3.py`, job 11806 then 11807). Both attempts
+stop at the same place: for a rectangular crop DINOv3 returns **200 patch
+tokens** on a non-square grid, while the mask resample produced 196 cells
+(14×14). Two fixes were tried (square-grid assumption; grid from the input
+tensor and patch size) and both still land on 196, so the mapping is not
+recovered by those methods. Next step: pick the (height, width) factor pair of
+the token count closest to the crop aspect, or read the model-specific grid
+metadata, then rerun — the script is ready apart from that mapping.
+
+Honest consequence: the **controls rerun is not available**, so the older probe
+numbers (apple 0.704/0.914, scissors-vs-apple 0.285/0.085, cup 0.482/0.374,
+clock 0.174/0.460) remain the only SAM 2 mask-tight reference. The DINOv3
+adoption does not rest on this rerun: it rests on the GT-pair AUC and the
+paired difference (CLS +0.050 [+0.004, +0.100], patch +0.115 [+0.100, +0.131]),
+which are complete and interval-clean.
+
+## Decision table (as it stands, written rules applied)
+
+| role | primary | fallback | evidence state |
+|---|---|---|---|
+| matching | **DINOv3 ViT-L** | DINOv2-large | **accepted**: GT pairs, AUC 0.805 CLS / 0.855 patch, paired difference excludes a loss on both descriptors |
+| segmentation | **SAM 2.1 base-plus** | — | SAM 3.1 text route blocked on integration (processor rejects text); SAM 2.1 is the incumbent and keeps working |
+| naming | **Qwen3-VL-32B (incumbent)** | Qwen3.5 family | 4B/9B/27B all below or level with the user's expectations on the public scales tested; all-crops accuracy 28.4% / 31.5% / 29.7%, strict group 25.4% / 25.4% / 23.8%; no candidate beats the baseline by the written rule, and the 32B over this crop set is **not completed** |
+| closed set over a public vocabulary | implemented, **not run** | 301-word result kept | `data/vocabulary_public.json` (1,253 names, LVIS 1,203 + Objects365 v1/v2 + COCO, licences recorded); harness flag `--vocab public`; job budget closed |
+| geometry | VGGT-1B (incumbent) | MapAnything (local) | **not started** in this batch; DA3-base and Pi3X need downloads |
+
+Rows marked "not completed" are exactly that: no number is inferred for them.

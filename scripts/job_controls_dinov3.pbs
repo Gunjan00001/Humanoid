@@ -1,0 +1,16 @@
+#!/bin/bash
+# The earlier SAM 2 mask-tight controls, re-measured with DINOv3 and DINOv2.
+# Uses the sam env (SAM 2 lives there); local models, offline.
+#PBS -N controls_dv3
+#PBS -q gpu
+#PBS -l select=1:ncpus=4:mem=48gb:ngpus=1
+#PBS -l walltime=00:30:00
+#PBS -o logs/controls_dv3.log
+#PBS -e logs/controls_dv3.err
+cd "$PBS_O_WORKDIR" || exit 1
+PY="${SPATIALDIFF_SAM_PYTHON:-$HOME/miniconda3/envs/spatialdiff-sam/bin/python}"
+export HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1
+GPU=$(nvidia-smi --query-gpu=index,memory.free --format=csv,noheader,nounits \
+      | sort -t, -k2 -rn | head -1 | cut -d, -f1)
+CUDA_VISIBLE_DEVICES=$GPU "$PY" scripts/probe_sam2_controls_dinov3.py
+echo "CONTROLS_DONE"
