@@ -131,3 +131,27 @@ on exact and 3.5 on exact-or-parent over all crops, with intervals that overlap
 almost completely. No separation, and no adoption decision is possible until the
 32B baseline is measured on the same crops with the same protocol.
 
+## Fixed COMMON group (review item 1), identical crops for every model
+
+Written once in `data/naming_common_classes.json`, derived from ground truth
+only, so no model and no tuning can move it:
+
+* **strict group**: the dev scenes' own ground-truth classes (10 classes, 63
+  crops of the 317 in the labelled set; only `bottle` has crops here, the rest
+  of the validation objects are room-scale classes the dev scenes do not share);
+* **project-like group**: a written list of everyday household and office
+  classes (40 classes, covering all 317 crops; structural items such as wall,
+  floor, ceiling, window, outlet, shadow, reflection and dataset oddities such
+  as stickers, pods and garment parts are excluded by that written decision).
+
+Free-form accuracy (normalized, steps 1-2; the embedding step is unchanged),
+identical crops for every model, N in the headers:
+
+| model | all 317 crops | in-vocabulary subset | strict group, n=63 crops |
+|---|---|---|---|
+| Qwen3.5-4B | 90/317 = 28.4% [23.7, 33.6] | 90/204 = 44.1% [37.5, 51.0] | 12/43 = 27.9% [16.7, 42.7] |
+| Qwen3.5-9B | 100/317 = 31.5% [26.7, 36.9] | 100/217 = 46.1% [39.6, 52.7] | 16/43 = 37.2% [24.4, 52.1] |
+| Qwen3.5-27B | 94/317 = 29.7% [24.9, 34.9] | 94/229 = 41.0% [34.9, 47.5] | 15/50 = 30.0% [19.1, 43.8] |
+
+The project's own classes are **not** easier for these models: the strict group
+sits below the all-crops line for the 4B and the 27B, and the 9B leads on both.
