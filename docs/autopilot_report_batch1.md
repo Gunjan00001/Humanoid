@@ -80,3 +80,50 @@ forward keys; placeholder echo 301 of 317 replies at attempt 3, latency
 attempt-4 plan (no placeholder, and a non-blank crop variant for the small
 model) is the resume command at the top of docs/autopilot_status.md.
 
+
+---
+
+# Batch 1 update (current evidence, supersedes the numbers above where they differ)
+
+## Decision table as it stands (written rules applied)
+
+| role | primary | fallback | evidence state |
+|---|---|---|---|
+| matching | **DINOv3 ViT-L** | DINOv2-large | accepted: GT-based pairs, AUC 0.805 CLS / 0.855 patch, paired difference excludes a loss on both descriptors (CLS +0.050 [+0.004, +0.100]; patch +0.115 [+0.100, +0.131]) |
+| segmentation | **SAM 2.1 base-plus** | — | SAM 3.1 text route blocked on integration; the download is sam3.1_multiplex.pt (Meta format, Sam3VideoModel), not a transformers image checkpoint |
+| naming | **Qwen3-VL-32B (incumbent)** | Qwen3.5 family | 4B/9B/27B: all-crops 28.4% / 31.5% / 29.7%; in-vocabulary 44.1% / 46.1% / 41.0%; strict group (identical 63 crops) 25.4% / 25.4% / 23.8%; the 32B over this crop set is not completed |
+| public-vocabulary closed set | implemented, not run | 301-word result kept | data/vocabulary_public.json: 1,253 names (LVIS 1,203 + Objects365 v1/v2 + COCO 80), sources and licences recorded; harness flag --vocab public; job budget closed |
+| geometry | VGGT-1B (incumbent) | MapAnything (local) | not started |
+
+## Corrections made in this batch
+- Wilson intervals: the reporting helper returned the centre as the lower bound; fixed in
+  src/naming/stats.py with known-value tests, every published interval recomputed, both
+  denominators stated (all crops and named crops).
+- The "unparsable" bucket was out-of-vocabulary naming: all three models answered 317/317,
+  zero format violations.
+- Strict-group denominators differed per model; fixed with one truth table, identical 63
+  crops for every model.
+- Matching pairs were circular (the pipeline's own matches); rebuilt from ground truth.
+- Context ablation (9B): blanked 38.5% [33.1, 44.1], 20% margin 33.1% [28.0, 38.6], frame
+  39.5% [34.1, 45.1], n = 299 (18 variant crops failed to load and count as errors).
+- SAM 2 mask-tight controls rerun blocked on the non-square patch grid (200 tokens vs 196
+  cells); two fixes tried, exact next step recorded.
+
+## Not completed, never inferred
+32B free baseline (job 11795 exit 1; 11790 failed on a literal $HOME in qsub -v, later
+fixed); full-vocabulary loglik runs (11791/11792/11794 exit 1); SAM 3.1 per-frame text
+segmentation (checkpoint format, see above); controls rerun (grid mapping); geometry
+(not started).
+
+## Git state and rails
+Only the two authorized rewrites (Phase 1B identity, Phase 1C leak regression) used force
+pushes, with the tag updates they required; no other force push or history rewrite; no
+backup deleted; held-out outputs and v1.0.0/archive tags untouched; the prepush audit ran
+clean before every push; suites green at every commit. This batch also removed 774 variant
+crop files that `git add -A` had swept in (repo budget back to 412 tracked files, test
+green), keeping the three manifests.
+
+## HUMAN ONLY
+GitHub Support request (~/purge/support_request.txt), enabling GitHub Pages, the demo video,
+new scene recordings under data/sealed/, frame review for faces or documents, deleting the
+backups.

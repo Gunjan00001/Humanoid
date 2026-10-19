@@ -76,3 +76,5 @@ data/naming_set/crops/
 *.key
 # stray root logs from jobs submitted at the repo root
 /*.log
+# every crop variant is derived data (blanked, margin, frame)
+data/naming_set/crops*/
