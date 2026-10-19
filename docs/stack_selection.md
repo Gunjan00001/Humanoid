@@ -211,3 +211,36 @@ VGGT-1B and MapAnything (apache) are local and are the first two rows to run;
 DA3 (GIANT cc-by-nc-4.0 / BASE apache-2.0) and Pi3X (cc-by-nc-4.0) need their
 downloads and the transformers `depth_anything` path was confirmed present.
 Recorded as pending, not as a negative.
+
+## DINOv3 evidence, corrected (GT-based pairs, cluster bootstrap)
+
+Correction to the first run: the pairs came from the pipeline's own matches,
+which is circular. Rebuilt from ground truth: the labelled manifest records each
+validation object's crop in video 1 and in video 2 independently of any
+detector, giving **29 positive pairs** (same instance, both videos) and **29
+negative pairs** (different instances), 58 crops, CPU.
+
+| encoder | descriptor | positive mean | negative mean | AUC | 95% cluster bootstrap |
+|---|---|---|---|---|---|
+| DINOv2-large | CLS | 0.487 | 0.208 | 0.799 | [0.676, 0.905] |
+| DINOv2-large | patch | 0.372 | 0.192 | 0.795 | [0.670, 0.899] |
+| DINOv3 ViT-L | CLS | 0.537 | 0.225 | 0.805 | [0.682, 0.918] |
+| DINOv3 ViT-L | patch | 0.487 | 0.207 | 0.855 | [0.745, 0.941] |
+
+**Paired difference on the same pairs** (bootstrap over pairs):
+CLS **+0.050 [+0.004, +0.100]**, patch **+0.115 [+0.100, +0.131]**. Neither
+interval includes a loss, so by the written rule DINOv3 ViT-L is **adopted as
+the primary matcher** (not merely provisional), with DINOv2-large the fallback.
+
+## Context ablation, 9B, all 317-crop runs (job 11793, exit 0)
+
+| crop context | exact / all | exact or parent / all |
+|---|---|---|
+| (a) mask-tight, background blanked | 80/299 = 26.8% | **115/299 = 38.5% [33.1, 44.1]** |
+| (b) tight box + 20% real background | 69/299 = 23.1% | **99/299 = 33.1% [28.0, 38.6]** |
+| (c) full frame, object outlined | 82/299 = 27.4% | **118/299 = 39.5% [34.1, 45.1]** |
+
+Reading: a real background margin makes it worse; the outlined full frame is one
+point above the blanked crop with overlapping intervals, so there is no
+separation. n = 299 here, not 317: eighteen crops failed to load in the variant
+directories and are counted as errors, which is recorded rather than hidden.

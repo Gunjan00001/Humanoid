@@ -209,3 +209,23 @@ What changed:
    rows: docs/stack_selection.md and the two `logs/bakeoff_naming_*.json` files
    now carry both denominators (all crops and named crops) with the corrected
    intervals.
+
+## SAM 3.1 text route: attempts and outcome (time boxed)
+
+1. `AutoProcessor.from_pretrained("~/models/sam3.1")` returns
+   **`Sam3VideoProcessor`**, whose call signature is
+   `(images, segmentation_maps, original_sizes, return_tensors, **kwargs)`, with
+   no `text`. Passing `text="apple"` (and `text=["apple"]`) fails with
+   "unexpected keyword argument 'text'". The processor's `model_input_names`
+   do include `input_ids`/`attention_mask`, which suggests the video/session
+   route rather than the plain call.
+2. The text-tuned sibling in transformers 5.19 is **`sam3_lite_text`**
+   (`Sam3LiteTextModel`, `Sam3LiteTextTextModel`), a different checkpoint from
+   the 3.1 weights, so it cannot stand in for SAM 3.1.
+3. Remaining routes, in order, for the next time box: (a) the image-model
+   session API in the `sam3` documentation, initialising a video session and
+   adding a text prompt; (b) a separate env with the official
+   `facebookresearch/sam3` package and its own text-prompt API.
+4. Status: **blocked on integration, not a model result.** SAM 2.1 base-plus
+   stays the segmenter meanwhile. The comparison harness is written and ready
+   (`scripts/bakeoff_segmentation.py`).
