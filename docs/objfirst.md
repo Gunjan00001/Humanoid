@@ -93,3 +93,18 @@ P90 by a wide margin, i.e. they are far apart for one object of that class. Two
 readings, both honest: either these are genuinely different pieces the detector
 split across metres, or they are separate objects labelled with one name; the
 gate evaluation will tell, because it scores against GT objects, not fragments.
+
+## M2 segmentation bridge
+
+`scripts/objfirst_segment.py` (run in `spatialdiff-sam3`) prompts SAM 3.1 with
+each cluster's cached VLM label under bf16 autocast and writes
+`logs/objfirst/masks/<scene>.npz` (one boolean mask per cluster) plus a JSON of
+mask statistics. `src/objfirst/segment.py` loads those masks, or calls the
+sam3-env script on demand via `ensure_masks`. Masks are **optional**: without
+them the spine still runs on the cached boxes, so a CPU-only checkout stays
+testable and nothing here runs on the default path.
+
+Not run yet: the mask pass is a GPU task; it is deliberately not appended to
+`data/batch_manifest.json` while the Phase 4 code lives on `exp/object-first`,
+because the runner works on the main checkout. The task is appended once the
+merge decision brings the code to main.
