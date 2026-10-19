@@ -75,10 +75,45 @@ def main() -> int:
     frames = R.load_frame_list(cfg)
     t1 = time.time()
     if args.backend == "vggt":
-        R.run_vggt(frames, cfg)
+        backend_result = R.run_vggt(frames, cfg)
     else:
-        R.run_mapanything(frames, cfg)
+        backend_result = R.run_mapanything(frames, cfg)
     result["reconstruct_s"] = round(time.time() - t1, 1)
+
+    # Persist the artifacts exactly as src/reconstruct.main does: run_vggt
+    # returns the arrays and leaves writing to the caller. MapAnything's worker
+    # writes its own files instead.
+    if not backend_result.get("wrote_files"):
+        import numpy as np
+        from src.common import repo_path, stamp
+        rdir = repo_path(cfg["paths"]["cache_dir"]) / "reconstruction"
+        rdir.mkdir(parents=True, exist_ok=True)
+        res = backend_result
+        np.savez_compressed(rdir / "cameras.npz",
+                            extrinsic=res["extrinsic"].astype(np.float32),
+                            intrinsic=res["intrinsic"].astype(np.float32))
+        np.savez(rdir / "dense.npz",
+                 depth=res["depth"].astype(np.float16),
+                 depth_conf=res["depth_conf"].astype(np.float16),
+                 world_points=res["world_points"].astype(np.float16))
+        np.savez(rdir / "colors.npz", images=res["colors"])
+        index_path = repo_path(cfg["paths"]["cache_dir"]) / "frames" / "index.json"
+        import hashlib
+        write_json(rdir / "meta.json", {
+            "created": stamp(), "config_hash": cfg.get("_config_hash"),
+            "backend": res["backend"], "model": res["model"],
+            "input_mode": res.get("input_mode"), "device": res["device"],
+            "dtype": res["dtype"], "num_frames": len(frames),
+            "image_hw": [int(res["depth"].shape[1]), int(res["depth"].shape[2])],
+            "conf_percentile": cfg["reconstruction"]["conf_percentile"],
+            "limit_per_video": None,
+            "inference_seconds": res.get("inference_seconds"),
+            "peak_gpu_gib": res.get("peak_gpu_gib"),
+            "frames_index_sha1": hashlib.sha1(index_path.read_bytes()).hexdigest()[:12],
+            "frames": [{"file": f["file"], "tag": f["tag"],
+                        "model_shape": list(res["depth"].shape[1:]), **tr}
+                       for f, tr in zip(frames, res["transforms"])],
+        })
     result["status"] = "reconstructed"
     write(out, result)
 
