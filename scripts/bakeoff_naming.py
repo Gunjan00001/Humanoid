@@ -55,6 +55,8 @@ def parse_args() -> argparse.Namespace:
                    help="free generation, or closed-set scoring by log likelihood")
     p.add_argument("--candidates", choices=["all", "top10"], default="all",
                    help="loglik: score the whole vocabulary or the SigLIP top 10")
+    p.add_argument("--vocab", choices=["own301", "public"], default="own301",
+                   help="closed-set candidate source; public = LVIS+Objects365+COCO names")
     p.add_argument("--manifest", default=str(MANIFEST),
                    help="crop manifest to score (variants share the code)")
     p.add_argument("--blank-calibration", action="store_true",
@@ -307,7 +309,11 @@ def main() -> int:
             # text-then-image pass produced vision tensors that generate
             # rejected, which is what the "keyboard" run was hiding.
             if args.protocol == "loglik":
-                cands = list(vocab.canonical)
+                if args.vocab == "public":
+                    public = json.loads((ROOT / "data" / "vocabulary_public.json").read_text())["names"]
+                    cands = list(public)
+                else:
+                    cands = list(vocab.canonical)
                 if args.shuffle_seed is not None:
                     import random
                     random.Random(args.shuffle_seed).shuffle(cands)

@@ -244,3 +244,36 @@ Reading: a real background margin makes it worse; the outlined full frame is one
 point above the blanked crop with overlapping intervals, so there is no
 separation. n = 299 here, not 317: eighteen crops failed to load in the variant
 directories and are counted as errors, which is recorded rather than hidden.
+
+## Strict-group correction (one truth table for every model)
+
+The earlier strict-group rows used each result file's stored truth strings, so
+their denominators differed (43/43/50). Corrected properly: ONE truth table is
+derived from the crop manifest and the synonym file (317 mapped crops), and all
+three models are rescored against it. Strict group = the dev scenes' own
+ground-truth classes; **identical 63 crops for every model**, unanswered and
+out-of-vocabulary answers counted as not correct:
+
+| model | strict group (n = 63, identical crops) |
+|---|---|
+| Qwen3.5-4B | 16/63 = **25.4%** [16.3, 37.3] |
+| Qwen3.5-9B | 16/63 = **25.4%** [16.3, 37.3] |
+| Qwen3.5-27B | 15/63 = **23.8%** [15.0, 35.6] |
+
+## Public vocabulary for item 1c — built from reachable official sources
+
+LVIS was not reachable as a category file, so the vocabulary comes from the
+**mmdetection** class-name module (Apache-2.0), which ships the official lists:
+
+* `lvis_classes` — **1,203** LVIS v1 category names (LVIS annotations: CC-BY 4.0);
+* `objects365v1_classes` and `objects365v2_classes` — **365 + 365** names
+  (Objects365: CC-BY 4.0);
+* `coco_classes` — **80** names (COCO annotations: CC-BY 4.0).
+
+Deduplicated against our own 301 words and each other:
+**`data/vocabulary_public.json`, 1,253 unique names**, with the sources, the
+retrieval date and the licences recorded inside the file. The harness takes it
+with `--vocab public`; combined with the SigLIP top-20 rerank this keeps the
+closed-set cost small. **Not run yet**: the naming job budget is closed at the
+five allowed jobs, so this is implementation-ready and recorded as pending,
+not as a result.
