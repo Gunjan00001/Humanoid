@@ -118,7 +118,7 @@ def main() -> int:
     write(out, result)
 
     recon = load_reconstruction(cfg)
-    pts, rgb, tags, conf = tagged_points(recon, cfg["diff"]["conf_percentile"])
+    pts, rgb, tags, conf = tagged_points(recon, cfg["reconstruction"]["conf_percentile"])
     pa, pb = pts[tags == "a"], pts[tags == "b"]
     step = max(1, len(pa) // 60000)
     pa_s, pb_s = pa[::step], pb[::step]
