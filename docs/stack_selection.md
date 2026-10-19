@@ -182,3 +182,32 @@ comparable directly; both were run with identical crops *inside* each study.
 
 Source: `logs/bakeoff_matching.json`, produced by `scripts/bakeoff_matching.py`
 (CPU, no GPU time).
+
+## Bake-off (b) SAM 3.1: **not completed**, blocker identified precisely
+
+Weights: local (`~/models/sam3.1`, 3.51 GB, HF gated=manual, license field
+"other", custom Meta licence text to be read before any use). The checkpoint
+loads, but the interface available in this environment is
+**`Sam3VideoProcessor`**, whose call takes images, segmentation maps and
+original sizes and **rejects `text`** (`unexpected keyword argument 'text'`,
+tested with both a string and a list). The text-prompted route therefore needs
+one of:
+
+* the official `facebookresearch/sam3` package (not installed; its own
+  text-prompted predictor), or
+* the `sam3_lite_text` family that ships in transformers 5.19 (classes present;
+  needs its own checkpoint and a compatibility check with the 3.1 weights).
+
+The harness for the comparison is written and ready
+(`scripts/bakeoff_segmentation.py`: text prompts for 3.1, box prompts for 2.1,
+mask IoU agreement, object-like area range 0.05%-30%, spurious-mask counts);
+it needs only the working text-prompted call. Until then the **SAM 2.1
+base-plus baseline stays the segmenter**, and (b) is recorded as not completed
+rather than guessed.
+
+## Bake-off (d) geometry: not started in this batch
+
+VGGT-1B and MapAnything (apache) are local and are the first two rows to run;
+DA3 (GIANT cc-by-nc-4.0 / BASE apache-2.0) and Pi3X (cc-by-nc-4.0) need their
+downloads and the transformers `depth_anything` path was confirmed present.
+Recorded as pending, not as a negative.
