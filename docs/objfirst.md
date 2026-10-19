@@ -108,3 +108,22 @@ Not run yet: the mask pass is a GPU task; it is deliberately not appended to
 `data/batch_manifest.json` while the Phase 4 code lives on `exp/object-first`,
 because the runner works on the main checkout. The task is appended once the
 merge decision brings the code to main.
+
+## M5 verification and fusion (implemented, first smoke)
+
+`verify.py` applies three signals with explicit "unverified" states: VLM
+confirmation per cluster (candidates whose only evidence was rejected are
+dropped), visibility diagnostics (attached when present, otherwise
+"visibility unverified", never assumed), and tiers with **gap-free stable
+numbers** (the first smoke exposed a numbering gap when a candidate was dropped;
+fixed so numbers are assigned on emission). `fuse.py` implements the written
+fusion rule: match on cluster overlap, keep the detector entry on agreement or
+disagreement (recording both), and append object-first-only candidates marked
+`source: objfirst`.
+
+First smoke on scene4: 4 candidates -> **3 after verification** (one scissors
+candidate dropped: its cluster was not VLM-confirmed), tiers plain for apple and
+scissors, numbers 1, 2, 3; fused output 5 entries (2 detector entries with one
+agreement and one without, plus the object-first-only candidate). Visibility
+says "unverified" for all three because the diff cache has no per-cluster
+visibility ids; that is stated rather than papered over.

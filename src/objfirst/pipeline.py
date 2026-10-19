@@ -15,7 +15,9 @@ from pathlib import Path
 from src.objfirst.inventory import build_inventory
 from src.objfirst.fragments import merge_by_extent, merge_fragments
 from src.objfirst.lift import lift
+from src.objfirst.fuse import fuse
 from src.objfirst.match import Instance, embed_patches, match_instances
+from src.objfirst.verify import verify
 
 
 def run_objfirst(cfg: dict) -> dict:
@@ -84,9 +86,15 @@ def run_objfirst(cfg: dict) -> dict:
         if j not in matched_b:
             candidates.append({"type": "added", "label": inst.label,
                                "to_cluster": inst.key})
-    out = {"scene": scene_dir.name, "inventory": {k: len(v) for k, v in inv.items()},
+    verified = verify(candidates, scene_dir)
+    detector = []
+    rep = scene_dir.parent.parent / "outputs" / scene_dir.name / "report.json"
+    if rep.exists():
+        detector = json.loads(rep.read_text()).get("changes", [])
+    fused = fuse(detector, verified)
+    out = {"scene": scene_dir.name, "fused": fused, "inventory": {k: len(v) for k, v in inv.items()},
            "instances": {"a": len(a), "b": len(b)}, "matched_pairs": len(pairs),
-           "candidates": candidates}
+           "candidates": verified}
     dest = Path(cfg["paths"]["cache_dir"]).parent.parent / "logs" / "objfirst"
     dest.mkdir(parents=True, exist_ok=True)
     (dest / f"{scene_dir.name}.json").write_text(json.dumps(out, indent=2))
