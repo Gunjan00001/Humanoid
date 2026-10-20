@@ -129,3 +129,11 @@ redistributed here.
    `~/purge/`) once satisfied.
 7. Final submission steps: repository description/topics, release notes for the
    tag, and the report link in the README if desired.
+
+### Addendum: strict move recall and fused entries
+
+Strict move recall per scene in the gate: demo 0.0%, scene2 undefined (no GT
+moves), scene3 undefined, scene4 100.0% (one GT move, found), scene5 0.0%,
+scene6 0.0%; **overall 1/12 = 8.3%**, below the baseline's 25.0%. Fused entries
+total **43** across the six scenes, against **24** baseline entries (demo 3,
+scene2 5, scene3 4, scene4 3, scene5 5, scene6 4; docs/accuracy.md).

@@ -10,6 +10,42 @@ runs the whole pipeline; on the cluster it submits and polls its own PBS GPU job
 
 ![scene4: apple moved, scissors removed, bottle added](outputs/scene4/change.gif)
 
+## Final state (what to expect today)
+
+The released pipeline is the frozen v1.0.0 configuration, unchanged in behaviour.
+On the six development scenes it finds **10 of 14** true changes (71.4%), with a
+localized recall of 12/14, strict move recall of 3/12, naming 6/10, **4 extras**
+and 3 fragments. On the held-out pair (never regenerated) it finds **2 of 5**
+changes. On the external SceneDiff benchmark the system scores **0.5063** against
+a perfect-mask oracle ceiling of **0.1147**, so the benchmark is limited by the
+domain, not by the adapter (docs/evaluation.md).
+
+**Models, adopted by written rules and evidenced in docs/stack_selection.md:**
+SAM 3.1 as the primary segmenter, integrated through the official package under
+bf16 autocast (SAM 2.1 base-plus fallback); **DINOv3 ViT-L patch features** as the
+matcher (AUC 0.855 [0.745, 0.941], paired gain over DINOv2 +0.115 [+0.100, +0.131]);
+**VGGT-1B** as the reconstruction backend, kept over MapAnything (**4.1 mm** versus
+**13.4 mm** static residual at 1x frames); Qwen3-VL-32B as the naming baseline,
+with Qwen3.5 4B/9B/27B no better (free-form accuracy 28.4% [23.7, 33.6], 31.5%
+[26.7, 36.9], 29.7% [24.9, 34.9] over 317 crops; the strict 63-crop group gives
+25.4 / 25.4 / 23.8%). Naming adoption is deliberately **not** switched on.
+
+**Phase 4, object-first path: rejected.** The M1-M5 implementation inherits the
+detector's clusters and 3D boxes, so it is not a test of the object-first
+hypothesis; it scored **7/14 = 50.0% with 32 extras**, and both regression scenes
+fell from 3/3 to 2/3. It is archived at tag `archive/object-first`, the flag stays
+off, and the honest next steps are listed in DEEPDIVE.md section 12 and
+docs/negative_results.md.
+
+**Licences and non-commercial scope.** SAM 3.1 uses the Meta SAM License and its
+publication acknowledgement is given here: this work uses the Segment Anything
+Model 3 (SAM 3) Materials. VGGT-1B is **CC BY-NC 4.0**, so every part of this
+repository that uses it is **non commercial**; Depth Anything 3 and Pi3X are also
+non commercial and are not integrated. SAM 2.1, DINOv2, Qwen and MapAnything are
+Apache-2.0; DINOv3 uses the DINOv3 License. Related work and citations: SceneDiff
+(external benchmark), HD-Epic and UNITE. See docs/models.md for the full table and
+docs/related_work.md for the references.
+
 ## Quick start
 
 ```bash

@@ -165,3 +165,9 @@ Not built, and the first items of "what I would do next with a week":
    lifted with the cached depth and poses);
 3. a **per-frame centroid scatter check** to reject unstable instances;
 4. matching and verification on those independent instances, then the same gate.
+
+Strict move recall per scene: demo 0.0%, scene4 100.0% (its one GT move found),
+scene5 0.0%, scene6 0.0%; scenes 2 and 3 contain no GT moves, so the metric is
+undefined there. Overall **1/12 = 8.3%**, against the baseline's 25.0%.
+Fused entries total **43** across the six scenes, against **24** baseline entries
+(demo 3, scene2 5, scene3 4, scene4 3, scene5 5, scene6 4, from docs/accuracy.md).
