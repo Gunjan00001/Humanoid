@@ -145,4 +145,3 @@ class FreeformScorer:
                                     "lead": round(lead, 3)})
             return Verdict(False, "borderline", f"nearest {best_name} at {best_sim:.3f}, lead {lead:.3f}")
         return Verdict(False, "no", f"nearest {best_name} at {best_sim:.3f}, lead {lead:.3f}")
-        return Verdict(False, "no", f"best {best} at {best_sim:.3f} below the threshold")

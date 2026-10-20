@@ -21,7 +21,6 @@ comparison uses what is verifiable:
 from __future__ import annotations
 
 import argparse
-import glob
 import json
 import sys
 from pathlib import Path

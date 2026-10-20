@@ -17,7 +17,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import math
 import sys
 import time
 from pathlib import Path
@@ -335,8 +334,7 @@ def main() -> int:
                                           blank_image=blank)
                 name = ranked[0][0]
                 top3 = [c for c, _ in ranked[:3]]
-                raw_answer = _j.dumps({"protocol": "loglik", "ranked": ranked[:5]})
-                row_proto = "loglik"
+                raw_answer = json.dumps({"protocol": "loglik", "ranked": ranked[:5]})
                 better = vocab.canonical_of(name)
                 truth_canon = vocab.canonical_of(sample["truth"]) or sample["truth"].lower()
                 correct = ("exact" if better == truth_canon else
@@ -348,7 +346,7 @@ def main() -> int:
                              "truth": truth_canon, "correct": correct, "top3_hit": in_top3,
                              "protocol": "loglik", "ranked": [c for c, _ in ranked[:5]]})
                 if (i % 25) == 0:
-                    out_partial.write_text(_j.dumps({"model": args.model, "rows": rows, "partial": True}, indent=2))
+                    out_partial.write_text(json.dumps({"model": args.model, "rows": rows, "partial": True}, indent=2))
                 continue
             chat_sess = [{"role": "user",
                   "content": [{"type": "image", "image": image},
