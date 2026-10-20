@@ -39,15 +39,17 @@ Written gates: the regression floor requires demo and scene4 to keep 3/3 with
 |---|---|
 | type recall | 10/14 = 71.4% |
 | localized recall | 12/14 = 85.7% |
-| strict move recall | 3/12 = 25.0% |
+| strict move recall | 1 of 4 per run (3 repeat runs) |
 | naming | 6/10 = 60.0% |
 | extras / fragments | 4 / 3 |
 
 **Held out (never regenerated in any rewrite):** scene5 1/2, scene6 1/3, i.e.
 **2/5 = 40%**, extras 3. Identical bytes to v1.0.0.
 
-**SceneDiff:** system 0.5063; perfect-mask oracle ceiling 0.1147, i.e. the
-external benchmark is capped by the domain (docs/evaluation.md).
+**SceneDiff:** obj/sc AP **0.0000** on both slices; 7 of 20 validation pairs were
+processable with no true positives, 13 of 20 and all 10 test pairs were
+unprocessable, and even perfect ground truth masks through the same adapter score
+0.1147, so the adapter is not the cause (docs/evaluation.md).
 
 **Phase 4:** 7/14 = 50.0%, 32 extras, 1 fragment, rejected (table above).
 
@@ -134,6 +136,6 @@ redistributed here.
 
 Strict move recall per scene in the gate: demo 0.0%, scene2 undefined (no GT
 moves), scene3 undefined, scene4 100.0% (one GT move, found), scene5 0.0%,
-scene6 0.0%; **overall 1/12 = 8.3%**, below the baseline's 25.0%. Fused entries
+scene6 0.0%; **1 of 4 per run (3 repeat runs)**, below the baseline note. Fused entries
 total **43** across the six scenes, against **24** baseline entries (demo 3,
 scene2 5, scene3 4, scene4 3, scene5 5, scene6 4; docs/accuracy.md).

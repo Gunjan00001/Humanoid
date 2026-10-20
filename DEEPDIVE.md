@@ -319,7 +319,7 @@ counting them as empty, 0.062 over the 7 processable pairs, obj/sc AP 0.0000. Fi
 adapter bugs were found and fixed in sequence, each documented in
 `docs/evaluation.md`. The decisive experiment was the oracle control: pushing
 ground-truth masks through the adapter gives 6 of 7 pairs above 0.5 IoU and an
-obj/sc AP of 0.1147. With perfect masks the method scores 0.11 on this benchmark,
+obj/sc AP of 0.1147 (the system itself scores obj/sc AP 0.0000 on both slices). With perfect masks the method scores 0.11 on this benchmark,
 so the ceiling is the method and the domain, not the adapter. The plane check added
 the mechanism: on these room-scale clips the automatic plane is a floor (4 pairs),
 a wall (1) or a tilted surface (8), with only 1 to 48 percent of confident points

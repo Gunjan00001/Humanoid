@@ -14,21 +14,31 @@ runs the whole pipeline; on the cluster it submits and polls its own PBS GPU job
 
 The released pipeline is the frozen v1.0.0 configuration, unchanged in behaviour.
 On the six development scenes it finds **10 of 14** true changes (71.4%), with a
-localized recall of 12/14, strict move recall of 3/12, naming 6/10, **4 extras**
-and 3 fragments. On the held-out pair (never regenerated) it finds **2 of 5**
-changes. On the external SceneDiff benchmark the system scores **0.5063** against
-a perfect-mask oracle ceiling of **0.1147**, so the benchmark is limited by the
-domain, not by the adapter (docs/evaluation.md).
+localized recall of 12/14, strict move recall of **1 of 4 per run (3 repeat
+runs)**, naming 6/10, **4 extras** and 3 fragments. On the held-out pair (never
+regenerated) it finds **2 of 5** changes.
 
-**Models, adopted by written rules and evidenced in docs/stack_selection.md:**
-SAM 3.1 as the primary segmenter, integrated through the official package under
-bf16 autocast (SAM 2.1 base-plus fallback); **DINOv3 ViT-L patch features** as the
-matcher (AUC 0.855 [0.745, 0.941], paired gain over DINOv2 +0.115 [+0.100, +0.131]);
-**VGGT-1B** as the reconstruction backend, kept over MapAnything (**4.1 mm** versus
-**13.4 mm** static residual at 1x frames); Qwen3-VL-32B as the naming baseline,
-with Qwen3.5 4B/9B/27B no better (free-form accuracy 28.4% [23.7, 33.6], 31.5%
-[26.7, 36.9], 29.7% [24.9, 34.9] over 317 crops; the strict 63-crop group gives
-25.4 / 25.4 / 23.8%). Naming adoption is deliberately **not** switched on.
+On the external SceneDiff benchmark the pipeline scores **obj/sc AP 0.0000**: on
+the 20 pair validation slice **13 pairs could not be processed** at the frozen
+settings and the 7 that ran had **no true positives**; the 10 pair test slice was
+entirely unprocessable (**0.0000**). Even perfect ground truth masks pushed
+through the same adapter score only **0.1147**, so the adapter is not the cause:
+the pipeline is built for small tabletop scenes (docs/evaluation.md).
+
+**Used by the released pipeline** (the default `detect.py` path, frozen v1.0.0):
+**VGGT-1B** for reconstruction, **Qwen3-VL-32B-Instruct** for naming (8B
+fallback), and **DINOv2-large** for matching. SAM 2 masks are optional and off by
+default.
+
+**Evaluated, not wired into the released pipeline:** **DINOv3 ViT-L patch
+features** (validated as a better matcher: AUC 0.855 [0.745, 0.941], paired gain
+over DINOv2 +0.115 [+0.100, +0.131]; used only in the rejected object-first
+experiment), **SAM 3.1** (integrated through the official package; 4 of 11 GT
+objects segmented with 14 spurious instances; not adopted as a change segmenter),
+**Qwen3.5 4B/9B/27B** (free-form 28.4% [23.7, 33.6], 31.5% [26.7, 36.9], 29.7%
+[24.9, 34.9] over 317 crops; no better than the 32B baseline; the strict 63-crop
+group gives 25.4 / 25.4 / 23.8%), and **MapAnything** (13.4 mm versus VGGT's
+4.1 mm static residual at 1x frames).
 
 **Phase 4, object-first path: rejected.** The M1-M5 implementation inherits the
 detector's clusters and 3D boxes, so it is not a test of the object-first
@@ -50,7 +60,10 @@ docs/related_work.md for the references.
 
 ```bash
 git clone --depth 1 https://github.com/Gunjan00001/Humanoid.git && cd Humanoid
-# videos and meshes come from Large File Storage: install git-lfs and let git pulls fetch automatically
+# light clone, code only (about 175 MB): the videos and meshes arrive later with
+GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://github.com/Gunjan00001/Humanoid.git
+# ... then `cd Humanoid && git lfs pull` fetches the videos and meshes
+# (Large File Storage: install git-lfs and let normal clones fetch automatically)
 conda create -n spatialdiff python=3.10 -y && conda activate spatialdiff
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
 pip install -r requirements.txt

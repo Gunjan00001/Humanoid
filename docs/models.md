@@ -94,24 +94,57 @@ same artifact contract (see `scripts/run_mapanything.py` and
   detections are the *same* object moved, not two different changes.
 - **SAM 2**, optional: tightens cluster masks so crops are cleaner.
 
-## SAM 3.1 (downloaded, text route not yet usable)
+## SAM 3.1 (integrated through the official package; not adopted)
 
-* repo: `facebook/sam3.1`, gated (accepted), HF licence field **"other"**.
-* local files: `sam3.1_multiplex.pt` (3.5 GB), `LICENSE` (7.3 KB), config with
-  `architectures = ["Sam3VideoModel"]`, `model_type = "sam3_video"`,
+* repo: `facebook/sam3.1`, gated (accepted), HF licence field "other". The local
+  `LICENSE` (7.3 KB) is the authority; clauses are quoted below.
+* local files: `sam3.1_multiplex.pt` (3.5 GB), `LICENSE`, config with
+  `architectures = ["Sam3VideoModel"]`, `model_type = "sam3_video"`, and
   `processor_config.json`.
-* the licence is a custom Meta text; the local copy is the authority and it was
-  read in the batch (key phrases below). **Recorded as not yet cleared for
-  product use**; the project uses it only for the research bake-off when the
-  route works.
-* the checkpoint is in Meta's own format, not transformers format: there is no
-  `model.safetensors` / `pytorch_model.bin`, and the architecture is the video
-  (multiplex) model. `Sam3Model.from_pretrained` therefore cannot load it, and
-  the transformers image text-prompted class (`Sam3Processor` + `Sam3Model`,
-  which does exist) needs either a transformers-format image checkpoint or the
-  official `facebookresearch/sam3` package for this `.pt`. That is the precise
-  blocker behind "SAM 3.1 text route: blocked on integration", not a property
-  of the model.
+* integration: works through the official `facebookresearch/sam3` package in the
+  `spatialdiff-sam3` env with `torch.autocast("cuda", dtype=torch.bfloat16)`. The
+  text tokenizer needs the BPE file shipped in that package
+  (`sam3/assets/bpe_simple_vocab_16e6.txt.gz`); `merges.txt` is not a substitute.
+  The checkpoint is Meta's own format, not transformers format, so
+  `Sam3Model.from_pretrained` cannot load it.
+* bake-off result (image text-prompt route, 11 GT objects): **4 of 11** objects
+  segmented in both videos with a name prompt, 2 of 11 with the generic prompt
+  "object", and **14 spurious masks**. Track IDs were not measured because the
+  image route has no tracker. **Not adopted as the change segmenter**; SAM 2.1
+  remains the fallback and `semantics.use_sam2` stays false.
+* **Not cleared for commercial use.** The licence is a limited research licence;
+  clauses quoted verbatim from the local copy:
+  * Grant: "You are granted a non-exclusive, worldwide, non-transferable and
+    royalty-free limited license under Meta's intellectual property or other
+    rights owned by Meta embodied in the SAM Materials to use, reproduce,
+    distribute, copy, create derivative works of, and make modifications to the
+    SAM Materials."
+  * Redistribution: "Distribution of SAM Materials, and any derivative works
+    thereof, are subject to the terms of this Agreement. If you distribute or
+    make the SAM Materials, or any derivative works thereof, available to a third
+    party, you may only do so under the terms of this Agreement and you shall
+    provide a copy of this Agreement with any such SAM Materials."
+  * Acknowledgement: "If you submit for publication the results of research you
+    perform on, using, or otherwise in connection with SAM Materials, you must
+    acknowledge the use of SAM Materials in your publication."
+  * Restrictions: "Your use of the SAM Materials will not involve or encourage
+    others to reverse engineer, decompile or discover the underlying components
+    of the SAM Materials." and "You agree not to use, or permit others to use,
+    SAM Materials for any activities subject to the International Traffic in Arms
+    Regulations (ITAR) or end uses prohibited by Trade Controls, including those
+    related to military or warfare purposes, nuclear industries or applications,
+    espionage, or the development or use of guns or illegal weapons."
+  * Termination: "If you institute litigation or other proceedings against Meta
+    or any entity ... alleging that the SAM Materials, outputs or results, or any
+    portion of any of the foregoing, constitutes infringement of intellectual
+    property or other rights owned or licensable by you, then any licenses
+    granted to you under this Agreement shall terminate as of the date such
+    litigation or claim is filed or instituted."
+
+Two MapAnything checkpoints exist and both are listed in the table above:
+`facebook/map-anything-apache` (**Apache-2.0**, the one used here, 13.4 mm static
+residual) and `facebook/map-anything` (**CC-BY-NC-4.0**, upstream default, not
+used). This project uses only the Apache-2.0 checkpoint.
 
 ### SAM 3.1 environment (added)
 

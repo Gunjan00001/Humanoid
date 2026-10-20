@@ -16,6 +16,11 @@ predictions and its headline numbers are all zero with 29 ground truth objects
 missed. This is the honest result of the pre-registered evaluation: the pipeline
 does not transfer to the room scale SceneDiff clips at the frozen settings.
 
+The system's own SceneDiff result is **obj/sc AP 0.0000** on both slices: 7 of
+20 validation pairs processed with no true positives, 13 of 20 and all 10 test
+pairs unprocessable. The 0.1147 figure is the perfect-mask oracle control (an
+upper bound, not a system score); the adapter is verified, the domain is not.
+
 The reduction lever is frames.adaptive_sharpness (Part C), which targets exactly
 this upstream failure and is evaluated as a post-hoc diagnostic on the validation
 pairs and scene2 only, never on the test pairs.
