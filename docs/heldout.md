@@ -418,3 +418,33 @@ the panels. Fixed in `src/visualize.py` (select before/after by tag) ,
 **visualization only; detection untouched**. `outputs/scene6/changes/*.png` and
 the checking sheet were re-rendered from the cached results; `report.json` and
 every detection number are unchanged.
+
+## Post-hoc redo of all six uploaded scenes (2026-10-20)
+
+A full redo of every uploaded scene was run once on the cluster (job 11880, two
+GPUs, current main, config v1.1.0) into fresh folders, `outputs/<scene>_redo` and
+`cache/<scene>_redo`. The frozen outputs, including `outputs/scene5` and
+`outputs/scene6`, were **not touched** (`git diff` empty). This is a post-hoc
+replay, **not part of the held-out result**: scene5 and scene6 were each run once
+for the original evaluation and those numbers stand.
+
+| scene | frozen entries | redo entries | quick match, frozen | quick match, redo | redo time |
+|---|---|---|---|---|---|
+| demo | 3 | 3 | 2/3, 1 extra | 2/3, 1 extra | 15.8 min |
+| scene2 | 2 | 5 | 1/1, 1 extra | 1/1, 4 extras | 9.2 min |
+| scene3 | 4 | 5 | 0/2, 4 extras | 0/2, 5 extras | 22.6 min |
+| scene4 | 3 | 3 | 3/3, 0 extras | 3/3, 0 extras | 10.7 min |
+| scene5 | 5 | 7 | 1/2, 4 extras | 1/2, 2 extras | 30.5 min |
+| scene6 | 2 | 2 | 1/3, 1 extra | 1/3, 1 extra | 27.7 min |
+
+The "quick match" column is an automatic type plus canonical-name comparison
+against ground truth. It is **not** the official scoring, which uses the human
+resolutions in `matches.json`; the two disagree where a label is a paraphrase
+(for example demo is 3/3 under the official resolution).
+
+scene4 and scene6 reproduced identically. scene2, scene3 and scene5 differ at the
+**cluster level**, not only in wording: fresh reconstruction and clustering gave
+8 -> 9 clusters on scene2, 29 -> 26 on scene3 and 58 -> 55 on scene5, while scene4
+(8) and scene6 (35) matched. The differences are therefore upstream of naming.
+Whether the cause is GPU nondeterminism across runs or a different working point
+is not established here and would need a third run to separate.

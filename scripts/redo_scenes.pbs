@@ -1,0 +1,16 @@
+#!/bin/bash
+# Redo the six uploaded scenes into fresh *_redo folders (frozen outputs untouched).
+#     qsub scripts/redo_scenes.pbs
+#PBS -N redo_scenes
+#PBS -q gpu
+#PBS -l select=1:ncpus=12:mem=60gb:ngpus=2
+#PBS -l walltime=12:00:00
+#PBS -j oe
+#PBS -o logs/pbs_redo.log
+cd "$PBS_O_WORKDIR" || exit 1
+mkdir -p logs
+unset CUDA_VISIBLE_DEVICES
+source "$HOME/miniconda3/etc/profile.d/conda.sh"
+conda activate spatialdiff
+export PATH="$CONDA_PREFIX/bin:$PATH"
+python scripts/redo_scenes.py
