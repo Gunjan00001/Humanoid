@@ -156,7 +156,7 @@ identical crops for every model, N in the headers:
 The project's own classes are **not** easier for these models: the strict group
 sits below the all-crops line for the 4B and the 27B, and the 9B leads on both.
 
-## Bake-off (c) DONE: DINOv3 ViT-L versus DINOv2-large — **DINOv3 is adopted**
+## Bake-off (c) DONE: DINOv3 ViT-L versus DINOv2-large — **DINOv3 wins the matcher decision (flag-gated)**
 
 Control design without new labels: every cluster in a scene's semantics cache
 has a crop in one video and a crop of the same object in the other, which is a
@@ -229,8 +229,9 @@ negative pairs** (different instances), 58 crops, CPU.
 
 **Paired difference on the same pairs** (bootstrap over pairs):
 CLS **+0.050 [+0.004, +0.100]**, patch **+0.115 [+0.100, +0.131]**. Neither
-interval includes a loss, so by the written rule DINOv3 ViT-L is **adopted as
-the primary matcher** (not merely provisional), with DINOv2-large the fallback.
+interval includes a loss, so by the written rule DINOv3 ViT-L **wins the matcher decision for the
+flag-gated route** (not merely provisional), with DINOv2-large the fallback and
+still the matcher the released `detect.py` path loads.
 
 ## Context ablation, 9B, all 317-crop runs (job 11793, exit 0)
 

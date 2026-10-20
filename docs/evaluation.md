@@ -21,6 +21,11 @@ The system's own SceneDiff result is **obj/sc AP 0.0000** on both slices: 7 of
 pairs unprocessable. The 0.1147 figure is the perfect-mask oracle control (an
 upper bound, not a system score); the adapter is verified, the domain is not.
 
+> The value 0.5063 that once appeared in a summary sentence is **not a score**:
+> it is the y coordinate of a 3D bounding box in
+> `outputs/scenediff_*/living_room_1_living_room_2/report.json`. The system's
+> SceneDiff AP is 0.0000 on both slices.
+
 The reduction lever is frames.adaptive_sharpness (Part C), which targets exactly
 this upstream failure and is evaluated as a post-hoc diagnostic on the validation
 pairs and scene2 only, never on the test pairs.

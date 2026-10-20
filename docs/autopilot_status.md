@@ -48,10 +48,11 @@ State:
    versus MapAnything 13.4 mm / 4.59 M / 32.8 s; 2x doubles density and time
    without improving the residual. **VGGT stays primary, MapAnything the
    alternative.**
-2. SAM 3.1 is the adopted segmenter (autocast; 4 of 11 GT objects both videos,
+2. SAM 3.1 is adopted as the target segmenter for the flag-gated route (autocast; 4 of 11 GT objects both videos,
    14 spurious, track IDs not measured); SAM 2.1 remains the automatic-mask
    fallback.
-3. DINOv3 ViT-L is the adopted matcher (GT pairs, interval-clean).
+3. DINOv3 ViT-L is adopted as the target matcher for the flag-gated route
+   (GT pairs, interval-clean); neither model is used by the released path.
 4. Phase 4 is on `exp/object-first`: M4 matching implemented (DINOv3 patch,
    four-signal cost, Hungarian). M1 inventory, M2 segmentation/tracking, M3
    lift and M5 verify/fuse are the next commits. Nothing is merged; the default
@@ -69,7 +70,8 @@ qstat | grep -E "batch_runner|bakeoff_sam"
 ```
 
 Current state:
-1. SAM 3.1 is ADOPTED as the primary segmenter (autocast bf16 fixed the dtype
+1. SAM 3.1 is adopted as the target segmenter for the flag-gated route, not used
+   by the released path (autocast bf16 fixed the dtype
    blocker; 4 of 11 GT objects segmented in both videos, 14 spurious; track IDs
    not measured). SAM 2.1 is the fallback for automatic masks.
 2. Unattended runner: scripts/run_batch.py + scripts/run_batch.pbs, manifest
