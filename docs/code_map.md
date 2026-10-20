@@ -121,3 +121,14 @@ and `why` comments at the two-column trickier loops. The digest ledger in
 docs/accuracy.md has one pre-to-post row per file: geometry, diff, tabletop,
 describe, reconstruct, align. Golden summaries under tests/golden_summary
 regenerate byte identical, so the refactor provably changed no behaviour.
+
+## Unattended and experimental tooling (added after the readability pass)
+
+| path | what it does |
+|---|---|
+| `scripts/run_batch.py`, `scripts/run_batch.pbs`, `data/batch_manifest.json` | the unattended task runner: skips `.done` tasks, pins the idlest GPU with backoff, per-task logs named with the job id, retries failures once, resubmits itself at the walltime |
+| `scripts/geometry_eval.py` | one reconstruction backend at one frame budget: extract, reconstruct, static residual, density |
+| `scripts/objfirst_gate.py` | Phase 4 gate evaluation on cached data, deterministic rerun |
+| `src/objfirst/` | EXPERIMENTAL, not used by detect.py: M1 inventory, M2 SAM 3.1 bridge, M3 lift, M4 DINOv3 matching, M5 verification/fusion |
+| `scripts/objfirst_segment.py` | SAM 3.1 mask pass in the `spatialdiff-sam3` env |
+| `scripts/objfirst_extents.py` | per-label extent distribution used by the merge rule |

@@ -122,3 +122,26 @@ scipy, imageio, numpy<2, setuptools<81). Import verified; the model build takes
 `checkpoint_path=~/models/sam3.1/sam3.1_multiplex.pt` and a `bpe_path` for the
 text tokenizer, which is the one remaining detail before the per-frame
 segmentation bake-off.
+
+## Acknowledgements, licences and non-commercial scope
+
+* **SAM 3.1** (Meta, custom "SAM License"): use in this project is research only.
+  The licence asks that publications state the use of SAM Materials in the
+  acknowledgement; the local licence text is the authority (docs/models.md
+  above). **Non commercial.**
+* **DINOv3 ViT-L** (Meta, DINOv3 License): used for the adopted matching
+  descriptor; read the local licence before any redistribution. Check the
+  commercial terms before product use.
+* **DINOv2-large** (Apache-2.0): fallback matcher.
+* **Qwen3-VL-32B** and **Qwen3.5** (Alibaba, Apache-2.0 per the probed cards):
+  naming baseline and challengers.
+* **VGGT-1B** (Meta, CC BY-NC 4.0): reconstruction backend. **Non commercial.**
+* **MapAnything** (Apache-2.0 variant used here): geometry alternative.
+* **Depth Anything 3** (GIANT cc-by-nc-4.0 / BASE apache-2.0) and **Pi3X**
+  (cc-by-nc-4.0): probed, not integrated. **Non commercial** where noted.
+* **SceneDiff** benchmark: the external evaluation slice, validation results in
+  docs/evaluation.md; its own licence applies to the data, which is not
+  redistributed in this repository.
+* Related work and citations used in the write-up: **UNITE** (arXiv 2512.14364),
+  **SceneDiff**, **HD-Epic**, **VGGT**, **MapAnything**, **SAM 2**, **SAM 3D**,
+  **PanSt3R**; see docs/related_work.md and the README citations block.

@@ -610,3 +610,36 @@ git diff v1.0.0 main -- outputs/scene5 outputs/scene6                     # empt
 one released change: the v1.1.0 adaptive sharpness fallback, which only runs when
 the absolute blur threshold leaves too few frames and is byte identical on every
 scene that already worked (`scripts/verify_adaptive_identity.py`).
+
+---
+
+## 12. Future work, with the evidence that motivates each item
+
+Nothing here was done; each item names the measurement that says why it is next.
+
+1. **Independent object inventory (the real object-first test).** The Phase 4
+   implementation inherited the detector's clusters and boxes, so it could not
+   test the hypothesis (docs/negative_results.md, "not a test"). Build per-video
+   SAM 3.1 text-prompt inventories, lift the masks with the cached depth and
+   poses, add a per-frame centroid scatter check, then rerun the same gate.
+2. **Lift sanity check.** Before judging any matching, project the cached boxes
+   through the cameras and confirm they land on the objects; the gate numbers
+   cannot be interpreted until that passes.
+3. **Naming adoption** (part-word ban, tiers, stable (#n) numbering). Built and
+   measured but not adopted: plain-tier precision 1/1, possibly 2/6, and the
+   rerank tops out at a 23.0% top-3 hit rate over 317 labelled crops
+   (docs/naming_v3.md, docs/naming_v4.md). Adopt only with an independent
+   vocabulary run (public list is built) and a baseline over the same crops.
+4. **Public-vocabulary closed set.** `data/vocabulary_public.json` (1,253 names,
+   LVIS 1,203 + Objects365 v1/v2 + COCO 80, licences recorded) and the harness
+   flag exist; the run needs a naming job slot.
+5. **SAM 3.1 tracking and mask quality.** The adopted segmenter has no tracker on
+   the image route; the video-session API would give track IDs and enable the
+   stability column the gate still lacks.
+6. **Fragment merging by measured distributions.** The touching-boxes rule and
+   the union-P90 rule are implemented; the remaining fragments are distant
+   pieces of one object, so the next step is the per-label extent distribution
+   combined with matching evidence (docs/objfirst.md).
+7. **A third SceneDiff slice or a room-scale scene.** The oracle ceiling is
+   0.1147 with perfect masks, so the external benchmark is capped by the domain;
+   a room-scale scene of our own is the better test (docs/room_scale.md).

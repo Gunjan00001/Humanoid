@@ -52,3 +52,5 @@ the compact summaries stayed on main.
 | SceneDiff early runs (`scripts/finish_c*`, the old adapter behaviour) | `archive/exp-accuracy` | `git show archive/exp-accuracy:<path>` |
 | `outputs/scene5_tabletop_posthoc` and `outputs/scene5_reencode_check` viewers, GIFs, meshes | tag `v1.2.1` (all tagged content stays) | `git checkout v1.2.1 -- outputs/scene5_reencode_check/<file>` |
 | the held-out outputs (`outputs/scene5`, `outputs/scene6`) | **never removed**, unchanged since `v1.0.0` | |
+
+| `archive/object-first` | the Phase 4 object-first path (M1-M5, fragment merging, the gate evaluation at 7/14 with 32 extras and the demo/scene4 regression, rejected). Branch deleted after archiving. |

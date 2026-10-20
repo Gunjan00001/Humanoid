@@ -151,3 +151,19 @@ already uses) fixes it. The corrected run on the same 317 crops produced real
 numbers (exact 28.4%, exact-or-parent 44.1%) and varied answers, so **none of
 the attempts in this section is a result about Qwen3.5**. Kept as history of the
 debugging, with the invariants now guarding the class of bug.
+
+## Phase 4 object-first path: not accepted, and not a test of the hypothesis
+
+The M1-M5 implementation was evaluated on the six development scenes with the
+baseline metric definitions, twice per scene for determinism (identical runs):
+overall **7/14 = 50.0%** with **32 extras** and 1 fragment, against the baseline's
+71% type recall and 4 extras. The regression floor fails explicitly: **demo 2/3**
+and **scene4 2/3** versus **3/3 and 0 extras** for the baseline. The written gates
+are not met; `diff.method` stays `tabletop` and nothing ships.
+
+Accurate scope: M1 and M3 inherit the detector's clusters and 3D boxes, so the
+path only sees what the change detector already proposed. This is **not a test of
+the object-first hypothesis**; the independent inventory (per-video SAM 3.1
+prompts, masks lifted from cached depth and poses), the lift sanity check and the
+per-frame centroid scatter check are not built. Do not record this as
+"object-first was tested and failed".

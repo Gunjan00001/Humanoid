@@ -1,0 +1,139 @@
+{
+  "unit": "reconstruction units (box diagonal)",
+  "rule": "merge same-label instances when the union diagonal <= P90 of the label; labels with n<3 fall back to touching boxes",
+  "labels": {
+    "apple": {
+      "n": 10,
+      "median": 0.1428,
+      "p90": 0.3192,
+      "max": 0.6563,
+      "rule": "extent"
+    },
+    "bin": {
+      "n": 1,
+      "median": 0.1214,
+      "p90": 0.1214,
+      "max": 0.1214,
+      "rule": "touch-only"
+    },
+    "book": {
+      "n": 1,
+      "median": 0.0763,
+      "p90": 0.0763,
+      "max": 0.0763,
+      "rule": "touch-only"
+    },
+    "bottle": {
+      "n": 3,
+      "median": 0.0959,
+      "p90": 0.6041,
+      "max": 0.7312,
+      "rule": "extent"
+    },
+    "cabinet": {
+      "n": 3,
+      "median": 0.4088,
+      "p90": 0.4171,
+      "max": 0.4191,
+      "rule": "extent"
+    },
+    "chair": {
+      "n": 10,
+      "median": 0.1718,
+      "p90": 0.5115,
+      "max": 2.1511,
+      "rule": "extent"
+    },
+    "coconut": {
+      "n": 5,
+      "median": 0.1971,
+      "p90": 0.5032,
+      "max": 0.6724,
+      "rule": "extent"
+    },
+    "cup": {
+      "n": 2,
+      "median": 0.1006,
+      "p90": 0.1012,
+      "max": 0.1014,
+      "rule": "touch-only"
+    },
+    "fan": {
+      "n": 1,
+      "median": 0.1737,
+      "p90": 0.1737,
+      "max": 0.1737,
+      "rule": "touch-only"
+    },
+    "notebook": {
+      "n": 2,
+      "median": 0.5609,
+      "p90": 0.9587,
+      "max": 1.0582,
+      "rule": "touch-only"
+    },
+    "pen": {
+      "n": 1,
+      "median": 0.0902,
+      "p90": 0.0902,
+      "max": 0.0902,
+      "rule": "touch-only"
+    },
+    "phone": {
+      "n": 1,
+      "median": 0.1863,
+      "p90": 0.1863,
+      "max": 0.1863,
+      "rule": "touch-only"
+    },
+    "plastic bag": {
+      "n": 1,
+      "median": 0.2117,
+      "p90": 0.2117,
+      "max": 0.2117,
+      "rule": "touch-only"
+    },
+    "remote control": {
+      "n": 1,
+      "median": 0.2023,
+      "p90": 0.2023,
+      "max": 0.2023,
+      "rule": "touch-only"
+    },
+    "scissors": {
+      "n": 4,
+      "median": 0.0956,
+      "p90": 0.2989,
+      "max": 0.3791,
+      "rule": "extent"
+    },
+    "stool": {
+      "n": 2,
+      "median": 0.2704,
+      "p90": 0.3457,
+      "max": 0.3646,
+      "rule": "touch-only"
+    },
+    "table": {
+      "n": 25,
+      "median": 0.1005,
+      "p90": 0.2843,
+      "max": 0.483,
+      "rule": "extent"
+    },
+    "television": {
+      "n": 1,
+      "median": 0.0695,
+      "p90": 0.0695,
+      "max": 0.0695,
+      "rule": "touch-only"
+    },
+    "wall outlet": {
+      "n": 1,
+      "median": 0.055,
+      "p90": 0.055,
+      "max": 0.055,
+      "rule": "touch-only"
+    }
+  }
+}

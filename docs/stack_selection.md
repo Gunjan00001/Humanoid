@@ -355,34 +355,3 @@ does it for 4 of 11 objects with 14 spurious masks. SAM 3.1 becomes the
 **primary segmenter** (mask quality and track IDs still to be measured), and
 SAM 2.1 stays the fallback for automatic masks. The licence remains the custom
 Meta "SAM License" recorded in docs/models.md.
-
-## Bake-off (d) DONE: geometry, VGGT versus MapAnything (unattended batch 11821)
-
-All four tasks completed in the unattended runner (job 11821, exit 0, no retries
-needed after the fixes). Frames extracted per video, then the backend ran on one
-pinned GPU; the residual is the mean nearest-neighbour distance of static
-structure (points of video A with a neighbour in video B within 5 cm), in
-reconstruction units, treated as metres at demo scale and **not metric
-validated**.
-
-| backend | frames | frames A+B | reconstruct | static mean NN | static fraction | points |
-|---|---|---|---|---|---|---|
-| mapanything | 1x | 30+30 | 32.8 s | 13.4 mm | 94.9% | 4.59 M |
-| mapanything | 2x | 60+60 | 47.2 s | 10.8 mm | 95.5% | 9.16 M |
-| vggt | 1x | 30+30 | 25.5 s | 4.1 mm | 99.8% | 8.05 M |
-| vggt | 2x | 60+60 | 52.2 s | 4.4 mm | 99.9% | 16.16 M |
-
-Reading, against decision rule 4 as written:
-
-* **VGGT wins on every axis**: residual 4.1 mm (1x) and 4.4 mm (2x) against
-  13.4 mm and 10.8 mm for MapAnything; **point density** 8.05 M and 16.16 M
-  against 4.59 M and 9.16 M; **runtime** 25.5 s and 52.2 s against 32.8 s and
-  47.2 s.
-* **Doubling the frame budget buys density, not accuracy** for VGGT: residual
-  moves 4.1 -> 4.4 mm while points double and time doubles. The 1x budget is the
-  efficient working point; 2x is available when density matters.
-* **Decision: VGGT-1B stays the primary backend; MapAnything remains the
-  alternative.** No adoption conflict with the earlier backend comparison.
-
-Source: `logs/batch/geom_*.json`, `.done` markers present, produced by
-`scripts/geometry_eval.py` under `scripts/run_batch.py`.

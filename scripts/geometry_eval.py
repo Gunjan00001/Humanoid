@@ -84,6 +84,7 @@ def main() -> int:
     # returns the arrays and leaves writing to the caller. MapAnything's worker
     # writes its own files instead.
     if not backend_result.get("wrote_files"):
+        import numpy as np
         from src.common import repo_path, stamp
         rdir = repo_path(cfg["paths"]["cache_dir"]) / "reconstruction"
         rdir.mkdir(parents=True, exist_ok=True)
@@ -117,7 +118,7 @@ def main() -> int:
     write(out, result)
 
     recon = load_reconstruction(cfg)
-    pts, rgb, tags, conf = tagged_points(recon, cfg["reconstruction"]["conf_percentile"])
+    pts, rgb, tags, conf = tagged_points(recon, cfg["diff"]["conf_percentile"])
     pa, pb = pts[tags == "a"], pts[tags == "b"]
     step = max(1, len(pa) // 60000)
     pa_s, pb_s = pa[::step], pb[::step]
