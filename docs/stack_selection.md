@@ -330,7 +330,7 @@ the **alternative**, pending the dtype fix and the same harness run. Track-ID
 stability is reported as **not measured** for both: the image route has no
 tracker, and the video-session route was not reached in the time box.
 
-## Bake-off (b) RESULT: SAM 3.1 adopted as the primary segmenter (autocast fixed)
+## Bake-off (b) RESULT: SAM 3.1 wins the segmenter decision for the flag-gated route (autocast fixed)
 
 The dtype blocker was solved by running the official path under
 `torch.autocast(device_type="cuda", dtype=torch.bfloat16)`: the checkpoint's

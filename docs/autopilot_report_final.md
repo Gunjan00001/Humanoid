@@ -75,9 +75,9 @@ than the 32B baseline); DINOv2-large as primary matcher.
 
 | model | role | licence | commercial |
 |---|---|---|---|
-| SAM 3.1 | primary segmenter (flag OFF) | Meta SAM License | **non commercial**; acknowledgement requested for publications |
+| SAM 3.1 | target segmenter for the flag-gated route (flag OFF; not used by the released path) | Meta SAM License | **non commercial**; acknowledgement requested for publications |
 | SAM 2.1 base-plus | fallback segmenter | Apache-2.0 | yes |
-| DINOv3 ViT-L | primary matcher | DINOv3 License | check terms |
+| DINOv3 ViT-L | target matcher for the flag-gated route (not used by the released path) | DINOv3 License | check terms |
 | DINOv2-large | fallback matcher | Apache-2.0 | yes |
 | VGGT-1B | reconstruction backend | CC BY-NC 4.0 | **non commercial** |
 | MapAnything | geometry alternative | Apache-2.0 variant | yes |
