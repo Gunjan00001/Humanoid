@@ -1,4 +1,5 @@
-"""Object-first pipeline (Phase 4), wired behind `diff.method: objfirst`, default OFF.
+"""EXPERIMENTAL, not used by detect.py. Phase 4 object-first pipeline (branch
+exp/object-first), wired behind `diff.method: objfirst`, default OFF.
 
 Why this exists: the current detector finds changes first and names them second,
 so a missed detection is lost. The object-first path turns the pipeline around:

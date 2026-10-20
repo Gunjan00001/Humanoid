@@ -127,3 +127,41 @@ scissors, numbers 1, 2, 3; fused output 5 entries (2 detector entries with one
 agreement and one without, plus the object-first-only candidate). Visibility
 says "unverified" for all three because the diff cache has no per-cluster
 visibility ids; that is stated rather than papered over.
+
+## Phase 4 gate evaluation (cached data, six scenes, deterministic rerun)
+
+`scripts/objfirst_gate.py`, object-first path with M5 fusion, twice per scene for
+determinism (all six identical):
+
+| scene | found / GT | extras | fragments | candidates | fused |
+|---|---|---|---|---|---|
+| demo | 2/3 | 5 | 0 | 7 | 7 |
+| scene2 | 1/1 | 5 | 0 | 6 | 6 |
+| scene3 | 1/2 | 10 | 0 | 11 | 11 |
+| scene4 | 2/3 | 0 | 1 | 3 | 5 |
+| scene5 | 0/2 | 7 | 0 | 7 | 8 |
+| scene6 | 1/3 | 5 | 0 | 6 | 6 |
+| **overall** | **7/14 = 50.0%** | **32** | **1** | | |
+
+**Gates applied, rejected.** The regression floor fails on both required scenes:
+demo 2/3 and scene4 2/3 against the baseline's 3/3 and 0 extras on each, and the
+extra count rises from 4 to 32 overall. `diff.method` stays `tabletop`; nothing
+from this path ships.
+
+## What this evaluation is NOT (accurate negative wording)
+
+M1 inventory and M3 lift **inherit the detector's clusters and 3D boxes**: the
+inventory reads the cached crops and VLM labels the detector produced, and the
+lift joins the diff stage's boxes. The path can therefore only see objects the
+incumbent detector already proposed, and it cannot test the central claim of the
+object-first hypothesis, that an independent inventory finds objects the change
+detector misses. **Object-first was not tested and did not fail.** What failed is
+this particular implementation, for a reason that was measured, not guessed.
+
+Not built, and the first items of "what I would do next with a week":
+1. the **lift sanity check** (project the cached boxes through the cameras and
+   confirm they land on the objects before any matching is judged);
+2. an **independent SAM 3.1 inventory** per video (per-frame text prompts, masks
+   lifted with the cached depth and poses);
+3. a **per-frame centroid scatter check** to reject unstable instances;
+4. matching and verification on those independent instances, then the same gate.
