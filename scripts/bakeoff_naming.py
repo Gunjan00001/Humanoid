@@ -26,7 +26,6 @@ sys.path.insert(0, str(ROOT))
 
 from src.naming.stats import wilson_pair  # noqa: E402
 from src.naming.vocabulary import Vocabulary, load_vocabulary  # noqa: E402
-from src.naming.descriptor import describe  # noqa: E402
 
 MANIFEST = ROOT / "data" / "naming_set" / "manifest.json"
 _SIGLIP = None
@@ -420,11 +419,14 @@ def main() -> int:
         parent_e = vocab.parent_of(better)
         parent_t = vocab.parent_of(truth_canon)
         if better == truth_canon:
-            counter["exact"] += 1; correct = "exact"
+            counter["exact"] += 1
+            correct = "exact"
         elif parent_e is not None and parent_e == parent_t:
-            counter["parent"] += 1; correct = "parent"
+            counter["parent"] += 1
+            correct = "parent"
         else:
-            counter["wrong"] += 1; correct = "wrong"
+            counter["wrong"] += 1
+            correct = "wrong"
         rows.append({"path": sample["path"], "name": name, "canon": better,
                      "truth": truth_canon, "correct": correct,
                      "protocol": "free", "raw": raw_answer[:200]})

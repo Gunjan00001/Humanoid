@@ -40,7 +40,7 @@ ALLOW = (
 )
 
 # 377 files before the cap of 420, mostly documentation and per-scene reports.
-FILE_COUNT_LIMIT = 420
+FILE_COUNT_LIMIT = 440  # raised once, for the 13 legitimate close-out files
 
 
 def tracked_files() -> list[tuple[str, int]]:

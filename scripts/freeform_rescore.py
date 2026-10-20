@@ -20,7 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from src.naming.freeform import FreeformScorer, normalize, load_synonyms  # noqa: E402
+from src.naming.freeform import FreeformScorer, load_synonyms  # noqa: E402
 from src.naming.stats import wilson_pair  # noqa: E402
 from src.naming.vocabulary import load_vocabulary  # noqa: E402
 
