@@ -447,4 +447,5 @@ scene4 and scene6 reproduced identically. scene2, scene3 and scene5 differ at th
 8 -> 9 clusters on scene2, 29 -> 26 on scene3 and 58 -> 55 on scene5, while scene4
 (8) and scene6 (35) matched. The differences are therefore upstream of naming.
 Whether the cause is GPU nondeterminism across runs or a different working point
-is not established here and would need a third run to separate.
+is not established here and would need a third run to separate. Full result
+lists and the artefact sizes are in docs/redo_results.md.

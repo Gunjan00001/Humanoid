@@ -78,3 +78,6 @@ data/naming_set/crops/
 /*.log
 # every crop variant is derived data (blanked, margin, frame)
 data/naming_set/crops*/
+
+# replay artefacts (derived, rebuilt by scripts/redo_scenes.pbs)
+outputs/*_redo/
