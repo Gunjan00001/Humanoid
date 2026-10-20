@@ -1,3 +1,12 @@
+# Status (final close-out)
+
+**Resume step if work continues:** nothing is in flight. The object-first branch
+is archived at tag `archive/object-first`; its gate evaluation is rejected and
+recorded. The next real step is item 1 of DEEPDIVE.md section 12: the independent
+SAM 3.1 inventory (per-video prompts, masks lifted from cached depth and poses,
+per-frame centroid scatter check), which is the actual test of the object-first
+hypothesis. Do not resubmit the old manifest tasks; they are done.
+
 # Autopilot status
 
 RESUME HERE (unattended mode; read logs/batch/*.done and *.failed first):
