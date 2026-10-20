@@ -61,8 +61,16 @@ docs/related_work.md for the references.
 ```bash
 # normal clone, fetches videos and meshes through Large File Storage (install git-lfs first)
 git clone --depth 1 https://github.com/Gunjan00001/Humanoid.git && cd Humanoid
-# or a light clone, code only (about 175 MB); `git lfs pull` fetches the media later
+```
+
+Or a light clone, code only (about 175 MB), and fetch the media afterwards:
+
+```bash
 GIT_LFS_SKIP_SMUDGE=1 git clone --depth 1 https://github.com/Gunjan00001/Humanoid.git && cd Humanoid
+git lfs pull
+```
+
+```bash
 conda create -n spatialdiff python=3.10 -y && conda activate spatialdiff
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
 pip install -r requirements.txt
